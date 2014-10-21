@@ -7,10 +7,11 @@
 ;;; Commentary:
 ;;
 
-(require 'elixir-mix)
-(require 'elixir-iex)
+(require 'elixir-compilation-mode)
 (require 'elixir-compile)
 (require 'elixir-execute)
+(require 'elixir-mix)
+(require 'elixir-iex)
 
 (provide 'elixir)
 
