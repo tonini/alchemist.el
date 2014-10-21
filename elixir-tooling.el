@@ -23,7 +23,8 @@ When elixir-tooling mode is enabled, the follwing elixir modes will be loaded:
   " elixir-tooling"
   :group 'elixir-tooling
   (cond (elixir-tooling-mode
-         (require 'elixir-compilation-mode)
+         (require 'elixir-utils)
+         (require 'elixir-compilation)
          (require 'elixir-compile)
          (require 'elixir-execute)
          (require 'elixir-mix)
