@@ -3,6 +3,9 @@
 ;;; Commentary:
 ;;
 
+(require 'compile)
+(require 'ansi-color)
+
 (defvar elixir-compilation--buffer-name nil
   "Used to store compilation name so recompilation works as expected.")
 (make-variable-buffer-local 'elixir-compilation--buffer-name)
