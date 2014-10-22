@@ -3,6 +3,8 @@
 ;;; Commentary:
 ;;
 
+;;; Code:
+
 (defcustom elixir-execute-command "elixir"
   "The shell command for elixir."
   :type 'string
@@ -17,7 +19,7 @@
   (elixir-execute--file buffer-file-name))
 
 (defun elixir-execute-file (filename)
-  "Run elixir with the given `filename`"
+  "Run elixir with the given `FILENAME`."
   (interactive "Felixir: ")
   (elixir-execute--file (expand-file-name filename)))
 
@@ -26,9 +28,12 @@
     (error "The given file doesn't exists"))
   (elixir-execute-run (list elixir-execute-command (expand-file-name filename))))
 
+(defun elixir-execute--read-command (command)
+  (read-shell-command "elixir command: " (concat command " ")))
+
 (defun elixir-execute-run (cmdlist)
   "Run a elixir with `CMDLIST`."
-  (interactive "Melixir: ")
+  (interactive (list (elixir-execute--read-command elixir-execute-command)))
   (elixir-compilation-run (elixir-utils-build-runner-cmdlist cmdlist)
                           elixir-execute-buffer-name))
 
