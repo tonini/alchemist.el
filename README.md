@@ -155,11 +155,11 @@
         <td>Evaluates the Elixir code in the current buffer.</td>
     </tr>
     <tr>
-        <td><code>alchemist-string-to-quoted-on-region</code></td>
+        <td><code>alchemist-eval-string-to-quoted-on-region</code></td>
         <td>Get the representation of the expression on the marked region.</td>
     </tr>
     <tr>
-        <td><code>alchemist-string-to-quoted-on-current-line</code></td>
+        <td><code>alchemist-eval-string-to-quoted-on-current-line</code></td>
         <td>Get the representation of the expression on the current line.</td>
     </tr>
 </table>
