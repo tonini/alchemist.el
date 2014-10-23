@@ -1,0 +1,15 @@
+language: emacs-lisp
+
+env:
+  - EMACS=emacs24
+
+before_install:
+  - export DEBIAN_FRONTEND='noninteractive'
+  - sudo apt-add-repository -y ppa:cassou/emacs
+  - sudo apt-get update -qq
+  - sudo apt-get install -yy emacs24 emacs24-el emacs24-common-non-dfsg
+  - curl -fsSkL "https://raw.github.com/cask/cask/${TRAVIS_BRANCH}/go" | python
+  - export PATH="${HOME}/.cask/bin:$PATH"
+
+script:
+  - make EMACS=${EMACS} build
