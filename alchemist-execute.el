@@ -34,8 +34,8 @@
 (defun alchemist-execute-run (cmdlist)
   "Run a elixir with `CMDLIST`."
   (interactive (list (alchemist-execute--read-command alchemist-execute-command)))
-  (alchemist-compilation-run (alchemist-utils-build-runner-cmdlist cmdlist)
-                          alchemist-execute-buffer-name))
+  (alchemist-buffer-run (alchemist-utils-build-runner-cmdlist cmdlist)
+                        alchemist-execute-buffer-name))
 
 (provide 'alchemist-execute)
 
