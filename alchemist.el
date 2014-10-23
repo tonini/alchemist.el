@@ -64,14 +64,7 @@
 
 ;;;###autoload
 (define-minor-mode alchemist-mode
-  "Toggle alchemist mode.
-
-When alchemist mode is enabled, the follwing elixir modes will be loaded:
-* alchemist-buffer
-* alchemist-compile
-* alchemist-execute
-* alchemist-eval
-* alchemist-mix"
+  "Toggle alchemist mode."
   nil
   ;; The indicator for the mode line.
   " alchemist"
