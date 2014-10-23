@@ -1,3 +1,4 @@
+language: c
 env:
   - EMACS=emacs24
   - EMACS=emacs-snapshot
