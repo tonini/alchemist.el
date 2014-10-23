@@ -57,7 +57,7 @@
 
 (defun alchemist-buffer--handle-compilation-once ()
   (remove-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation-once t)
-  (delete-matching-lines "\\(-*- mode:\\|elixir-compilation;\\|Elixir started\\|^$\\)" (point-min) (point)))
+  (delete-matching-lines "\\(-*- mode:\\|elixir-compilation;\\)" (point-min) (point)))
 
 (defun alchemist-buffer--handle-compilation ()
   (ansi-color-apply-on-region compilation-filter-start (point)))
