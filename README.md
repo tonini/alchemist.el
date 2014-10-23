@@ -1,5 +1,7 @@
 # Elixir Tooling Integration Into Emacs
 
+[![Build Status](https://travis-ci.org/tonini/alchemist.el.png)](https://travis-ci.org/tonini/alchemist.el)
+
 ## Installation
 
 ### Manual
