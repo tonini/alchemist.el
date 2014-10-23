@@ -121,6 +121,11 @@
   (interactive "Mmix local.install URL: ")
   (alchemist-mix-execute (list alchemist-mix-command "local.install" url)))
 
+(defun alchemist-mix-hex-search (command)
+  "Display packages matching the given search query."
+  (interactive "Mmix hex.search: ")
+  (alchemist-mix-execute (list alchemist-mix-command "hex.search" command)))
+
 (defun alchemist-mix-help (command)
   "Show help output for a specific mix command."
   (interactive "Mmix help: ")
