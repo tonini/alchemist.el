@@ -55,6 +55,13 @@
 
 ;;; Code:
 
+(require 'alchemist-utils)
+(require 'alchemist-buffer)
+(require 'alchemist-compile)
+(require 'alchemist-execute)
+(require 'alchemist-eval)
+(require 'alchemist-mix)
+
 ;;;###autoload
 (define-minor-mode alchemist-mode
   "Toggle alchemist mode.
@@ -68,14 +75,7 @@ When alchemist mode is enabled, the follwing elixir modes will be loaded:
   nil
   ;; The indicator for the mode line.
   " alchemist"
-  :group 'alchemist
-  (cond (alchemist-mode
-         (require 'alchemist-utils)
-         (require 'alchemist-buffer)
-         (require 'alchemist-compile)
-         (require 'alchemist-execute)
-         (require 'alchemist-eval)
-         (require 'alchemist-mix))))
+  :group 'alchemist)
 
 (provide 'alchemist)
 
