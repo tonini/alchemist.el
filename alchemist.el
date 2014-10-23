@@ -20,9 +20,9 @@ When alchemist mode is enabled, the follwing elixir modes will be loaded:
 * alchemist-iex"
   nil
   ;; The indicator for the mode line.
-  " elixir-tooling"
-  :group 'elixir-tooling
-  (cond (elixir-tooling-mode
+  " alchemist"
+  :group 'alchemist
+  (cond (alchemist-mode
          (require 'alchemist-utils)
          (require 'alchemist-buffer)
          (require 'alchemist-compile)
