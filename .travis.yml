@@ -1,4 +1,3 @@
-language: emacs-lisp
 env:
   - EMACS=emacs24
   - EMACS=emacs-snapshot
