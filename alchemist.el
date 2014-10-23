@@ -6,8 +6,8 @@
 
 ;; URL: http://www.github.com/tonini/alchemist.el
 ;; Version: 0.1.0
-;; Package-Requires:
-;; Keywords: mix, elixir, elixirc, hex
+;; Package-Requires: ((emacs "24"))
+;; Keywords: languages, mix, elixir, elixirc, hex
 
 ;; This file is not part of GNU Emacs.
 
