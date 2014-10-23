@@ -52,7 +52,7 @@
 (defun alchemist-compile-run (cmdlist)
   "Run a elixir with `CMDLIST`."
   (interactive (list (alchemist-compile--read-command alchemist-compile-command)))
-  (alchemist-buffer-run (alchemist-utils-build-runner-cmdlist cmdlist)
+  (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist cmdlist)
                         alchemist-compile-buffer-name))
 
 (provide 'alchemist-compile)

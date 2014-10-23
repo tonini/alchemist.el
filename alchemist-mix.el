@@ -114,8 +114,8 @@
   (interactive "Mmix: ")
   (let ((old-directory default-directory))
     (unless (string= (car cmdlist) "new")
-      (alchemist-utils-establish-project-root-directory))
-    (alchemist-buffer-run (alchemist-utils-build-runner-cmdlist cmdlist)
+      (alchemist-utils--establish-project-root-directory))
+    (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist cmdlist)
                             alchemist-mix-buffer-name)
     (cd old-directory)))
 

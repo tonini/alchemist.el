@@ -33,20 +33,20 @@ It walking the directory tree until it finds a elixir project root indicator."
   (let* ((file (file-name-as-directory (expand-file-name default-directory))))
     (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
 
-(defun alchemist-utils-flatten (alist)
+(defun alchemist-utils--flatten (alist)
   (cond ((null alist) nil)
         ((atom alist) (list alist))
-        (t (append (alchemist-utils-flatten (car alist))
-                   (alchemist-utils-flatten (cdr alist))))))
+        (t (append (alchemist-utils--flatten (car alist))
+                   (alchemist-utils--flatten (cdr alist))))))
 
-(defun alchemist-utils-build-runner-cmdlist (command)
+(defun alchemist-utils--build-runner-cmdlist (command)
   "Build the commands list for the runner."
-  (remove "" (alchemist-utils-flatten
+  (remove "" (alchemist-utils--flatten
               (list (if (stringp command)
                         (split-string command)
                       command)))))
 
-(defun alchemist-utils-establish-project-root-directory ()
+(defun alchemist-utils--establish-project-root-directory ()
   "Set the default-directory to the Elixir project root."
   (let ((project-root (alchemist-utils--elixir-project-root)))
     (when project-root
