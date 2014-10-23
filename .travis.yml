@@ -12,4 +12,4 @@ before_install:
 install:
   - cask install
 script:
-  - make EMACS=${EMACS build
+  - make EMACS=${EMACS} build
