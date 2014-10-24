@@ -18,7 +18,6 @@
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
-- [Eval](#eval)
 - [Contributing](#contributing)
 
 ## Mix
@@ -132,35 +131,6 @@
     <tr>
       <td><code>alchemist-execute</code></th>
       <td>Run a custom execute command with <code>elixir</code>.</th>
-    </tr>
-</table>
-
-## Eval
-
-<table>
-    <tr>
-        <th>Command (For the <code>M-x</code> prompt.)</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-on-region</code></td>
-        <td>Evaluates the Elixir code on the marked region.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-on-current-line</code></td>
-        <td>Evaluates the Elixir code on the current line.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-on-current-buffer</code></td>
-        <td>Evaluates the Elixir code in the current buffer.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-string-to-quoted-on-region</code></td>
-        <td>Get the representation of the expression on the marked region.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-string-to-quoted-on-current-line</code></td>
-        <td>Get the representation of the expression on the current line.</td>
     </tr>
 </table>
 

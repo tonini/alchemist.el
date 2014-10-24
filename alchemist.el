@@ -59,7 +59,6 @@
 (require 'alchemist-buffer)
 (require 'alchemist-compile)
 (require 'alchemist-execute)
-(require 'alchemist-eval)
 (require 'alchemist-mix)
 
 ;;;###autoload
