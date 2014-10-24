@@ -61,13 +61,32 @@
 (require 'alchemist-execute)
 (require 'alchemist-mix)
 
+(defvar alchemist-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c a t") 'alchemist-mix-test)
+    (define-key map (kbd "C-c a m t f") 'alchemist-mix-test-file)
+    (define-key map (kbd "C-c a m t b") 'alchemist-mix-test-this-buffer)
+    (define-key map (kbd "C-c a m t .") 'alchemist-mix-test-at-point)
+    (define-key map (kbd "C-c a c c") 'alchemist-compile)
+    (define-key map (kbd "C-c a c f") 'alchemist-compile-file)
+    (define-key map (kbd "C-c a c b") 'alchemist-compile-this-buffer)
+    (define-key map (kbd "C-c a e e") 'alchemist-execute)
+    (define-key map (kbd "C-c a e f") 'alchemist-execute-file)
+    (define-key map (kbd "C-c a e b") 'alchemist-execute-this-buffer)
+    map)
+  "The keymap used when `alchemist-mode' is active.")
+
 ;;;###autoload
 (define-minor-mode alchemist-mode
-  "Toggle alchemist mode."
+  "Toggle alchemist mode.
+
+Key bindings:
+\\{alchemist-mode-map}"
   nil
   ;; The indicator for the mode line.
   " alchemist"
-  :group 'alchemist)
+  :global t
+  :keymap 'alchemist-mode-map)
 
 (provide 'alchemist)
 
