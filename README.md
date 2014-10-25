@@ -4,6 +4,14 @@
 
 ## Installation
 
+### ELPA
+
+alchemist.el is available on [MELPA](http://melpa.milkbox.net/). Just run `M-x package-install
+[RET] alchemist [RET]` inside your emacs and you're ready to go.
+
+If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
+familiar with it.
+
 ### Manual
 
 ```lisp
