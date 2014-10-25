@@ -28,12 +28,7 @@
 
 ;;; Installation:
 
-;;    alchemist.el is available on both community maintained repositories - Marmalade and MELPA
-
-;;    (add-to-list 'package-archives
-;;                 '("marmalade" . "http://marmalade-repo.org/packages/"))
-;;
-;;    or
+;;    alchemist.el is available on MELPA
 ;;
 ;;    (add-to-list 'package-archives
 ;;                 '("melpa" . "http://melpa.org/packages/") t)
