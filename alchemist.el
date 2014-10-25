@@ -59,6 +59,7 @@
 (require 'alchemist-compile)
 (require 'alchemist-execute)
 (require 'alchemist-mix)
+(require 'alchemist-on-save)
 
 ;;;###autoload
 (define-minor-mode alchemist-mode
