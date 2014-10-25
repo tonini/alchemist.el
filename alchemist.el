@@ -59,7 +59,7 @@
 (define-minor-mode alchemist-mode
   "Toggle alchemist mode.
 
-When alchemist mode is enabled, the follwing elixir modes will be loaded:
+When alchemist mode is enabled, the following elixir modes will be loaded:
 * alchemist-buffer
 * alchemist-compile
 * alchemist-execute
@@ -75,7 +75,9 @@ When alchemist mode is enabled, the follwing elixir modes will be loaded:
          (require 'alchemist-compile)
          (require 'alchemist-execute)
          (require 'alchemist-eval)
-         (require 'alchemist-mix))))
+         (require 'alchemist-mix)
+         (require 'alchemist-on-save)
+         )))
 
 (provide 'alchemist)
 

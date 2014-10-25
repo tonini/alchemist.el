@@ -26,6 +26,13 @@
 (require 'compile)
 (require 'ansi-color)
 
+(defcustom alchemist-red-green-modeline t
+  "If t, the modeline background is changed to green or red depending
+   on the success or failure of commands such as 'mix test'."
+  :type 'boolean
+  :group 'alchemist-mix)
+
+
 (defvar alchemist-buffer--buffer-name nil
   "Used to store compilation name so recompilation works as expected.")
 (make-variable-buffer-local 'alchemist-buffer--buffer-name)
@@ -77,8 +84,17 @@ Returns the compilation buffer."
                   (cons alchemist-buffer--error-link-options compilation-error-regexp-alist-alist))
       (setq-local compilation-error-regexp-alist (cons 'elixir compilation-error-regexp-alist))
       (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation nil t)
-      (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation-once nil t))))
+      (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation-once nil t)
+      (if alchemist-red-green-modeline
+          (add-hook 'compilation-finish-functions 'alchemist-set-modeline-color nil t)))))
 
+(defun alchemist-set-modeline-color (buffer status)
+  (set-face-attribute 'mode-line nil
+                      :background (if (string-prefix-p "finished" status) "darkgreen" "darkred")
+                      :foreground "white")
+  (message status)
+  (remove-hook 'compilation-finish-functions 'alchemist-set-modeline-color))
+  
 (provide 'alchemist-buffer)
 
 ;;; alchemist-buffer.el ends here
