@@ -26,6 +26,29 @@
 (require 'compile)
 (require 'ansi-color)
 
+(defcustom alchemist-red-green-modeline t
+  "If t, the modeline background is changed to green or red depending
+   on the success or failure of commands such as 'mix test'."
+  :type 'boolean
+  :group 'alchemist-mix)
+
+(defvar alchemist-buffer--mode-line-format-store nil)
+(setq alchemist-buffer--mode-line-format-store
+      mode-line-format)
+
+(defface alchemist-buffer--success-face
+  '((t (:inherit font-lock-variable-name-face :bold nil :background "darkgreen" :foreground "white")))
+  ""
+  :group 'alchemist-buffer)
+
+(defface alchemist-buffer--failed-face
+  '((t (:inherit font-lock-variable-name-face :bold nil :background "red" :foreground "white")))
+  ""
+  :group 'alchemist-buffer)
+
+(defvar alchemist-buffer-test-mode-line-message
+  "Elixir")
+
 (defvar alchemist-buffer--buffer-name nil
   "Used to store compilation name so recompilation works as expected.")
 (make-variable-buffer-local 'alchemist-buffer--buffer-name)
@@ -60,13 +83,12 @@
   (delete-matching-lines "\\(-*- mode:\\|elixir-compilation;\\)" (point-min) (point)))
 
 (defun alchemist-buffer--handle-compilation ()
-  (ansi-color-apply-on-region compilation-filter-start (point)))
+  (ansi-color-apply-on-region (point-min) (point-max)))
 
 (defun alchemist-buffer-run (cmdlist buffer-name)
   "run CMDLIST in `alchemist-buffer-mode'.
 Returns the compilation buffer."
   (save-some-buffers (not compilation-ask-about-save) alchemist-buffer--save-buffers-predicate)
-
   (let* ((alchemist-buffer--buffer-name buffer-name)
          (compilation-filter-start (point-min)))
     (with-current-buffer
@@ -77,7 +99,34 @@ Returns the compilation buffer."
                   (cons alchemist-buffer--error-link-options compilation-error-regexp-alist-alist))
       (setq-local compilation-error-regexp-alist (cons 'elixir compilation-error-regexp-alist))
       (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation nil t)
-      (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation-once nil t))))
+      (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation-once nil t)
+      (when alchemist-red-green-modeline
+        (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))
+
+(defun alchemist-buffer--set-modeline-color (buffer status)
+  (let ((status-font-face (if (string-prefix-p "finished" status)
+                              'alchemist-buffer--success-face
+                            'alchemist-buffer--failed-face)))
+    (alchemist-buffer--reset-mode-line)
+    (alchemist-buffer--add-to-modeline status-font-face)
+    (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color)))
+
+(defun alchemist-buffer--initalize-modeline ()
+  (setq-default mode-line-format (append (list (propertize
+                                                (concat " " alchemist-buffer-test-mode-line-message  " ")
+                                                'face 'alchemist-buffer--success-face))
+                                         mode-line-format))
+    )
+
+(defun alchemist-buffer--reset-mode-line ()
+  (setq-default mode-line-format
+                alchemist-buffer--mode-line-format-store))
+
+(defun alchemist-buffer--add-to-modeline (status-font-face)
+  (setq-default mode-line-format (append (list (propertize
+                                                (concat " " alchemist-buffer-test-mode-line-message  " ")
+                                                'face status-font-face))
+                                         mode-line-format)))
 
 (provide 'alchemist-buffer)
 
