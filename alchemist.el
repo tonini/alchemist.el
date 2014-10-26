@@ -5,9 +5,9 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.1.0
-;; Package-Requires:
-;; Keywords: mix, elixir, elixirc, hex
+;; Version: 0.2.0
+;; Package-Requires: ((emacs "24"))
+;; Keywords: languages, mix, elixir, elixirc, hex
 
 ;; This file is not part of GNU Emacs.
 
@@ -28,15 +28,14 @@
 
 ;;; Installation:
 
-;;    alchemist.el is available on both community maintained repositories - Marmalade and MELPA
-
+;;    alchemist.el is available on both community maintained repositories -
+;;    Marmalade and MELPA.
+;;
 ;;    (add-to-list 'package-archives
 ;;                 '("marmalade" . "http://marmalade-repo.org/packages/"))
 ;;
-;;    or
-;;
 ;;    (add-to-list 'package-archives
-;;                 '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;;                 '("melpa" . "http://melpa.org/packages/") t)
 ;;
 ;;    M-x package-install alchemist
 
@@ -55,29 +54,25 @@
 
 ;;; Code:
 
+(require 'alchemist-utils)
+(require 'alchemist-buffer)
+(require 'alchemist-compile)
+(require 'alchemist-execute)
+(require 'alchemist-mix)
+(require 'alchemist-hooks)
+
 ;;;###autoload
 (define-minor-mode alchemist-mode
-  "Toggle alchemist mode.
-
-When alchemist mode is enabled, the following elixir modes will be loaded:
-* alchemist-buffer
-* alchemist-compile
-* alchemist-execute
-* alchemist-eval
-* alchemist-mix"
+  "Toggle alchemist mode."
   nil
   ;; The indicator for the mode line.
   " alchemist"
   :group 'alchemist
   (cond (alchemist-mode
-         (require 'alchemist-utils)
-         (require 'alchemist-buffer)
-         (require 'alchemist-compile)
-         (require 'alchemist-execute)
-         (require 'alchemist-eval)
-         (require 'alchemist-mix)
-         (require 'alchemist-on-save)
-         )))
+         (alchemist-buffer--initalize-modeline))
+        (t
+         ;; Reset the mode-line
+         (alchemist-buffer--reset-mode-line))))
 
 (provide 'alchemist)
 

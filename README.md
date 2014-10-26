@@ -4,6 +4,17 @@
 
 ## Installation
 
+### ELPA
+
+alchemist.el is available on both community maintained repositories -
+[Marmalade](http://marmalade-repo.org/) and
+[MELPA](http://melpa.milkbox.net/). Just run `M-x package-install
+[RET] alchemist [RET]`
+inside your emacs and you're ready to go.
+
+If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
+familiar with it.
+
 ### Manual
 
 ```lisp
@@ -18,7 +29,6 @@
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
-- [Eval](#eval)
 - [Contributing](#contributing)
 
 ## Mix
@@ -132,35 +142,6 @@
     <tr>
       <td><code>alchemist-execute</code></th>
       <td>Run a custom execute command with <code>elixir</code>.</th>
-    </tr>
-</table>
-
-## Eval
-
-<table>
-    <tr>
-        <th>Command (For the <code>M-x</code> prompt.)</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-on-region</code></td>
-        <td>Evaluates the Elixir code on the marked region.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-on-current-line</code></td>
-        <td>Evaluates the Elixir code on the current line.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-eval-on-current-buffer</code></td>
-        <td>Evaluates the Elixir code in the current buffer.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-string-to-quoted-on-region</code></td>
-        <td>Get the representation of the expression on the marked region.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-string-to-quoted-on-current-line</code></td>
-        <td>Get the representation of the expression on the current line.</td>
     </tr>
 </table>
 
