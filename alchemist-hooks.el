@@ -1,8 +1,9 @@
-;;; alchemist-on-save.el --- Run tests on save
+;;; alchemist-hooks.el --- Run tests on save
 
 ;; Copyright © 2014 Samuel Tonini
 
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com
+;;         Dave Thomas <http://pragdave.me>
 
 ;; This file is not part of GNU Emacs.
 
@@ -23,29 +24,20 @@
 
 ;;; Code:
 
-
-
-(defcustom alchemist-test-on-save t
-  "If t, run alchemist-mix-test on save."
+(defcustom alchemist-hooks-test-on-save t
+  "If t, run `alchemist-mix-test' on save."
   :type 'boolean
-  :group 'alchemist-mix)
+  :group 'alchemist-hooks)
 
-(defun alchemist-on-save ()
-  (if alchemist-test-on-save
-      (alchemist-mix-test)))
+(defun alchemist-hooks--test-on-save ()
+  (when (and alchemist-hooks-test-on-save
+             (eq major-mode 'elixir-mode))
+    (alchemist-mix-test)))
 
-(add-hook 'after-save-hook 'alchemist-on-save nil t)
+(eval-after-load 'elixir-mode
+  '(progn
+     (add-hook 'after-save-hook 'alchemist-hooks--test-on-save nil nil)))
 
+(provide 'alchemist-hooks)
 
-;;(add-hook 'compilation-finish-functions 'set-modeline-color)
-
-;;(defun set-modeline-color (buffer status)
-;;  (message status))
-
-;;(set-face-attribute 'mode-line nil
-;;                    :background "darkred"
-;;                    :foreground "white")
-
-(provide 'alchemist-on-save)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; alchemist-on-save.el ends here
+;;; alchemist-hooks.el ends here
