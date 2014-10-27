@@ -54,7 +54,7 @@
 (make-variable-buffer-local 'alchemist-buffer--buffer-name)
 
 (defvar alchemist-buffer--error-link-options
-  '(elixir "\\([a-z./_]+\\):\\([0-9]+\\)\\(: warning\\)?" 1 2 nil (3) 1)
+  '(elixir "\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)\\(: warning\\)?" 1 2 nil (3) 1)
   "File link matcher for `compilation-error-regexp-alist-alist' (matches path/to/file:line).")
 
 (defun alchemist-buffer--kill-any-orphan-proc ()
