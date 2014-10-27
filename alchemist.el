@@ -65,7 +65,7 @@
   " alchemist"
   :group 'alchemist
   (cond (alchemist-mode
-         (alchemist-buffer-initalize-modeline))
+         (alchemist-buffer-initialize-modeline))
         (t
          (alchemist-buffer-reset-modeline))))
 

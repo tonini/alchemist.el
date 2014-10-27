@@ -127,7 +127,7 @@ Argument BUFFER-NAME for the compilation."
     (alchemist-buffer-update-modestring)
     (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color)))
 
-(defun alchemist-buffer-initalize-modeline ()
+(defun alchemist-buffer-initialize-modeline ()
   (when alchemist-buffer-status-modeline
     (setq alchemist-buffer-current-test-suite-state 'alchemist-buffer--running-face)
     (unless (memq 'alchemist-buffer-modestring global-mode-string)
