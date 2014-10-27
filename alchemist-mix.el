@@ -42,6 +42,11 @@
 (defvar alchemist-mix--local-install-option-types '("path" "url")
   "List of local.install option types.")
 
+(defun alchemist-mix-display-mix-buffer ()
+  (interactive)
+  (when (get-buffer alchemist-mix-buffer-name)
+    (display-buffer alchemist-mix-buffer-name)))
+
 (defun alchemist-mix--completing-read (prompt cmdlist)
   (completing-read prompt cmdlist nil t nil nil (car cmdlist)))
 

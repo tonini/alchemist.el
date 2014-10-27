@@ -5,7 +5,7 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
@@ -28,7 +28,11 @@
 
 ;;; Installation:
 
-;;    alchemist.el is available on MELPA
+;;    alchemist.el is available on both community maintained repositories -
+;;    Marmalade and MELPA.
+;;
+;;    (add-to-list 'package-archives
+;;                 '("marmalade" . "http://marmalade-repo.org/packages/"))
 ;;
 ;;    (add-to-list 'package-archives
 ;;                 '("melpa" . "http://melpa.org/packages/") t)
@@ -55,6 +59,7 @@
 (require 'alchemist-compile)
 (require 'alchemist-execute)
 (require 'alchemist-mix)
+(require 'alchemist-hooks)
 
 ;;;###autoload
 (define-minor-mode alchemist-mode
@@ -62,7 +67,12 @@
   nil
   ;; The indicator for the mode line.
   " alchemist"
-  :group 'alchemist)
+  :group 'alchemist
+  (cond (alchemist-mode
+         (alchemist-buffer--initalize-modeline))
+        (t
+         ;; Reset the mode-line
+         (alchemist-buffer--reset-mode-line))))
 
 (provide 'alchemist)
 
