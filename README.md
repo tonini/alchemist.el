@@ -6,11 +6,9 @@
 
 ### ELPA
 
-alchemist.el is available on both community maintained repositories -
-[Marmalade](http://marmalade-repo.org/) and
-[MELPA](http://melpa.milkbox.net/). Just run `M-x package-install
-[RET] alchemist [RET]`
-inside your emacs and you're ready to go.
+alchemist.el is available on community maintained repository - [MELPA](http://melpa.milkbox.net/)
+
+Just run `M-x package-install [RET] alchemist [RET]` inside your emacs and you're ready to go.
 
 If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
 familiar with it.
@@ -29,6 +27,8 @@ familiar with it.
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
+- [Hooks](#hooks)
+- [Modeline](#modeline)
 - [Contributing](#contributing)
 
 ## Mix
@@ -144,6 +144,26 @@ familiar with it.
       <td>Run a custom execute command with <code>elixir</code>.</th>
     </tr>
 </table>
+
+## Hooks
+
+There is a `after-save-hook` called `alchemist-hooks--test-on-save` which runs
+the whole elixir test suite via `alchemist-mix-test`. The `alchemist-mix-test`
+will just run if the current buffer is in major `elixir-mode`.
+
+If you would like to use it just set the `alchemist-hooks-test-on-save` variable
+via `(setq alchemist-hooks-test-on-save t)` or `M-x customize-group [RET] alchemist-hooks`
+
+## Modeline
+
+By default the status of `alchemist-mix-test`, `alchemist-compile` etc will be
+shown in the
+[mode-line](https://www.gnu.org/software/emacs/manual/html_node/emacs/Mode-Line.html)
+
+If you don't like that just set the `alchemist-buffer-status-modeline` variable
+via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] alchemist-buffer`
+
+![Alchemist modeline](http://i.imgur.com/SBfhajV.png)
 
 ## Contributing
 

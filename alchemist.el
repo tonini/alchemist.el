@@ -28,11 +28,7 @@
 
 ;;; Installation:
 
-;;    alchemist.el is available on both community maintained repositories -
-;;    Marmalade and MELPA.
-;;
-;;    (add-to-list 'package-archives
-;;                 '("marmalade" . "http://marmalade-repo.org/packages/"))
+;;    alchemist.el is available on community maintained repository MELPA.
 ;;
 ;;    (add-to-list 'package-archives
 ;;                 '("melpa" . "http://melpa.org/packages/") t)
@@ -59,6 +55,7 @@
 (require 'alchemist-compile)
 (require 'alchemist-execute)
 (require 'alchemist-mix)
+(require 'alchemist-hooks)
 
 ;;;###autoload
 (define-minor-mode alchemist-mode
@@ -66,7 +63,11 @@
   nil
   ;; The indicator for the mode line.
   " alchemist"
-  :group 'alchemist)
+  :group 'alchemist
+  (cond (alchemist-mode
+         (alchemist-buffer-initalize-modeline))
+        (t
+         (alchemist-buffer-reset-modeline))))
 
 (provide 'alchemist)
 
