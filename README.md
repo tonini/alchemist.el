@@ -1,6 +1,8 @@
-# Elixir Tooling Integration Into Emacs
-
 [![Build Status](https://travis-ci.org/tonini/alchemist.el.png)](https://travis-ci.org/tonini/alchemist.el)
+[![MELPA](http://melpa.org/packages/alchemist-badge.svg)](http://melpa.org/#/alchemist)
+[![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Elixir Tooling Integration Into Emacs
 
 ## Installation
 
