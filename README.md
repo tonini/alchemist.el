@@ -1,6 +1,6 @@
+[![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Build Status](https://travis-ci.org/tonini/alchemist.el.png)](https://travis-ci.org/tonini/alchemist.el)
 [![MELPA](http://melpa.org/packages/alchemist-badge.svg)](http://melpa.org/#/alchemist)
-[![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 # Elixir Tooling Integration Into Emacs
 
@@ -176,3 +176,12 @@ Contributions are very welcome!
 4. Push to your branch - `git push origin my_branch`
 5. Send me a pull-request for your topic branch
 6. That's it!
+
+## License
+
+Copyright © 2014 Samuel Tonini and
+[contributors](https://github.com/tonini/alchemist.el/contributors).
+
+Distributed under the GNU General Public License, version 3
+
+[badge-license]: https://img.shields.io/badge/license-GPL_3-green.svg
