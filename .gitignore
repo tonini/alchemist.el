@@ -1,2 +1,12 @@
-.cask/
-alchemist.el.tar.gz
+*~
+*\#*\#
+*.\#*
+*.elc
+.cask
+elpa
+.depend
+alchemist-pkg.el
+packages/*
+TAGS
+.DS_STORE
+dist
