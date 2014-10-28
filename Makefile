@@ -1,7 +1,7 @@
 EMACS = emacs
 EMACSFLAGS =
 CASK = cask
-VERSION = `$(CASK) exec $(EMACS) --version | head -1`
+EMACS_VERSION = `$(CASK) exec $(EMACS) --version | head -1`
 ALCHEMIST = alchemist.el
 
 OBJECTS = alchemist.elc
@@ -15,7 +15,7 @@ STAT_COLOR=\033[2;33m
 info:
 	@ echo "\n$(INFO_COLOR)Installed Emacs info: $(NO_COLOR)\n"
 	@ echo "  $(STAT_COLOR)[PATH]$(NO_COLOR)    = `which $(EMACS)`"
-	@ echo "  $(STAT_COLOR)[VERSION]$(NO_COLOR) = $(VERSION)"
+	@ echo "  $(STAT_COLOR)[VERSION]$(NO_COLOR) = $(EMACS_VERSION)"
 
 build: cask test-elc test
 
@@ -48,3 +48,7 @@ clean:
 clean-elc:
 	@ echo "\n$(INFO_COLOR)Clean $(OBJECTS): $(NO_COLOR)\n"
 	rm -f $(OBJECTS)
+
+package:
+	@ echo "\n$(INFO_COLOR)Package Alchemist: $(NO_COLOR)\n"
+	$(CASK) package
