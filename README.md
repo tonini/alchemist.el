@@ -29,6 +29,8 @@ familiar with it.
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
+- [Inline Docs](#inline-documentation)
+  - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Contributing](#contributing)
@@ -144,6 +146,84 @@ familiar with it.
     <tr>
       <td><code>alchemist-execute</code></th>
       <td>Run a custom execute command with <code>elixir</code>.</th>
+    </tr>
+</table>
+
+## Inline Documentation
+
+There is the `alchemist-help-minor-mode` for a complete fully functional
+interface to the Elixir documentation. The `alchemist-help-minor-mode` uses the
+same functions like Elixir's [IEx](http://elixir-lang.org/docs/stable/iex/).
+
+What does that mean? It means no matter which Elixir version is currently
+installed on the system, the documentation you get by `alchemist` is the same
+`IEx` would deliver.
+
+<table>
+    <tr>
+        <th>Command (For the <code>M-x</code> prompt.)</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><code>alchemist-help</code></td>
+        <td>Run a custom search.</td>
+    </tr>
+    <tr>
+        <td><code>alchemist-help-sexp-at-point</code></td>
+        <td>Run <code>alchemist-help</code> with the expression under the cursor. (example: <code>is_binary</code>)</td>
+    </tr>
+    <tr>
+        <td><code>alchemist-help-module-sexp-at-point</code></td>
+        <td>Run <code>alchemist-help</code> with the module and expression under the cursor. (example: <code>String.slice</code>)</td>
+    </tr>
+    <tr>
+        <td><code>alchemist-help-search-marked-region</code></td>
+        <td>Run <code>alchemist-help</code> with the current marked region.</td>
+    </tr>
+</table>
+
+### Alchemist Minor Mode Keymap
+
+Inside of the `alchemist-help-minor-mode` (`*elixir help*` buffer) the key `?` will
+open a keymap summary in the `minibuffer` with the following functionality:
+
+You're always be able to continue to search inside the `*elixir help*` buffer
+with keys like `e` and `E`.
+
+![Alchemist Help Minor Mode Key Summary](http://i.imgur.com/UrDyU0K.png)
+
+<table>
+    <tr>
+        <th>Key</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td><code>q</code></td>
+        <td>Quit <code>*elixir help*</code> buffer window</td>
+    </tr>
+    <tr>
+        <td><code>e</code></td>
+        <td><code>alchemist-help-sexp-at-point</code></td>
+    </tr>
+    <tr>
+        <td><code>E</code></td>
+        <td><code>alchemist-help-module-sexp-at-point</code></td>
+    </tr>
+    <tr>
+        <td><code>s</code></td>
+        <td><code>alchemist-help</code></td>
+    </tr>
+    <tr>
+        <td><code>n</code></td>
+        <td><code>alchemist-help-next-search</code></td>
+    </tr>
+    <tr>
+        <td><code>p</code></td>
+        <td><code>alchemist-help-previous-search</code></td>
+    </tr>
+    <tr>
+        <td><code>?</code></td>
+        <td><code>alchemist-help-minor-mode-key-binding-summary</code></td>
     </tr>
 </table>
 

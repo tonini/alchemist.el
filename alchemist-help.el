@@ -127,7 +127,7 @@ h(%s)" string))
     (delete-matching-lines "do not show this result in output" (point-min) (point-max))
     (ansi-color-apply-on-region (point-min) (point-max))
     (toggle-read-only 1)
-    (alchemist-help--minor-mode 1)))
+    (alchemist-help-minor-mode 1)))
 
 (defun alchemist-help-minor-mode-key-binding-summary ()
   (interactive)
@@ -163,7 +163,7 @@ h(%s)" string))
       (setq alchemist-help-search-history-index next-position)
       (alchemist-help (nth next-position alchemist-help-search-history)))))
 
-(define-minor-mode alchemist-help--minor-mode
+(define-minor-mode alchemist-help-minor-mode
   "Minor mode for displaying elixir help."
   :group 'alchemist-help
   :keymap '(("q" . quit-window)
