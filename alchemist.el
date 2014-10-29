@@ -56,6 +56,7 @@
 (require 'alchemist-execute)
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
+(require 'alchemist-help)
 
 ;;;###autoload
 (defun alchemist-version (&optional show-version)
