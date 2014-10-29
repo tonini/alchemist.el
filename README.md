@@ -182,7 +182,7 @@ installed on the system, the documentation you get by `alchemist` is the same
     </tr>
 </table>
 
-### Alchemist Minor Mode Keymap
+### Alchemist Help Minor Mode Keymap
 
 Inside of the `alchemist-help-minor-mode` (`*elixir help*` buffer) the key `?` will
 open a keymap summary in the `minibuffer` with the following functionality:
