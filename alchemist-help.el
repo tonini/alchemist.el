@@ -1,4 +1,4 @@
-;;; alchemist-help.el ---
+;;; alchemist-help.el --- Interface to Elixir's documentation
 
 ;; Copyright © 2014 Samuel Tonini
 
@@ -21,15 +21,23 @@
 
 ;;; Commentary:
 
+;; Mode for searching through Elixir's documentation
+
 ;;; Code:
 
 (defface alchemist-help--key-face
   '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
-  ""
+  "Fontface for the letter keys in the summary."
   :group 'alchemist-help)
 
 (defvar alchemist-help-search-history '()
-  "Stores the search history")
+  "Stores the search history.")
+
+(defvar alchemist-help-search-history-index 0
+  "Stores the current position in the search history.")
+
+(defvar alchemist-help-current-search-text '()
+  "Stores the current search text.")
 
 (defun alchemist-help-module-sexp-at-point ()
   "Run `alchemist-help' with the module and sexp combination at point."
@@ -54,7 +62,9 @@
       (alchemist-help (buffer-substring-no-properties p1 p2)))))
 
 (defun alchemist-help-search-marked-region (begin end)
-  ""
+  "Run `alchemist-help' with the marked region.
+Argument BEGIN where the mark starts.
+Argument END where the mark ends."
   (interactive "r")
   (alchemist-help (filter-buffer-substring begin end)))
 
@@ -94,9 +104,26 @@ h(%s)" string))
   (pop-to-buffer alchemist-help-buffer-name)
   (setq buffer-undo-list nil)
   (let ((inhibit-read-only t)
-        (buffer-undo-list t))
+        (buffer-undo-list t)
+        (position-current-search-text (cl-position alchemist-help-current-search-text
+                                                   alchemist-help-search-history)))
     (erase-buffer)
-    (insert content)
+    (cond ((or (string-match-p (format "No documentation for %s was found"
+                                       alchemist-help-current-search-text) content)
+               (string-match-p "Invalid arguments for h helper" content)
+               (string-match-p "\\*\\* " content)
+               (string-match-p "Could not load module" content)
+               )
+           (insert (propertize
+                    (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
+                    'face 'alchemist-help--key-face)))
+          (t
+           (insert content)
+           (when (and alchemist-help-search-history
+                      position-current-search-text)
+             (setq alchemist-help-search-history-index position-current-search-text))
+           (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
+             (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))))
     (delete-matching-lines "do not show this result in output" (point-min) (point-max))
     (ansi-color-apply-on-region (point-min) (point-max))
     (toggle-read-only 1)
@@ -111,6 +138,10 @@ h(%s)" string))
            "]-sexp-at-point ["
            (propertize "E" 'face 'alchemist-help--key-face)
            "]-module-sexp-at-point ["
+           (propertize "n" 'face 'alchemist-help--key-face)
+           "]-next-search ["
+           (propertize "p" 'face 'alchemist-help--key-face)
+           "]-previous-search ["
            (propertize "s" 'face 'alchemist-help--key-face)
            "]-search ["
            (propertize "?" 'face 'alchemist-help--key-face)
@@ -118,13 +149,19 @@ h(%s)" string))
 
 (defun alchemist-help-next-search ()
   (interactive)
-  (let ((current-position (- alchemist-help-search-history-index 1)))
-    (message current-position)
-    (unless (< current-position 0)
-      (setq alchemist-help-search-history-index (- alchemist-help-search-history-index 1))
-      (alchemist-help (nth current-position alchemist-help-search-history))
-        )
-    ))
+  (let ((current-position (cl-position alchemist-help-current-search-text alchemist-help-search-history))
+        (next-position (- alchemist-help-search-history-index 1)))
+    (unless (< next-position 0)
+      (setq alchemist-help-search-history-index next-position)
+      (alchemist-help (nth next-position alchemist-help-search-history)))))
+
+(defun alchemist-help-previous-search ()
+  (interactive)
+  (let ((current-position (cl-position alchemist-help-current-search-text alchemist-help-search-history))
+        (next-position (+ alchemist-help-search-history-index 1)))
+    (unless (> next-position (- (length alchemist-help-search-history) 1))
+      (setq alchemist-help-search-history-index next-position)
+      (alchemist-help (nth next-position alchemist-help-search-history)))))
 
 (define-minor-mode alchemist-help--minor-mode
   "Minor mode for displaying elixir help."
@@ -133,15 +170,17 @@ h(%s)" string))
             ("e" . alchemist-help-sexp-at-point)
             ("E" . alchemist-help-module-sexp-at-point)
             ("s" . alchemist-help)
-            ("?" . alchemist-help-minor-mode-key-binding-summary)
-            ))
+            ("n" . alchemist-help-next-search)
+            ("p" . alchemist-help-previous-search)
+            ("?" . alchemist-help-minor-mode-key-binding-summary)))
 
 (defun alchemist-help (search)
   (interactive
    (list
-    (ido-completing-read "Elixir help: " alchemist-help-search-history)))
-  (unless (memq 'search alchemist-help-search-history)
-    (add-to-list 'alchemist-help-search-history search))
+    (completing-read "Elixir help: " alchemist-help-search-history)))
+  (setq alchemist-help-current-search-text search)
   (alchemist-help--eval-string (alchemist-help-build-code-for-search search)))
 
 (provide 'alchemist-help)
+
+;;; alchemist-help.el ends here
