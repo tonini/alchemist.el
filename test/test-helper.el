@@ -1,4 +1,5 @@
 (require 'f)
+(require 'ert)
 
 (defvar alchemist-test-path
   (f-dirname (f-this-file)))

@@ -11,7 +11,6 @@
 (add-to-list 'load-path alchemist-test-path)
 
 (require 'alchemist)
-(require 'alchemist-utils)
 
 (load (expand-file-name "test-helper.el" alchemist-test-path) nil t)
 (dolist (test-file (or argv (directory-files alchemist-test-path t "-tests.el$")))

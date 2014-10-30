@@ -23,7 +23,6 @@
 
 ;;; Code:
 
-(require 'ert)
 (require 'test-helper)
 
 (ert-deftest test-elixir-project-root/mix-file-exists ()
