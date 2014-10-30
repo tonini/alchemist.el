@@ -2,7 +2,33 @@
 [![Build Status](https://travis-ci.org/tonini/alchemist.el.png)](https://travis-ci.org/tonini/alchemist.el)
 [![MELPA](http://melpa.org/packages/alchemist-badge.svg)](http://melpa.org/#/alchemist)
 
-# Elixir Tooling Integration Into Emacs
+<br/>
+
+<p align="center">
+  <img
+  src="https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/alchemist_logo.png"
+  alt="Alchemist Logo"/>
+</p>
+
+<p align="center">
+  <blockquote>Elixir Tooling Integration Into Emacs</blockquote>
+</p>
+
+***
+
+- [Installation](#installation)
+  - [ELPA](#elpa)
+  - [Manual](#manual)
+- [Mix](#mix)
+- [Compile & Execute](#compile-and-execute)
+  - [Compile](#compile-functions)
+  - [Execute](#execute-functions)
+- [Inline Docs](#inline-documentation)
+  - [Keymap](#alchemist-help-minor-mode-keymap)
+- [Hooks](#hooks)
+- [Modeline](#modeline)
+- [Contributing](#contributing)
+
 
 ## Installation
 
@@ -18,22 +44,10 @@ familiar with it.
 ### Manual
 
 ```lisp
-(add-to-list 'load-path "~/path/to/alchemist.el/")
+(add-to-list 'load-path "/path/to/alchemist.el/")
 (require 'alchemist)
 (alchemist-mode 1)
 ```
-
-## Usage
-
-- [Mix](#mix)
-- [Compile & Execute](#compile-and-execute)
-  - [Compile](#compile-functions)
-  - [Execute](#execute-functions)
-- [Inline Docs](#inline-documentation)
-  - [Keymap](#alchemist-help-minor-mode-keymap)
-- [Hooks](#hooks)
-- [Modeline](#modeline)
-- [Contributing](#contributing)
 
 ## Mix
 
