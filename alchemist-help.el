@@ -44,9 +44,9 @@
   (interactive)
   (let (p1 p2)
     (save-excursion
-      (skip-chars-backward "-a-z0-9A-z.")
+      (skip-chars-backward "-a-z0-9A-z./?")
       (setq p1 (point))
-      (skip-chars-forward "-a-z0-9A-z.")
+      (skip-chars-forward "-a-z0-9A-z./?")
       (setq p2 (point))
       (alchemist-help (buffer-substring-no-properties p1 p2)))))
 
