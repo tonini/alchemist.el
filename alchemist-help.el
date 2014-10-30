@@ -70,24 +70,17 @@ Application.put_env(:iex, :colors, [enabled: true])
 h(%s)" string))
 
 (defun alchemist-help--eval-string (string)
-  (alchemist-help--execute-alchemist-with-code-eval-string string))
+  (alchemist-help--execute-alchemist-with-code-eval-string
+   (alchemist-help-build-code-for-search string)))
 
-(defvar alchemist-help--temp-eval-filename "alchemist-help-tmp-eval-file.exs")
-
-(defun alchemist-help--code-eval-string-command (file)
-  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
+(defun alchemist-help--eval-string-command (string)
+  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(\"%s\"), 0))'"
           alchemist-execute-command
-          file))
+          string))
 
 (defun alchemist-help--execute-alchemist-with-code-eval-string (string)
-  (with-temp-file alchemist-help--temp-eval-filename
-    (insert string))
-  (let ((content (shell-command-to-string (alchemist-help--code-eval-string-command alchemist-help--temp-eval-filename))))
-    (delete-file alchemist-help--temp-eval-filename)
+  (let ((content (shell-command-to-string (alchemist-help--eval-string-command string))))
     (alchemist-help--initialize-buffer content)))
-
-(defun alchemist-help--eval-doc (string)
-  (alchemist-help--execute-alchemist-with-code-eval-string string))
 
 (defun alchemist-help--initialize-buffer (content)
   (pop-to-buffer alchemist-help-buffer-name)
@@ -165,7 +158,7 @@ h(%s)" string))
    (list
     (completing-read "Elixir help: " alchemist-help-search-history)))
   (setq alchemist-help-current-search-text search)
-  (alchemist-help--eval-string (alchemist-help-build-code-for-search search)))
+  (alchemist-help--eval-string search))
 
 ;; These functions will not be available in the release of version 0.4.0
 (define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point)
