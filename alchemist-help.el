@@ -39,25 +39,14 @@
 (defvar alchemist-help-current-search-text '()
   "Stores the current search text.")
 
-(defun alchemist-help-module-sexp-at-point ()
-  "Run `alchemist-help' with the module and sexp combination at point."
+(defun alchemist-help-search-at-point ()
+  "Search through `alchemist-help' with the expression under the cursor."
   (interactive)
   (let (p1 p2)
     (save-excursion
       (skip-chars-backward "-a-z0-9A-z.")
       (setq p1 (point))
       (skip-chars-forward "-a-z0-9A-z.")
-      (setq p2 (point))
-      (alchemist-help (buffer-substring-no-properties p1 p2)))))
-
-(defun alchemist-help-sexp-at-point ()
-  "Run `alchemist-help' with the sexp at point."
-  (interactive)
-  (let (p1 p2)
-    (save-excursion
-      (skip-chars-backward "-a-z0-9A-z")
-      (setq p1 (point))
-      (skip-chars-forward "-a-z0-9A-z")
       (setq p2 (point))
       (alchemist-help (buffer-substring-no-properties p1 p2)))))
 
@@ -135,9 +124,7 @@ h(%s)" string))
    (concat "[" (propertize "q" 'face 'alchemist-help--key-face)
            "]-quit ["
            (propertize "e" 'face 'alchemist-help--key-face)
-           "]-sexp-at-point ["
-           (propertize "E" 'face 'alchemist-help--key-face)
-           "]-module-sexp-at-point ["
+           "]-search-at-point ["
            (propertize "n" 'face 'alchemist-help--key-face)
            "]-next-search ["
            (propertize "p" 'face 'alchemist-help--key-face)
@@ -167,8 +154,7 @@ h(%s)" string))
   "Minor mode for displaying elixir help."
   :group 'alchemist-help
   :keymap '(("q" . quit-window)
-            ("e" . alchemist-help-sexp-at-point)
-            ("E" . alchemist-help-module-sexp-at-point)
+            ("e" . alchemist-help-search-at-point)
             ("s" . alchemist-help)
             ("n" . alchemist-help-next-search)
             ("p" . alchemist-help-previous-search)
@@ -180,6 +166,10 @@ h(%s)" string))
     (completing-read "Elixir help: " alchemist-help-search-history)))
   (setq alchemist-help-current-search-text search)
   (alchemist-help--eval-string (alchemist-help-build-code-for-search search)))
+
+;; These functions will not be available in the release of version 0.4.0
+(define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point)
+(define-obsolete-function-alias 'alchemist-help-module-sexp-at-point 'alchemist-help-search-at-point)
 
 (provide 'alchemist-help)
 
