@@ -4,4 +4,5 @@
 (package-file "alchemist.el")
 
 (development
- (depends-on "f"))
+ (depends-on "f")
+ (depends-on "pkg-info"))
