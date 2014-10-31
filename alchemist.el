@@ -5,8 +5,8 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.3.0
-;; Package-Requires: ((emacs "24"))
+;; Version: 0.4.0-dev
+;; Package-Requires: ((emacs "24") (pkg-info "0.5"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
 ;; This file is not part of GNU Emacs.
@@ -49,6 +49,8 @@
 ;;    (alchemist-mode 1)
 
 ;;; Code:
+
+(require 'pkg-info) ; For `pkg-info-version-info'
 
 (require 'alchemist-utils)
 (require 'alchemist-buffer)
