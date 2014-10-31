@@ -89,17 +89,17 @@ h(%s)" string))
         (buffer-undo-list t)
         (position-current-search-text (cl-position alchemist-help-current-search-text
                                                    alchemist-help-search-history)))
-    (erase-buffer)
     (cond ((or (string-match-p (format "No documentation for %s was found"
                                        alchemist-help-current-search-text) content)
                (string-match-p "Invalid arguments for h helper" content)
                (string-match-p "\\*\\* " content)
                (string-match-p "Could not load module" content)
                )
-           (insert (propertize
+           (message (propertize
                     (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
                     'face 'alchemist-help--key-face)))
           (t
+           (erase-buffer)
            (insert content)
            (when (and alchemist-help-search-history
                       position-current-search-text)
