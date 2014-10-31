@@ -4,6 +4,9 @@
 
 ### Enhancements
 
+  * Inform about no documentation for the current search in minibuffer.
+    It's not handy if workflow is cut apart when there is no
+    documentation for a given search term.
   * Improve loading time for documention by means of removing the temporary
     file for evaluation.
   * Simplify the search function for searching for the current `expression` under
