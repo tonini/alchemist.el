@@ -160,7 +160,7 @@ h(%s)" string))
   (setq alchemist-help-current-search-text search)
   (alchemist-help--eval-string search))
 
-;; These functions will not be available in the release of version 0.4.0
+;; These functions will not be available in the release of version 1.0.0
 (define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point)
 (define-obsolete-function-alias 'alchemist-help-module-sexp-at-point 'alchemist-help-search-at-point)
 
