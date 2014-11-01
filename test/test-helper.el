@@ -5,7 +5,7 @@
   (f-dirname (f-this-file)))
 
 (defvar alchemist-sandbox-path
-  (f-slash (f-expand "sandbox" alchemist-test-path)))
+  (file-name-as-directory (f-expand "sandbox" alchemist-test-path)))
 
 (defmacro with-sandbox (&rest body)
   "Evaluate BODY in an empty temporary directory."
