@@ -5,14 +5,14 @@
   (f-dirname (f-this-file)))
 
 (defvar alchemist-sandbox-path
-  (f-expand "sandbox" alchemist-test-path))
+  (f-slash (f-expand "sandbox" alchemist-test-path)))
 
-(defmacro within-sandbox (&optional current &rest body)
-  "Evaluate BODY in an empty sandbox directory."
-  `(let ((default-directory
-           (f-join alchemist-sandbox-path (format "%s" ,current))))
+(defmacro with-sandbox (&rest body)
+  "Evaluate BODY in an empty temporary directory."
+  `(let ((default-directory alchemist-sandbox-path))
+     (when (f-dir? alchemist-sandbox-path)
+       (f-delete alchemist-sandbox-path :force))
      (f-mkdir alchemist-sandbox-path)
-     ,@body
-     (f-delete alchemist-sandbox-path :force)))
+     ,@body))
 
 (provide 'test-helper)

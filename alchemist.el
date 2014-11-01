@@ -53,6 +53,7 @@
 (require 'pkg-info) ; For `pkg-info-version-info'
 
 (require 'alchemist-utils)
+(require 'alchemist-project)
 (require 'alchemist-buffer)
 (require 'alchemist-compile)
 (require 'alchemist-execute)
