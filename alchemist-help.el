@@ -25,6 +25,10 @@
 
 ;;; Code:
 
+(defvar alchemist-help-mix-run-command
+  "mix run"
+  "The shell command for `mix run`.")
+
 (defface alchemist-help--key-face
   '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
   "Fontface for the letter keys in the summary."
@@ -74,8 +78,10 @@ h(%s)" string))
    (alchemist-help-build-code-for-search string)))
 
 (defun alchemist-help--eval-string-command (string)
-  (format "%s -e 'IO.puts inspect(elem(Code.eval_string(\"%s\"), 0))'"
-          alchemist-execute-command
+  (format "%s -e 'Code.eval_string(\"%s\")'"
+          (if (alchemist-project-p)
+              alchemist-help-mix-run-command
+            alchemist-execute-command)
           string))
 
 (defun alchemist-help--execute-alchemist-with-code-eval-string (string)
@@ -92,12 +98,14 @@ h(%s)" string))
     (cond ((or (string-match-p (format "No documentation for %s was found"
                                        alchemist-help-current-search-text) content)
                (string-match-p "Invalid arguments for h helper" content)
-               (string-match-p "\\*\\* " content)
+               (string-match-p "** (TokenMissingError)" content)
+               (string-match-p "** (SyntaxError)" content)
+               (string-match-p "** (FunctionClauseError)" content)
                (string-match-p "Could not load module" content)
                )
            (message (propertize
-                    (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
-                    'face 'alchemist-help--key-face)))
+                     (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
+                     'face 'alchemist-help--key-face)))
           (t
            (erase-buffer)
            (insert content)
@@ -107,6 +115,9 @@ h(%s)" string))
            (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
              (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))))
     (delete-matching-lines "do not show this result in output" (point-min) (point-max))
+    (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
+    (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
+
     (ansi-color-apply-on-region (point-min) (point-max))
     (toggle-read-only 1)
     (alchemist-help-minor-mode 1)))
@@ -157,8 +168,13 @@ h(%s)" string))
   (interactive
    (list
     (completing-read "Elixir help: " alchemist-help-search-history)))
-  (setq alchemist-help-current-search-text search)
-  (alchemist-help--eval-string search))
+  (let ((old-directory default-directory))
+    (setq alchemist-help-current-search-text search)
+    (when (alchemist-project-p)
+      (alchemist-project--establish-root-directory))
+    (alchemist-help--eval-string (alchemist-utils--clear-search-text search))
+    (when (alchemist-project-p)
+      (cd old-directory))))
 
 ;; These functions will not be available in the release of version 1.0.0
 (define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point)

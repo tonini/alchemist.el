@@ -1,4 +1,4 @@
-;;; alchemist.el --- Elixir tooling integration into emacs
+;;; alchemist-utils-tests.el ---
 
 ;; Copyright © 2014 Samuel Tonini
 ;;
@@ -25,30 +25,11 @@
 
 (require 'test-helper)
 
-(ert-deftest test-elixir-project-root/mix-file-exists ()
-  (within-sandbox "lib/elixir"
-                  (f-touch "../../mix.exs")
-                  (should (equal (f-expand (alchemist-utils--elixir-project-root)) alchemist-sandbox-path))))
-
-(ert-deftest test-alchemist-project-root/mix-file-dont-exists ()
-  (within-sandbox
-   (should (equal (alchemist-utils--elixir-project-root) nil))))
-
 (ert-deftest test-flatten-of-list ()
   (should (equal (alchemist-utils--flatten '(1 2 (3 4) 5))
                  '(1 2 3 4 5)))
   (should (equal (alchemist-utils--flatten '(1 2 ("dude" "hero" (3)) 4 5))
                  '(1 2 "dude" "hero" 3 4 5))))
-
-(ert-deftest test-establish-root-directory/set-default-directory ()
-  (within-sandbox "lib/elixir"
-                  (f-touch "../../mix.exs")
-                  (should (equal (alchemist-utils--establish-project-root-directory)
-                                 default-directory))))
-
-(ert-deftest test-establish-root-directory/no-root-exists ()
-  (within-sandbox
-   (should (equal (alchemist-utils--establish-project-root-directory) nil))))
 
 (ert-deftest test-cmdlist-runner-builder ()
   (should (equal (alchemist-utils--build-runner-cmdlist "mix help")
@@ -60,6 +41,16 @@
   (should (equal (alchemist-utils--build-runner-cmdlist '("elixirc" ""))
                  '("elixirc"))))
 
-(provide 'alchemist-tests)
+(ert-deftest test-utils/clear-search-text ()
+  (should (equal (alchemist-utils--clear-search-text "Elixir.Module.")
+                 "Elixir.Module"))
+  (should (equal (alchemist-utils--clear-search-text "Elixir.Module,")
+                 "Elixir.Module"))
+  (should (equal (alchemist-utils--clear-search-text "Elixir.Module.function.")
+                 "Elixir.Module.function"))
+  (should (equal (alchemist-utils--clear-search-text "__CALLER__.")
+                   "__CALLER__")))
 
-;;; alchemist-tests.el ends here
+(provide 'alchemist-utils-tests)
+
+;;; alchemist-utils-tests.el ends here

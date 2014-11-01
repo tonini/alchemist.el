@@ -23,15 +23,15 @@
 
 ;;; Code:
 
-(defvar alchemist-utils--elixir-project-root-indicator
-  "mix.exs"
-  "The file which indicate an elixir project root.")
+;; (defvar alchemist-utils--elixir-project-root-indicator
+;;   "mix.exs"
+;;   "The file which indicate an elixir project root.")
 
-(defun alchemist-utils--elixir-project-root ()
-  "Finds the root directory of the project.
-It walking the directory tree until it finds a elixir project root indicator."
-  (let* ((file (file-name-as-directory (expand-file-name default-directory))))
-    (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
+;; (defun alchemist-utils--elixir-project-root ()
+;;   "Finds the root directory of the project.
+;; It walking the directory tree until it finds a elixir project root indicator."
+;;   (let* ((file (file-name-as-directory (expand-file-name default-directory))))
+;;     (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
 
 (defun alchemist-utils--flatten (alist)
   (cond ((null alist) nil)
@@ -46,11 +46,12 @@ It walking the directory tree until it finds a elixir project root indicator."
                         (split-string command)
                       command)))))
 
-(defun alchemist-utils--establish-project-root-directory ()
-  "Set the default-directory to the Elixir project root."
-  (let ((project-root (alchemist-utils--elixir-project-root)))
-    (when project-root
-      (setq default-directory project-root))))
+(defun alchemist-utils--clear-search-text (search-text)
+  (let* ((search-text (replace-regexp-in-string  "\\.$" "" search-text))
+         (search-text (replace-regexp-in-string  "^\\.$" "" search-text))
+         (search-text (replace-regexp-in-string  ",$" "" search-text))
+         (search-text (replace-regexp-in-string  "^,$" "" search-text)))
+    search-text))
 
 (provide 'alchemist-utils)
 
