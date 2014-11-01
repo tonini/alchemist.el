@@ -21,6 +21,8 @@
 
 ;;; Commentary:
 
+;; API to identify Elixir mix projects.
+
 ;;; Code:
 
 (require 'cl)
