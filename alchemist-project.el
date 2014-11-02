@@ -65,7 +65,7 @@
 
 (defun alchemist-project-name ()
   "Return the name of the current Elixir project."
-  (if alchemist-project-p
+  (if (alchemist-project-p)
       (car (cdr (reverse (split-string (alchemist-project-root) "/"))))
     ""))
 

@@ -53,4 +53,15 @@
    (f-mkdir "path" "to" "lib")
    (should (equal (alchemist-project-root "path/to/lib") nil))))
 
+(ert-deftest test-project-name/no-project-root ()
+  "Should return an empty string"
+  (with-sandbox
+   (should (equal (alchemist-project-name) ""))))
+
+(ert-deftest test-project-name/project-exists ()
+  "Should return name of the project"
+  (with-sandbox
+   (f-touch "mix.exs")
+   (should (equal (alchemist-project-name) "sandbox"))))
+
 (provide 'alchemist-project-tests)
