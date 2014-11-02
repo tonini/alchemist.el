@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.0-dev
+
+### Enhancements
+
+  * Add `alchemist-project-name` to get the name of the current mix project.
+
 ## v0.4.0
 
 ### Enhancements
