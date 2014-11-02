@@ -4,6 +4,10 @@ CASK = cask
 EMACS_VERSION = `$(CASK) exec $(EMACS) --version | head -1`
 ALCHEMIST = alchemist.el
 
+VERSION = $(shell git describe --tags --abbrev=0 | sed 's/^v//')
+PACKAGE_NAME = alchemist-$(VERSION)
+
+ELS = $(wildcard *.el)
 OBJECTS = alchemist.elc
 
 NO_COLOR=\033[0m
@@ -52,3 +56,7 @@ clean-elc:
 package:
 	@ echo "\n$(INFO_COLOR)Package Alchemist: $(NO_COLOR)\n"
 	$(CASK) package
+
+packageclean:
+	@ echo "\n$(INFO_COLOR)Clean Alchemist Package: $(NO_COLOR)\n"
+	rm dist/$(PACKAGE_NAME).tar
