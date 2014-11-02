@@ -88,6 +88,18 @@ h(%s)" string))
   (let ((content (shell-command-to-string (alchemist-help--eval-string-command string))))
     (alchemist-help--initialize-buffer content)))
 
+(defun alchemist-help-bad-search-output-p (string)
+  (let ((match (or (string-match-p (format "No documentation for %s was found"
+                                           alchemist-help-current-search-text) string)
+                   (string-match-p "Invalid arguments for h helper" string)
+                   (string-match-p "** (TokenMissingError)" string)
+                   (string-match-p "** (SyntaxError)" string)
+                   (string-match-p "** (FunctionClauseError)" string)
+                   (string-match-p "Could not load module" string))))
+    (if match
+        t
+      nil)))
+
 (defun alchemist-help--initialize-buffer (content)
   (pop-to-buffer alchemist-help-buffer-name)
   (setq buffer-undo-list nil)
@@ -95,14 +107,7 @@ h(%s)" string))
         (buffer-undo-list t)
         (position-current-search-text (cl-position alchemist-help-current-search-text
                                                    alchemist-help-search-history)))
-    (cond ((or (string-match-p (format "No documentation for %s was found"
-                                       alchemist-help-current-search-text) content)
-               (string-match-p "Invalid arguments for h helper" content)
-               (string-match-p "** (TokenMissingError)" content)
-               (string-match-p "** (SyntaxError)" content)
-               (string-match-p "** (FunctionClauseError)" content)
-               (string-match-p "Could not load module" content)
-               )
+    (cond ((alchemist-help-bad-search-output-p content)
            (message (propertize
                      (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
                      'face 'alchemist-help--key-face)))
