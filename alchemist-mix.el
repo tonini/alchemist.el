@@ -140,7 +140,7 @@
   "Run a mix command."
   (interactive "Mmix: ")
   (let ((old-directory default-directory))
-    (alchemist-utils--establish-project-root-directory)
+    (alchemist-project--establish-root-directory)
     (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist cmdlist)
                           alchemist-mix-buffer-name)
     (cd old-directory)))
