@@ -1,10 +1,14 @@
 # Changelog
 
-## v0.5.0-dev
+## v0.4.1
 
 ### Enhancements
 
   * Add `alchemist-project-name` to get the name of the current mix project.
+
+### Bug fixes
+
+  * Fix bad function call in `alchemist-mix-execute` (thx @pragdave)
 
 ## v0.4.0
 
