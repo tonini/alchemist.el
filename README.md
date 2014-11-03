@@ -183,12 +183,9 @@ installed on the system, the documentation you get by `alchemist` is the same
         <td>Run a custom search.</td>
     </tr>
     <tr>
-        <td><code>alchemist-help-sexp-at-point</code></td>
-        <td>Run <code>alchemist-help</code> with the expression under the cursor. (example: <code>is_binary</code>)</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-help-module-sexp-at-point</code></td>
-        <td>Run <code>alchemist-help</code> with the module and expression under the cursor. (example: <code>String.slice</code>)</td>
+        <td><code>alchemist-help-search-at-point</code></td>
+        <td>Run <code>alchemist-help</code> with the expression under the
+    cursor. (example: <code>is_binary</code> or <code>Code.eval_string</code>)</td>
     </tr>
     <tr>
         <td><code>alchemist-help-search-marked-region</code></td>
@@ -217,11 +214,7 @@ with keys like `e` and `E`.
     </tr>
     <tr>
         <td><code>e</code></td>
-        <td><code>alchemist-help-sexp-at-point</code></td>
-    </tr>
-    <tr>
-        <td><code>E</code></td>
-        <td><code>alchemist-help-module-sexp-at-point</code></td>
+        <td><code>alchemist-help-search-at-point</code></td>
     </tr>
     <tr>
         <td><code>s</code></td>
