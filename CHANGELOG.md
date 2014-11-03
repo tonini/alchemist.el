@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.0-dev
+
+### Enhancements
+
+   * Add a [default-keymap](https://github.com/tonini/alchemist.el/pull/2/files?diff=unified#diff-0)
+
 ## v0.4.1
 
 ### Enhancements
