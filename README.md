@@ -198,8 +198,7 @@ installed on the system, the documentation you get by `alchemist` is the same
 Inside of the `alchemist-help-minor-mode` (`*elixir help*` buffer) the key `?` will
 open a keymap summary in the `minibuffer` with the following functionality:
 
-You're always be able to continue to search inside the `*elixir help*` buffer
-with keys like `e` and `E`.
+You're always be able to continue to search inside the `*elixir help*` buffer.
 
 ![Alchemist Help Minor Mode Key Summary](https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/help_summary.png)
 
