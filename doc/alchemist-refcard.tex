@@ -1,0 +1,92 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{textcomp}
+\usepackage{fullpage}
+\usepackage{boxedminipage}
+\usepackage{multicol}
+\pagestyle{empty}
+
+
+\newcommand{\docheading}{\Huge\centering{Alchemist Quick Reference Card}\normalsize\bigskip}
+\newcommand{\helpgroup}[1]{\par\noindent\centering{\textbf{\large#1}\medskip}}
+\newcommand{\helpkey}[2]{\par~~\noindent\textbf{#1}\hfill{#2}~~}
+\newcommand{\group}[1]{\bigskip\par\noindent\textbf{\large#1}\medskip}
+\newcommand{\subgroup}[1]{\medskip\par\noindent\textbf{#1}\medskip}
+\newcommand{\key}[2]{\par\noindent\textbf{#1}\hfill{#2}}
+\newcommand{\meta}[1]{\textlangle{#1}\textrangle}
+
+\begin{document}
+
+\renewcommand{\baselinestretch}{1.2}
+
+\docheading
+
+\bigskip
+
+\begin{boxedminipage}[t]{11cm}
+
+\medskip
+
+\helpgroup{Getting help in Emacs}
+
+\helpkey{C-h k \meta{key}}{describe function bound to \meta{key}}
+\helpkey{C-h b}{list the current key-bindings for the focus buffer}
+\helpkey{C-h m}{describe mode}
+\helpkey{C-h l}{show the keys you have pressed}
+\helpkey{\meta{prefix} C-h}{show all key-bindings beginning with \meta{prefix}}
+
+\medskip
+
+\end{boxedminipage}
+
+\setlength{\bigskipamount}{1.5cm}
+
+\bigskip
+
+\begin{minipage}[t]{8cm}
+
+\helpgroup{Mix}
+
+\key{C-c a t}{alchemist-mix-new}
+\key{C-c a m t f}{alchemist-mix-test-file}
+\key{C-c a m t b}{alchemist-mix-test-at-point}
+
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}[t]{8cm}
+
+\helpgroup{Compilation}
+
+\key{C-c a c c}{alchemist-compile}
+\key{C-c a c f}{alchemist-compile-file}
+\key{C-c a c b}{alchemist-compile-this-buffer}
+
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}[t]{8cm}
+
+\helpgroup{Execution}
+
+\key{C-c a e e}{alchemist-execute}
+\key{C-c a e f}{alchemist-execute-file}
+\key{C-c a e b}{alchemist-execute-this-buffer}
+
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}[t]{8cm}
+
+\helpgroup{Documentation}
+
+\key{C-c a h h}{alchemist-help}
+\key{C-c a h e}{alchemist-help-search-at-point}
+\key{C-c a h m}{alchemist-help-search-marked-region}
+
+\end{minipage}
+
+\end{document}
