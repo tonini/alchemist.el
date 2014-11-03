@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.5.0-dev
+## v0.5.0
 
 ### Enhancements
 
