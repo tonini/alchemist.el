@@ -145,6 +145,7 @@ h(%s)" string))
            "]-keys")))
 
 (defun alchemist-help-next-search ()
+  "Switches to the next search in the history."
   (interactive)
   (let ((current-position (cl-position alchemist-help-current-search-text alchemist-help-search-history))
         (next-position (- alchemist-help-search-history-index 1)))
@@ -153,6 +154,7 @@ h(%s)" string))
       (alchemist-help (nth next-position alchemist-help-search-history)))))
 
 (defun alchemist-help-previous-search ()
+  "Switches to the previous search in the history."
   (interactive)
   (let ((current-position (cl-position alchemist-help-current-search-text alchemist-help-search-history))
         (next-position (+ alchemist-help-search-history-index 1)))
