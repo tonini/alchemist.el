@@ -4,6 +4,8 @@
 
 ### Enhancements
 
+   * Make `alchemist-help-search-marked-region` also useful via short key inside
+     the `*elixir help*` buffer.
    * Build status from `mix`, `compile` or `execute` will now shown they're
      status inside the `mode-name` of the `elixir-mode` instead in the
      `global-mode-line`. (thanks @pragdave)

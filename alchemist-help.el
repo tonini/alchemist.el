@@ -134,6 +134,8 @@ h(%s)" string))
            "]-quit ["
            (propertize "e" 'face 'alchemist-help--key-face)
            "]-search-at-point ["
+           (propertize "m" 'face 'alchemist-help--key-face)
+           "]-search-marked-region ["
            (propertize "n" 'face 'alchemist-help--key-face)
            "]-next-search ["
            (propertize "p" 'face 'alchemist-help--key-face)
@@ -164,6 +166,7 @@ h(%s)" string))
   :group 'alchemist-help
   :keymap '(("q" . quit-window)
             ("e" . alchemist-help-search-at-point)
+            ("m" . alchemist-help-search-marked-region)
             ("s" . alchemist-help)
             ("n" . alchemist-help-next-search)
             ("p" . alchemist-help-previous-search)
