@@ -27,6 +27,7 @@
   - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
+- [Keymap](#keymap)
 - [Contributing](#contributing)
 
 
@@ -250,6 +251,12 @@ If you don't like that just set the `alchemist-buffer-status-modeline` variable
 via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] alchemist-buffer`
 
 ![Alchemist Build Status](https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/build_status.png)
+
+## Keymap
+
+Alchemist comes with a default keymap.
+
+You find and overview of all the key-bindings on the [Alchemist-Refcard](https://github.com/tonini/alchemist.el/blob/master/doc/alchemist-refcard.pdf?raw=true).
 
 ## Contributing
 
