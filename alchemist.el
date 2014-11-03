@@ -61,6 +61,10 @@
 (require 'alchemist-hooks)
 (require 'alchemist-help)
 
+(defun alchemist-mode-hook ()
+  "Hook which enables `alchemist-mode'"
+  (alchemist-mode 1))
+
 ;;;###autoload
 (defun alchemist-version (&optional show-version)
   "Get the Alchemist version as string.
@@ -114,6 +118,8 @@ Key bindings:
          (alchemist-buffer-initialize-modeline))
         (t
          (alchemist-buffer-reset-modeline))))
+
+(add-hook 'elixir-mode-hook 'alchemist-mode-hook)
 
 (provide 'alchemist)
 
