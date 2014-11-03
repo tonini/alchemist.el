@@ -45,8 +45,7 @@
 
 ;;     Add the following in your .emacs file:
 
-;;    (require alchemist)
-;;    (alchemist-mode 1)
+;;    (require 'alchemist)
 
 ;;; Code:
 
