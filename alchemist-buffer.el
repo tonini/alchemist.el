@@ -33,7 +33,7 @@ changes depending on the success or failure of commands such as 'mix test'."
   :group 'alchemist-buffer)
 
 (defface alchemist-buffer--success-face
-  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "white")))
+  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
   ""
   :group 'alchemist-buffer)
 
