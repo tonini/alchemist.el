@@ -121,7 +121,6 @@ h(%s)" string))
              (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))))
     (delete-matching-lines "do not show this result in output" (point-min) (point-max))
     (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
-    (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
 
     (ansi-color-apply-on-region (point-min) (point-max))
     (toggle-read-only 1)
