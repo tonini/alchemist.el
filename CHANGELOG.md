@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+   * Add a alchemist keymap refcard
    * Add a [default-keymap](https://github.com/tonini/alchemist.el/pull/2/files?diff=unified#diff-0)
 
 ## v0.4.1
