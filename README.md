@@ -46,7 +46,6 @@ familiar with it.
 ```lisp
 (add-to-list 'load-path "/path/to/alchemist.el/")
 (require 'alchemist)
-(alchemist-mode 1)
 ```
 
 ## Mix
@@ -245,13 +244,12 @@ via `(setq alchemist-hooks-test-on-save t)` or `M-x customize-group [RET] alchem
 ## Modeline
 
 By default the status of `alchemist-mix-test`, `alchemist-compile` etc will be
-shown in the
-[mode-line](https://www.gnu.org/software/emacs/manual/html_node/emacs/Mode-Line.html)
+represented via the colorized `mode-name`. In our case that will be the `elixir-mode`.
 
 If you don't like that just set the `alchemist-buffer-status-modeline` variable
 via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] alchemist-buffer`
 
-![Alchemist modeline](http://i.imgur.com/SBfhajV.png)
+![Alchemist Build Status](https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/build_status.png)
 
 ## Contributing
 

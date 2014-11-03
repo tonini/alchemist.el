@@ -52,7 +52,6 @@ changes depending on the success or failure of commands such as 'mix test'."
   ""
   :group 'alchemist-buffer)
 
-
 (defvar alchemist-buffer--mode-name-face 'mode-line)
 
 (defvar alchemist-buffer--buffer-name nil
@@ -115,7 +114,7 @@ Argument BUFFER-NAME for the compilation."
         (if (string-prefix-p "finished" status)
             'alchemist-buffer--success-face
           'alchemist-buffer--failed-face))
-          
+
   (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
 
 (defun alchemist-buffer-initialize-modeline ()
