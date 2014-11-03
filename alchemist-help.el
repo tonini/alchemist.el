@@ -66,7 +66,7 @@ Argument END where the mark ends."
   :type 'string
   :group 'alchemist-help)
 
-(defun alchemist-help-build-code-for-search (string)
+(defun alchemist-help--build-code-for-search (string)
   (format "import IEx.Helpers
 
 Application.put_env(:iex, :colors, [enabled: true])
@@ -75,7 +75,7 @@ h(%s)" string))
 
 (defun alchemist-help--eval-string (string)
   (alchemist-help--execute-alchemist-with-code-eval-string
-   (alchemist-help-build-code-for-search string)))
+   (alchemist-help--build-code-for-search string)))
 
 (defun alchemist-help--eval-string-command (string)
   (format "%s -e 'Code.eval_string(\"%s\")'"
