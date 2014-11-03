@@ -92,9 +92,9 @@ just return nil."
     (define-key map (kbd "C-c a e e") 'alchemist-execute)
     (define-key map (kbd "C-c a e f") 'alchemist-execute-file)
     (define-key map (kbd "C-c a e b") 'alchemist-execute-this-buffer)
-    (define-key map (kbd "C-c a s s") 'alchemist-help)
-    (define-key map (kbd "C-c a s e") 'alchemist-help-search-at-point)
-    (define-key map (kbd "C-c a s m") 'alchemist-help-search-marked-region)
+    (define-key map (kbd "C-c a h h") 'alchemist-help)
+    (define-key map (kbd "C-c a h e") 'alchemist-help-search-at-point)
+    (define-key map (kbd "C-c a h m") 'alchemist-help-search-marked-region)
     map)
   "The keymap used when `alchemist-mode' is active.")
 
