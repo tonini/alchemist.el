@@ -4,6 +4,9 @@
 
 ### Enhancements
 
+   * Build status from `mix`, `compile` or `execute` will now shown they're
+     status inside the `mode-name` of the `elixir-mode` instead in the
+     `global-mode-line`. (thanks @pragdave)
    * Add a alchemist keymap refcard
    * Add a [default-keymap](https://github.com/tonini/alchemist.el/pull/2/files?diff=unified#diff-0)
 
