@@ -83,9 +83,13 @@ changes depending on the success or failure of commands such as 'mix test'."
   (lambda ()
     (not (string= (substring (buffer-name) 0 1) "*"))))
 
-(defun alchemist-buffer--handle-compilation-once ()
-  (remove-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation-once t)
-  (delete-matching-lines "\\(-*- mode:\\|elixir-compilation;\\)" (point-min) (point)))
+(defun alchemist-buffer--remove-dispensable-output ()
+  (delete-matching-lines "\\(-*- mode:\\|Compiled \\|elixir-compilation;\\|Elixir started\\|^$\\)" (point-min) (point-max))
+  (remove-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output t))
+
+(defun alchemist-buffer-remove-dispensable-output-after-finish (buffer msg)
+  (delete-matching-lines "\\(Excluding tags\\|Including tags\\)" (point-min) (point-max))
+  (delete-matching-lines "\\(Elixir finished\\)" (point-min) (point-max)))
 
 (defun alchemist-buffer--handle-compilation ()
   (ansi-color-apply-on-region (point-min) (point-max)))
@@ -105,7 +109,8 @@ Argument BUFFER-NAME for the compilation."
                   (cons alchemist-buffer--error-link-options compilation-error-regexp-alist-alist))
       (setq-local compilation-error-regexp-alist (cons 'elixir compilation-error-regexp-alist))
       (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation nil t)
-      (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation-once nil t)
+      (add-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output nil t)
+      (add-to-list 'compilation-finish-functions 'alchemist-buffer-remove-dispensable-output-after-finish)
       (when alchemist-buffer-status-modeline
         (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))
 

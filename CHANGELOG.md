@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.0-dev
+
+### Enhancements
+
+   * Improve the readability of the alchemist buffer through removing
+     dispensable output
+
 ## v0.5.0
 
 ### Enhancements
