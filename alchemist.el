@@ -111,7 +111,7 @@ Key bindings:
   ;; The indicator for the mode line.
   " alchemist"
   :group 'alchemist
-  :global t
+  :global nil
   :keymap 'alchemist-mode-map
   (cond (alchemist-mode
          (alchemist-buffer-initialize-modeline))
