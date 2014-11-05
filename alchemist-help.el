@@ -78,7 +78,7 @@ h(%s)" string))
    (alchemist-help--build-code-for-search string)))
 
 (defun alchemist-help--eval-string-command (string)
-  (format "%s -e 'Code.eval_string(\"%s\")'"
+  (format "%s -e '%s'"
           (if (alchemist-project-p)
               alchemist-help-mix-run-command
             alchemist-execute-command)
@@ -95,6 +95,7 @@ h(%s)" string))
                    (string-match-p "** (TokenMissingError)" string)
                    (string-match-p "** (SyntaxError)" string)
                    (string-match-p "** (FunctionClauseError)" string)
+                   (string-match-p "** (CompileError)" string)
                    (string-match-p "Could not load module" string))))
     (if match
         t

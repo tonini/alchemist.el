@@ -44,6 +44,9 @@
                  t))
   (should (equal (alchemist-help-bad-search-output-p
                   "Could not load module....")
+                 t))
+  (should (equal (alchemist-help-bad-search-output-p
+                  "** (CompileError) nofile:5:")
                  t)))
 
 (provide 'alchemist-help-tests)

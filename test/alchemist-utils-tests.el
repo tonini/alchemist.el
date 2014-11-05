@@ -49,7 +49,7 @@
   (should (equal (alchemist-utils--clear-search-text "Elixir.Module.function.")
                  "Elixir.Module.function"))
   (should (equal (alchemist-utils--clear-search-text "__CALLER__.")
-                   "__CALLER__")))
+                 "__CALLER__")))
 
 (provide 'alchemist-utils-tests)
 

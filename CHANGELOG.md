@@ -4,6 +4,8 @@
 
 ### Enhancements
 
+   * Remove the `Code.eval_sting/1` call inside the
+     `alchemist-help--eval-string-command` function
    * Improve the readability of the alchemist buffer through removing
      dispensable output
 
