@@ -257,7 +257,7 @@ h(%s)" string))
 (defun alchemist-help (search)
   (interactive
    (list
-    (completing-read "Elixir help: " alchemist-help-search-history)))
+    (completing-read "Elixir help: " alchemist-help-search-history nil nil "")))
   (let ((old-directory default-directory))
     (setq alchemist-help-current-search-text search)
     (when (alchemist-project-p)
