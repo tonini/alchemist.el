@@ -52,10 +52,7 @@
       (setq p1 (point))
       (skip-chars-forward "-a-z0-9A-z./?!")
       (setq p2 (point))
-      (if (string-match-p ".\\..+\/[0-9]" (buffer-substring-no-properties p1 p2))
-          (alchemist-help (buffer-substring-no-properties p1 p2))
-        (alchemist-help
-         (alchemist-help--prepare-completing (buffer-substring-no-properties p1 p2)))))))
+      (alchemist-help--execute (buffer-substring-no-properties p1 p2)))))
 
 (defun alchemist-help--prepare-completing (string)
   (let* ((completing-collection (alchemist-help--function-string-to-list
@@ -137,11 +134,7 @@ Argument BEGIN where the mark starts.
 Argument END where the mark ends."
   (interactive "r")
   (let ((region (filter-buffer-substring begin end)))
-    (if (string-match-p ".\\..+\/[0-9]" region)
-        (alchemist-help region)
-      (alchemist-help
-       (alchemist-help--prepare-completing region))
-      (alchemist-help region))))
+    (alchemist-help--execute region)))
 
 (defcustom alchemist-help-buffer-name "*elixir help*"
   "Name of the elixir help buffer."
@@ -255,10 +248,20 @@ h(%s)" string))
             ("?" . alchemist-help-minor-mode-key-binding-summary)))
 
 (defun alchemist-help (search)
+  (interactive "MElixir help: ")
+  (alchemist-help--execute search))
+
+(defun alchemist-help-history (search)
   (interactive
    (list
-    (completing-read "Elixir help: " alchemist-help-search-history nil nil "")))
-  (let ((old-directory default-directory))
+    (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
+  (alchemist-help--execute search))
+
+(defun alchemist-help--execute (search)
+  (let ((old-directory default-directory)
+        (search (if (string-match-p ".\\..+\/[0-9]" search)
+                    search
+                  (alchemist-help--prepare-completing search))))
     (setq alchemist-help-current-search-text search)
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
