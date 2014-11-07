@@ -48,18 +48,93 @@
   (interactive)
   (let (p1 p2)
     (save-excursion
-      (skip-chars-backward "-a-z0-9A-z./?")
+      (skip-chars-backward "-a-z0-9A-z./?!")
       (setq p1 (point))
-      (skip-chars-forward "-a-z0-9A-z./?")
+      (skip-chars-forward "-a-z0-9A-z./?!")
       (setq p2 (point))
-      (alchemist-help (buffer-substring-no-properties p1 p2)))))
+      (alchemist-help--execute (buffer-substring-no-properties p1 p2)))))
+
+(defun alchemist-help--prepare-completing (string)
+  (let* ((completing-collection (alchemist-help--function-string-to-list
+                                 (alchemist-help--autocomplete-expand string)))
+         (search-term (when (> (length completing-collection) 0)
+                        (car completing-collection)))
+         (completing-collection (cdr completing-collection))
+         (search-term (if (and (> (length completing-collection) 1)
+                               (string-match-p ".\\.." search-term))
+                          (concat (car (split-string search-term "\\.")) ".")
+                        search-term))
+         (completing-collection (if (and (equal 1 (length completing-collection))
+                                         (string-match-p ".\\.." search-term))
+                                    '()
+                                  completing-collection))
+         (completing-collection (if (string-match-p "\\.$" search-term)
+                                    (mapcar (lambda (fn) (concat search-term fn)) completing-collection)
+                                  completing-collection))
+         (search-term (if (equal (length completing-collection) 1)
+                          (car completing-collection)
+                        search-term))
+         )
+
+    (cond  ((equal (length completing-collection) 1)
+            (car completing-collection))
+           (completing-collection
+            (alchemist-help-completing-read
+             "Elixir help: "
+             completing-collection
+             nil
+             nil
+             string))
+           (t search-term))))
+
+(defun alchemist-help-completing-read (prompt collection predicate require-match initial)
+  (completing-read
+   prompt
+   collection
+   predicate require-match initial))
+
+(defun alchemist-help--autocomplete-expand (string)
+  (let* ((elixir-code (format "
+defmodule Alchemist do
+  def expand(exp) do
+    {status, result, list } = IEx.Autocomplete.expand(Enum.reverse(exp))
+
+    case { status, result, list } do
+      { :yes, [], _ } -> List.insert_at(list, 0, exp)
+      { :yes, _,  _ } -> expand(exp ++ result)
+                  _t  -> exp
+    end
+  end
+end
+
+IO.inspect Alchemist.expand('%s')
+" string))
+         (command (if (alchemist-project-p)
+                      (format "%s --no-compile -e \"%s\"" alchemist-help-mix-run-command elixir-code)
+                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code)))
+         )
+
+    (when (alchemist-project-p)
+      (alchemist-project--establish-root-directory))
+
+    (shell-command-to-string command)))
+
+(defun alchemist-help--function-string-to-list (string)
+  (let* ((search-text (replace-regexp-in-string "\"" "" string))
+         (search-text (replace-regexp-in-string "\\[" "" search-text))
+         (search-text (replace-regexp-in-string "\\]" "" search-text))
+         (search-text (replace-regexp-in-string "'" "" search-text))
+         (search-text (replace-regexp-in-string "\n" "" search-text))
+         (search-text (replace-regexp-in-string " " "" search-text))
+         ) (split-string search-text ",")))
 
 (defun alchemist-help-search-marked-region (begin end)
   "Run `alchemist-help' with the marked region.
 Argument BEGIN where the mark starts.
 Argument END where the mark ends."
   (interactive "r")
-  (alchemist-help (filter-buffer-substring begin end)))
+  (let ((region (filter-buffer-substring begin end)))
+    (alchemist-help--execute region)))
 
 (defcustom alchemist-help-buffer-name "*elixir help*"
   "Name of the elixir help buffer."
@@ -78,19 +153,17 @@ h(%s)" string))
    (alchemist-help--build-code-for-search string)))
 
 (defun alchemist-help--eval-string-command (string)
-  (format "%s -e '%s'"
-          (if (alchemist-project-p)
-              alchemist-help-mix-run-command
-            alchemist-execute-command)
-          string))
+  (let ((command (if (alchemist-project-p)
+                     (format "%s --no-compile -e \"%s\"" alchemist-help-mix-run-command string)
+                   (format "%s -e \"%s\"" alchemist-execute-command string))))
+    command))
 
 (defun alchemist-help--execute-alchemist-with-code-eval-string (string)
   (let ((content (shell-command-to-string (alchemist-help--eval-string-command string))))
-    (alchemist-help--initialize-buffer content)))
+    (alchemist-help--initialize-buffer content default-directory)))
 
 (defun alchemist-help-bad-search-output-p (string)
-  (let ((match (or (string-match-p (format "No documentation for %s was found"
-                                           alchemist-help-current-search-text) string)
+  (let ((match (or (string-match-p "No documentation for " string)
                    (string-match-p "Invalid arguments for h helper" string)
                    (string-match-p "** (TokenMissingError)" string)
                    (string-match-p "** (SyntaxError)" string)
@@ -101,8 +174,9 @@ h(%s)" string))
         t
       nil)))
 
-(defun alchemist-help--initialize-buffer (content)
+(defun alchemist-help--initialize-buffer (content d-directory)
   (pop-to-buffer alchemist-help-buffer-name)
+  (setq default-directory d-directory)
   (setq buffer-undo-list nil)
   (let ((inhibit-read-only t)
         (buffer-undo-list t)
@@ -175,10 +249,20 @@ h(%s)" string))
             ("?" . alchemist-help-minor-mode-key-binding-summary)))
 
 (defun alchemist-help (search)
+  (interactive "MElixir help: ")
+  (alchemist-help--execute search))
+
+(defun alchemist-help-history (search)
   (interactive
    (list
-    (completing-read "Elixir help: " alchemist-help-search-history)))
-  (let ((old-directory default-directory))
+    (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
+  (alchemist-help--execute search))
+
+(defun alchemist-help--execute (search)
+  (let ((old-directory default-directory)
+        (search (if (string-match-p ".\\..+\/[0-9]" search)
+                    search
+                  (alchemist-help--prepare-completing search))))
     (setq alchemist-help-current-search-text search)
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))

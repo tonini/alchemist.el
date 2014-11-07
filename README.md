@@ -183,6 +183,10 @@ installed on the system, the documentation you get by `alchemist` is the same
         <td>Run a custom search.</td>
     </tr>
     <tr>
+        <td><code>alchemist-help-history</code></td>
+        <td>Toggle through search history.</td>
+    </tr>
+    <tr>
         <td><code>alchemist-help-search-at-point</code></td>
         <td>Run <code>alchemist-help</code> with the expression under the
     cursor. (example: <code>is_binary</code> or <code>Code.eval_string</code>)</td>
@@ -214,6 +218,10 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
     <tr>
         <td><code>e</code></td>
         <td><code>alchemist-help-search-at-point</code></td>
+    </tr>
+    <tr>
+        <td><code>m</code></td>
+        <td><code>alchemist-help-search-marked-region</code></td>
     </tr>
     <tr>
         <td><code>s</code></td>

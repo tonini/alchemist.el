@@ -1,9 +1,14 @@
 # Changelog
 
-## v0.6.0-dev
+## v0.6.0
 
 ### Enhancements
 
+   * Introduce autocomplete feature for
+     searching. `alchemist-help-search-at-point` and
+     `alchemist-help-search-marked-region` use the autocomplete functionality.
+   * Introduce `alchemist-help-history` for toggle through search
+     history. `alchemist-help` has no history completing anymore.
    * Remove the `Code.eval_sting/1` call inside the
      `alchemist-help--eval-string-command` function
    * Improve the readability of the alchemist buffer through removing
