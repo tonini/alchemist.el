@@ -160,7 +160,7 @@ h(%s)" string))
 
 (defun alchemist-help--execute-alchemist-with-code-eval-string (string)
   (let ((content (shell-command-to-string (alchemist-help--eval-string-command string))))
-    (alchemist-help--initialize-buffer content)))
+    (alchemist-help--initialize-buffer content default-directory)))
 
 (defun alchemist-help-bad-search-output-p (string)
   (let ((match (or (string-match-p "No documentation for " string)
@@ -174,8 +174,9 @@ h(%s)" string))
         t
       nil)))
 
-(defun alchemist-help--initialize-buffer (content)
+(defun alchemist-help--initialize-buffer (content d-directory)
   (pop-to-buffer alchemist-help-buffer-name)
+  (setq default-directory d-directory)
   (setq buffer-undo-list nil)
   (let ((inhibit-read-only t)
         (buffer-undo-list t)
