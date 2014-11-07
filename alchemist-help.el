@@ -110,7 +110,7 @@ defmodule Alchemist do
 
     case { status, result, list } do
       { :yes, [], _ } -> List.insert_at(list, 0, exp)
-      { :yes, _, _  } -> expand(exp ++ result)
+      { :yes, _,  _ } -> expand(exp ++ result)
                   _t  -> exp
     end
   end
