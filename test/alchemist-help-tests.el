@@ -49,7 +49,4 @@
                   "** (CompileError) nofile:5:")
                  t)))
 
-(ert-deftest test-completion-output/put-result-apart ()
-(should (equal  )))
-
 (provide 'alchemist-help-tests)
