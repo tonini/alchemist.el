@@ -76,7 +76,7 @@
                                   completing-collection))
          (search-term (if (equal (length completing-collection) 1)
                           (car completing-collection)
-                      search-term))
+                        search-term))
          )
 
     (cond  ((equal (length completing-collection) 1)
@@ -136,7 +136,12 @@ IO.inspect Alchemist.expand('%s')
 Argument BEGIN where the mark starts.
 Argument END where the mark ends."
   (interactive "r")
-  (alchemist-help (filter-buffer-substring begin end)))
+  (let ((region (filter-buffer-substring begin end)))
+    (if (string-match-p ".\\..+\/[0-9]" region)
+        (alchemist-help region)
+      (alchemist-help
+       (alchemist-help--prepare-completing region))
+      (alchemist-help region))))
 
 (defcustom alchemist-help-buffer-name "*elixir help*"
   "Name of the elixir help buffer."
