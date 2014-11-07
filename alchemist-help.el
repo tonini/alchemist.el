@@ -74,8 +74,9 @@
          (completing-collection (if (string-match-p "\\.$" search-term)
                                     (mapcar (lambda (fn) (concat search-term fn)) completing-collection)
                                   completing-collection))
-         (search-term (when (equal (length completing-collection) 1)
-                        (car completing-collection)))
+         (search-term (if (equal (length completing-collection) 1)
+                          (car completing-collection)
+                      search-term))
          )
 
     (cond  ((equal (length completing-collection) 1)
@@ -96,7 +97,7 @@
    predicate require-match initial))
 
 (defun alchemist-help--autocomplete-expand (string)
-  (let ((elixir-code (format "
+  (let* ((elixir-code (format "
 defmodule Alchemist do
   def expand(exp) do
     {status, result, list } = IEx.Autocomplete.expand(Enum.reverse(exp))
@@ -110,15 +111,16 @@ defmodule Alchemist do
 end
 
 IO.inspect Alchemist.expand('%s')
-" string)))
+" string))
+         (command (if (alchemist-project-p)
+                      (format "%s --no-compile -e \"%s\"" alchemist-help-mix-run-command elixir-code)
+                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code)))
+         )
 
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
 
-    (shell-command-to-string (format "%s -e \"%s\""
-                                     (if (alchemist-project-p)
-                                         alchemist-help-mix-run-command
-                                       alchemist-execute-command) elixir-code))))
+    (shell-command-to-string command)))
 
 (defun alchemist-help--function-string-to-list (string)
   (let* ((search-text (replace-regexp-in-string "\"" "" string))
@@ -153,11 +155,10 @@ h(%s)" string))
    (alchemist-help--build-code-for-search string)))
 
 (defun alchemist-help--eval-string-command (string)
-  (format "%s -e '%s'"
-          (if (alchemist-project-p)
-              alchemist-help-mix-run-command
-            alchemist-execute-command)
-          string))
+  (let ((command (if (alchemist-project-p)
+                     (format "%s --no-compile -e \"%s\"" alchemist-help-mix-run-command string)
+                   (format "%s -e \"%s\"" alchemist-execute-command string))))
+    command))
 
 (defun alchemist-help--execute-alchemist-with-code-eval-string (string)
   (let ((content (shell-command-to-string (alchemist-help--eval-string-command string))))
