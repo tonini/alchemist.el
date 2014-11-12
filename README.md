@@ -46,7 +46,7 @@ You can install `Alchemist` with the following commnad:
 <kbd>M-x package-install [RET] alchemist [RET]</kbd>
 
 or by adding this bit of Emacs Lisp code to your Emacs initialization file
-(.emacs or init.el):
+(`.emacs` or `init.el`):
 
 ```el
 (unless (package-installed-p 'alchemist)
