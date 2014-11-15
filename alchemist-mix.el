@@ -23,6 +23,11 @@
 
 ;;; Code:
 
+(defgroup alchemist-mix nil
+  "Emacs integration for Elixir's mix"
+  :prefix "alchemist-mix-"
+  :group 'alchemist)
+
 (defcustom alchemist-mix-command "mix"
   "The shell command for mix."
   :type 'string

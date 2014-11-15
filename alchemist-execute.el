@@ -23,6 +23,11 @@
 
 ;;; Code:
 
+(defgroup alchemist-execute nil
+  "Elixir's script execution integration"
+  :prefix "alchemist-execute-"
+  :group 'alchemist)
+
 (defcustom alchemist-execute-command "elixir"
   "The shell command for elixir."
   :type 'string

@@ -1,4 +1,4 @@
-;;; alchemist-hooks.el --- Run tests on save
+;;; alchemist-hooks.el --- Hooks
 
 ;; Copyright © 2014 Samuel Tonini
 
@@ -23,6 +23,11 @@
 ;;; Commentary:
 
 ;;; Code:
+
+(defgroup alchemist-hooks nil
+  "Hooks"
+  :prefix "alchemist-hooks-"
+  :group 'alchemist)
 
 (defcustom alchemist-hooks-test-on-save nil
   "If t, run `alchemist-mix-test' on save."

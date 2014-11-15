@@ -30,6 +30,13 @@
 
 ;;; Code:
 
+(defgroup alchemist nil
+  "Elixir Tooling Integration Into Emacs"
+  :prefix "alchemist-"
+  :group 'applications
+  :link '(url-link :tag "Github" "https://github.com/tonini/alchemist.el")
+  :link '(emacs-commentary-link :tag "Commentary" "alchemist"))
+
 (require 'pkg-info) ; For `pkg-info-version-info'
 
 (require 'alchemist-utils)

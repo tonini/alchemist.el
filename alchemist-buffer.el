@@ -26,6 +26,11 @@
 (require 'compile)
 (require 'ansi-color)
 
+(defgroup alchemist-buffer nil
+  "Custom compilation mode for Elixir"
+  :prefix "alchemist-buffer-"
+  :group 'alchemist)
+
 (defcustom alchemist-buffer-status-modeline t
   "If t, the face of the Elixir mode name in the modeline
 changes depending on the success or failure of commands such as 'mix test'."

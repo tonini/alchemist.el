@@ -23,6 +23,11 @@
 
 ;;; Code:
 
+(defgroup alchemist-compile nil
+  "Elixir's compile integration"
+  :prefix "alchemist-compile-"
+  :group 'alchemist)
+
 (defcustom alchemist-compile-command "elixirc"
   "The shell command for elixirc."
   :type 'string
