@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.0-dev
+
+### Enhancements
+
+   * Remove dispensable informations in compilation buffers
+
 ## v0.6.0
 
 ### Enhancements
