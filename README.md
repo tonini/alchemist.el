@@ -1,6 +1,7 @@
 [![License GPL 3][badge-license]](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Build Status](https://travis-ci.org/tonini/alchemist.el.png)](https://travis-ci.org/tonini/alchemist.el)
 [![MELPA](http://melpa.org/packages/alchemist-badge.svg)](http://melpa.org/#/alchemist)
+[![MELPA Stable](http://stable.melpa.org/packages/alchemist-badge.svg)](http://stable.melpa.org/#/alchemist)
 
 <br/>
 
@@ -17,7 +18,8 @@
 ***
 
 - [Installation](#installation)
-  - [ELPA](#elpa)
+  - [ELPA](#installation-via-packageel)
+  - [Via el-get](#via-el-get)
   - [Manual](#manual)
 - [Mix](#mix)
 - [Compile & Execute](#compile-and-execute)
@@ -33,19 +35,54 @@
 
 ## Installation
 
-### ELPA
+### Installation via package.el
 
-alchemist.el is available on community maintained repository - [MELPA](http://melpa.milkbox.net/)
+`package.el` is the built-in package manager in Emacs.
 
-Just run `M-x package-install [RET] alchemist [RET]` inside your emacs and you're ready to go.
+Alchemist.el is available on the three major community maintained repositories -
+[MELPA STABLE](melpa-stable.milkbox.net), [MELPA](http://melpa.milkbox.net) and [Marmalade](https://marmalade-repo.org/).
 
-If you're not already using ELPA, check the [emacswiki](http://www.emacswiki.org/emacs/ELPA) page to get
-familiar with it.
+You can install `Alchemist` with the following commnad:
+
+<kbd>M-x package-install [RET] alchemist [RET]</kbd>
+
+or by adding this bit of Emacs Lisp code to your Emacs initialization file
+(`.emacs` or `init.el`):
+
+```el
+(unless (package-installed-p 'alchemist)
+  (package-install 'alchemist))
+```
+
+If the installation doesn't work try refreshing the package list:
+
+<kbd>M-x package-refresh-contents [RET]</kbd>
+
+Keep in mind that MELPA packages are built automatically from
+the `master` branch, meaning bugs might creep in there from time to
+time. Never-the-less, installing from MELPA is the recommended way of
+obtaining Alchemist, as the `master` branch is normally quite stable and
+"stable" (tagged) builds are released somewhat infrequently.
+
+With the most recent builds of Emacs, you can pin Alchemist to always
+use MELPA Stable by adding this to your Emacs initialization:
+
+```el
+(add-to-list 'package-pinned-packages '(alchemist . "melpa-stable") t)
+```
+
+### Via el-get
+
+[el-get](https://github.com/dimitri/el-get) is another popular package manager for Emacs. If you're an el-get
+user just do <kbd>M-x el-get-install [RET] alchemist [RET]</kbd>.
 
 ### Manual
 
-```lisp
-(add-to-list 'load-path "/path/to/alchemist.el/")
+You can install Alchemist manually by placing Alchemist on your `load-path` and
+`require` ing it. Many people favour the folder `~/.emacs.d/vendor`.
+
+```el
+(add-to-list 'load-path "~/.emacs.d/vendor/alchemist.el/")
 (require 'alchemist)
 ```
 

@@ -26,6 +26,11 @@
 (require 'compile)
 (require 'ansi-color)
 
+(defgroup alchemist-buffer nil
+  "Custom compilation mode for Elixir"
+  :prefix "alchemist-buffer-"
+  :group 'alchemist)
+
 (defcustom alchemist-buffer-status-modeline t
   "If t, the face of the Elixir mode name in the modeline
 changes depending on the success or failure of commands such as 'mix test'."
@@ -59,7 +64,7 @@ changes depending on the success or failure of commands such as 'mix test'."
 (make-variable-buffer-local 'alchemist-buffer--buffer-name)
 
 (defvar alchemist-buffer--error-link-options
-  '(elixir "\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)\\(: warning\\)?" 1 2 nil (3) 1)
+  '(elixir "^\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)\\(: warning\\)?$" 1 2 nil (3) 1)
   "File link matcher for `compilation-error-regexp-alist-alist' (matches path/to/file:line).")
 
 (defun alchemist-buffer--kill-any-orphan-proc ()
@@ -88,8 +93,7 @@ changes depending on the success or failure of commands such as 'mix test'."
   (remove-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output t))
 
 (defun alchemist-buffer-remove-dispensable-output-after-finish (buffer msg)
-  (delete-matching-lines "\\(Excluding tags\\|Including tags\\)" (point-min) (point-max))
-  (delete-matching-lines "\\(Elixir finished\\)" (point-min) (point-max)))
+  (delete-matching-lines "\\(Excluding tags\\|Including tags\\|Elixir exited\\|Elixir finished\\)" (point-min) (point-max)))
 
 (defun alchemist-buffer--handle-compilation ()
   (ansi-color-apply-on-region (point-min) (point-max)))

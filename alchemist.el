@@ -26,28 +26,16 @@
 
 ;;; Commentary:
 
-;;; Installation:
-
-;;    alchemist.el is available on community maintained repository MELPA.
-;;
-;;    (add-to-list 'package-archives
-;;                 '("melpa" . "http://melpa.org/packages/") t)
-;;
-;;    M-x package-install alchemist
-
-;;   Manual Installation:
-;;
-;;    (add-to-list 'load-path "~/path/to/alchemist.el/")
-;;    (require 'alchemist)
-;;    (alchemist-mode 1)
-
-;;; Usage:
-
-;;     Add the following in your .emacs file:
-
-;;    (require 'alchemist)
+;;  Alchemist integrate Elixir's tooling into emacs.
 
 ;;; Code:
+
+(defgroup alchemist nil
+  "Elixir Tooling Integration Into Emacs"
+  :prefix "alchemist-"
+  :group 'applications
+  :link '(url-link :tag "Github" "https://github.com/tonini/alchemist.el")
+  :link '(emacs-commentary-link :tag "Commentary" "alchemist"))
 
 (require 'pkg-info) ; For `pkg-info-version-info'
 

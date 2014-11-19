@@ -25,6 +25,11 @@
 
 ;;; Code:
 
+(defgroup alchemist-help nil
+  "Interface to Elixir's documentation"
+  :prefix "alchemist-help-"
+  :group 'alchemist)
+
 (defvar alchemist-help-mix-run-command
   "mix run"
   "The shell command for `mix run`.")
