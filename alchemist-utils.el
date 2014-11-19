@@ -23,15 +23,15 @@
 
 ;;; Code:
 
-;; (defvar alchemist-utils--elixir-project-root-indicator
-;;   "mix.exs"
-;;   "The file which indicate an elixir project root.")
+(defvar alchemist-utils--elixir-project-root-indicator
+  "mix.exs"
+  "The file which indicate an elixir project root.")
 
-;; (defun alchemist-utils--elixir-project-root ()
-;;   "Finds the root directory of the project.
-;; It walking the directory tree until it finds a elixir project root indicator."
-;;   (let* ((file (file-name-as-directory (expand-file-name default-directory))))
-;;     (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
+(defun alchemist-utils--elixir-project-root ()
+  "Finds the root directory of the project.
+It walks the directory tree until it finds a elixir project root indicator."
+  (let* ((file (file-name-as-directory (expand-file-name default-directory))))
+    (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
 
 (defun alchemist-utils--flatten (alist)
   (cond ((null alist) nil)
