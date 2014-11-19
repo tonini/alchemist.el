@@ -31,7 +31,8 @@
 
 (defun alchemist-hooks--test-on-save ()
   (when (and alchemist-hooks-test-on-save
-             (eq major-mode 'elixir-mode))
+             (alchemist-utils--elixir-project-root)
+             (eq major-mode 'elixir-mode))    ;; TODO: why is this here? alchemist mode is only loaded in elixir mode.
     (alchemist-mix-test)))
 
 (eval-after-load 'elixir-mode
