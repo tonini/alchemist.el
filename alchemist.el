@@ -47,6 +47,7 @@
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
 (require 'alchemist-help)
+(require 'alchemist-complete)
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"

@@ -1,4 +1,4 @@
-;;; alchemist-help.el --- Interface to Elixir's documentation
+;;; alchemist-help.el --- Interface to Elixir's documentation -*- lexical-binding: t -*-
 
 ;; Copyright © 2014 Samuel Tonini
 
@@ -263,17 +263,60 @@ h(%s)" string))
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
   (alchemist-help--execute search))
 
+;; HELP
+;; complete query ->
+
+;; (defun alchemist-help--execute (search)
+;;   (let ((old-directory default-directory)
+;;         (search (if (string-match-p ".\\..+\/[0-9]" search)
+;;                     search
+;;                   (alchemist-help--prepare-completing search))))
+;;     (setq alchemist-help-current-search-text search)
+;;     (when (alchemist-project-p)
+;;       (alchemist-project--establish-root-directory))
+;;     (alchemist-help--eval-string (alchemist-utils--clear-search-text search))
+;;     (when (alchemist-project-p)
+;;       (cd old-directory))))
+
+(defun alchemist-help--start-help-process (exp callback)
+  ""
+  (interactive)
+  (let* ((buffer (get-buffer-create "alchemist-help-buffer"))
+         (command (alchemist-help--eval-string-command (alchemist-help--build-code-for-search exp)))
+         (proc (start-process-shell-command "alchemist-help-proc" buffer command)))
+    (set-process-sentinel proc (lambda (process signal)
+                                 (cond
+                                  ((equal signal "finished\n")
+                                   (funcall callback (with-current-buffer (process-buffer process)
+                                                       (buffer-substring (point-min) (point-max))))
+                                   (kill-buffer (process-buffer process))
+                                   )
+                                  ('t
+                                   (message "signal: %s" signal)))))))
+
 (defun alchemist-help--execute (search)
-  (let ((old-directory default-directory)
-        (search (if (string-match-p ".\\..+\/[0-9]" search)
-                    search
-                  (alchemist-help--prepare-completing search))))
-    (setq alchemist-help-current-search-text search)
+  (let ((last-directory default-directory))
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
-    (alchemist-help--eval-string (alchemist-utils--clear-search-text search))
-    (when (alchemist-project-p)
-      (cd old-directory))))
+    (if (string-match-p ".\\..+\/[0-9]" search)
+        (alchemist-help--start-help-process search (lambda (output)
+                                                     (alchemist-help--initialize-buffer output last-directory)
+                                                     (when (alchemist-project-p)
+                                                       (cd last-directory))))
+
+      (alchemist-complete search (lambda (candidates)
+                                   (let* ((candidates (alchemist-complete--output-to-list candidates))
+                                          (search (alchemist-complete--completing-prompt search candidates)))
+                                     (setq alchemist-help-current-search-text search)
+                                     (when (alchemist-project-p)
+                                       (alchemist-project--establish-root-directory))
+                                     (alchemist-help--start-help-process search (lambda (output)
+                                                                                  (alchemist-help--initialize-buffer output last-directory)
+                                                                                  (when (alchemist-project-p)
+                                                                                    (cd last-directory))))
+                                     )))
+      )
+    ))
 
 ;; These functions will not be available in the release of version 1.0.0
 (define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point)
