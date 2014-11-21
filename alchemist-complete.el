@@ -52,9 +52,7 @@ IO.inspect Alchemist.expand('%s')
 " exp))
          (command (if (alchemist-project-p)
                       (format "%s --no-compile -e \"%s\"" alchemist-help-mix-run-command elixir-code)
-                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code)))
-         )
-
+                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code))))
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
     command))
@@ -72,8 +70,8 @@ IO.inspect Alchemist.expand('%s')
                                                        (buffer-substring (point-min) (point-max))))
                                    (kill-buffer (process-buffer process)))
                                   ('t
-                                   (message "signal: %s" signal)))))))
-
+                                   (message "signal: %s" signal)
+                                   (kill-buffer (process-buffer process))))))))
 
 (defun alchemist-complete--completing-prompt (initial completing-collection)
   (let* ((search-term (when (> (length completing-collection) 0)
@@ -103,12 +101,6 @@ IO.inspect Alchemist.expand('%s')
              nil
              initial))
            (t search-term))))
-
-(defun alchemist-complete-test (search)
-  (interactive "MComplete:")
-  (alchemist-complete search (lambda (candidates)
-                               (let* ((candidates (alchemist-complete--output-to-list candidates))
-                                      (search (alchemist-complete--completing-prompt search candidates)))))))
 
 (provide 'alchemist-complete)
 

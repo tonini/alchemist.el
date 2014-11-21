@@ -269,21 +269,6 @@ h(%s)" (if alchemist-help-ansi-color "true" "false") string))
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
   (alchemist-help--execute search))
 
-;; HELP
-;; complete query ->
-
-;; (defun alchemist-help--execute (search)
-;;   (let ((old-directory default-directory)
-;;         (search (if (string-match-p ".\\..+\/[0-9]" search)
-;;                     search
-;;                   (alchemist-help--prepare-completing search))))
-;;     (setq alchemist-help-current-search-text search)
-;;     (when (alchemist-project-p)
-;;       (alchemist-project--establish-root-directory))
-;;     (alchemist-help--eval-string (alchemist-utils--clear-search-text search))
-;;     (when (alchemist-project-p)
-;;       (cd old-directory))))
-
 (defun alchemist-help--start-help-process (exp callback)
   ""
   (interactive)
@@ -298,18 +283,13 @@ h(%s)" (if alchemist-help-ansi-color "true" "false") string))
                                    (kill-buffer (process-buffer process))
                                    )
                                   ('t
-                                   (message "signal: %s" signal)))))))
+                                   (message "signal: %s" signal)
+                                   (kill-buffer (process-buffer process))))))))
 
 (defun alchemist-help--execute (search)
   (let ((last-directory default-directory))
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
-    ;; (if (string-match-p ".\\..+\/[0-9]" search)
-    ;;     (alchemist-help--start-help-process search (lambda (output)
-    ;;                                                  (alchemist-help--initialize-buffer output last-directory)
-    ;;                                                  (when (alchemist-project-p)
-    ;;                                                    (cd last-directory))))
-
     (alchemist-complete search (lambda (candidates)
                                  (let* ((candidates (alchemist-complete--output-to-list candidates))
                                         (search (alchemist-complete--completing-prompt search candidates)))
@@ -319,10 +299,7 @@ h(%s)" (if alchemist-help-ansi-color "true" "false") string))
                                    (alchemist-help--start-help-process search (lambda (output)
                                                                                 (alchemist-help--initialize-buffer output last-directory)
                                                                                 (when (alchemist-project-p)
-                                                                                  (cd last-directory))))
-                                   )))
-    ;; )
-    ))
+                                                                                  (cd last-directory)))))))))
 
 ;; These functions will not be available in the release of version 1.0.0
 (define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point)
