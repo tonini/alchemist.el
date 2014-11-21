@@ -54,16 +54,20 @@ ansi formatted documention"
 (defvar alchemist-help-current-search-text '()
   "Stores the current search text.")
 
-(defun alchemist-help-search-at-point ()
-  "Search through `alchemist-help' with the expression under the cursor."
-  (interactive)
+(defun alchemist-help--exp-at-point ()
+  "Return the expression under the cursor"
   (let (p1 p2)
     (save-excursion
       (skip-chars-backward "-a-z0-9A-z./?!")
       (setq p1 (point))
       (skip-chars-forward "-a-z0-9A-z./?!")
       (setq p2 (point))
-      (alchemist-help--execute (buffer-substring-no-properties p1 p2)))))
+      (buffer-substring-no-properties p1 p2))))
+
+(defun alchemist-help-search-at-point ()
+  "Search through `alchemist-help' with the expression under the cursor."
+  (interactive)
+  (alchemist-help--execute (alchemist-help--exp-at-point)))
 
 (defun alchemist-help--prepare-completing (string)
   (let* ((completing-collection (alchemist-help--function-string-to-list
