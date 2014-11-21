@@ -30,6 +30,12 @@
   :prefix "alchemist-help-"
   :group 'alchemist)
 
+(defcustom alchemist-help-ansi-color nil
+  "If non-nil, `alchemist-help' will present
+ansi formatted documention"
+  :type 'boolean
+  :group 'alchemist-help)
+
 (defvar alchemist-help-mix-run-command
   "mix run"
   "The shell command for `mix run`.")
@@ -149,9 +155,9 @@ Argument END where the mark ends."
 (defun alchemist-help--build-code-for-search (string)
   (format "import IEx.Helpers
 
-Application.put_env(:iex, :colors, [enabled: true])
+Application.put_env(:iex, :colors, [enabled: %s])
 
-h(%s)" string))
+h(%s)" (if alchemist-help-ansi-color "true" "false") string))
 
 (defun alchemist-help--eval-string (string)
   (alchemist-help--execute-alchemist-with-code-eval-string
@@ -298,24 +304,24 @@ h(%s)" string))
   (let ((last-directory default-directory))
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
-    (if (string-match-p ".\\..+\/[0-9]" search)
-        (alchemist-help--start-help-process search (lambda (output)
-                                                     (alchemist-help--initialize-buffer output last-directory)
-                                                     (when (alchemist-project-p)
-                                                       (cd last-directory))))
+    ;; (if (string-match-p ".\\..+\/[0-9]" search)
+    ;;     (alchemist-help--start-help-process search (lambda (output)
+    ;;                                                  (alchemist-help--initialize-buffer output last-directory)
+    ;;                                                  (when (alchemist-project-p)
+    ;;                                                    (cd last-directory))))
 
-      (alchemist-complete search (lambda (candidates)
-                                   (let* ((candidates (alchemist-complete--output-to-list candidates))
-                                          (search (alchemist-complete--completing-prompt search candidates)))
-                                     (setq alchemist-help-current-search-text search)
-                                     (when (alchemist-project-p)
-                                       (alchemist-project--establish-root-directory))
-                                     (alchemist-help--start-help-process search (lambda (output)
-                                                                                  (alchemist-help--initialize-buffer output last-directory)
-                                                                                  (when (alchemist-project-p)
-                                                                                    (cd last-directory))))
-                                     )))
-      )
+    (alchemist-complete search (lambda (candidates)
+                                 (let* ((candidates (alchemist-complete--output-to-list candidates))
+                                        (search (alchemist-complete--completing-prompt search candidates)))
+                                   (setq alchemist-help-current-search-text search)
+                                   (when (alchemist-project-p)
+                                     (alchemist-project--establish-root-directory))
+                                   (alchemist-help--start-help-process search (lambda (output)
+                                                                                (alchemist-help--initialize-buffer output last-directory)
+                                                                                (when (alchemist-project-p)
+                                                                                  (cd last-directory))))
+                                   )))
+    ;; )
     ))
 
 ;; These functions will not be available in the release of version 1.0.0
