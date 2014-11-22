@@ -205,15 +205,11 @@ h(%s)" (if alchemist-help-ansi-color "true" "false") string))
          (command (alchemist-help--eval-string-command (alchemist-help--build-code-for-search exp)))
          (proc (start-process-shell-command "alchemist-help-proc" buffer command)))
     (set-process-sentinel proc (lambda (process signal)
-                                 (cond
-                                  ((equal signal "finished\n")
+                                 (when (equal signal "finished\n")
                                    (funcall callback (with-current-buffer (process-buffer process)
                                                        (buffer-substring (point-min) (point-max))))
                                    (kill-buffer (process-buffer process))
-                                   )
-                                  ('t
-                                   (message "signal: %s" signal)
-                                   (kill-buffer (process-buffer process))))))))
+                                   )))))
 
 (defun alchemist-help--execute (search)
   (let ((last-directory default-directory))

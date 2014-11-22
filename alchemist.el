@@ -50,6 +50,9 @@
 (require 'alchemist-complete)
 (require 'alchemist-company)
 
+(when (boundp 'company-backends)
+  (require 'alchemist-company))
+
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
   (alchemist-mode 1))
