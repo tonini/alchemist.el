@@ -27,6 +27,7 @@
   - [Execute](#execute-functions)
 - [Inline Docs](#inline-documentation)
   - [Keymap](#alchemist-help-minor-mode-keymap)
+- [Auto-completion](#auto-completion)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -210,6 +211,13 @@ What does that mean? It means no matter which Elixir version is currently
 installed on the system, the documentation you get by `alchemist` is the same
 `IEx` would deliver.
 
+By default the ANSI color formated documentation is disabled. You can enable it
+by setting the following variable to `t`.
+
+```el
+(setq alchemist-help-ansi-color t)
+```
+
 <table>
     <tr>
         <th>Command (For the <code>M-x</code> prompt.)</th>
@@ -277,6 +285,17 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
         <td><code>alchemist-help-minor-mode-key-binding-summary</code></td>
     </tr>
 </table>
+
+## Auto-completion
+
+Alchemist users are advised to use
+[company-mode](http://company-mode.github.io/) to enable auto-completion inside
+of Elixir source code.
+
+Alchemist enables a company-mode elixir backend by default if company-mode is
+installed.
+
+![Alchemist Company](logo/alchemist-company.gif)
 
 ## Hooks
 
