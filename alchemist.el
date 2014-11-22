@@ -5,7 +5,7 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.6.0
+;; Version: 0.7.0
 ;; Package-Requires: ((emacs "24") (pkg-info "0.5"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
@@ -47,6 +47,10 @@
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
 (require 'alchemist-help)
+(require 'alchemist-complete)
+
+(when (boundp 'company-backends)
+  (require 'alchemist-company))
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
