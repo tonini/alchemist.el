@@ -48,7 +48,6 @@
 (require 'alchemist-hooks)
 (require 'alchemist-help)
 (require 'alchemist-complete)
-(require 'alchemist-company)
 
 (when (boundp 'company-backends)
   (require 'alchemist-company))
