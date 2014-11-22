@@ -1,9 +1,15 @@
 # Changelog
 
-## v0.7.0-dev
+## v0.7.0
 
 ### Enhancements
 
+   * Implement alchemist-company backend.
+   * Separate alchemist-complete functionality.
+   * Optimize the building of the complete list.
+   * Replace `shell-command-to-string` with background processes to improve.
+     performance and remove emacs workflow distruption.
+   * Add project directory check to save-hook (thx @pragdave)
    * Remove dispensable informations in compilation buffers
 
 ## v0.6.0
