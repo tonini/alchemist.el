@@ -41,7 +41,8 @@
   (should (equal (alchemist-complete--build-candidates '("def" "def/2" "defdelegate/2" "defexception/1"))
                  '("def" "defdelegate" "defexception")))
   (should (equal (alchemist-complete--build-candidates '("List.delete" "delete/2" "delete_at/2"))
-                 '("List.delete" "List.delete_at"))))
+                 '("List.delete" "List.delete_at")))
+  )
 
 
 (ert-deftest test-complete-candidates/build-help-candidates ()
