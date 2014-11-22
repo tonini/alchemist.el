@@ -32,11 +32,11 @@
   (interactive (list 'interactive))
   (case command
     (interactive (company-begin-backend 'alchemist-company))
-    ;; (init (when (eq major-mode 'elixir-mode)))
+    (init (when (eq major-mode 'elixir-mode)))
     (prefix (and (eq major-mode 'elixir-mode)
                  (alchemist-help--exp-at-point)))
     (candidates (cons :async
-        (lambda (cb) (alchemist-complete arg cb))))))
+        (lambda (cb) (alchemist-complete-candidates arg cb))))))
 
 (add-to-list 'company-backends 'alchemist-company)
 
