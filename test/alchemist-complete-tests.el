@@ -39,7 +39,9 @@
   (should (equal (alchemist-complete--build-candidates '("Enum" "Enum" "Enumerable"))
                  '("Enum" "Enumerable")))
   (should (equal (alchemist-complete--build-candidates '("def" "def/2" "defdelegate/2" "defexception/1"))
-                 '("def" "defdelegate" "defexception"))))
+                 '("def" "defdelegate" "defexception")))
+  (should (equal (alchemist-complete--build-candidates '("List.delete" "delete/2" "delete_at/2"))
+                 '("List.delete" "List.delete_at"))))
 
 
 (ert-deftest test-complete-candidates/build-help-candidates ()
@@ -49,7 +51,10 @@
   (should (equal (alchemist-complete--build-help-candidates '("Enum" "Enum" "Enumerable"))
                  '("Enum" "Enumerable")))
   (should (equal (alchemist-complete--build-help-candidates '("def" "def/2" "defdelegate/2" "defexception/1"))
-                 '("def/2" "defdelegate/2" "defexception/1"))))
+                 '("def/2" "defdelegate/2" "defexception/1")))
+  (should (equal (alchemist-complete--build-help-candidates '("List.delete" "delete/2" "delete_at/2"))
+                 '("List.delete/2" "List.delete_at/2")))
+  )
 
 
 
