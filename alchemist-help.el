@@ -58,9 +58,9 @@ ansi formatted documention"
   "Return the expression under the cursor"
   (let (p1 p2)
     (save-excursion
-      (skip-chars-backward "-a-z0-9A-z./?!")
+      (skip-chars-backward "-a-z0-9A-z./?!:")
       (setq p1 (point))
-      (skip-chars-forward "-a-z0-9A-z./?!")
+      (skip-chars-forward "-a-z0-9A-z./?!:")
       (setq p2 (point))
       (buffer-substring-no-properties p1 p2))))
 
@@ -288,15 +288,15 @@ h(%s)" (if alchemist-help-ansi-color "true" "false") string))
                                    )
                                   ('t
                                    (message "signal: %s" signal)
-                                   (kill-buffer (process-buffer process))))))))
+                                   (kill-buffer (process-buffer process))
+                                   ))))))
 
 (defun alchemist-help--execute (search)
   (let ((last-directory default-directory))
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
     (alchemist-complete search (lambda (candidates)
-                                 (let* ((candidates (alchemist-complete--output-to-list candidates))
-                                        (search (alchemist-complete--completing-prompt search candidates)))
+                                 (let* ((search (alchemist-complete--completing-prompt search candidates)))
                                    (setq alchemist-help-current-search-text search)
                                    (when (alchemist-project-p)
                                      (alchemist-project--establish-root-directory))

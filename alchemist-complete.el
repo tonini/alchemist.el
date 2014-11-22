@@ -25,14 +25,36 @@
 
 ;;; Code:
 
-(defun alchemist-complete--output-to-list (string)
-  (let* ((search-text (replace-regexp-in-string "\"" "" string))
-         (search-text (replace-regexp-in-string "\\[" "" search-text))
-         (search-text (replace-regexp-in-string "\\]" "" search-text))
-         (search-text (replace-regexp-in-string "'" "" search-text))
-         (search-text (replace-regexp-in-string "\n" "" search-text))
-         (search-text (replace-regexp-in-string " " "" search-text)))
-    (split-string search-text ",")))
+
+(defun alchemist-complete--build-candidates (a-list)
+  (let* ((search-term (car a-list))
+         (candidates (mapcar (lambda (c) (replace-regexp-in-string "/[0-9]$" "" c)) a-list))
+         (candidates (if (string-match-p "\\.$" search-term)
+                         (mapcar (lambda (c) (concat search-term c)) (cdr candidates))
+                       candidates
+                       ))
+         (candidates (delete-dups candidates))
+         )
+    candidates))
+
+(defun alchemist-complete--build-help-candidates (a-list)
+  (let* ((search-term (car a-list))
+         (candidates (if (string-match-p "\\.$" search-term)
+                         (let* ((candidates (mapcar (lambda (c) (concat search-term c)) (cdr a-list)))
+                                (search-term (replace-regexp-in-string "\\.$" "" search-term)))
+                           (push search-term candidates))
+                       (cdr a-list))))
+    (delete-dups candidates)))
+
+(defun alchemist-complete--elixir-output-to-list (output)
+  (let* ((output (replace-regexp-in-string "\"" "" output))
+         (output (replace-regexp-in-string "\\[" "" output))
+         (output (replace-regexp-in-string "\\]" "" output))
+         (output (replace-regexp-in-string "'" "" output))
+         (output (replace-regexp-in-string "\n" "" output))
+         (output (replace-regexp-in-string " " "" output))
+         (a-list (split-string output ",")))
+    a-list))
 
 (defun alchemist-complete--command (exp)
   (let* ((elixir-code (format "
@@ -66,41 +88,28 @@ IO.inspect Alchemist.expand('%s')
     (set-process-sentinel proc (lambda (process signal)
                                  (cond
                                   ((equal signal "finished\n")
-                                   (funcall callback (with-current-buffer (process-buffer process)
-                                                       (buffer-substring (point-min) (point-max))))
-                                   (kill-buffer (process-buffer process)))
+                                   (let ((output (alchemist-complete--elixir-output-to-list (with-current-buffer (process-buffer process)
+                                                                                              (buffer-substring (point-min) (point-max))))))
+                                     (funcall callback output)
+                                     (kill-buffer (process-buffer process))))
                                   ('t
                                    (message "signal: %s" signal)
                                    (kill-buffer (process-buffer process))))))))
 
+(alchemist-complete "List" (lambda (e) (message "%s" e)))
+
 (defun alchemist-complete--completing-prompt (initial completing-collection)
-  (let* ((search-term (when (> (length completing-collection) 0)
-                        (car completing-collection)))
-         (completing-collection (cdr completing-collection))
-         (search-term (if (and (> (length completing-collection) 1)
-                               (string-match-p ".\\.." search-term))
-                          (concat (car (split-string search-term "\\.")) ".")
-                        search-term))
-         (completing-collection (if (and (equal 1 (length completing-collection))
-                                         (string-match-p ".\\.." search-term))
-                                    '()
-                                  completing-collection))
-         (completing-collection (if (string-match-p "\\.$" search-term)
-                                    (mapcar (lambda (fn) (concat search-term fn)) completing-collection)
-                                  completing-collection))
-         (search-term (if (equal (length completing-collection) 1)
-                          (car completing-collection)
-                        search-term)))
-    (cond  ((equal (length completing-collection) 1)
-            (car completing-collection))
-           (completing-collection
-            (completing-read
-             "Elixir help: "
-             completing-collection
-             nil
-             nil
-             initial))
-           (t search-term))))
+  (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
+    (cond ((equal (length completing-collection) 1)
+           (car completing-collection))
+          (completing-collection
+           (completing-read
+            "Elixir help: "
+            completing-collection
+            nil
+            nil
+            initial))
+          (t initial))))
 
 (provide 'alchemist-complete)
 
