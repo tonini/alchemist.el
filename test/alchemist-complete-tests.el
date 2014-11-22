@@ -42,8 +42,10 @@
                  '("def" "defdelegate" "defexception")))
   (should (equal (alchemist-complete--build-candidates '("List.delete" "delete/2" "delete_at/2"))
                  '("List.delete" "List.delete_at")))
-  )
-
+  (should (equal (alchemist-complete--build-candidates '(":file" "filename" "file_server" "file_io_server"))
+                 '(":filename" ":file_server" ":file_io_server")))
+  (should (equal (alchemist-complete--build-candidates '(":file." "pid2name/1" "set_cwd/1" "rename/2"))
+                 '(":file.pid2name" ":file.set_cwd" ":file.rename"))))
 
 (ert-deftest test-complete-candidates/build-help-candidates ()
   "Build a candidates list"
