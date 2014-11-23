@@ -5,7 +5,7 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.7.0
+;; Version: 0.7.1
 ;; Package-Requires: ((emacs "24") (pkg-info "0.5"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
