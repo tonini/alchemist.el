@@ -1,4 +1,4 @@
-;;; alchemist-complete.el ---  -*- lexical-binding: t -*-
+;;; alchemist-complete.el ---  Complete functionality for Elixir and Erlang source code -*- lexical-binding: t -*-
 
 ;; Copyright © 2014 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;
+;; Complete functionality for Elixir and Erlang source code.
 
 ;;; Code:
 
