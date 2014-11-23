@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.1
+
+### Bugfix
+
+   * Codebase need to be compiled to deliver proper completion.
+
 ## v0.7.0
 
 ### Enhancements
