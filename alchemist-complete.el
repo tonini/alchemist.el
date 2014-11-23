@@ -25,6 +25,11 @@
 
 ;;; Code:
 
+(defgroup alchemist-complete nil
+  "Complete functionality for Elixir and Erlang source code."
+  :prefix "alchemist-complete-"
+  :group 'alchemist)
+
 (defun alchemist-complete--clean-functions (candidates)
   (mapcar (lambda (c) (replace-regexp-in-string "/[0-9]$" "" c)) candidates))
 
