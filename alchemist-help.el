@@ -95,7 +95,7 @@ h(%s)" (if alchemist-help-ansi-color "true" "false") string))
 
 (defun alchemist-help--eval-string-command (string)
   (let ((command (if (alchemist-project-p)
-                     (format "%s --no-compile -e \"%s\"" alchemist-help-mix-run-command string)
+                     (format "%s -e \"%s\"" alchemist-help-mix-run-command string)
                    (format "%s -e \"%s\"" alchemist-execute-command string))))
     command))
 

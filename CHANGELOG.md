@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.2
+
+### Bugfix
+
+   * Fix the loading of the alchemist-company functionality via `eval-after-load`
+
 ## v0.7.1
 
 ### Bugfix
