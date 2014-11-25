@@ -27,6 +27,11 @@
 
 (require 'cl)
 
+(defgroup alchemist-project nil
+  "API to identify Elixir mix projects."
+  :prefix "alchemist-help-"
+  :group 'alchemist)
+
 (defvar alchemist-project-root-indicators
   '("mix.exs")
   "list of file-/directory-names which indicate a root of a elixir project")
