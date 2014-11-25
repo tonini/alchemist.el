@@ -59,6 +59,12 @@ ansi formatted documention"
 (defvar alchemist-help-current-search-text '()
   "Stores the current search text.")
 
+(defun alchemist-help--load-ansi-color-setting ()
+  (let ((config (gethash "docs-ansi-color" (alchemist-project-config))))
+    (if config
+        (intern config)
+      alchemist-help-ansi-color)))
+
 (defun alchemist-help--exp-at-point ()
   "Return the expression under the cursor"
   (let (p1 p2)
@@ -87,7 +93,7 @@ Argument END where the mark ends."
 
 Application.put_env(:iex, :colors, [enabled: %s])
 
-h(%s)" (if alchemist-help-ansi-color "true" "false") string))
+h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
 
 (defun alchemist-help--eval-string (string)
   (alchemist-help--execute-alchemist-with-code-eval-string

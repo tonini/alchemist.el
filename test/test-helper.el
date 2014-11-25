@@ -15,4 +15,9 @@
      (f-mkdir alchemist-sandbox-path)
      ,@body))
 
+(defmacro with-current-variable (name value &rest body)
+  "Evaluate BODY after temporarily set variable NAME with VALUE."
+`(let ((,name ,value))
+   ,@body))
+
 (provide 'test-helper)
