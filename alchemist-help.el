@@ -231,9 +231,8 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
                                                                                 (when (alchemist-project-p)
                                                                                   (cd last-directory)))))))))
 
-;; These functions will not be available in the release of version 1.0.0
-(define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point)
-(define-obsolete-function-alias 'alchemist-help-module-sexp-at-point 'alchemist-help-search-at-point)
+(define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point "1.0.0")
+(define-obsolete-function-alias 'alchemist-help-module-sexp-at-point 'alchemist-help-search-at-point "1.0.0")
 
 (provide 'alchemist-help)
 
