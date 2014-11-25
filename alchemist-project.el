@@ -26,11 +26,38 @@
 ;;; Code:
 
 (require 'cl)
+(require 'json)
 
 (defgroup alchemist-project nil
   "API to identify Elixir mix projects."
   :prefix "alchemist-help-"
   :group 'alchemist)
+
+(defcustom alchemist-project-config-filename ".alchemist"
+  "Name of the file which holds the Elixir project setup."
+  :type 'string
+  :group 'alchemist)
+
+(defun alchemist-project--config-filepath ()
+  "Return the path to the config file."
+  (format "%s/%s"
+          (alchemist-project-root)
+          alchemist-project-config-filename))
+
+(defun alchemist-project--config-exists-p ()
+  "Check if project config file exists."
+  (file-exists-p (alchemist-project--config-filepath)))
+
+(defun alchemist-project-config ()
+  "Return the current Elixir project configs."
+  (let* ((json-object-type 'hash-table)
+         (config (if (alchemist-project--config-exists-p)
+                     (json-read-from-string
+                      (with-temp-buffer
+                        (insert-file-contents (alchemist-project--config-filepath))
+                        (buffer-string)))
+                   (make-hash-table :test 'equal))))
+    config))
 
 (defvar alchemist-project-root-indicators
   '("mix.exs")

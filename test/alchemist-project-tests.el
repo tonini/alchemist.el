@@ -64,4 +64,22 @@
    (f-touch "mix.exs")
    (should (equal (alchemist-project-name) "sandbox"))))
 
+(ert-deftest test-project-config/return-config ()
+  "Should return a hash-table with the config."
+  (with-sandbox
+   (f-touch ".alchemist")
+   (f-touch "mix.exs")
+   (f-write "{
+  \"docs-ansi-color\": \"true\"
+}" 'utf-8 ".alchemist")
+   (should (equal (gethash "docs-ansi-color" (alchemist-project-config))
+                  "true"))))
+
+(ert-deftest test-project-config/return-nil ()
+  "Should return empty hash-table if no config exists."
+  (with-sandbox
+   (f-touch "mix.exs")
+   (should (equal (gethash "docs-ansi-color" (alchemist-project-config))
+                  nil))))
+
 (provide 'alchemist-project-tests)
