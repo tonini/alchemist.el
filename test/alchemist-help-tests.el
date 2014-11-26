@@ -1,4 +1,4 @@
-;;; alchemist-help-tests.el ---
+;;; alchemist-help-tests.el --- Test suite for alchemist-help.el
 
 ;; Copyright © 2014 Samuel Tonini
 ;;
@@ -70,3 +70,5 @@
    (should (equal (alchemist-help--load-ansi-color-setting) nil))))
 
 (provide 'alchemist-help-tests)
+
+;;; alchemist-help-tests.el ends here
