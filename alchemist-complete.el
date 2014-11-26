@@ -1,4 +1,4 @@
-;;; alchemist-complete.el ---  Complete functionality for Elixir and Erlang source code -*- lexical-binding: t -*-
+;;; alchemist-complete.el ---  Complete functionality for Elixir source code -*- lexical-binding: t -*-
 
 ;; Copyright © 2014 Samuel Tonini
 
@@ -26,7 +26,7 @@
 ;;; Code:
 
 (defgroup alchemist-complete nil
-  "Complete functionality for Elixir and Erlang source code."
+  "Complete functionality for Elixir source code."
   :prefix "alchemist-complete-"
   :group 'alchemist)
 
