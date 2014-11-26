@@ -93,6 +93,8 @@ IO.inspect Alchemist.expand('%s')
 (defun alchemist-complete--sentinel (proc callback &optional format-function)
   (set-process-sentinel proc (lambda (process signal)
                                (cond ((equal signal "finished\n")
+                                      ;; TODO
+                                      ;; Clear content from compile output
                                       (let* ((candidates (alchemist-complete--elixir-output-to-list
                                                           (alchemist-utils--get-buffer-content (process-buffer process))))
                                              (candidates (if format-function
