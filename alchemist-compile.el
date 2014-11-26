@@ -42,7 +42,7 @@
   (alchemist-compile--file buffer-file-name))
 
 (defun alchemist-compile-file (filename)
-  "Compile the given `FILENAME`."
+  "Compile the given FILENAME."
   (interactive "Felixirc: ")
   (alchemist-compile--file (expand-file-name filename)))
 
@@ -55,7 +55,7 @@
   (read-shell-command "elixirc command: " (concat command " ")))
 
 (defun alchemist-compile (cmdlist)
-  "Compile `CMDLIST` with elixirc."
+  "Compile CMDLIST with elixirc."
   (interactive (list (alchemist-compile--read-command alchemist-compile-command)))
   (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist cmdlist)
                         alchemist-compile-buffer-name))

@@ -112,7 +112,7 @@
     (alchemist-mix-execute (list alchemist-mix-command command))))
 
 (defun alchemist-mix-local-install (path-or-url)
-  "Prompt for mix local.install <path> or <url>."
+  "Prompt for mix local.install PATH-OR-URL."
   (interactive
    (list (completing-read "mix local.install FORMAT: "
                           alchemist-mix--local-install-option-types
@@ -122,12 +122,12 @@
     (call-interactively 'alchemist-mix-local-install-with-url)))
 
 (defun alchemist-mix-local-install-with-path (path)
-  "Runs local.install and prompt for a <path> as argument."
+  "Runs local.install and prompt for a PATH as argument."
   (interactive "fmix local.install PATH: ")
   (alchemist-mix-execute (list alchemist-mix-command "local.install" path)))
 
 (defun alchemist-mix-local-install-with-url (url)
-  "Runs local.install and prompt for a <url> as argument."
+  "Runs local.install and prompt for a URL as argument."
   (interactive "Mmix local.install URL: ")
   (alchemist-mix-execute (list alchemist-mix-command "local.install" url)))
 
