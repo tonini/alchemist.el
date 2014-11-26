@@ -59,7 +59,7 @@
    (f-touch ".alchemist")
    (f-touch "mix.exs")
    (f-write "{
-  \"docs-ansi-color\": \"t\"
+  \"docs-ansi-color-enabled\": \"t\"
 }" 'utf-8 ".alchemist")
    (should (equal (alchemist-help--load-ansi-color-setting) t)))
   (with-sandbox

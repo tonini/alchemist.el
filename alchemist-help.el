@@ -60,7 +60,7 @@ ansi formatted documention"
   "Stores the current search text.")
 
 (defun alchemist-help--load-ansi-color-setting ()
-  (let ((config (gethash "docs-ansi-color" (alchemist-project-config))))
+  (let ((config (gethash "docs-ansi-color-enabled" (alchemist-project-config))))
     (if config
         (intern config)
       alchemist-help-ansi-color)))
