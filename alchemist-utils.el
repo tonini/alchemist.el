@@ -53,6 +53,16 @@ It walks the directory tree until it finds a elixir project root indicator."
          (search-text (replace-regexp-in-string  "^,$" "" search-text)))
     search-text))
 
+(defun alchemist-utils--erase-buffer (buffer)
+  "Use `erase-buffer' inside BUFFER."
+  (with-current-buffer buffer
+    (erase-buffer)))
+
+(defun alchemist-utils--get-buffer-content (buffer)
+  "Return the content of BUFFER."
+  (with-current-buffer buffer
+    (buffer-substring (point-min) (point-max))))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
