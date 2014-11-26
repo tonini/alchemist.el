@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.8.0
+
+### Enhancements
+
+   * Toggle between completion and documention lookup for current codebase with
+     `alchemist-project-toggle-complete-and-docs`
+   * Introduce `.alchemist` file for project specific configuration
+     (`docs-ansi-color-enabled`, `complete-and-docs-enabled`)
+
 ## v0.7.2
 
 ### Bugfix
