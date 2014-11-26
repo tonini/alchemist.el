@@ -82,4 +82,16 @@
    (should (equal (gethash "docs-ansi-color" (alchemist-project-config))
                   nil))))
 
+(ert-deftest test-project-variable/toggle-complete-and-docs ()
+  "Test toggle function to enable/disable the completion and docs
+for project codebase"
+  (with-current-variable alchemist-project-codebase-complete-and-docs-enabled nil
+                         (alchemist-project-toggle-complete-and-docs)
+                         (should (eq alchemist-project-codebase-complete-and-docs-enabled
+                                     t)))
+  (with-current-variable alchemist-project-codebase-complete-and-docs-enabled t
+                         (alchemist-project-toggle-complete-and-docs)
+                         (should (eq alchemist-project-codebase-complete-and-docs-enabled
+                                     nil))))
+
 (provide 'alchemist-project-tests)

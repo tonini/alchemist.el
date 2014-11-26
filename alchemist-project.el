@@ -38,6 +38,28 @@
   :type 'string
   :group 'alchemist)
 
+(defcustom alchemist-project-codebase-complete-and-docs-enabled t
+  "When `t', it enables the completion and documention lookup for
+the project specific codebase."
+  :type 'string
+  :group 'alchemist)
+
+(defun alchemist-project-toggle-complete-and-docs ()
+  "Toggle between the complete and documention lookup for current elixir codebase."
+  (interactive)
+  (if alchemist-project-codebase-complete-and-docs-enabled
+      (setq alchemist-project-codebase-complete-and-docs-enabled nil)
+    (setq alchemist-project-codebase-complete-and-docs-enabled t))
+  (if alchemist-project-codebase-complete-and-docs-enabled
+      (message "completion and documention for project codebase is enabled")
+    (message "The completion and documention for project codebase is disabled")))
+
+(defun alchemist-project--load-complete-and-docs-enabled-setting ()
+  (let ((config (gethash "complete-and-docs-enabled" (alchemist-project-config))))
+    (if config
+        (intern config)
+      alchemist-project-codebase-complete-and-docs-enabled)))
+
 (defun alchemist-project--config-filepath ()
   "Return the path to the config file."
   (format "%s/%s"

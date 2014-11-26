@@ -82,7 +82,8 @@ end
 
 IO.inspect Alchemist.expand('%s')
 " exp))
-         (command (if (alchemist-project-p)
+         (command (if (and (alchemist-project-p)
+                           (alchemist-project--load-complete-and-docs-enabled-setting))
                       (format "%s -e \"%s\"" alchemist-help-mix-run-command elixir-code)
                     (format "%s -e \"%s\"" alchemist-execute-command elixir-code))))
     (when (alchemist-project-p)
