@@ -42,7 +42,7 @@
   (alchemist-execute--file buffer-file-name))
 
 (defun alchemist-execute-file (filename)
-  "Run elixir with the given `FILENAME`."
+  "Run elixir with the given FILENAME."
   (interactive "Felixir: ")
   (alchemist-execute--file (expand-file-name filename)))
 
@@ -55,7 +55,7 @@
   (read-shell-command "elixir command: " (concat command " ")))
 
 (defun alchemist-execute (cmdlist)
-  "Run a elixir with `CMDLIST`."
+  "Run a elixir with CMDLIST."
   (interactive (list (alchemist-execute--read-command alchemist-execute-command)))
   (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist cmdlist)
                         alchemist-execute-buffer-name))
