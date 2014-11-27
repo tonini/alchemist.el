@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.8.0
+## v0.8.0-dev
 
 ### Enhancements
 
@@ -8,6 +8,8 @@
      `alchemist-project-toggle-complete-and-docs`
    * Introduce `.alchemist` file for project specific configuration
      (`docs-ansi-color-enabled`, `complete-and-docs-enabled`)
+   * Big refining of `alchemist-help` and `alchemist-complete`.
+   * Better handling of non-complete output in the subprocesses
 
 ## v0.7.2
 
