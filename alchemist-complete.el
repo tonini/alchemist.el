@@ -1,4 +1,4 @@
-;;; alchemist-complete.el ---  Complete functionality for Elixir source code -*- lexical-binding: t -*-
+;;; alchemist-complete.el --- Complete functionality for Elixir source code -*- lexical-binding: t -*-
 
 ;; Copyright © 2014 Samuel Tonini
 
@@ -66,6 +66,11 @@
          (a-list (split-string output ",")))
     a-list))
 
+(defun alchemist-complete--clear-buffer (buffer)
+  "Clears the BUFFER from not used lines."
+  (with-current-buffer buffer
+  (delete-non-matching-lines "^ '.+\\|\\['.+" (point-min) (point-max))))
+
 (defun alchemist-complete--command (exp)
   (let* ((elixir-code (format "
 defmodule Alchemist do
@@ -93,18 +98,16 @@ IO.inspect Alchemist.expand('%s')
 (defun alchemist-complete--sentinel (proc callback &optional format-function)
   (set-process-sentinel proc (lambda (process signal)
                                (cond ((equal signal "finished\n")
-                                      ;; TODO
-                                      ;; Clear content from compile output
+                                      (alchemist-complete--clear-buffer (process-buffer process))
                                       (let* ((candidates (alchemist-complete--elixir-output-to-list
                                                           (alchemist-utils--get-buffer-content (process-buffer process))))
                                              (candidates (if format-function
                                                              (funcall format-function candidates)
                                                            candidates)))
-                                        (funcall callback candidates)
-                                        (alchemist-utils--erase-buffer (process-buffer process))))
+                                        (funcall callback candidates)))
                                      (t
-                                      (funcall callback '())
-                                      (alchemist-utils--erase-buffer (process-buffer process)))))))
+                                      (funcall callback '())))
+                               (alchemist-utils--erase-buffer (process-buffer process)))))
 
 (defun alchemist-complete (exp callback)
   (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
