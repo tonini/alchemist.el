@@ -48,6 +48,7 @@
   "List of local.install option types.")
 
 (defun alchemist-mix-display-mix-buffer ()
+  "Display the mix buffer when exists."
   (interactive)
   (when (get-buffer alchemist-mix-buffer-name)
     (display-buffer alchemist-mix-buffer-name)))
@@ -56,7 +57,7 @@
   (completing-read prompt cmdlist nil t nil nil (car cmdlist)))
 
 (defun alchemist-mix-new (name)
-  "Create a new elixir project with mix."
+  "Create a new elixir project named by NAME."
   (interactive "Gmix new: ")
   (alchemist-mix-execute (list alchemist-mix-command "new" (expand-file-name name))))
 
@@ -71,11 +72,12 @@
   (alchemist-mix--test-file buffer-file-name))
 
 (defun alchemist-mix-test-file (filename)
-  "Run <mix test> with the given `filename`"
+  "Run `alchemist-mix--test-file' with the FILENAME."
   (interactive "Fmix test: ")
   (alchemist-mix--test-file (expand-file-name filename)))
 
 (defun alchemist-mix--test-file (filename)
+  "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
   (alchemist-mix-execute (list alchemist-mix-command "test" (expand-file-name filename))))

@@ -189,18 +189,18 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
             ("?" . alchemist-help-minor-mode-key-binding-summary)))
 
 (defun alchemist-help (search)
+  "Load Elixir documention for SEARCH."
   (interactive "MElixir help: ")
   (alchemist-help--execute search))
 
 (defun alchemist-help-history (search)
+  "Load Elixir from the documention history for SEARCH."
   (interactive
    (list
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
   (alchemist-help--execute search))
 
 (defun alchemist-help--start-help-process (exp callback)
-  ""
-  (interactive)
   (let* ((buffer (get-buffer-create "alchemist-help-buffer"))
          (command (alchemist-help--eval-string-command (alchemist-help--build-code-for-search exp)))
          (proc (start-process-shell-command "alchemist-help-proc" buffer command)))
