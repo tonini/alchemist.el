@@ -5,7 +5,7 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.8.0-dev
+;; Version: 0.8.0-cvs
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
@@ -55,16 +55,13 @@
   "Hook which enables `alchemist-mode'"
   (alchemist-mode 1))
 
-(defvar alchemist--version "0.8.0-dev")
+(defvar alchemist--version "0.8.0-cvs")
 
 ;;;###autoload
 (defun alchemist-version (&optional show-version)
   "Display Alchemist's version."
   (interactive)
-  (let* ((version (if (string-match-p "-dev$" alchemist--version)
-                    (format "%s (Snapshot)" alchemist--version)
-                   (format "%s (Release)" alchemist--version))))
-    (message "Alchemist %s" version)))
+  (message "Alchemist %s" (replace-regexp-in-string "-cvs" "snapshot" alchemist--version)))
 
 (defvar alchemist-mode-map
   (let ((map (make-sparse-keymap)))
