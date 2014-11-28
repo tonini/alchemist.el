@@ -5,8 +5,8 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.7.2
-;; Package-Requires: ((emacs "24") (pkg-info "0.5"))
+;; Version: 0.8.0-dev
+;; Package-Requires: ((emacs "24"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
 ;; This file is not part of GNU Emacs.
@@ -37,8 +37,6 @@
   :link '(url-link :tag "Github" "https://github.com/tonini/alchemist.el")
   :link '(emacs-commentary-link :tag "Commentary" "alchemist"))
 
-(require 'pkg-info) ; For `pkg-info-version-info'
-
 (require 'alchemist-utils)
 (require 'alchemist-project)
 (require 'alchemist-buffer)
@@ -57,24 +55,16 @@
   "Hook which enables `alchemist-mode'"
   (alchemist-mode 1))
 
+(defvar alchemist--version "0.8.0-dev")
+
 ;;;###autoload
 (defun alchemist-version (&optional show-version)
-  "Get the Alchemist version as string.
-
-If called interactively or if SHOW-VERSION is non-nil, show the
-version in the echo area and the messages buffer.
-
-The returned string includes both, the version from package.el
-and the library version, if both a present and different.
-
-If the version number could not be determined, signal an error,
-if called interactively, or if SHOW-VERSION is non-nil, otherwise
-just return nil."
-  (interactive (list t))
-  (let ((version (pkg-info-version-info 'alchemist)))
-    (when show-version
-      (message "Alchemist version: %s" version))
-    version))
+  "Display Alchemist's version."
+  (interactive)
+  (let* ((version (if (string-match-p "-dev$" alchemist--version)
+                    (format "%s (Snapshot)" alchemist--version)
+                   (format "%s (Release)" alchemist--version))))
+    (message "Alchemist %s" version)))
 
 (defvar alchemist-mode-map
   (let ((map (make-sparse-keymap)))

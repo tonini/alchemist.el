@@ -5,5 +5,4 @@
 
 (development
  (depends-on "f")
- (depends-on "pkg-info")
  (depends-on "company"))
