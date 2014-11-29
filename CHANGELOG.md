@@ -10,6 +10,7 @@
      (`docs-ansi-color-enabled`, `complete-and-docs-enabled`).
    * Big refining of `alchemist-help` and `alchemist-complete`.
    * Better handling of non-complete output in the subprocesses.
+   * Improve README file.
 
 ## v0.7.2
 
