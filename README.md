@@ -104,6 +104,15 @@ Disable complete and documention lookup for project own codebase:
 (setq alchemist-project-codebase-complete-and-docs-enabled nil) ;; default t
 ```
 
+To get code completion and documentation lookup for the current codebase,
+the project needs to be compiled. With the variable above
+`alchemist-project-codebase-complete-and-docs-enabled` it can be disabled and
+the code completion and documention lookup for the Elixir language itself will
+just be enabled.
+
+The function `alchemist-project-toggle-complete-and-docs` can also be used to enable/disable
+completion and documentation when needed.
+
 ### Project configuration file
 
 To setup custom configurations for different Elixir projects, create a
