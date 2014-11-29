@@ -26,7 +26,7 @@
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
-- [Inline Docs](#inline-documentation)
+- [Documentation lookup](#documentation-lookup)
   - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Auto-completion](#auto-completion)
 - [Hooks](#hooks)
@@ -232,7 +232,7 @@ Example:
     </tr>
 </table>
 
-## Inline Documentation
+## Documentation lookup
 
 There is the `alchemist-help-minor-mode` for a complete fully functional
 interface to the Elixir documentation. The `alchemist-help-minor-mode` uses the
@@ -246,7 +246,7 @@ By default the ANSI color formated documentation is disabled. You can enable it
 by setting the following variable to `t`.
 
 ```el
-(setq alchemist-help-ansi-color t)
+(setq alchemist-help-docs-ansi-color-enabled t)
 ```
 
 <table>
