@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.8.0-dev (unreleased)
+## v0.8.0
 
 ### Enhancements
 
