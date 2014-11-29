@@ -70,10 +70,10 @@
    (f-touch ".alchemist")
    (f-touch "mix.exs")
    (f-write "{
-  \"docs-ansi-color-enabled\": \"true\"
+  \"codebase-complete-and-docs-enabled\": \"t\"
 }" 'utf-8 ".alchemist")
-   (should (equal (gethash "docs-ansi-color-enabled" (alchemist-project-config))
-                  "true"))))
+   (should (equal (gethash "codebase-complete-and-docs-enabled" (alchemist-project-config))
+                  "t"))))
 
 (ert-deftest test-project-config/return-nil ()
   "Should return empty hash-table if no config exists."

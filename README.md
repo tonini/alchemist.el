@@ -21,6 +21,7 @@
   - [ELPA](#installation-via-packageel)
   - [Via el-get](#via-el-get)
   - [Manual](#manual)
+- [Configuration](#configuration)
 - [Mix](#mix)
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
@@ -85,6 +86,36 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 ```el
 (add-to-list 'load-path "~/.emacs.d/vendor/alchemist.el/")
 (require 'alchemist)
+```
+
+## Configuration
+
+There are some ways Alchemist can be adjusted that certain workflows operating differently.
+
+Enable ansi color formatted documentation:
+
+```el
+(setq alchemist-help-docs-ansi-color-enabled t) ;; default: nil
+```
+
+Disable complete and documention lookup for project own codebase:
+
+```el
+(setq alchemist-project-codebase-complete-and-docs-enabled nil) ;; default t
+```
+
+### Project configuration file
+
+To setup custom configurations for different Elixir projects, create a
+`.alchemist` file in the root of the project.
+
+Example:
+
+```json
+{
+  "docs-ansi-color-enabled": "t",
+  "codebase-complete-and-docs-enabled": "t"
+}
 ```
 
 ## Mix

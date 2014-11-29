@@ -55,7 +55,7 @@ the project specific codebase."
     (message "The completion and documention for project codebase is disabled")))
 
 (defun alchemist-project--load-complete-and-docs-enabled-setting ()
-  (let ((config (gethash "complete-and-docs-enabled" (alchemist-project-config))))
+  (let ((config (gethash "codebase-complete-and-docs-enabled" (alchemist-project-config))))
     (if config
         (intern config)
       alchemist-project-codebase-complete-and-docs-enabled)))

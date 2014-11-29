@@ -30,7 +30,7 @@
   :prefix "alchemist-help-"
   :group 'alchemist)
 
-(defcustom alchemist-help-ansi-color nil
+(defcustom alchemist-help-docs-ansi-color-enabled nil
   "If non-nil, `alchemist-help' will present
 ansi formatted documention"
   :type 'boolean
@@ -63,7 +63,7 @@ ansi formatted documention"
   (let ((config (gethash "docs-ansi-color-enabled" (alchemist-project-config))))
     (if config
         (intern config)
-      alchemist-help-ansi-color)))
+      alchemist-help-docs-ansi-color-enabled)))
 
 (defun alchemist-help--exp-at-point ()
   "Return the expression under the cursor"

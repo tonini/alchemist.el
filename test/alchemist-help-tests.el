@@ -53,7 +53,7 @@
   "Should test different cases how ansi-color is set."
   (should (equal (alchemist-help--load-ansi-color-setting)
                  nil))
-  (with-current-variable alchemist-help-ansi-color t
+  (with-current-variable alchemist-help-docs-ansi-color-enabled t
                          (should (equal (alchemist-help--load-ansi-color-setting) t)))
   (with-sandbox
    (f-touch ".alchemist")
