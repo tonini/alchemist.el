@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.9.0-dev
+
+### Enhancements
+
+   * [Project] `alchemist-project-find-test` Open project test directory and
+     list all test files.
+   * [Project] `alchemist-project-open-tests-for-current-file` Opens the appropriate test file for the current buffer file in a new window.
+
 ## v0.8.0
 
 ### Enhancements

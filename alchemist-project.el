@@ -117,6 +117,36 @@ the project specific codebase."
     (when project-root
       (setq default-directory project-root))))
 
+(defun alchemist-project-open-tests-for-current-file ()
+  "Opens the appropriate test file for the current buffer file
+in a new window."
+  (interactive)
+  (let* ((filename (file-relative-name (buffer-file-name) (alchemist-project-root)))
+         (filename (replace-regexp-in-string "^lib/" "test/" filename))
+         (filename (replace-regexp-in-string "\.ex$" "_test\.exs" filename))
+         (filename (format "%s/%s" (alchemist-project-root) filename)))
+    (if (file-exists-p filename)
+        (find-file-other-window filename)
+      (message "No test file found."))))
+
+(defun alchemist-project-find-test ()
+  "Open project test directory and list all test files."
+  (interactive)
+  (when (alchemist-project-p)
+    (find-file (alchemist-project--open-directory-files "test"))))
+
+(defun alchemist-project--open-directory-files (directory)
+  (let ((directory (concat (replace-regexp-in-string "\/?$" "" (concat (alchemist-project-root) directory) "/"))))
+    (message directory)
+    (concat directory "/" (completing-read (concat directory ": ")
+                                           (mapcar (lambda (path)
+                                                     (replace-regexp-in-string (concat "^" (regexp-quote directory) "/") "" path))
+                                                   (split-string
+                                                    (shell-command-to-string
+                                                     (concat
+                                                      "find \"" directory
+                                                      "\" -type f | grep \"_test\.exs\" | grep -v \"/.git/\" | grep -v \"/.yardoc/\""))))))))
+
 (defun alchemist-project-name ()
   "Return the name of the current Elixir project."
   (if (alchemist-project-p)
