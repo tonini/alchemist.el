@@ -36,7 +36,7 @@
     (prefix (and (eq major-mode 'elixir-mode)
                  (alchemist-help--exp-at-point)))
     (candidates (cons :async
-        (lambda (cb) (alchemist-complete-candidates arg cb))))))
+                      (lambda (cb) (alchemist-complete-candidates arg cb))))))
 
 (add-to-list 'company-backends 'alchemist-company)
 
