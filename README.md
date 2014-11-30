@@ -27,7 +27,7 @@
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
 - [Documentation lookup](#documentation-lookup)
-  - [Keymap](#alchemist-help-minor-mode-keymap)
+- [Keymap](#alchemist-help-minor-mode-keymap)
 - [Auto-completion](#auto-completion)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
