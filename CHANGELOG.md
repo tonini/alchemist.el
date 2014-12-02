@@ -7,6 +7,8 @@
    * [Project] `alchemist-project-find-test` Open project test directory and
      list all test files.
    * [Project] `alchemist-project-open-tests-for-current-file` Opens the appropriate test file for the current buffer file in a new window.
+   * [Project] Add keybindings for `alchemist-project-` specific interactive
+     functions.
 
 ## v0.8.0
 
