@@ -78,6 +78,8 @@
     (define-key map (kbd "C-c a h h") 'alchemist-help)
     (define-key map (kbd "C-c a h e") 'alchemist-help-search-at-point)
     (define-key map (kbd "C-c a h m") 'alchemist-help-search-marked-region)
+    (define-key map (kbd "C-c a p f") 'alchemist-project-find-test)
+    (define-key map (kbd "C-c a p t") 'alchemist-project-open-tests-for-current-file)
     map)
   "The keymap used when `alchemist-mode' is active.")
 
