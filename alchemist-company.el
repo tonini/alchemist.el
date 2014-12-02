@@ -27,6 +27,18 @@
 
 (require 'company)
 
+(defun alchemist-company--show-documentation ()
+  (interactive)
+  (company--electric-do
+    (let ((selected (nth company-selection company-candidates)))
+      (alchemist-help--execute selected))))
+(put 'alchemist-company--show-documentation 'company-keep t)
+
+(defun alchemist-company--keybindings ()
+  (define-key company-active-map (kbd "C-d") 'alchemist-company--show-documentation))
+
+(add-hook 'company-mode-hook 'alchemist-company--keybindings)
+
 (defun alchemist-company (command &optional arg &rest ignored)
   "`company-mode' completion back-end for Elixir."
   (interactive (list 'interactive))

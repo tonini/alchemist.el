@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+   * [Company] Documentation lookup for current company candidate selection with `C-d`.
    * [Project] `alchemist-project-find-test` Open project test directory and
      list all test files.
    * [Project] `alchemist-project-open-tests-for-current-file` Opens the appropriate test file for the current buffer file in a new window.
