@@ -38,7 +38,7 @@
   :type 'string
   :group 'alchemist)
 
-(defcustom alchemist-project-codebase-complete-and-docs-enabled t
+(defcustom alchemist-project-codebase-complete-and-docs-enabled nil
   "When `t', it enables the completion and documention lookup for
 the project specific codebase."
   :type 'string

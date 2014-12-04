@@ -4,7 +4,12 @@
 
 ### Enhancements
 
-   * [Company] Documentation lookup for current company candidate selection with `C-d`.
+   * [Company] Documentation lookup for current company candidate selection with
+     `C-d`.
+   * [Project] Configuration variable
+     `alchemist-project-codebase-complete-and-docs-enabled` is set to value
+     `nil` default. Many users didn't realize how completion for theyr own
+     Elixir project codebase works, when they start the first time using Alchemist.
    * [Project] `alchemist-project-find-test` Open project test directory and
      list all test files.
    * [Project] `alchemist-project-open-tests-for-current-file` Opens the appropriate test file for the current buffer file in a new window.
