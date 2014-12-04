@@ -77,8 +77,7 @@ changes depending on the success or failure of commands such as 'mix test'."
   "Elixir compilation mode."
   (progn
     (font-lock-add-keywords nil
-                            '(("^Finished in .*$" . font-lock-string-face)
-                              ("^Elixir.*$" . font-lock-string-face)))
+                            '(("^Finished in .*$" . font-lock-string-face)))
     ;; Set any bound buffer name buffer-locally
     (setq alchemist-buffer--buffer-name alchemist-buffer--buffer-name)
     (set (make-local-variable 'kill-buffer-hook)
