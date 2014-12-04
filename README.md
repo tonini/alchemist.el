@@ -101,14 +101,14 @@ Enable ansi color formatted documentation:
 Disable complete and documention lookup for project own codebase:
 
 ```el
-(setq alchemist-project-codebase-complete-and-docs-enabled nil) ;; default t
+(setq alchemist-project-codebase-complete-and-docs-enabled t) ;; default nil
 ```
 
 To get code completion and documentation lookup for the current codebase,
 the project needs to be compiled. With the variable above
-`alchemist-project-codebase-complete-and-docs-enabled` it can be disabled and
-the code completion and documention lookup for the Elixir language itself will
-just be enabled.
+`alchemist-project-codebase-complete-and-docs-enabled` it can be enabled. By
+default it's set to `nil` and the code completion and documention lookup will
+just work with the Elixir language core and standart libraries.
 
 The function `alchemist-project-toggle-complete-and-docs` can also be used to enable/disable
 completion and documentation when needed.
