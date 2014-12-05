@@ -105,7 +105,7 @@ Argument BUFFER-NAME for the compilation."
   (let* ((alchemist-buffer--buffer-name buffer-name)
          (compilation-filter-start (point-min)))
     (with-current-buffer
-        (compilation-start (mapconcat 'shell-quote-argument cmdlist " ")
+        (compilation-start (mapconcat 'concat cmdlist " ")
                            'alchemist-buffer-mode
                            (lambda (b) alchemist-buffer--buffer-name))
       (setq-local compilation-error-regexp-alist-alist
