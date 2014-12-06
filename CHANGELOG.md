@@ -18,7 +18,7 @@
      `alchemist-project-compile-when-needed` is set to value
      `nil` default. Many users didn't realize how completion for theyr own
      Elixir project codebase works, when they start the first time using Alchemist.
-
+   * Update Refcard with project keybindings.
 ## v0.8.0
 
 ### Enhancements
