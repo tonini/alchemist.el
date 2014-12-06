@@ -333,6 +333,10 @@ installed.
 
 ![Alchemist Company](logo/alchemist-company.gif)
 
+When the keybinding <kbd>C-d</kbd> is used on one of the selected completion
+candidates, a documentation lookup for the candidate will be made and displayed in
+another window.
+
 ## Hooks
 
 There is a `after-save-hook` called `alchemist-hooks--test-on-save` which runs
