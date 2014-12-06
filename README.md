@@ -26,6 +26,7 @@
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
+- [Project](#project)
 - [Documentation lookup](#documentation-lookup)
 - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Auto-completion](#auto-completion)
@@ -235,6 +236,13 @@ Example:
       <td>Run a custom execute command with <code>elixir</code>.</th>
     </tr>
 </table>
+
+## Project
+
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a p f</kbd>|Open project test directory and list all test files. `alchemist-project-find-test`|
+|<kbd>C-c a p t</kbd>|Opens the appropriate test file for the current buffer file in a new window. `alchemist-project-open-tests-for-current-file`
 
 ## Documentation lookup
 
