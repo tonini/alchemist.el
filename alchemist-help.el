@@ -30,8 +30,8 @@
   :prefix "alchemist-help-"
   :group 'alchemist)
 
-(defcustom alchemist-help-docs-ansi-color-enabled nil
-  "If non-nil, `alchemist-help' will present
+(defcustom alchemist-help-ansi-color-docs t
+  "If `t`, `alchemist-help' will present
 ansi formatted documention"
   :type 'boolean
   :group 'alchemist-help)
@@ -60,10 +60,10 @@ ansi formatted documention"
   "Stores the current search text.")
 
 (defun alchemist-help--load-ansi-color-setting ()
-  (let ((config (gethash "docs-ansi-color-enabled" (alchemist-project-config))))
+  (let ((config (gethash "ansi-color-docs" (alchemist-project-config))))
     (if config
         (intern config)
-      alchemist-help-docs-ansi-color-enabled)))
+      alchemist-help-ansi-color-docs)))
 
 (defun alchemist-help--exp-at-point ()
   "Return the expression under the cursor"
@@ -98,10 +98,13 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
 (defun alchemist-help--eval-string-command (string)
   (when (alchemist-project-p)
     (alchemist-project--establish-root-directory))
-  (let ((command (if (and (alchemist-project-p)
-                          (alchemist-project--load-complete-and-docs-enabled-setting))
-                     (format "%s -e \"%s\"" alchemist-help-mix-run-command string)
-                   (format "%s -e \"%s\"" alchemist-execute-command string))))
+  (let* ((compile-option (if (and (alchemist-project-p)
+                                  (alchemist-project--load-compile-when-needed-setting))
+                             ""
+                           "--no-compile"))
+         (command (if (alchemist-project-p)
+                      (format "%s %s -e \"%s\"" alchemist-help-mix-run-command compile-option string)
+                    (format "%s -e \"%s\"" alchemist-execute-command string))))
     command))
 
 (defun alchemist-help-bad-search-output-p (string)

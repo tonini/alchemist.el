@@ -95,23 +95,18 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 Enable ansi color formatted documentation:
 
 ```el
-(setq alchemist-help-docs-ansi-color-enabled t) ;; default: nil
+(setq alchemist-help-ansi-color-docs t) ;; default: t
 ```
 
-Disable complete and documention lookup for project own codebase:
+Enable compilation if needed when do documentation lookup or completion on
+Elixir project current codebase.
 
 ```el
-(setq alchemist-project-codebase-complete-and-docs-enabled t) ;; default nil
+(setq alchemist-project-compile-when-needed t) ;; default nil
 ```
 
-To get code completion and documentation lookup for the current codebase,
-the project needs to be compiled. With the variable above
-`alchemist-project-codebase-complete-and-docs-enabled` it can be enabled. By
-default it's set to `nil` and the code completion and documention lookup will
-just work with the Elixir language core and standart libraries.
-
-The function `alchemist-project-toggle-complete-and-docs` can also be used to enable/disable
-completion and documentation when needed.
+The function `alchemist-project-toggle-compile-when-needed` can also be used to enable/disable
+compilation on the fly.
 
 ### Project configuration file
 

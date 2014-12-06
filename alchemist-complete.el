@@ -69,10 +69,10 @@
 (defun alchemist-complete--clear-buffer (buffer)
   "Clears the BUFFER from not used lines."
   (with-current-buffer buffer
-  (delete-non-matching-lines "^ '.+\\|\\['.+" (point-min) (point-max))))
+    (delete-non-matching-lines "^ '.+\\|\\['.+" (point-min) (point-max))))
 
-(defun alchemist-complete--command (exp)
-  (let* ((elixir-code (format "
+(defun alchemist-complete--elixir-complete-code (exp)
+  (format "
 defmodule Alchemist do
   def expand(exp) do
     {status, result, list } = IEx.Autocomplete.expand(Enum.reverse(exp))
@@ -87,10 +87,17 @@ end
 
 IO.inspect Alchemist.expand('%s')
 " exp))
-         (command (if (and (alchemist-project-p)
-                           (alchemist-project--load-complete-and-docs-enabled-setting))
-                      (format "%s -e \"%s\"" alchemist-help-mix-run-command elixir-code)
-                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code))))
+
+(defun alchemist-complete--command (exp)
+  (let* ((elixir-code (alchemist-complete--elixir-complete-code exp))
+         (compile-option (if (and (alchemist-project-p)
+                                  (alchemist-project--load-compile-when-needed-setting))
+                             ""
+                           "--no-compile"))
+         (command (if (alchemist-project-p)
+                      (format "%s %s -e \"%s\"" alchemist-help-mix-run-command compile-option elixir-code)
+                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code)))
+         )
     (when (alchemist-project-p)
       (alchemist-project--establish-root-directory))
     command))

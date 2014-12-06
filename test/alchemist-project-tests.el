@@ -70,28 +70,28 @@
    (f-touch ".alchemist")
    (f-touch "mix.exs")
    (f-write "{
-  \"codebase-complete-and-docs-enabled\": \"t\"
+  \"compile-when-needed\": \"t\"
 }" 'utf-8 ".alchemist")
-   (should (equal (gethash "codebase-complete-and-docs-enabled" (alchemist-project-config))
+   (should (equal (gethash "compile-when-needed" (alchemist-project-config))
                   "t"))))
 
 (ert-deftest test-project-config/return-nil ()
   "Should return empty hash-table if no config exists."
   (with-sandbox
    (f-touch "mix.exs")
-   (should (equal (gethash "docs-ansi-color-enabled" (alchemist-project-config))
+   (should (equal (gethash "ansi-color-docs" (alchemist-project-config))
                   nil))))
 
-(ert-deftest test-project-variable/toggle-complete-and-docs ()
-  "Test toggle function to enable/disable the completion and docs
-for project codebase"
-  (with-current-variable alchemist-project-codebase-complete-and-docs-enabled nil
-                         (alchemist-project-toggle-complete-and-docs)
-                         (should (eq alchemist-project-codebase-complete-and-docs-enabled
+(ert-deftest test-project-variable/toggle-compilation ()
+  "Test toggle function to enable/disable the compilation for
+for Elixir project when needed."
+  (with-current-variable alchemist-project-compile-when-needed nil
+                         (alchemist-project-toggle-compile-when-needed)
+                         (should (eq alchemist-project-compile-when-needed
                                      t)))
-  (with-current-variable alchemist-project-codebase-complete-and-docs-enabled t
-                         (alchemist-project-toggle-complete-and-docs)
-                         (should (eq alchemist-project-codebase-complete-and-docs-enabled
+  (with-current-variable alchemist-project-compile-when-needed t
+                         (alchemist-project-toggle-compile-when-needed)
+                         (should (eq alchemist-project-compile-when-needed
                                      nil))))
 
 (provide 'alchemist-project-tests)

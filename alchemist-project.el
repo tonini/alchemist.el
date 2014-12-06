@@ -38,27 +38,35 @@
   :type 'string
   :group 'alchemist)
 
-(defcustom alchemist-project-codebase-complete-and-docs-enabled nil
-  "When `t', it enables the completion and documention lookup for
-the project specific codebase."
+(defcustom alchemist-project-compile-when-needed nil
+  "When `t', it compiles the Elixir project codebase when needed.
+
+For example:
+If documentation lookup or completion for code is made, it first tries to
+compile the current Elixir project codebase. This makes sure that the
+documentation and completion is always up to date with the codebase.
+
+Please be aware that when the compilation fails, no documentation or
+completion will be work.
+"
   :type 'string
   :group 'alchemist)
 
-(defun alchemist-project-toggle-complete-and-docs ()
-  "Toggle between the complete and documention lookup for current elixir codebase."
+(defun alchemist-project-toggle-compile-when-needed ()
+  ""
   (interactive)
-  (if alchemist-project-codebase-complete-and-docs-enabled
-      (setq alchemist-project-codebase-complete-and-docs-enabled nil)
-    (setq alchemist-project-codebase-complete-and-docs-enabled t))
-  (if alchemist-project-codebase-complete-and-docs-enabled
-      (message "completion and documention for project codebase is enabled")
-    (message "The completion and documention for project codebase is disabled")))
+  (if alchemist-project-compile-when-needed
+      (setq alchemist-project-compile-when-needed nil)
+    (setq alchemist-project-compile-when-needed t))
+  (if alchemist-project-compile-when-needed
+      (message "Compilation of project when needed is enabled")
+    (message "Compilation of project when needed is disabled")))
 
-(defun alchemist-project--load-complete-and-docs-enabled-setting ()
-  (let ((config (gethash "codebase-complete-and-docs-enabled" (alchemist-project-config))))
+(defun alchemist-project--load-compile-when-needed-setting ()
+  (let ((config (gethash "compile-when-needed" (alchemist-project-config))))
     (if config
         (intern config)
-      alchemist-project-codebase-complete-and-docs-enabled)))
+      alchemist-project-compile-when-needed)))
 
 (defun alchemist-project--config-filepath ()
   "Return the path to the config file."
