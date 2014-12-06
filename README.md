@@ -92,10 +92,10 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 
 There are some ways Alchemist can be adjusted that certain workflows operating differently.
 
-Enable ansi color formatted documentation:
+Disable ansi color formatted documentation:
 
 ```el
-(setq alchemist-help-ansi-color-docs t) ;; default: t
+(setq alchemist-help-ansi-color-docs t) ;; default: nil
 ```
 
 Enable compilation if needed when do documentation lookup or completion on
@@ -117,8 +117,8 @@ Example:
 
 ```json
 {
-  "docs-ansi-color-enabled": "t",
-  "codebase-complete-and-docs-enabled": "t"
+  "ansi-color-docs": "nil",
+  "compile-when-needed": "t"
 }
 ```
 
@@ -245,13 +245,6 @@ same functions like Elixir's [IEx](http://elixir-lang.org/docs/stable/iex/).
 What does that mean? It means no matter which Elixir version is currently
 installed on the system, the documentation you get by `alchemist` is the same
 `IEx` would deliver.
-
-By default the ANSI color formated documentation is disabled. You can enable it
-by setting the following variable to `t`.
-
-```el
-(setq alchemist-help-docs-ansi-color-enabled t)
-```
 
 <table>
     <tr>
