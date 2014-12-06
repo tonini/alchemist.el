@@ -4,17 +4,20 @@
 
 ### Enhancements
 
-   * [Company] Documentation lookup for current company candidate selection with
-     `C-d`.
-   * [Project] Configuration variable
-     `alchemist-project-codebase-complete-and-docs-enabled` is set to value
-     `nil` default. Many users didn't realize how completion for theyr own
-     Elixir project codebase works, when they start the first time using Alchemist.
    * [Project] `alchemist-project-find-test` Open project test directory and
      list all test files.
    * [Project] `alchemist-project-open-tests-for-current-file` Opens the appropriate test file for the current buffer file in a new window.
    * [Project] Add keybindings for `alchemist-project-` specific interactive
      functions.
+   * [Project] Refine the controlling of documentation lookup and completion
+     inside Elixir project codebase. The variable
+     `alchemist-project-compile-when-needed` brings a much better handeling.
+   * [Company] Documentation lookup for current company candidate selection with
+     `C-d`.
+   * [Project] Configuration variable
+     `alchemist-project-compile-when-needed` is set to value
+     `nil` default. Many users didn't realize how completion for theyr own
+     Elixir project codebase works, when they start the first time using Alchemist.
 
 ## v0.8.0
 
