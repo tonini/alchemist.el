@@ -30,6 +30,7 @@
 - [Documentation lookup](#documentation-lookup)
 - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Auto-completion](#auto-completion)
+  - [Debug](#debug)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -336,6 +337,12 @@ installed.
 When the keybinding <kbd>C-d</kbd> is used on one of the selected completion
 candidates, a documentation lookup for the candidate will be made and displayed in
 another window.
+
+### Debug
+
+The function `alchemist-complete-debug-mode` can be used to enable/disable the
+debug mode. When enabled, the error output from the completion will be shown in
+a separate window.
 
 ## Hooks
 
