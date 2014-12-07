@@ -30,6 +30,19 @@
   :prefix "alchemist-complete-"
   :group 'alchemist)
 
+(defvar alchemist-complete-debug-mode nil)
+
+(defun alchemist-complete-debug-mode ()
+  "Enables the debug mode for completion if `alchemist-complete-debug-mode'
+is `nil', otherwise it disable it."
+  (interactive)
+  (setq alchemist-complete-debug-mode (not alchemist-complete-debug-mode))
+  (let ((state (if alchemist-complete-debug-mode
+                  "ENABLED"
+                "DISABLED")))
+    (message "Alchemist complete debug mode is: %s" state)
+    ))
+
 (defun alchemist-complete--clean-functions (candidates)
   (mapcar (lambda (c) (replace-regexp-in-string "/[0-9]$" "" c)) candidates))
 
@@ -113,6 +126,9 @@ IO.inspect Alchemist.expand('%s')
                                                            candidates)))
                                         (funcall callback candidates)))
                                      (t
+                                      (when alchemist-complete-debug-mode
+                                        (alchemist-utils--warn (format "\n== ALCHEMIST COMPLETION FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
+                                                                       (alchemist-utils--get-buffer-content (process-buffer process)))))
                                       (funcall callback '())))
                                (alchemist-utils--erase-buffer (process-buffer process)))))
 

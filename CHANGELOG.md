@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.10.0-dev (unreleased)
+
+### Enhancements
+
+   * [Complete] Add the function `alchemist-complete-debug-mode` for controlling
+     the display of the error output from completion.
+
 ## v0.9.0
 
 ### Enhancements
