@@ -6,6 +6,9 @@
 \usepackage{multicol}
 \pagestyle{empty}
 
+\usepackage[T1]{fontenc}
+\newcommand{\changefont}[3]{
+\fontfamily{#1} \fontseries{#2} \fontshape{#3} \selectfont}
 
 \newcommand{\docheading}{\Huge\centering{Alchemist Quick Reference Card}\normalsize\bigskip}
 \newcommand{\helpgroup}[1]{\par\noindent\centering{\textbf{\large#1}\medskip}}
@@ -16,6 +19,8 @@
 \newcommand{\meta}[1]{\textlangle{#1}\textrangle}
 
 \begin{document}
+
+\changefont{pag}{m}{n}
 
 \renewcommand{\baselinestretch}{1.2}
 
