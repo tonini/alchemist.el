@@ -97,7 +97,7 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 Disable ansi color formatted documentation:
 
 ```el
-(setq alchemist-help-ansi-color-docs t) ;; default: nil
+(setq alchemist-help-ansi-color-docs nil) ;; default: t
 ```
 
 Enable compilation if needed when do documentation lookup or completion on
