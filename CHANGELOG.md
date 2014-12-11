@@ -4,6 +4,8 @@
 
 ### Enhancements
 
+   * [Message] Implement Alchemist internal message API for things like debug
+     message etc.
    * [Complete] Add the function `alchemist-complete-debug-mode` for controlling
      the display of the error output from completion.
 
