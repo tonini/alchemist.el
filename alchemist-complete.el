@@ -127,10 +127,13 @@ IO.inspect Alchemist.expand('%s')
                                         (funcall callback candidates)))
                                      (t
                                       (when alchemist-complete-debug-mode
-                                        (alchemist-utils--warn (format "\n== ALCHEMIST COMPLETION FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
-                                                                       (alchemist-utils--get-buffer-content (process-buffer process)))))
+                                        (alchemist-complete--debug-message (alchemist-utils--get-buffer-content (process-buffer process))))
                                       (funcall callback '())))
                                (alchemist-utils--erase-buffer (process-buffer process)))))
+
+(defun alchemist-complete--debug-message (content)
+  (alchemist-message (format "== ALCHEMIST COMPLETION FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
+                             content)))
 
 (defun alchemist-complete (exp callback)
   (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
