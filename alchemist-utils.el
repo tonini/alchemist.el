@@ -63,10 +63,6 @@ It walks the directory tree until it finds a elixir project root indicator."
   (with-current-buffer buffer
     (buffer-substring (point-min) (point-max))))
 
-(defun alchemist-utils--warn (message)
-  (kill-buffer "*Warnings*")
-  (warn message))
-
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
