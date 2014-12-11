@@ -46,6 +46,7 @@
 (require 'alchemist-hooks)
 (require 'alchemist-help)
 (require 'alchemist-complete)
+(require 'alchemist-message)
 
 (eval-after-load 'company
   '(progn
