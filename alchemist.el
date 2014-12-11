@@ -47,6 +47,7 @@
 (require 'alchemist-help)
 (require 'alchemist-complete)
 (require 'alchemist-message)
+(require 'alchemist-iex)
 
 (eval-after-load 'company
   '(progn
