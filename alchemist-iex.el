@@ -77,16 +77,6 @@ setting up the alchemist IEx buffer."
           (call-interactively 'alchemist-iex-start-process))
         (alchemist-iex-process arg))))
 
-;;;###autoload
-(defalias 'run-elixir 'alchemist-iex-run)
-(defalias 'inferior-elixir 'alchemist-iex-run)
-;;;###autoload
-(defun alchemist-iex-run (&optional arg)
-  "Show the iex buffer. Start the process if needed."
-  (interactive "P")
-  (let ((proc (alchemist-iex-process arg)))
-    (pop-to-buffer (process-buffer proc))))
-
 (defun alchemist-iex--remove-newlines (string)
   (replace-regexp-in-string "\n" " " string))
 
@@ -125,6 +115,17 @@ and jump to the buffer."
       (insert-before-markers str)
       (move-marker comint-last-input-end (point))
       (comint-send-string proc str))))
+
+;;;###autoload
+(defalias 'run-elixir 'alchemist-iex-run)
+(defalias 'inferior-elixir 'alchemist-iex-run)
+
+;;;###autoload
+(defun alchemist-iex-run (&optional arg)
+  "Show the iex buffer. Start the process if needed."
+  (interactive "P")
+  (let ((proc (alchemist-iex-process arg)))
+    (pop-to-buffer (process-buffer proc))))
 
 (provide 'alchemist-iex)
 
