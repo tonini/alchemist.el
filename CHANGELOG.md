@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.11.0-dev (unreleased)
+
+### Changes
+
+  * [IEx] Remove default keymap, TAB is not needed because users have theyre own
+    setup for `company-complete`.
+
 ## v0.10.0
 
 ### Enhancements
