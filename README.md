@@ -31,6 +31,8 @@
 - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Auto-completion](#auto-completion)
   - [Debug](#debug)
+- [IEx](#iex)
+  - [Complete & Documentation lookup](complete--documentation-lookup)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -343,6 +345,28 @@ another window.
 The function `alchemist-complete-debug-mode` can be used to enable/disable the
 debug mode. When enabled, the error output from the completion will be shown in
 a separate window.
+
+## IEx
+
+Alchemist provides a `REPL` buffer, connected to an
+[Elixir IEx](http://elixir-lang.org/docs/master/iex/IEx.html) subprocess.
+
+| Keybinding | Description |
+|--------------------|------------------------------------------|
+|<kbd>C-c a i i</kbd>| Start an IEx process. `alchemist-iex-run`|
+|<kbd>C-c a i l</kbd>| Sends the current line to the IEx process. `alchemist-iex-send-current-line`|
+|<kbd>C-c a i c</kbd>| Sends the current line to the IEx process and jump to the buffer.. `alchemist-iex-send-current-line-and-go`|
+|<kbd>C-c a i r</kbd>| Sends the marked region to the IEx process. `alchemist-iex-send-region`|
+|<kbd>C-c a i m</kbd>| Sends the marked region to the IEx process and jump to the buffer. `alchemist-iex-send-region-and-go`|
+
+### Complete & Documentation lookup
+
+When Alchemist finds [company-mode](http://company-mode.github.io/) it enables
+completion inside in IEx process buffer.
+
+Documention lookup inside an IEx process buffer will also be activated.
+
+![IEx Completion and Docs lookup](logo/iex-complete-docs-lookup.gif)
 
 ## Hooks
 

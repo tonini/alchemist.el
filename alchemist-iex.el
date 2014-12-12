@@ -70,8 +70,8 @@
   "Start an IEX process.
 With universal prefix \\[universal-argument], prompts for a COMMAND,
 otherwise uses `alchemist-iex-program-name'.
-It runs the hook `alchemist-iex-hook' after starting the process and
-setting up the alchemist IEx buffer."
+It runs the hook `alchemist-iex-mode-hook' after starting the process and
+setting up the IEx buffer."
   (interactive (list (alchemist-iex-command current-prefix-arg)))
   (setq alchemist-iex-buffer
         (apply 'make-comint "Alchemist-IEx" (car command) nil (cdr command)))
@@ -91,7 +91,7 @@ setting up the alchemist IEx buffer."
   (replace-regexp-in-string "\n" " " string))
 
 (defun alchemist-iex-send-current-line ()
-  "Sends the current line to the inferior IEx process."
+  "Sends the current line to the IEx process."
   (interactive)
   (let ((str (thing-at-point 'line)))
     (alchemist-iex--send-command (alchemist-iex-process) str)))
@@ -111,7 +111,7 @@ and jump to the buffer."
   (pop-to-buffer (process-buffer (alchemist-iex-process))))
 
 (defun alchemist-iex-send-region (beg end)
-  "Sends the marked region to the inferior IEx process."
+  "Sends the marked region to the IEx process."
   (interactive (list (point) (mark)))
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
@@ -133,7 +133,8 @@ and jump to the buffer."
 
 ;;;###autoload
 (defun alchemist-iex-run (&optional arg)
-  "Show the iex buffer. Start the process if needed."
+  "Start an IEx process.
+Show the IEx buffer if an IEx process is already run."
   (interactive "P")
   (let ((proc (alchemist-iex-process arg)))
     (pop-to-buffer (process-buffer proc))))
