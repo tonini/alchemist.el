@@ -79,6 +79,7 @@ setting up the alchemist IEx buffer."
 
 ;;;###autoload
 (defalias 'run-elixir 'alchemist-iex-run)
+(defalias 'inferior-elixir 'alchemist-iex-run)
 ;;;###autoload
 (defun alchemist-iex-run (&optional arg)
   "Show the iex buffer. Start the process if needed."
@@ -94,6 +95,20 @@ setting up the alchemist IEx buffer."
   (interactive)
   (let ((str (thing-at-point 'line)))
     (alchemist-iex--send-command (alchemist-iex-process) str)))
+
+(defun alchemist-iex-send-current-line-and-go ()
+  "Sends the current line to the inferior IEx process
+and jump to the buffer."
+  (interactive)
+  (call-interactively 'alchemist-iex-send-current-line)
+  (pop-to-buffer (process-buffer (alchemist-iex-process))))
+
+(defun alchemist-iex-send-region-and-go ()
+  "Sends the marked region to the inferior IEx process
+and jump to the buffer."
+  (interactive)
+  (call-interactively 'alchemist-iex-send-region)
+  (pop-to-buffer (process-buffer (alchemist-iex-process))))
 
 (defun alchemist-iex-send-region (beg end)
   "Sends the marked region to the inferior IEx process."
