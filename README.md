@@ -351,6 +351,12 @@ a separate window.
 Alchemist provides a `REPL` buffer, connected to an
 [Elixir IEx](http://elixir-lang.org/docs/master/iex/IEx.html) subprocess.
 
+To start an IEx process just run <kbd>M-x alchemist-iex-run</kbd>
+
+To start an custom IEx process with additional arguments just use the
+[universal-argument](http://www.gnu.org/software/emacs/manual/html_node/emacs/Arguments.html) <kbd>C-u</kbd>
+before run <kbd>M-x alchemist-iex-run</kbd>
+
 | Keybinding | Description |
 |--------------------|------------------------------------------|
 |<kbd>C-c a i i</kbd>| Start an IEx process. `alchemist-iex-run`|
