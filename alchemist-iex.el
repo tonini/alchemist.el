@@ -35,21 +35,12 @@
 (defvar alchemist-iex-mode-hook nil
   "Hook for customizing `alchemist-iex-mode'.")
 
-(defvar alchemist-iex-mode-map
-  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-    (define-key map (kbd "TAB") 'company-complete)
-    map)
-  "Basic mode map for `alchemist-iex-mode'")
-
 (define-derived-mode alchemist-iex-mode comint-mode "Alchemist-IEx"
-  "Major mode for interacting with an Elixir IEx process.
-
-\\<alchemist-iex-mode-map>"
+  "Major mode for interacting with an Elixir IEx process."
   nil "Alchemist-IEx"
   (set (make-local-variable 'comint-prompt-regexp)
        "^iex(\\([0-9]+\\|[a-zA-Z_@]+\\))> ")
-  (set (make-local-variable 'comint-input-autoexpand) nil)
-  (use-local-map alchemist-iex-mode-map))
+  (set (make-local-variable 'comint-input-autoexpand) nil))
 
 (defun alchemist-iex-string-to-strings (string)
   "Split the STRING into a list of strings."
