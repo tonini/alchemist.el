@@ -4,6 +4,8 @@
 
 ### Enhancements
 
+   * [Alchemist] Add keybindings for Alchemist-IEx.
+   * [IEx] Implemention of an Elixir IEx process buffer.
    * [Message] Implement Alchemist internal message API for things like debug
      message etc.
    * [Complete] Add the function `alchemist-complete-debug-mode` for controlling
