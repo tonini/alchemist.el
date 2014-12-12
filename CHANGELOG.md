@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+   * [IEx] Run IEx with mix. `alchemist-iex-project-run`
    * [Alchemist] Add keybindings for Alchemist-IEx.
    * [IEx] Implemention of an Elixir IEx process buffer.
    * [Message] Implement Alchemist internal message API for things like debug

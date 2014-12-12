@@ -64,7 +64,7 @@
 (defun alchemist-iex-command (arg)
   (alchemist-iex-string-to-strings
    (if (null arg) alchemist-iex-program-name
-     (read-string "Command to run Elixir IEx: " alchemist-iex-program-name))))
+     (read-string "Command to run Elixir IEx: " (concat alchemist-iex-program-name arg)))))
 
 (defun alchemist-iex-start-process (command)
   "Start an IEX process.
@@ -138,6 +138,18 @@ Show the IEx buffer if an IEx process is already run."
   (interactive "P")
   (let ((proc (alchemist-iex-process arg)))
     (pop-to-buffer (process-buffer proc))))
+
+;;;###autoload
+(defun alchemist-iex-project-run ()
+  "Start an IEx process with mix 'iex -S mix'
+Show the IEx buffer if an IEx process is already run."
+  (interactive)
+  (if (alchemist-project-p)
+      (progn
+        (alchemist-project--establish-root-directory)
+        (let ((proc (alchemist-iex-process " -S mix")))
+          (pop-to-buffer (process-buffer proc))))
+    (message "No mix.exs file available. Please use `alchemist-iex-run' instead.")))
 
 (provide 'alchemist-iex)
 

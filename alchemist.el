@@ -83,6 +83,7 @@
     (define-key map (kbd "C-c a p f") 'alchemist-project-find-test)
     (define-key map (kbd "C-c a p t") 'alchemist-project-open-tests-for-current-file)
     (define-key map (kbd "C-c a i i") 'alchemist-iex-run)
+    (define-key map (kbd "C-c a i p") 'alchemist-iex-project-run)
     (define-key map (kbd "C-c a i l") 'alchemist-iex-send-current-line)
     (define-key map (kbd "C-c a i c") 'alchemist-iex-send-current-line-and-go)
     (define-key map (kbd "C-c a i r") 'alchemist-iex-send-region)
