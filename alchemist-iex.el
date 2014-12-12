@@ -32,11 +32,24 @@
 (defvar alchemist-iex-buffer nil
   "The buffer in which the Elixir IEx process is running.")
 
+(defvar alchemist-iex-mode-hook nil
+  "Hook for customizing `alchemist-iex-mode'.")
+
+(defvar alchemist-iex-mode-map
+  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+    (define-key map (kbd "TAB") 'company-complete)
+    map)
+  "Basic mode map for `alchemist-iex-mode'")
+
 (define-derived-mode alchemist-iex-mode comint-mode "Alchemist-IEx"
-  "Major mode for interacting with an Elixir IEx process."
+  "Major mode for interacting with an Elixir IEx process.
+
+\\<alchemist-iex-mode-map>"
+  nil "Alchemist-IEx"
   (set (make-local-variable 'comint-prompt-regexp)
        "^iex(\\([0-9]+\\|[a-zA-Z_@]+\\))> ")
-  (set (make-local-variable 'comint-input-autoexpand) nil))
+  (set (make-local-variable 'comint-input-autoexpand) nil)
+  (use-local-map alchemist-iex-mode-map))
 
 (defun alchemist-iex-string-to-strings (string)
   "Split the STRING into a list of strings."
@@ -45,16 +58,13 @@
       (append (unless (eq i 0) (split-string (substring string 0 i)))
               (let ((rfs (read-from-string string i)))
                 (cons (car rfs)
-                      (inferior-haskell-string-to-strings
+                      (alchemist-iex-string-to-strings
                        (substring string (cdr rfs)))))))))
 
 (defun alchemist-iex-command (arg)
   (alchemist-iex-string-to-strings
    (if (null arg) alchemist-iex-program-name
      (read-string "Command to run Elixir IEx: " alchemist-iex-program-name))))
-
-(defvar alchemist-iex-buffer nil
-  "The buffer in which the inferior process is running.")
 
 (defun alchemist-iex-start-process (command)
   "Start an IEX process.
@@ -67,7 +77,7 @@ setting up the alchemist IEx buffer."
         (apply 'make-comint "Alchemist-IEx" (car command) nil (cdr command)))
   (with-current-buffer alchemist-iex-buffer
     (alchemist-iex-mode)
-    (run-hooks 'alchemist-iex-hook)))
+    (run-hooks 'alchemist-iex-mode-hook)))
 
 (defun alchemist-iex-process (&optional arg)
   (or (if (buffer-live-p alchemist-iex-buffer)
