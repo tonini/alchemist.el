@@ -353,9 +353,10 @@ Alchemist provides a `REPL` buffer, connected to an
 
 To start an IEx process just run <kbd>M-x alchemist-iex-run</kbd>
 
-To start an custom IEx process with additional arguments just use the
+To start a custom IEx process with additional arguments (like: `iex -S mix`) just use the
 [universal-argument](http://www.gnu.org/software/emacs/manual/html_node/emacs/Arguments.html) <kbd>C-u</kbd>
 before run <kbd>M-x alchemist-iex-run</kbd>
+
 
 | Keybinding | Description |
 |--------------------|------------------------------------------|
