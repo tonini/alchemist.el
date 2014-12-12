@@ -109,12 +109,13 @@ and jump to the buffer."
     (alchemist-iex--send-command (alchemist-iex-process) region)))
 
 (defun alchemist-iex--send-command (proc str)
-  (let ((str (concat (alchemist-iex--remove-newlines str) "\n")))
+  (let ((str-no-newline (concat (alchemist-iex--remove-newlines str) "\n"))
+        (str (concat str "\n")))
     (with-current-buffer (process-buffer proc)
       (goto-char (process-mark proc))
       (insert-before-markers str)
       (move-marker comint-last-input-end (point))
-      (comint-send-string proc str))))
+      (comint-send-string proc str-no-newline))))
 
 ;;;###autoload
 (defalias 'run-elixir 'alchemist-iex-run)
