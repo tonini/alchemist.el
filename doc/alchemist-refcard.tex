@@ -1,10 +1,13 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,8pt]{article}
 
 \usepackage{textcomp}
 \usepackage{fullpage}
 \usepackage{boxedminipage}
 \usepackage{multicol}
+\usepackage[a4paper,left=1cm,right=1cm,top=3cm,bottom=1cm]{geometry}
 \pagestyle{empty}
+
+\marginparwidth = 10pt
 
 \usepackage[T1]{fontenc}
 \newcommand{\changefont}[3]{
@@ -48,65 +51,52 @@
 
 \bigskip
 
-\begin{minipage}[t]{10cm}
+\setlength{\columnsep}{1cm}
 
-\helpgroup{Mix}
+\begin{multicols}{2}
+
+\group{Mix}
 
 \key{C-c a t}{alchemist-mix-new}
 \key{C-c a m t f}{alchemist-mix-test-file}
 \key{C-c a m t b}{alchemist-mix-test-this-buffer}
 \key{C-c a m t .}{alchemist-mix-test-at-point}
 
-\end{minipage}
-
-
-\bigskipamount1cm
-
-\bigskip
-
-\begin{minipage}[t]{10cm}
-
-\helpgroup{Compilation}
+\group{Compilation}
 
 \key{C-c a c c}{alchemist-compile}
 \key{C-c a c f}{alchemist-compile-file}
 \key{C-c a c b}{alchemist-compile-this-buffer}
 
-\end{minipage}
-
-\bigskip
-
-\begin{minipage}[t]{10cm}
-
-\helpgroup{Execution}
+\group{Execution}
 
 \key{C-c a e e}{alchemist-execute}
 \key{C-c a e f}{alchemist-execute-file}
 \key{C-c a e b}{alchemist-execute-this-buffer}
 
-\end{minipage}
 
-\bigskip
+\group{Project}
 
-\begin{minipage}[t]{10cm}
+\key{C-c a p f}{alchemist-project-find-test}
+\key{C-c a p t}{alchemist-project-open-tests-for-current-file}
 
-\helpgroup{Documentation Lookup}
+
+\columnbreak
+
+\group{Documentation Lookup}
 
 \key{C-c a h h}{alchemist-help}
 \key{C-c a h e}{alchemist-help-search-at-point}
 \key{C-c a h m}{alchemist-help-search-marked-region}
 
-\end{minipage}
+\group{IEx}
 
-\bigskip
+\key{C-c a i i}{alchemist-iex-run}
+\key{C-c a i l}{alchemist-iex-send-current-line}
+\key{C-c a i c}{alchemist-iex-send-current-line-and-go}
+\key{C-c a i r}{alchemist-iex-send-region}
+\key{C-c a i m}{alchemist-iex-send-region-and-go}
 
-\begin{minipage}[t]{10cm}
-
-\helpgroup{Project}
-
-\key{C-c a p f}{alchemist-project-find-test}
-\key{C-c a p t}{alchemist-project-open-tests-for-current-file}
-
-\end{minipage}
+\end{multicols}
 
 \end{document}
