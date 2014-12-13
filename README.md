@@ -32,7 +32,7 @@
 - [Auto-completion](#auto-completion)
   - [Debug](#debug)
 - [IEx](#iex)
-  - [Complete & Documentation lookup](complete--documentation-lookup)
+  - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
