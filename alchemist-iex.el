@@ -132,7 +132,8 @@ Show the IEx buffer if an IEx process is already run."
 
 ;;;###autoload
 (defun alchemist-iex-project-run ()
-  "Start an IEx process with mix 'iex -S mix'
+  "Start an IEx process with mix 'iex -S mix in the
+context of an Elixir project.'
 Show the IEx buffer if an IEx process is already run."
   (interactive)
   (let ((old-directory default-directory))
