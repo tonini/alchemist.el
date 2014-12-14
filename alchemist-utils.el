@@ -23,6 +23,8 @@
 
 ;;; Code:
 
+(require 'ansi-color)
+
 (defvar alchemist-utils--elixir-project-root-indicator
   "mix.exs"
   "The file which indicate an elixir project root.")
@@ -61,7 +63,7 @@ It walks the directory tree until it finds a elixir project root indicator."
 (defun alchemist-utils--get-buffer-content (buffer)
   "Return the content of BUFFER."
   (with-current-buffer buffer
-    (buffer-substring (point-min) (point-max))))
+    (ansi-color-filter-apply (buffer-substring (point-min) (point-max)))))
 
 (provide 'alchemist-utils)
 
