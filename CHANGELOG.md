@@ -1,11 +1,15 @@
 # Changelog
 
-## v0.11.0-dev (unreleased)
+## v0.10.1
 
 ### Changes
 
   * [IEx] Remove default keymap, TAB is not needed because users have theyre own
     setup for `company-complete`.
+
+### Bugfixes
+
+  * [Utils] Clean buffer content from ansi escape sequences. (issue: #25)
 
 ## v0.10.0
 
