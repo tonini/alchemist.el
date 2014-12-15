@@ -40,8 +40,7 @@ is `nil', otherwise it disable it."
   (let ((state (if alchemist-complete-debug-mode
                   "ENABLED"
                 "DISABLED")))
-    (message "Alchemist complete debug mode is: %s" state)
-    ))
+    (message "Alchemist complete debug mode is: %s" state)))
 
 (defun alchemist-complete--clean-functions (candidates)
   (mapcar (lambda (c) (replace-regexp-in-string "/[0-9]$" "" c)) candidates))
