@@ -2,6 +2,10 @@
 
 ## v0.11.0-dev (unreleased)
 
+### Enhancements
+
+  * [IEx] compile the current buffer file within an IEx process. `alchemist-iex-compile-this-buffer`
+
 ### Changes
 
   * [Complete] `alchemist-complete-debug-mode` is `t` by default and failed

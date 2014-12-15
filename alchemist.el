@@ -88,6 +88,7 @@
     (define-key map (kbd "C-c a i c") 'alchemist-iex-send-current-line-and-go)
     (define-key map (kbd "C-c a i r") 'alchemist-iex-send-region)
     (define-key map (kbd "C-c a i m") 'alchemist-iex-send-region-and-go)
+    (define-key map (kbd "C-c a i b") 'alchemist-iex-compile-this-buffer)
     map)
   "The keymap used when `alchemist-mode' is active.")
 
