@@ -30,7 +30,7 @@
   :prefix "alchemist-complete-"
   :group 'alchemist)
 
-(defvar alchemist-complete-debug-mode nil)
+(defvar alchemist-complete-debug-mode t)
 
 (defun alchemist-complete-debug-mode ()
   "Enables the debug mode for completion if `alchemist-complete-debug-mode'

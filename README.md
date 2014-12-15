@@ -112,6 +112,27 @@ Elixir project current codebase.
 The function `alchemist-project-toggle-compile-when-needed` can also be used to enable/disable
 compilation on the fly.
 
+By default, the error output of failed completions will be displayed in a
+separat buffer.
+
+Example output:
+
+```shell
+== ALCHEMIST COMPLETION FAILED ==
+== OUTPUT BEGIN:
+** (CompileError) mix.exs:5: function asdas/0 undefined
+    (stdlib) lists.erl:1336: :lists.foreach/2
+    (stdlib) erl_eval.erl:657: :erl_eval.do_apply/6
+
+== OUTPUT END:
+```
+
+This behavior can be disabled with set the following variable.
+
+```el
+(setq alchemist-complete-debug-mode nil) ;; default t
+```
+
 ### Project configuration file
 
 To setup custom configurations for different Elixir projects, create a
@@ -343,8 +364,7 @@ another window.
 ### Debug
 
 The function `alchemist-complete-debug-mode` can be used to enable/disable the
-debug mode. When enabled, the error output from the completion will be shown in
-a separate window.
+debug mode. When disabled, the error output from the completion will not be displayed.
 
 ## IEx
 
