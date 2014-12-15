@@ -109,6 +109,12 @@ and jump to the buffer."
   (let* ((region (buffer-substring-no-properties beg end)))
     (alchemist-iex--send-command (alchemist-iex-process) region)))
 
+(defun alchemist-iex-compile-this-buffer ()
+  "Compiles the current buffer in the IEx process."
+  (interactive)
+  (let ((str (format "c(\"%s\")" (buffer-file-name))))
+    (alchemist-iex--send-command (alchemist-iex-process) str)))
+
 (defun alchemist-iex--send-command (proc str)
   (let ((str-no-newline (concat (alchemist-iex--remove-newlines str) "\n"))
         (str (concat str "\n")))
