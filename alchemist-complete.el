@@ -38,8 +38,8 @@ is `nil', otherwise it disable it."
   (interactive)
   (setq alchemist-complete-debug-mode (not alchemist-complete-debug-mode))
   (let ((state (if alchemist-complete-debug-mode
-                  "ENABLED"
-                "DISABLED")))
+                   "ENABLED"
+                 "DISABLED")))
     (message "Alchemist complete debug mode is: %s" state)))
 
 (defun alchemist-complete--clean-functions (candidates)
@@ -119,7 +119,8 @@ IO.inspect Alchemist.expand('%s')
                                (cond ((equal signal "finished\n")
                                       (alchemist-complete--clear-buffer (process-buffer process))
                                       (let* ((candidates (alchemist-complete--elixir-output-to-list
-                                                          (alchemist-utils--get-buffer-content (process-buffer process))))
+                                                          (alchemist--utils-clear-ansi-sequences
+                                                           (alchemist-utils--get-buffer-content (process-buffer process)))))
                                              (candidates (if format-function
                                                              (funcall format-function candidates)
                                                            candidates)))

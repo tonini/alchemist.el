@@ -63,7 +63,11 @@ It walks the directory tree until it finds a elixir project root indicator."
 (defun alchemist-utils--get-buffer-content (buffer)
   "Return the content of BUFFER."
   (with-current-buffer buffer
-    (ansi-color-filter-apply (buffer-substring (point-min) (point-max)))))
+    (buffer-substring (point-min) (point-max))))
+
+(defun alchemist--utils-clear-ansi-sequences (string)
+  "Clear STRING from all ansi escape sequences."
+  (ansi-color-filter-apply string))
 
 (provide 'alchemist-utils)
 
