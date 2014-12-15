@@ -96,23 +96,23 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 
 There are some ways Alchemist can be adjusted that certain workflows operating differently.
 
-Disable ansi color formatted documentation:
+* Disable ansi color formatted documentation:
 
 ```el
 (setq alchemist-help-ansi-color-docs nil) ;; default: t
 ```
 
-Enable compilation if needed when do documentation lookup or completion on
+* Enable compilation if needed when do documentation lookup or completion on
 Elixir project current codebase.
 
 ```el
 (setq alchemist-project-compile-when-needed t) ;; default nil
 ```
 
-The function `alchemist-project-toggle-compile-when-needed` can also be used to enable/disable
+* The function `alchemist-project-toggle-compile-when-needed` can also be used to enable/disable
 compilation on the fly.
 
-By default, the error output of failed completions will be displayed in a
+* By default, the error output of failed completions will be displayed in a
 separat buffer.
 
 Example output:
