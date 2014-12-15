@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.11.0-dev (unreleased)
+
+### Changes
+
+  * [Complete] `alchemist-complete-debug-mode` is `t` by default and failed
+    completions output will be displayed.
+
 ## v0.10.1
 
 ### Changes
