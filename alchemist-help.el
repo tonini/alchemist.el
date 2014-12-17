@@ -31,19 +31,17 @@
   :group 'alchemist)
 
 (defcustom alchemist-help-ansi-color-docs t
-  "If `t`, `alchemist-help' will present
-ansi formatted documention"
+  "If Non-nil, `alchemist-help' will present ansi colored documentation."
   :type 'boolean
   :group 'alchemist-help)
 
 (defcustom alchemist-help-buffer-name "*elixir help*"
-  "Name of the elixir help buffer."
+  "Name of the Elixir help buffer."
   :type 'string
   :group 'alchemist-help)
 
-(defvar alchemist-help-mix-run-command
-  "mix run"
-  "The shell command for `mix run`.")
+(defvar alchemist-help-mix-run-command "mix run"
+  "The shell command for 'mix run'.")
 
 (defface alchemist-help--key-face
   '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
