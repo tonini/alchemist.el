@@ -34,8 +34,11 @@
   :group 'alchemist)
 
 (defcustom alchemist-buffer-status-modeline t
-  "If t, the face of the Elixir mode name in the modeline
-changes depending on the success or failure of commands such as 'mix test'."
+  "Decides if face of local `mode-name' variable should change with compilation status.
+
+For example, when `alchemist-mix-test' failes, the `mode-name' will be
+formated with the `alchemist-buffer--failed-face' face, to symbolize failing tests.
+"
   :type 'boolean
   :group 'alchemist-buffer)
 
