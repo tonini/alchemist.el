@@ -1,4 +1,4 @@
-;;; alchemist-buffer.el --- Define a custom compilation mode for Elixir executions
+;;; alchemist-buffer.el --- Custom compilation mode for Alchemist
 
 ;; Copyright © 2014 Samuel Tonini
 
@@ -21,13 +21,15 @@
 
 ;;; Commentary:
 
+;;  Custom compilation mode for Alchemist
+
 ;;; Code:
 
 (require 'compile)
 (require 'ansi-color)
 
 (defgroup alchemist-buffer nil
-  "Custom compilation mode for Elixir"
+  "Custom compilation mode for Alchemist"
   :prefix "alchemist-buffer-"
   :group 'alchemist)
 
