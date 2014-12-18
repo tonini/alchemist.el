@@ -46,12 +46,13 @@
     (alchemist-eval--evaluate-code string)))
 
 (defun alchemist-eval--evaluate-code (string)
-  (with-temp-file ".alchemist-eval.exs"
-    (insert string))
-  (let ((output (shell-command-to-string
-                 (alchemist-eval--build-code-evaluation-command ".alchemist-eval.exs"))))
-    (delete-file ".alchemist-eval.exs")
-    (message (alchemist-utils--remove-newline-at-end output))))
+  (let ((tmp-file ".alchemist-eval.exs"))
+    (with-temp-file tmp-file
+      (insert string))
+    (let ((output (shell-command-to-string
+                   (alchemist-eval--build-code-evaluation-command tmp-file))))
+      (delete-file tmp-file)
+      (message (alchemist-utils--remove-newline-at-end output)))))
 
 (defun alchemist-eval--build-code-evaluation-command (file)
   (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
