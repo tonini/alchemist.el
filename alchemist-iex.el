@@ -81,6 +81,11 @@ setting up the IEx buffer."
 (defun alchemist-iex--remove-newlines (string)
   (replace-regexp-in-string "\n" " " string))
 
+(defun alchemist-iex-send-last-sexp ()
+  "Send the previous sexp to the inferior IEx process."
+  (interactive)
+  (alchemist-iex-send-region (save-excursion (backward-sexp) (point)) (point)))
+
 (defun alchemist-iex-send-current-line ()
   "Sends the current line to the IEx process."
   (interactive)
