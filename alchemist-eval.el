@@ -25,7 +25,7 @@
 
 ;;; Code:
 
-(defun alchemist-eval-this-line ()
+(defun alchemist-eval-current-line ()
   "Evaluate the Elixir code on the current line."
   (interactive)
   (let ((current-line (thing-at-point 'line)))
