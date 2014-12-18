@@ -69,6 +69,9 @@ It walks the directory tree until it finds a elixir project root indicator."
   "Clear STRING from all ansi escape sequences."
   (ansi-color-filter-apply string))
 
+(defun alchemist-utils--remove-newline-at-end (string)
+  (replace-regexp-in-string "\n$" "" string))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here

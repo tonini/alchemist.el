@@ -51,6 +51,13 @@
   (should (equal (alchemist-utils--clear-search-text "__CALLER__.")
                  "__CALLER__")))
 
+(ert-deftest test-utils/remove-newline-at-end ()
+  "Remove newline at the end of string."
+  (should (equal (alchemist-utils--remove-newline-at-end "This is
+a text
+") "This is
+a text")))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here
