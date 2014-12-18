@@ -29,7 +29,7 @@
   "Evaluate the Elixir code on the current line."
   (interactive)
   (let ((current-line (thing-at-point 'line)))
-    (alchemist-eval--evaluate-code current-line)))
+    (message (alchemist-eval--evaluate-code current-line))))
 
 (defun alchemist-eval-region (beg end)
   "Evaluate the Elixir code on marked region."
@@ -37,13 +37,13 @@
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
   (let ((string (buffer-substring-no-properties beg end)))
-    (alchemist-eval--evaluate-code string)))
+    (message (alchemist-eval--evaluate-code string))))
 
 (defun alchemist-eval-buffer ()
   "Evaluate the Elixir code in the current buffer."
   (interactive)
   (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (alchemist-eval--evaluate-code string)))
+    (message (alchemist-eval--evaluate-code string))))
 
 (defun alchemist-eval--evaluate-code (string)
   (let ((tmp-file ".alchemist-eval.exs"))
@@ -52,7 +52,7 @@
     (let ((output (shell-command-to-string
                    (alchemist-eval--build-code-evaluation-command tmp-file))))
       (delete-file tmp-file)
-      (message (alchemist-utils--remove-newline-at-end output)))))
+      (alchemist-utils--remove-newline-at-end output))))
 
 (defun alchemist-eval--build-code-evaluation-command (file)
   (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
