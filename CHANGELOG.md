@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.11.1
+
+### Bugfixes
+
+  * [Eval] Project root needs to be estabished before evaluate code in context
+    of the mix projects.
+
 ## v0.11.0
 
 ### Enhancements

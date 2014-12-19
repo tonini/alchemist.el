@@ -131,21 +131,29 @@ and insert result."
         (insert (format "  # => %s" string))))))
 
 (defun alchemist-eval--evaluate-code (string)
-  (let ((tmp-file ".alchemist-eval.exs"))
+  (let ((tmp-file ".alchemist-eval.exs")
+        (old-directory default-directory))
+    (when (alchemist-project-p)
+      (alchemist-project--establish-root-directory))
     (with-temp-file tmp-file
       (insert string))
     (let ((output (shell-command-to-string
                    (alchemist-eval--build-code-evaluation-command tmp-file))))
       (delete-file tmp-file)
+      (cd old-directory)
       (alchemist-utils--remove-newline-at-end output))))
 
 (defun alchemist-eval--evaluate-code-as-quoted (string)
-  (let ((tmp-file ".alchemist-eval.exs"))
+  (let ((tmp-file ".alchemist-eval.exs")
+        (old-directory default-directory))
+    (when (alchemist-project-p)
+      (alchemist-project--establish-root-directory))
     (with-temp-file tmp-file
       (insert string))
     (let ((output (shell-command-to-string
                    (alchemist-eval--build-code-evaluation-as-quoted-command tmp-file))))
       (delete-file tmp-file)
+      (cd old-directory)
       (alchemist-utils--remove-newline-at-end output))))
 
 (defun alchemist-eval--build-code-evaluation-command (file)
