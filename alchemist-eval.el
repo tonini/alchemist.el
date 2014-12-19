@@ -51,20 +51,6 @@ and insert the result."
   (let ((current-line (thing-at-point 'line)))
     (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted current-line))))
 
-(defun alchemist-eval--insert (string)
-  (let ((lines (split-string string "\n")))
-    (if (> (length lines) 1)
-        (progn
-          (save-excursion
-            (end-of-line)
-            (mapc (lambda (s)
-                    (newline)
-                    (insert (format "# => %s" s)))
-                  lines)))
-      (save-excursion
-        (end-of-line)
-        (insert (format "  # => %s" string))))))
-
 (defun alchemist-eval-region (beg end)
   "Evaluate the Elixir code on marked region."
   (interactive (list (point) (mark)))
@@ -129,6 +115,20 @@ and insert result."
   (interactive)
   (let ((string (buffer-substring-no-properties (point-min) (point-max))))
     (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted string))))
+
+(defun alchemist-eval--insert (string)
+  (let ((lines (split-string string "\n")))
+    (if (> (length lines) 1)
+        (progn
+          (save-excursion
+            (end-of-line)
+            (mapc (lambda (s)
+                    (newline)
+                    (insert (format "# => %s" s)))
+                  lines)))
+      (save-excursion
+        (end-of-line)
+        (insert (format "  # => %s" string))))))
 
 (defun alchemist-eval--evaluate-code (string)
   (let ((tmp-file ".alchemist-eval.exs"))
