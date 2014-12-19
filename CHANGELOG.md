@@ -4,6 +4,30 @@
 
 ### Enhancements
 
+  * [Eval] Implementation of Eval functionality.
+  * [Eval] Evaluate the Elixir code on the current line with `alchemist-eval-current-line`.
+  * [Eval] Evaluate the Elixir code on the current line and
+    insert the result with `alchemist-eval-print-current-line`.
+  * [Eval] Get the Elixir code representation of the expression on the current
+    line  with `alchemist-eval-quoted-current-line`.
+  * [Eval] Get the Elixir code representation of the expression on the current line
+    and insert the result with `alchemist-eval-print-quoted-current-line`.
+  * [Eval] Evaluate the Elixir code on marked region with
+    `alchemist-eval-region`.
+  * [Eval] Evaluate the Elixir code on marked region and
+    insert the result with `alchemist-eval-print-region`.
+  * [Eval] Get the Elixir code representation of the expression on marked region
+    with `alchemist-eval-quoted-region`.
+  * [Eval] Get the Elixir code representation of the expression on marked region
+    and insert the result with `alchemist-eval-print-quoted-region`.
+  * [Eval] Evaluate the Elixir code in the current buffer with
+    `alchemist-eval-buffer`.
+  * [Eval] Evaluate the Elixir code in the current buffer and insert the result
+    with `alchemist-eval-print-buffer`.
+  * [Eval] Get the Elixir code representation of the expression in the current
+    buffer with `alchemist-eval-quoted-buffer`.
+  * [Eval] Get the Elixir code representation of the expression in the current buffer
+    and insert result with `alchemist-eval-print-quoted-buffer`.
   * [IEx] compile the current buffer file within an IEx process. `alchemist-iex-compile-this-buffer`
 
 ### Changes
