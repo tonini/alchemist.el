@@ -27,20 +27,28 @@
 
 (defun alchemist-eval-print-current-line ()
   "Evaluate the Elixir code on the current line and
-insert the result inline."
+insert the result."
   (interactive)
   (let ((current-line (thing-at-point 'line)))
     (alchemist-eval--insert (alchemist-eval--evaluate-code current-line))))
 
 (defun alchemist-eval-print-region (beg end)
   "Evaluate the Elixir code on marked region and
-insert the result inline."
+insert the result."
   (interactive (list (point) (mark)))
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
   (let ((string (buffer-substring-no-properties beg end)))
     (when (> end beg)
       (exchange-point-and-mark))
+    (alchemist-eval--insert (alchemist-eval--evaluate-code string))))
+
+(defun alchemist-eval-print-buffer ()
+  "Evaluate the Elixir code in the current buffer and
+insert the result."
+  (interactive)
+  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
+    (end-of-buffer)
     (alchemist-eval--insert (alchemist-eval--evaluate-code string))))
 
 (defun alchemist-eval--insert (string)
