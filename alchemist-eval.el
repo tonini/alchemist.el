@@ -100,7 +100,7 @@ insert the result."
                    alchemist-execute-command)))
     (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
             command
-            ".alchemist-eval.exs")))
+            file)))
 
 (provide 'alchemist-eval)
 
