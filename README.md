@@ -33,6 +33,7 @@
   - [Debug](#debug)
 - [IEx](#iex)
   - [Complete & Documentation lookup](#complete--documentation-lookup)
+- [Eval](#eval)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -398,6 +399,27 @@ completion inside in IEx process buffer.
 Documention lookup inside an IEx process buffer will also be activated.
 
 ![IEx Completion and Docs lookup](logo/iex-complete-docs-lookup.gif)
+
+## Eval
+
+Alchemist comes with the functionality to evaluate code inside the buffer.
+
+| Keybinding | Description |
+|--------------------|------------------------------------------|
+|<kbd>C-c a v l</kbd>| Evaluate the Elixir code on the current line. `alchemist-eval-current-line`.|
+|<kbd>C-c a v k</kbd>| Evaluate the Elixir code on the current line and insert the result. `alchemist-eval-print-current-line`.|
+|<kbd>C-c a v j</kbd>| Get the Elixir code representation of the expression on the current line. `alchemist-eval-quoted-current-line`. |
+|<kbd>C-c a v h</kbd>| Get the Elixir code representation of the expression on the current line and insert the result. `alchemist-eval-print-quoted-current-line`. |
+|<kbd>C-c a v o</kbd>| Evaluate the Elixir code on marked region. `alchemist-eval-region`.|
+|<kbd>C-c a v i</kbd>| Evaluate the Elixir code on marked region and insert the result. `alchemist-eval-print-region`.|
+|<kbd>C-c a v u</kbd>| Get the Elixir code representation of the expression on marked region. `alchemist-eval-quoted-region`.|
+|<kbd>C-c a v y</kbd>| Get the Elixir code representation of the expression on marked region and insert the result. `alchemist-eval-print-quoted-region`.|
+|<kbd>C-c a v q</kbd>| Evaluate the Elixir code in the current buffer. `alchemist-eval-buffer`.|
+|<kbd>C-c a v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
+|<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
+|<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
+
+
 
 ## Hooks
 
