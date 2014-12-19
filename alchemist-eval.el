@@ -149,20 +149,19 @@ and insert result."
       (alchemist-utils--remove-newline-at-end output))))
 
 (defun alchemist-eval--build-code-evaluation-command (file)
-  (let ((command (if (alchemist-project-p)
-                     (format "%s run --no-compile" alchemist-mix-command)
-                   alchemist-execute-command)))
-    (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
-            command
-            file)))
+  (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
+          (alchemist-eval--runner)
+          file))
 
 (defun alchemist-eval--build-code-evaluation-as-quoted-command (file)
-  (let ((command (if (alchemist-project-p)
-                     (format "%s run --no-compile" alchemist-mix-command)
-                   alchemist-execute-command)))
-    (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1), pretty: true)'"
-            command
-            file)))
+  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1), pretty: true)'"
+          (alchemist-eval--runner)
+          file))
+
+(defun alchemist-eval--runner ()
+  (if (alchemist-project-p)
+      (format "%s run --no-compile" alchemist-mix-command)
+    alchemist-execute-command))
 
 (provide 'alchemist-eval)
 
