@@ -95,9 +95,12 @@ insert the result."
       (alchemist-utils--remove-newline-at-end output))))
 
 (defun alchemist-eval--build-code-evaluation-command (file)
-  (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
-          elixir-mode-command
-          ".alchemist-eval.exs"))
+  (let ((command (if (alchemist-project-p)
+                     (format "%s run --no-compile" alchemist-mix-command)
+                   alchemist-execute-command)))
+    (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
+            command
+            ".alchemist-eval.exs")))
 
 (provide 'alchemist-eval)
 
