@@ -42,18 +42,8 @@
        "^iex(\\([0-9]+\\|[a-zA-Z_@]+\\))> ")
   (set (make-local-variable 'comint-input-autoexpand) nil))
 
-(defun alchemist-iex--string-to-strings (string)
-  "Split the STRING into a list of strings."
-  (let ((i (string-match "[\"]" string)))
-    (if (null i) (split-string string)  ; no quoting:  easy
-      (append (unless (eq i 0) (split-string (substring string 0 i)))
-              (let ((rfs (read-from-string string i)))
-                (cons (car rfs)
-                      (alchemist-iex--string-to-strings
-                       (substring string (cdr rfs)))))))))
-
 (defun alchemist-iex-command (arg)
-  (alchemist-iex--string-to-strings
+  (split-string-and-unquote
    (if (null arg) alchemist-iex-program-name
      (read-string "Command to run Elixir IEx: " (concat alchemist-iex-program-name arg)))))
 
