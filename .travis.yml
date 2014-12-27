@@ -1,21 +1,21 @@
 language: erlang
 otp_release:
   - 17.0
-before_install:
-  - wget http://s3.hex.pm/builds/elixir/v1.0.0.zip
-  - unzip -d elixir v1.0.0.zip
-before_script:
-  - export PATH=`pwd`/elixir/bin:$PATH
+cache: apt
 env:
   - EMACS=emacs24
   - EMACS=emacs-snapshot
 before_install:
+  - wget http://s3.hex.pm/builds/elixir/v1.0.0.zip
+  - unzip -d elixir v1.0.0.zip
   - sudo add-apt-repository -y ppa:cassou/emacs # Emacs 24.3
   - sudo add-apt-repository -y ppa:ubuntu-elisp/ppa # Emacs snapshot
   - sudo apt-get update
   - sudo apt-get install -y $EMACS
   - curl -fsSkL https://raw.github.com/cask/cask/master/go | python
   - export PATH="${HOME}/.cask/bin:$PATH"
+before_script:
+  - export PATH=`pwd`/elixir/bin:$PATH
 install:
   - cask install
 script:
