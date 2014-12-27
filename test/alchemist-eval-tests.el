@@ -44,6 +44,16 @@
                                  a + b")
 			(alchemist-eval-region (point-min) (point-max))))))
 
+(ert-deftest show-result-in-echo-area ()
+  "Evalute code on current line"
+  (should (equal "54" (with-temp-buffer
+			(alchemist-mode)
+			(insert "sum = fn (a, b) ->
+                                   a + b
+                                 end
+                                 sum.(21, 33)")
+			(alchemist-eval-buffer)))))
+
 (provide 'alchemist-eval-tests)
 
 ;;; alchemist-eval-tests.el ends here
