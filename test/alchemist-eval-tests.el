@@ -27,16 +27,16 @@
 
 (require 'test-helper)
 
-(ert-deftest show-result-in-echo-area ()
-  "Evalute code on current line"
+(ert-deftest evaluate-code-of-current-line ()
+  "Evalute code on current line and output result."
   (should (equal "2" (with-temp-buffer
 		       (alchemist-mode)
 		       (insert "1 + 1")
 		       (goto-char (point-min))
 		       (alchemist-eval-current-line)))))
 
-(ert-deftest show-result-in-echo-area ()
-  "Evalute code on current line"
+(ert-deftest evaluate-code-of-marked-region ()
+  "Evalute code on region and output result."
   (should (equal "12" (with-temp-buffer
 			(alchemist-mode)
 			(insert "a = 10
@@ -44,8 +44,8 @@
                                  a + b")
 			(alchemist-eval-region (point-min) (point-max))))))
 
-(ert-deftest show-result-in-echo-area ()
-  "Evalute code on current line"
+(ert-deftest evaluate-code-in-current-buffer ()
+  "Evalute code in current buffer."
   (should (equal "54" (with-temp-buffer
 			(alchemist-mode)
 			(insert "sum = fn (a, b) ->
