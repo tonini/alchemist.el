@@ -35,6 +35,15 @@
 		       (goto-char (point-min))
 		       (alchemist-eval-current-line)))))
 
+(ert-deftest show-result-in-echo-area ()
+  "Evalute code on current line"
+  (should (equal "12" (with-temp-buffer
+			(alchemist-mode)
+			(insert "a = 10
+                                 b = 2
+                                 a + b")
+			(alchemist-eval-region (point-min) (point-max))))))
+
 (provide 'alchemist-eval-tests)
 
 ;;; alchemist-eval-tests.el ends here
