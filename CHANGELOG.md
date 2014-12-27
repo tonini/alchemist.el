@@ -4,6 +4,8 @@
 
 ### Enhancements
 
+  * [Tests] Add more tests for eval functionality. 
+
 ## v0.11.1
 
 ### Bugfixes
