@@ -38,7 +38,7 @@
 (require 'alchemist)
 
 (load (expand-file-name "test-helper.el" alchemist-test-path) nil t)
-(dolist (test-file (or argv (directory-files alchemist-test-path t "-tests.el$")))
+(dolist (test-file (or argv (directory-files alchemist-test-path t "-test.el$")))
   (load test-file nil t))
 
 (ert-run-tests-batch-and-exit t)
