@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Mix] Add mix command prompt with completion
   * [Tests] Add more tests for eval functionality.
   * [Tests] switch to ert-runner instead of custom test runner.
 
