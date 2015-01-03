@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/tonini/alchemist.el.png)](https://travis-ci.org/tonini/alchemist.el)
 [![MELPA](http://melpa.org/packages/alchemist-badge.svg)](http://melpa.org/#/alchemist)
 [![MELPA Stable](http://stable.melpa.org/packages/alchemist-badge.svg)](http://stable.melpa.org/#/alchemist)
+[![Gratipay](https://img.shields.io/gratipay/tonini.svg)](https://gratipay.com/tonini/)
 
 <br/>
 
