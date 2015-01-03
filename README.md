@@ -157,6 +157,10 @@ Example:
         <th>Description</th>
     </tr>
     <tr>
+        <td><code>alchemist-mix</code></td>
+        <td>Prompt for a mix command including a list of all available mix commands.</td>
+    </tr>
+    <tr>
         <td><code>alchemist-mix-new</code></td>
         <td>Create a new Elixir application.</td>
     </tr>
@@ -210,7 +214,7 @@ Example:
     </tr>
     <tr>
         <td><code>alchemist-mix-execute</code></td>
-        <td>Run any command in the context of the application.</td>
+        <td>Prompt for a mix command.</td>
     </tr>
     <tr>
         <td><code>alchemist-mix-hex-search</code></td>
