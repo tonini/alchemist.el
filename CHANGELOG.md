@@ -4,7 +4,8 @@
 
 ### Enhancements
 
-  * [Tests] Add more tests for eval functionality. 
+  * [Tests] Add more tests for eval functionality.
+  * [Tests] switch to ert-runner instead of custom test runner.
 
 ## v0.11.1
 
