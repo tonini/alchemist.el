@@ -12,9 +12,18 @@
   alt="Alchemist Logo"/>
 </p>
 
-<p align="center">
-  <blockquote>Elixir Tooling Integration Into Emacs</blockquote>
-</p>
+> Elixir Tooling Integration Into Emacs</blockquote>
+
+Alchemist comes with a bunch of features, which are:
+
+* Powerful IEx integration
+* Mix integration
+* Compile & Execution of Elixir code
+* Inline code evaluation
+* Documentation lookup
+* Smart code completion
+* Elixir project management
+* Integration with [company-mode](http://company-mode.github.io/)
 
 ***
 
@@ -29,7 +38,7 @@
   - [Execute](#execute-functions)
 - [Project](#project)
 - [Documentation lookup](#documentation-lookup)
-- [Keymap](#alchemist-help-minor-mode-keymap)
+  - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Auto-completion](#auto-completion)
   - [Debug](#debug)
 - [IEx](#iex)
