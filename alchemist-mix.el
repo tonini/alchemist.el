@@ -1,6 +1,6 @@
 ;;; alchemist-mix.el --- Emacs integration for Elixir's mix
 
-;; Copyright © 2014 Samuel Tonini
+;; Copyright © 2014-2015 Samuel Tonini
 
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com
 

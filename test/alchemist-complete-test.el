@@ -1,6 +1,6 @@
 ;;; alchemist-complete-tests.el ---
 
-;; Copyright © 2014 Samuel Tonini
+;; Copyright © 2014-2015 Samuel Tonini
 ;;
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 

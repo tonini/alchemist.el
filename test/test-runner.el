@@ -1,6 +1,6 @@
 ;;; test-runner.el --- The test runner for the alchemist test suites
 
-;; Copyright © 2014 Samuel Tonini
+;; Copyright © 2014-2015 Samuel Tonini
 ;;
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
