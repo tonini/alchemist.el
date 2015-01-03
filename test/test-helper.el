@@ -25,10 +25,12 @@
 ;;; Code:
 
 (require 'f)
-(require 'ert)
 
 (defvar alchemist-test-path
-  (f-dirname (f-this-file)))
+  (f-parent (f-this-file)))
+
+(defvar alchemist-root-path
+  (f-parent alchemist-test-path))
 
 (defvar alchemist-sandbox-path
   (file-name-as-directory (f-expand "sandbox" alchemist-test-path)))
@@ -45,6 +47,11 @@
   "Evaluate BODY after temporarily set variable NAME with VALUE."
 `(let ((,name ,value))
    ,@body))
+
+(add-to-list 'load-path alchemist-root-path)
+
+(require 'alchemist)
+(require 'ert)
 
 (provide 'test-helper)
 
