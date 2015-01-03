@@ -105,6 +105,19 @@
    (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)))
   (alchemist-mix-execute (list command)))
 
+(defun alchemist-mix--commands ()
+  (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
+    (mapcar (lambda (s)
+              (cdr (split-string (car (split-string s "#")))))
+            (cdr (split-string mix-cmd-list "\n")))))
+
+(defun alchemist-mix (command)
+  "Prompt for mix commands."
+  (interactive
+   (list (alchemist-mix--completing-read "mix: " (alchemist-mix--commands))))
+  (let ((command (read-string "mix " (concat command " "))))
+    (alchemist-mix-execute (list command))))
+
 (defun alchemist-mix-local-with-prompt (command)
   "Prompt for mix local commands."
   (interactive
