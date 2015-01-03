@@ -8,6 +8,10 @@
   * [Tests] Add more tests for eval functionality.
   * [Tests] switch to ert-runner instead of custom test runner.
 
+### Bugfixes
+
+  * [Refcard] Display correct function for the `C-c a t` keybinding.
+
 ## v0.11.1
 
 ### Bugfixes
