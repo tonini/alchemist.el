@@ -44,4 +44,4 @@ packageclean:
 	@ echo "\n$(INFO_COLOR)Clean Alchemist Package: $(NO_COLOR)\n"
 	rm dist/$(PACKAGE_NAME).tar
 
-.PHONY: info test build cask clean clean-elc test-elc
+.PHONY: info test cask clean clean-elc test-elc
