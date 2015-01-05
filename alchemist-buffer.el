@@ -85,16 +85,6 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
     (when orphan-proc
       (kill-process orphan-proc))))
 
-(define-compilation-mode alchemist-buffer-mode "Elixir"
-  "Elixir compilation mode."
-  (progn
-    (font-lock-add-keywords nil
-                            '(("^Finished in .*$" . font-lock-string-face)))
-    ;; Set any bound buffer name buffer-locally
-    (setq alchemist-buffer--buffer-name alchemist-buffer--buffer-name)
-    (set (make-local-variable 'kill-buffer-hook)
-         'alchemist-buffer--kill-any-orphan-proc)))
-
 (defvar alchemist-buffer--save-buffers-predicate
   (lambda ()
     (not (string= (substring (buffer-name) 0 1) "*"))))
@@ -108,6 +98,31 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
 
 (defun alchemist-buffer--handle-compilation ()
   (ansi-color-apply-on-region (point-min) (point-max)))
+
+(defun alchemist-buffer--set-modeline-color (buffer status)
+  (setq alchemist-buffer--mode-name-face
+        (if (string-prefix-p "finished" status)
+            'alchemist-buffer--success-face
+          'alchemist-buffer--failed-face))
+
+  (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
+
+(defun alchemist-buffer-initialize-modeline ()
+  (setq mode-name
+         '(:eval (propertize "Elixir" 'face alchemist-buffer--mode-name-face))))
+
+(defun alchemist-buffer-reset-modeline ()
+  (setq mode-name "Elixir"))
+
+(define-compilation-mode alchemist-buffer-mode "Elixir"
+  "Elixir compilation mode."
+  (progn
+    (font-lock-add-keywords nil
+                            '(("^Finished in .*$" . font-lock-string-face)))
+    ;; Set any bound buffer name buffer-locally
+    (setq alchemist-buffer--buffer-name alchemist-buffer--buffer-name)
+    (set (make-local-variable 'kill-buffer-hook)
+         'alchemist-buffer--kill-any-orphan-proc)))
 
 (defun alchemist-buffer-run (cmdlist buffer-name)
   "Run CMDLIST in `alchemist-buffer-mode'.
@@ -128,21 +143,6 @@ Argument BUFFER-NAME for the compilation."
       (add-to-list 'compilation-finish-functions 'alchemist-buffer-remove-dispensable-output-after-finish)
       (when alchemist-buffer-status-modeline
         (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))
-
-(defun alchemist-buffer--set-modeline-color (buffer status)
-  (setq alchemist-buffer--mode-name-face
-        (if (string-prefix-p "finished" status)
-            'alchemist-buffer--success-face
-          'alchemist-buffer--failed-face))
-
-  (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
-
-(defun alchemist-buffer-initialize-modeline ()
-  (setq mode-name
-         '(:eval (propertize "Elixir" 'face alchemist-buffer--mode-name-face))))
-
-(defun alchemist-buffer-reset-modeline ()
-  (setq mode-name "Elixir"))
 
 (provide 'alchemist-buffer)
 
