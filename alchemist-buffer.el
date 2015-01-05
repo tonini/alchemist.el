@@ -28,6 +28,8 @@
 (require 'compile)
 (require 'ansi-color)
 
+;; Variables
+
 (defgroup alchemist-buffer nil
   "Custom compilation mode for Alchemist."
   :prefix "alchemist-buffer-"
@@ -41,26 +43,6 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
   :type 'boolean
   :group 'alchemist-buffer)
 
-(defface alchemist-buffer--success-face
-  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
-  ""
-  :group 'alchemist-buffer)
-
-(defface alchemist-buffer--failed-face
-  '((t (:inherit font-lock-variable-name-face :bold t :background "red" :foreground "white")))
-  ""
-  :group 'alchemist-buffer)
-
-(defface alchemist-buffer--running-face
-  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "black")))
-  ""
-  :group 'alchemist-buffer)
-
-(defface alchemist-buffer--empty-face
-  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "white")))
-  ""
-  :group 'alchemist-buffer)
-
 (defvar alchemist-buffer--mode-name-face 'mode-line)
 
 (defvar alchemist-buffer--buffer-name nil
@@ -70,6 +52,32 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
 (defvar alchemist-buffer--error-link-options
   '(elixir "^\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)\\(: warning\\)?$" 1 2 nil (3) 1)
   "File link matcher for `compilation-error-regexp-alist-alist' (matches path/to/file:line).")
+
+;; Faces
+
+(defface alchemist-buffer--success-face
+  "Face for successful compilation run."
+  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
+  ""
+  :group 'alchemist-buffer)
+
+(defface alchemist-buffer--failed-face
+  "Face for failed compilation run."
+  '((t (:inherit font-lock-variable-name-face :bold t :background "red" :foreground "white")))
+  ""
+  :group 'alchemist-buffer)
+
+(defface alchemist-buffer--running-face
+  "Face for running compilation."
+  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "black")))
+  ""
+  :group 'alchemist-buffer)
+
+(defface alchemist-buffer--empty-face
+  "Face for empty compilation run status."
+  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "white")))
+  ""
+  :group 'alchemist-buffer)
 
 (defun alchemist-buffer--kill-any-orphan-proc ()
   "Ensure any dangling buffer process is killed."
