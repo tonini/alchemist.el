@@ -70,11 +70,6 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
   "Face for running compilation."
   :group 'alchemist-buffer)
 
-(defface alchemist-buffer--empty-face
-  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "white")))
-  "Face for empty compilation run status."
-  :group 'alchemist-buffer)
-
 (defun alchemist-buffer--kill-any-orphan-proc ()
   "Ensure any dangling buffer process is killed."
   (let ((orphan-proc (get-buffer-process (buffer-name))))
