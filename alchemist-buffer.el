@@ -28,37 +28,19 @@
 (require 'compile)
 (require 'ansi-color)
 
+;; Variables
+
 (defgroup alchemist-buffer nil
-  "Custom compilation mode for Alchemist"
+  "Custom compilation mode for Alchemist."
   :prefix "alchemist-buffer-"
   :group 'alchemist)
 
 (defcustom alchemist-buffer-status-modeline t
-  "Decides if face of local `mode-name' variable should change with compilation status.
+  "if t, the face of local `mode-name' variable will change with compilation status.
 
 For example, when `alchemist-mix-test' failes, the `mode-name' will be
 formated with the `alchemist-buffer--failed-face' face, to symbolize failing tests."
   :type 'boolean
-  :group 'alchemist-buffer)
-
-(defface alchemist-buffer--success-face
-  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
-  ""
-  :group 'alchemist-buffer)
-
-(defface alchemist-buffer--failed-face
-  '((t (:inherit font-lock-variable-name-face :bold t :background "red" :foreground "white")))
-  ""
-  :group 'alchemist-buffer)
-
-(defface alchemist-buffer--running-face
-  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "black")))
-  ""
-  :group 'alchemist-buffer)
-
-(defface alchemist-buffer--empty-face
-  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "white")))
-  ""
   :group 'alchemist-buffer)
 
 (defvar alchemist-buffer--mode-name-face 'mode-line)
@@ -71,21 +53,37 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
   '(elixir "^\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)\\(: warning\\)?$" 1 2 nil (3) 1)
   "File link matcher for `compilation-error-regexp-alist-alist' (matches path/to/file:line).")
 
+;; Faces
+
+(defface alchemist-buffer--success-face
+  "Face for successful compilation run."
+  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
+  ""
+  :group 'alchemist-buffer)
+
+(defface alchemist-buffer--failed-face
+  "Face for failed compilation run."
+  '((t (:inherit font-lock-variable-name-face :bold t :background "red" :foreground "white")))
+  ""
+  :group 'alchemist-buffer)
+
+(defface alchemist-buffer--running-face
+  "Face for running compilation."
+  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "black")))
+  ""
+  :group 'alchemist-buffer)
+
+(defface alchemist-buffer--empty-face
+  "Face for empty compilation run status."
+  '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "white")))
+  ""
+  :group 'alchemist-buffer)
+
 (defun alchemist-buffer--kill-any-orphan-proc ()
   "Ensure any dangling buffer process is killed."
   (let ((orphan-proc (get-buffer-process (buffer-name))))
     (when orphan-proc
       (kill-process orphan-proc))))
-
-(define-compilation-mode alchemist-buffer-mode "Elixir"
-  "Elixir compilation mode."
-  (progn
-    (font-lock-add-keywords nil
-                            '(("^Finished in .*$" . font-lock-string-face)))
-    ;; Set any bound buffer name buffer-locally
-    (setq alchemist-buffer--buffer-name alchemist-buffer--buffer-name)
-    (set (make-local-variable 'kill-buffer-hook)
-         'alchemist-buffer--kill-any-orphan-proc)))
 
 (defvar alchemist-buffer--save-buffers-predicate
   (lambda ()
@@ -100,6 +98,33 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
 
 (defun alchemist-buffer--handle-compilation ()
   (ansi-color-apply-on-region (point-min) (point-max)))
+
+(defun alchemist-buffer--set-modeline-color (buffer status)
+  (setq alchemist-buffer--mode-name-face
+        (if (string-prefix-p "finished" status)
+            'alchemist-buffer--success-face
+          'alchemist-buffer--failed-face))
+
+  (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
+
+(defun alchemist-buffer-initialize-modeline ()
+  "Initialize the mode-line face."
+  (setq mode-name
+         '(:eval (propertize "Elixir" 'face alchemist-buffer--mode-name-face))))
+
+(defun alchemist-buffer-reset-modeline ()
+  "Reset the current mode-line face to default."
+  (setq mode-name "Elixir"))
+
+(define-compilation-mode alchemist-buffer-mode "Elixir"
+  "Elixir compilation mode."
+  (progn
+    (font-lock-add-keywords nil
+                            '(("^Finished in .*$" . font-lock-string-face)))
+    ;; Set any bound buffer name buffer-locally
+    (setq alchemist-buffer--buffer-name alchemist-buffer--buffer-name)
+    (set (make-local-variable 'kill-buffer-hook)
+         'alchemist-buffer--kill-any-orphan-proc)))
 
 (defun alchemist-buffer-run (cmdlist buffer-name)
   "Run CMDLIST in `alchemist-buffer-mode'.
@@ -120,21 +145,6 @@ Argument BUFFER-NAME for the compilation."
       (add-to-list 'compilation-finish-functions 'alchemist-buffer-remove-dispensable-output-after-finish)
       (when alchemist-buffer-status-modeline
         (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))
-
-(defun alchemist-buffer--set-modeline-color (buffer status)
-  (setq alchemist-buffer--mode-name-face
-        (if (string-prefix-p "finished" status)
-            'alchemist-buffer--success-face
-          'alchemist-buffer--failed-face))
-
-  (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
-
-(defun alchemist-buffer-initialize-modeline ()
-  (setq mode-name
-         '(:eval (propertize "Elixir" 'face alchemist-buffer--mode-name-face))))
-
-(defun alchemist-buffer-reset-modeline ()
-  (setq mode-name "Elixir"))
 
 (provide 'alchemist-buffer)
 
