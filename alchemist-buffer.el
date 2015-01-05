@@ -34,7 +34,7 @@
   :group 'alchemist)
 
 (defcustom alchemist-buffer-status-modeline t
-  "Decides if face of local `mode-name' variable should change with compilation status.
+  "if t, the face of local `mode-name' variable will change with compilation status.
 
 For example, when `alchemist-mix-test' failes, the `mode-name' will be
 formated with the `alchemist-buffer--failed-face' face, to symbolize failing tests."
