@@ -108,10 +108,12 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
   (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
 
 (defun alchemist-buffer-initialize-modeline ()
+  "Initialize the mode-line face."
   (setq mode-name
          '(:eval (propertize "Elixir" 'face alchemist-buffer--mode-name-face))))
 
 (defun alchemist-buffer-reset-modeline ()
+  "Reset the current mode-line face to default."
   (setq mode-name "Elixir"))
 
 (define-compilation-mode alchemist-buffer-mode "Elixir"
