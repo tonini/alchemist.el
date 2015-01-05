@@ -29,7 +29,7 @@
 (require 'ansi-color)
 
 (defgroup alchemist-buffer nil
-  "Custom compilation mode for Alchemist"
+  "Custom compilation mode for Alchemist."
   :prefix "alchemist-buffer-"
   :group 'alchemist)
 
