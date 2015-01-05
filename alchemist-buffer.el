@@ -56,27 +56,23 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
 ;; Faces
 
 (defface alchemist-buffer--success-face
-  "Face for successful compilation run."
   '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
-  ""
+  "Face for successful compilation run."
   :group 'alchemist-buffer)
 
 (defface alchemist-buffer--failed-face
-  "Face for failed compilation run."
   '((t (:inherit font-lock-variable-name-face :bold t :background "red" :foreground "white")))
-  ""
+  "Face for failed compilation run."
   :group 'alchemist-buffer)
 
 (defface alchemist-buffer--running-face
-  "Face for running compilation."
   '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "black")))
-  ""
+  "Face for running compilation."
   :group 'alchemist-buffer)
 
 (defface alchemist-buffer--empty-face
-  "Face for empty compilation run status."
   '((t (:inherit font-lock-variable-name-face :bold nil :background "gray" :foreground "white")))
-  ""
+  "Face for empty compilation run status."
   :group 'alchemist-buffer)
 
 (defun alchemist-buffer--kill-any-orphan-proc ()
