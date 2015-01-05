@@ -7,13 +7,10 @@ env:
   - EVM_EMACS=emacs-24.2-bin
   - EVM_EMACS=emacs-24.3-bin
   - EVM_EMACS=emacs-24.4-bin
-  - EVM_EMACS=emacs-git-snapshot
 before_install:
   - wget http://s3.hex.pm/builds/elixir/v1.0.0.zip
   - unzip -d elixir v1.0.0.zip
   - curl -fsSkL https://gist.githubusercontent.com/tonini/09a8bec7a0b2c219e0d7/raw > travis.sh && source ./travis.sh
-  - sudo apt-get update
-  - sudo apt-get install texinfo
   - evm install $EVM_EMACS --use --skip
   - cask
 before_script:
