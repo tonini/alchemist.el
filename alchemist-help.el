@@ -258,7 +258,7 @@ AlchemistModule.get_modules |> Enum.map &IO.puts/1
             ("?" . alchemist-help-minor-mode-key-binding-summary)))
 
 (defun alchemist-help (search)
-  "Load Elixir documention for SEARCH."
+  "Load Elixir documentation for SEARCH."
   (interactive
    (list (completing-read
           "Elixir help: "
@@ -269,7 +269,7 @@ AlchemistModule.get_modules |> Enum.map &IO.puts/1
   (alchemist-help--execute search))
 
 (defun alchemist-help-history (search)
-  "Load Elixir from the documention history for SEARCH."
+  "Load Elixir from the documentation history for SEARCH."
   (interactive
    (list
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
