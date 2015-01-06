@@ -191,7 +191,51 @@ Argument END where the mark ends."
         (next-position (- alchemist-help-search-history-index 1)))
     (unless (< next-position 0)
       (setq alchemist-help-search-history-index next-position)
-      (alchemist-help (nth next-position alchemist-help-search-history)))))
+      (alchemist-help--execute (nth next-position alchemist-help-search-history)))))
+
+(defun alchemist-help--elixir-modules-to-list (str)
+  (let* ((modules (split-string str))
+         (modules (mapcar (lambda (m)
+                            (when (string-match-p "Elixir\\." m)
+                              (replace-regexp-in-string "Elixir\\." "" m))) modules))
+         (modules (delete nil modules))
+         (modules (cl-sort modules 'string-lessp :key 'downcase))
+         (modules (delete-dups modules)))
+    modules)
+  )
+
+(defun alchemist-help--get-modules ()
+  (let* ((elixir-code "
+defmodule AlchemistModule do
+  def get_modules do
+    modules = Enum.map(:code.all_loaded, fn({m, _}) -> Atom.to_string(m) end)
+
+    if :code.get_mode() === :interactive do
+      modules ++ get_modules_from_applications()
+    else
+      modules
+    end
+  end
+
+  defp get_modules_from_applications do
+    for {app, _, _} <- :application.loaded_applications,
+        {_, modules} = :application.get_key(app, :modules),
+             module <- modules,
+             has_doc = Code.get_docs(module, :moduledoc), elem(has_doc, 1) do
+      Atom.to_string(module)
+    end
+  end
+end
+
+AlchemistModule.get_modules |> Enum.map &IO.puts/1
+")
+         (command (if (alchemist-project-p)
+                      (format "%s -e \"%s\"" alchemist-help-mix-run-command elixir-code)
+                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code))))
+    (when (alchemist-project-p)
+
+      (alchemist-project--establish-root-directory))
+    (alchemist-help--elixir-modules-to-list (shell-command-to-string command))))
 
 (defun alchemist-help-previous-search ()
   "Switches to the previous search in the history."
@@ -200,7 +244,7 @@ Argument END where the mark ends."
         (next-position (+ alchemist-help-search-history-index 1)))
     (unless (> next-position (- (length alchemist-help-search-history) 1))
       (setq alchemist-help-search-history-index next-position)
-      (alchemist-help (nth next-position alchemist-help-search-history)))))
+      (alchemist-help--execute (nth next-position alchemist-help-search-history)))))
 
 (define-minor-mode alchemist-help-minor-mode
   "Minor mode for displaying elixir help."
@@ -215,7 +259,13 @@ Argument END where the mark ends."
 
 (defun alchemist-help (search)
   "Load Elixir documention for SEARCH."
-  (interactive "MElixir help: ")
+  (interactive
+   (list (completing-read
+          "Elixir help: "
+          (alchemist-help--get-modules)
+          nil
+          nil
+          nil)))
   (alchemist-help--execute search))
 
 (defun alchemist-help-history (search)
