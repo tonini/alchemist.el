@@ -77,18 +77,25 @@
       (setq p2 (point))
       (buffer-substring-no-properties p1 p2))))
 
-(defun alchemist-help-search-at-point ()
-  "Search through `alchemist-help' with the expression under the cursor."
-  (interactive)
-  (alchemist-help--execute (alchemist-help--exp-at-point)))
+(defun alchemist-help--start-help-process (exp callback)
+  (let* ((buffer (get-buffer-create "alchemist-help-buffer"))
+         (command (alchemist-help--eval-string-command (alchemist-help--build-code-for-search exp)))
+         (proc (start-process-shell-command "alchemist-help-proc" buffer command)))
+    (set-process-sentinel proc (lambda (process signal)
+                                 (when (equal signal "finished\n")
+                                   (funcall callback (alchemist-utils--get-buffer-content (process-buffer process))))
+                                 (alchemist-utils--erase-buffer (process-buffer process))))))
 
-(defun alchemist-help-search-marked-region (begin end)
-  "Run `alchemist-help' with the marked region.
-Argument BEGIN where the mark starts.
-Argument END where the mark ends."
-  (interactive "r")
-  (let ((region (filter-buffer-substring begin end)))
-    (alchemist-help--execute region)))
+(defun alchemist-help--execute (search)
+  (let ((last-directory default-directory)
+        (last-buffer (current-buffer)))
+    (alchemist-complete search (lambda (candidates)
+                                 (let* ((search (alchemist-complete--completing-prompt search candidates)))
+                                   (setq alchemist-help-current-search-text search)
+                                   (alchemist-help--start-help-process search (lambda (output)
+                                                                                (alchemist-help--initialize-buffer output)
+                                                                                (with-current-buffer last-buffer
+                                                                                  (cd last-directory)))))))))
 
 (defun alchemist-help--build-code-for-search (string)
   (format "import IEx.Helpers
@@ -164,6 +171,19 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
            (propertize "?" 'face 'alchemist-help--key-face)
            "]-keys")))
 
+(defun alchemist-help-search-at-point ()
+  "Search through `alchemist-help' with the expression under the cursor."
+  (interactive)
+  (alchemist-help--execute (alchemist-help--exp-at-point)))
+
+(defun alchemist-help-search-marked-region (begin end)
+  "Run `alchemist-help' with the marked region.
+Argument BEGIN where the mark starts.
+Argument END where the mark ends."
+  (interactive "r")
+  (let ((region (filter-buffer-substring begin end)))
+    (alchemist-help--execute region)))
+
 (defun alchemist-help-next-search ()
   "Switches to the next search in the history."
   (interactive)
@@ -204,26 +224,6 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
    (list
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
   (alchemist-help--execute search))
-
-(defun alchemist-help--start-help-process (exp callback)
-  (let* ((buffer (get-buffer-create "alchemist-help-buffer"))
-         (command (alchemist-help--eval-string-command (alchemist-help--build-code-for-search exp)))
-         (proc (start-process-shell-command "alchemist-help-proc" buffer command)))
-    (set-process-sentinel proc (lambda (process signal)
-                                 (when (equal signal "finished\n")
-                                   (funcall callback (alchemist-utils--get-buffer-content (process-buffer process))))
-                                 (alchemist-utils--erase-buffer (process-buffer process))))))
-
-(defun alchemist-help--execute (search)
-  (let ((last-directory default-directory)
-        (last-buffer (current-buffer)))
-    (alchemist-complete search (lambda (candidates)
-                                 (let* ((search (alchemist-complete--completing-prompt search candidates)))
-                                   (setq alchemist-help-current-search-text search)
-                                   (alchemist-help--start-help-process search (lambda (output)
-                                                                                (alchemist-help--initialize-buffer output)
-                                                                                (with-current-buffer last-buffer
-                                                                                  (cd last-directory)))))))))
 
 (define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point "1.0.0")
 (define-obsolete-function-alias 'alchemist-help-module-sexp-at-point 'alchemist-help-search-at-point "1.0.0")
