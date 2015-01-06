@@ -13,8 +13,10 @@
 
 ### Changes
 
+  * [Messages] Don't switch to Message buffer after displaying it. Use `display-buffer` instead of `pop-to-buffer`.
   * [Help] Remove `alchemist-help-next-search` and `alchemist-help-previous-search`. They work clumsy and it's not fast enought to work with.
   * [Help] Remove obsolete aliases for `alchemist-help-sexp-at-point` and `alchemist-help-module-sexp-at-point`
+
 ### Bugfixes
 
   * [Refcard] Display correct function for the `C-c a t` keybinding.

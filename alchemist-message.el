@@ -31,15 +31,16 @@
   (alchemist-message--initialize-buffer message))
 
 (defun alchemist-message--initialize-buffer (message)
-  (pop-to-buffer alchemist-message--buffer-name)
-  (let ((inhibit-read-only t)
-        (buffer-undo-list t))
-    (erase-buffer)
-    (insert message)
-    (goto-char (point-min))
-    (ansi-color-apply-on-region (point-min) (point-max))
-    (read-only-mode)
-    (alchemist-message-mode 1)))
+  (display-buffer (get-buffer-create alchemist-message--buffer-name))
+  (with-current-buffer alchemist-message--buffer-name
+    (let ((inhibit-read-only t)
+          (buffer-undo-list t))
+      (erase-buffer)
+      (insert message)
+      (goto-char (point-min))
+      (ansi-color-apply-on-region (point-min) (point-max))
+      (read-only-mode)
+      (alchemist-message-mode 1))))
 
 (define-minor-mode alchemist-message-mode
   "Minor mode for displaying alchemist messages"
