@@ -4,9 +4,15 @@
 
 ### Enhancements
 
+  * [Help] Add `alchemist-help` module prompt. It's loads all available Modules in the current environemnt which have a proper moduledoc.
+  * [Help] Add `alchemist-help-history` to `alchemist-help-minor-mode`. `alchemist-help-history` lookup straight for the stored search text, without completion.
   * [Mix] Add mix command prompt with completion
   * [Tests] Add more tests for eval functionality.
   * [Tests] switch to ert-runner instead of custom test runner.
+
+### Changes
+
+  * [Help] Remove `alchemist-help-next-search` and `alchemist-help-previous-search`. They work clumsy and it's not fast enought to work with.
 
 ### Bugfixes
 
