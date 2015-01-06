@@ -324,7 +324,7 @@ open a keymap summary in the `minibuffer` with the following functionality:
 
 You're always be able to continue to search inside the `*elixir help*` buffer.
 
-![Alchemist Help Minor Mode Key Summary](https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/help_summary.png)
+![Alchemist Help Minor Mode Key Summary](logo/help_summary.png)
 
 <table>
     <tr>
@@ -348,12 +348,8 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
         <td><code>alchemist-help</code></td>
     </tr>
     <tr>
-        <td><code>n</code></td>
-        <td><code>alchemist-help-next-search</code></td>
-    </tr>
-    <tr>
-        <td><code>p</code></td>
-        <td><code>alchemist-help-previous-search</code></td>
+        <td><code>h</code></td>
+        <td><code>alchemist-help-history</code></td>
     </tr>
     <tr>
         <td><code>?</code></td>
@@ -452,7 +448,7 @@ represented via the colorized `mode-name`. In our case that will be the `elixir-
 If you don't like that just set the `alchemist-buffer-status-modeline` variable
 via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] alchemist-buffer`
 
-![Alchemist Build Status](https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/build_status.png)
+![Alchemist Build Status](logo/build_status.png)
 
 ## Keymap
 
