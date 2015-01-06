@@ -109,7 +109,7 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
                     (format "%s -e \"%s\"" alchemist-execute-command string))))
     command))
 
-(defun alchemist-help-bad-search-output-p (string)
+(defun alchemist-help--bad-search-output-p (string)
   (let ((match (or (string-match-p "No documentation for " string)
                    (string-match-p "Invalid arguments for h helper" string)
                    (string-match-p "** (TokenMissingError)" string)
@@ -128,7 +128,7 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
         (buffer-undo-list t)
         (position-current-search-text (cl-position alchemist-help-current-search-text
                                                    alchemist-help-search-history)))
-    (cond ((alchemist-help-bad-search-output-p content)
+    (cond ((alchemist-help--bad-search-output-p content)
            (message (propertize
                      (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
                      'face 'alchemist-help--key-face)))
