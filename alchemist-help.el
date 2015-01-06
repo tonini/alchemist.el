@@ -30,8 +30,10 @@
   :prefix "alchemist-help-"
   :group 'alchemist)
 
+;; Variables
+
 (defcustom alchemist-help-ansi-color-docs t
-  "If Non-nil, `alchemist-help' will present ansi colored documentation."
+  "If t, `alchemist-help' will present ansi colored documentation."
   :type 'boolean
   :group 'alchemist-help)
 
@@ -43,19 +45,21 @@
 (defvar alchemist-help-mix-run-command "mix run"
   "The shell command for 'mix run'.")
 
-(defface alchemist-help--key-face
-  '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
-  "Fontface for the letter keys in the summary."
-  :group 'alchemist-help)
-
 (defvar alchemist-help-search-history '()
-  "Stores the search history.")
+  "Storage for the search history.")
 
 (defvar alchemist-help-search-history-index 0
   "Stores the current position in the search history.")
 
 (defvar alchemist-help-current-search-text '()
-  "Stores the current search text.")
+  "Stores the current search.")
+
+;; Faces
+
+(defface alchemist-help--key-face
+  '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
+  "Fontface for the letter keys in the summary."
+  :group 'alchemist-help)
 
 (defun alchemist-help--load-ansi-color-setting ()
   (let ((config (gethash "ansi-color-docs" (alchemist-project-config))))
@@ -64,7 +68,7 @@
       alchemist-help-ansi-color-docs)))
 
 (defun alchemist-help--exp-at-point ()
-  "Return the expression under the cursor"
+  "Return the expression under the cursor."
   (let (p1 p2)
     (save-excursion
       (skip-chars-backward "-a-z0-9A-z./?!:")
