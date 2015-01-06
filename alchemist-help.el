@@ -1,4 +1,4 @@
-;;; alchemist-help.el --- Interface to Elixir's documentation -*- lexical-binding: t -*-
+;;; alchemist-help.el --- Functionality for Elixir documentation lookup -*- lexical-binding: t -*-
 
 ;; Copyright © 2014-2015 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; Mode for searching through Elixir's documentation
+;; Functionality for Elixir documentation lookup
 
 ;;; Code:
 
