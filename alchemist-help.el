@@ -254,9 +254,6 @@ AlchemistModule.get_modules |> Enum.map &IO.puts/1
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
   (alchemist-help--execute-without-complete search))
 
-(define-obsolete-function-alias 'alchemist-help-sexp-at-point 'alchemist-help-search-at-point "1.0.0")
-(define-obsolete-function-alias 'alchemist-help-module-sexp-at-point 'alchemist-help-search-at-point "1.0.0")
-
 (provide 'alchemist-help)
 
 ;;; alchemist-help.el ends here
