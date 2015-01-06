@@ -26,7 +26,7 @@
 ;;; Code:
 
 (defgroup alchemist-help nil
-  "Interface to Elixir's documentation"
+  "Functionality for Elixir documentation lookup."
   :prefix "alchemist-help-"
   :group 'alchemist)
 
