@@ -110,6 +110,12 @@ and jump to the buffer."
   (let ((str (format "c(\"%s\")" (buffer-file-name))))
     (alchemist-iex--send-command (alchemist-iex-process) str)))
 
+(defun alchemist-iex-recompile-this-buffer ()
+  "Recompiles and reloads the current buffer in the IEx process."
+  (interactive)
+  (let ((str (format "r(\"%s\")" (buffer-file-name))))
+    (alchemist-iex--send-command (alchemist-iex-process) str)))
+
 (defun alchemist-iex--send-command (proc str)
   (let ((str-no-newline (concat (alchemist-iex--remove-newlines str) "\n"))
         (str (concat str "\n")))
