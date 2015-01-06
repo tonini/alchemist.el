@@ -37,7 +37,7 @@
 (defun alchemist-hooks--test-on-save ()
   (when (and alchemist-hooks-test-on-save
              (alchemist-utils--elixir-project-root)
-    (alchemist-mix-test)))
+    (alchemist-mix-test))))
 
 (eval-after-load 'elixir-mode
   '(progn
