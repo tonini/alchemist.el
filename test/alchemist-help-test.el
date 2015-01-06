@@ -28,24 +28,24 @@
 (ert-deftest test-search-output/contains-bad-text ()
   "Should return t"
   (setq alchemist-help-current-search-text "CustomModule")
-  (should (equal (alchemist-help-bad-search-output-p "No documentation for CustomModule was found")
+  (should (equal (alchemist-help--bad-search-output-p "No documentation for CustomModule was found")
                  t))
-  (should (equal (alchemist-help-bad-search-output-p
+  (should (equal (alchemist-help--bad-search-output-p
                   "Invalid arguments for h helper")
                  t))
-  (should (equal (alchemist-help-bad-search-output-p
+  (should (equal (alchemist-help--bad-search-output-p
                   "** (TokenMissingError)....")
                  t))
-  (should (equal (alchemist-help-bad-search-output-p
+  (should (equal (alchemist-help--bad-search-output-p
                   "** (SyntaxError)....")
                  t))
-  (should (equal (alchemist-help-bad-search-output-p
+  (should (equal (alchemist-help--bad-search-output-p
                   "** (FunctionClauseError)...")
                  t))
-  (should (equal (alchemist-help-bad-search-output-p
+  (should (equal (alchemist-help--bad-search-output-p
                   "Could not load module....")
                  t))
-  (should (equal (alchemist-help-bad-search-output-p
+  (should (equal (alchemist-help--bad-search-output-p
                   "** (CompileError) nofile:5:")
                  t)))
 
