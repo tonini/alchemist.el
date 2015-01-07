@@ -81,16 +81,10 @@ is `nil', otherwise it disable it."
                            (t (cdr a-list)))))
     (delete-dups candidates)))
 
-(defun alchemist-complete--elixir-output-to-list (output)
-  (let* ((output (replace-regexp-in-string "\"\\|\\[\\|\\]\\|'\\|\n\\|\s" "" output))
-         (a-list (split-string output ",")))
-    a-list))
-
 (defun alchemist-complete--output-to-list (output)
   (let* ((output (replace-regexp-in-string "^cmp:" "" output))
          (output (split-string output))
          (output (delete nil output))
-         ;; (output (cl-sort output 'string-lessp :key 'downcase))
          (modules (delete-dups output)))
     output)
   )
@@ -152,18 +146,6 @@ Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
   (alchemist-message (format "== ALCHEMIST COMPLETION FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
                              content)))
 
-(defun alchemist-complete (exp callback)
-  (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
-         (command (alchemist-complete--command exp))
-         (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
-    (alchemist-complete--sentinel proc callback)))
-
-(defun alchemist-complete-candidates (exp callback)
-  (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
-         (command (alchemist-complete--command exp))
-         (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
-    (alchemist-complete--sentinel proc callback #'alchemist-complete--build-candidates)))
-
 (defun alchemist-complete--completing-prompt (initial completing-collection)
   (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
     (cond ((equal (length completing-collection) 1)
@@ -176,6 +158,18 @@ Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
             nil
             initial))
           (t initial))))
+
+(defun alchemist-complete (exp callback)
+  (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
+         (command (alchemist-complete--command exp))
+         (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
+    (alchemist-complete--sentinel proc callback)))
+
+(defun alchemist-complete-candidates (exp callback)
+  (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
+         (command (alchemist-complete--command exp))
+         (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
+    (alchemist-complete--sentinel proc callback #'alchemist-complete--build-candidates)))
 
 (provide 'alchemist-complete)
 

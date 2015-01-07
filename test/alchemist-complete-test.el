@@ -27,7 +27,9 @@
 
 (ert-deftest test-elixir-output/format-to-list ()
   "Formats the output from elixir into a proper list"
-  (should (equal (alchemist-complete--elixir-output-to-list "[List., delete/2, to_string/1]")
+  (should (equal (alchemist-complete--output-to-list "cmp:List.
+cmp:delete/2
+cmp:to_string/1")
                  '("List." "delete/2" "to_string/1"))))
 
 (ert-deftest test-complete-candidates/build-candidates ()
