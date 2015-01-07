@@ -155,7 +155,7 @@ Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
             completing-collection
             nil
             nil
-            initial))
+            (replace-regexp-in-string "\\.$" "" initial)))
           (t initial))))
 
 (defun alchemist-complete (exp callback)
