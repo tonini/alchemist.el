@@ -35,7 +35,7 @@
   (should (equal (alchemist-complete--build-candidates '("List." "delete/2" "to_string/1"))
                  '("List.delete" "List.to_string")))
   (should (equal (alchemist-complete--build-candidates '("List." "delete/2" "delete/3" "to_string/1"))
-                 '("List.delete" "List.to_string")))
+                 '("List.delete" "List.delete" "List.to_string")))
   (should (equal (alchemist-complete--build-candidates '("Enum" "Enum" "Enumerable"))
                  '("Enum" "Enumerable")))
   (should (equal (alchemist-complete--build-candidates '("def" "def/2" "defdelegate/2" "defexception/1"))

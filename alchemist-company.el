@@ -27,11 +27,17 @@
 
 (require 'company)
 
+(defcustom alchemist-company-show-annotation t
+  "Show an annotation inline with the candidate."
+  :type 'boolean
+  :group 'alchemist-company)
+
 (defun alchemist-company--show-documentation ()
   (interactive)
   (company--electric-do
-    (let ((selected (nth company-selection company-candidates)))
-      (alchemist-help--execute selected))))
+    (let* ((selected (nth company-selection company-candidates))
+           (candidate (format "%s%s" selected (alchemist-company--annotation selected))))
+      (alchemist-help--execute-without-complete candidate))))
 (put 'alchemist-company--show-documentation 'company-keep t)
 
 (defun alchemist-company--keybindings ()
@@ -39,9 +45,14 @@
 
 (add-hook 'company-mode-hook 'alchemist-company--keybindings)
 
+(defun alchemist-company--annotation (candidate)
+  (get-text-property 0 'meta candidate))
+
 (defun alchemist-company (command &optional arg &rest ignored)
   "`company-mode' completion back-end for Elixir."
   (interactive (list 'interactive))
+  (when alchemist-company-show-annotation
+    (set 'ompany-tooltip-align-annotations t))
   (case command
     (interactive (company-begin-backend 'alchemist-company))
     (init (when (or (eq major-mode 'elixir-mode)
@@ -50,7 +61,10 @@
                      (string= mode-name "Alchemist-IEx"))
                  (alchemist-help--exp-at-point)))
     (candidates (cons :async
-                      (lambda (cb) (alchemist-complete-candidates arg cb))))))
+                      (lambda (cb) (alchemist-complete-candidates arg cb))))
+    (annotation (when alchemist-company-show-annotation
+                  (alchemist-company--annotation arg)))
+    ))
 
 (add-to-list 'company-backends 'alchemist-company)
 
