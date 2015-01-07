@@ -42,9 +42,6 @@ is `nil', otherwise it disable it."
                  "DISABLED")))
     (message "Alchemist complete debug mode is: %s" state)))
 
-(defun alchemist-complete--clean-functions (candidates)
-  (mapcar (lambda (c) (replace-regexp-in-string "/[0-9]$" "" c)) candidates))
-
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
          (candidates (mapcar (lambda (c) (concat prefix "." c)) (cdr functions))))
@@ -69,11 +66,9 @@ is `nil', otherwise it disable it."
                                         (not (string-match-p "\\.$" search-term)))
                                    (propertize (concat ":" candidate)))
                                   ((string-match-p "\\." search-term)
-                                   (propertize
-                                    (alchemist-complete--add-prefix-to-function search-term
-                                                                                (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta))
-                                  (t
-                                   (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
+                                   (propertize (alchemist-complete--add-prefix-to-function search-term
+                                                                                           (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta))
+                                  (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
                              (cdr a-list))))
     candidates))
 
