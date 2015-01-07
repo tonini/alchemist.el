@@ -42,9 +42,6 @@ is `nil', otherwise it disable it."
                  "DISABLED")))
     (message "Alchemist complete debug mode is: %s" state)))
 
-(defun alchemist-complete--clean-functions (candidates)
-  (mapcar (lambda (c) (replace-regexp-in-string "/[0-9]$" "" c)) candidates))
-
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
          (candidates (mapcar (lambda (c) (concat prefix "." c)) (cdr functions))))
@@ -52,16 +49,27 @@ is `nil', otherwise it disable it."
         (push prefix candidates)
       candidates)))
 
+(defun alchemist-complete--add-prefix-to-function (prefix function)
+  (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
+         (candidate (concat prefix "." function)))
+    candidate))
+
 (defun alchemist-complete--build-candidates (a-list)
   (let* ((search-term (car a-list))
-         (candidates (alchemist-complete--clean-functions a-list))
-         (candidates (cond ((string-match-p "\\." search-term)
-                            (alchemist-complete--concat-prefix-with-functions search-term candidates))
-                           ((and (string-match-p "^:" search-term)
-                                 (not (string-match-p "\\.$" search-term)))
-                            (mapcar (lambda (c) (concat ":" c)) (cdr candidates)))
-                           (t (cdr candidates))))
-         (candidates (delete-dups candidates)))
+         (candidates (mapcar (lambda (f)
+                               (let* ((candidate f)
+                                      (meta (if (string-match-p "^.+/" f)
+                                                (replace-regexp-in-string "^.+/" "/" f)
+                                              "")))
+                                 (cond
+                                  ((and (string-match-p "^:" search-term)
+                                        (not (string-match-p "\\.$" search-term)))
+                                   (propertize (concat ":" candidate)))
+                                  ((string-match-p "\\." search-term)
+                                   (propertize (alchemist-complete--add-prefix-to-function search-term
+                                                                                           (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta))
+                                  (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
+                             (cdr a-list))))
     candidates))
 
 (defun alchemist-complete--build-help-candidates (a-list)
@@ -70,18 +78,20 @@ is `nil', otherwise it disable it."
                             (alchemist-complete--concat-prefix-with-functions search-term a-list t))
                            ((string-match-p "\\..+" search-term)
                             (alchemist-complete--concat-prefix-with-functions search-term a-list))
-                           (t (cdr a-list)))))
+                           (t a-list))))
     (delete-dups candidates)))
 
-(defun alchemist-complete--elixir-output-to-list (output)
-  (let* ((output (replace-regexp-in-string "\"\\|\\[\\|\\]\\|'\\|\n\\|\s" "" output))
-         (a-list (split-string output ",")))
-    a-list))
+(defun alchemist-complete--output-to-list (output)
+  (let* ((output (replace-regexp-in-string "^cmp:" "" output))
+         (output (split-string output))
+         (output (delete nil output)))
+    output)
+  )
 
 (defun alchemist-complete--clear-buffer (buffer)
   "Clears the BUFFER from not used lines."
   (with-current-buffer buffer
-    (delete-non-matching-lines "^ '.+\\|\\['.+" (point-min) (point-max))))
+    (delete-non-matching-lines "^cmp:" (point-min) (point-max))))
 
 (defun alchemist-complete--elixir-complete-code (exp)
   (format "
@@ -90,14 +100,14 @@ defmodule Alchemist do
     {status, result, list } = IEx.Autocomplete.expand(Enum.reverse(exp))
 
     case { status, result, list } do
+      { :no, _, _ }  -> ''
       { :yes, [], _ } -> List.insert_at(list, 0, exp)
       { :yes, _,  _ } -> expand(exp ++ result)
-                  _t  -> exp
     end
   end
 end
 
-IO.inspect Alchemist.expand('%s')
+Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
 " exp))
 
 (defun alchemist-complete--command (exp)
@@ -118,7 +128,7 @@ IO.inspect Alchemist.expand('%s')
   (set-process-sentinel proc (lambda (process signal)
                                (cond ((equal signal "finished\n")
                                       (alchemist-complete--clear-buffer (process-buffer process))
-                                      (let* ((candidates (alchemist-complete--elixir-output-to-list
+                                      (let* ((candidates (alchemist-complete--output-to-list
                                                           (alchemist--utils-clear-ansi-sequences
                                                            (alchemist-utils--get-buffer-content (process-buffer process)))))
                                              (candidates (if format-function
@@ -135,6 +145,19 @@ IO.inspect Alchemist.expand('%s')
   (alchemist-message (format "== ALCHEMIST COMPLETION FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
                              content)))
 
+(defun alchemist-complete--completing-prompt (initial completing-collection)
+  (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
+    (cond ((equal (length completing-collection) 1)
+           (car completing-collection))
+          (completing-collection
+           (completing-read
+            "Elixir help: "
+            completing-collection
+            nil
+            nil
+            (replace-regexp-in-string "\\.$" "" initial)))
+          (t initial))))
+
 (defun alchemist-complete (exp callback)
   (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
          (command (alchemist-complete--command exp))
@@ -146,19 +169,6 @@ IO.inspect Alchemist.expand('%s')
          (command (alchemist-complete--command exp))
          (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
     (alchemist-complete--sentinel proc callback #'alchemist-complete--build-candidates)))
-
-(defun alchemist-complete--completing-prompt (initial completing-collection)
-  (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
-    (cond ((equal (length completing-collection) 1)
-           (car completing-collection))
-          (completing-collection
-           (completing-read
-            "Elixir help: "
-            completing-collection
-            nil
-            nil
-            initial))
-          (t initial))))
 
 (provide 'alchemist-complete)
 

@@ -95,6 +95,7 @@
                                                                                   (cd last-directory)))))))))
 
 (defun alchemist-help--execute-without-complete (search)
+  (setq alchemist-help-current-search-text search)
   (let ((last-directory default-directory)
         (last-buffer (current-buffer)))
     (alchemist-help--start-help-process search (lambda (output)
@@ -245,7 +246,9 @@ AlchemistModule.get_modules |> Enum.map &IO.puts/1
           nil
           nil
           nil)))
-  (alchemist-help--execute search))
+  (alchemist-help--execute (if (string-match-p "\\.$" search)
+                               search
+                             (concat search "."))))
 
 (defun alchemist-help-history (search)
   "Load Elixir from the documentation history for SEARCH."
