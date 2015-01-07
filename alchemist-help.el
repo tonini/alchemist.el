@@ -95,6 +95,7 @@
                                                                                   (cd last-directory)))))))))
 
 (defun alchemist-help--execute-without-complete (search)
+  (setq alchemist-help-current-search-text search)
   (let ((last-directory default-directory)
         (last-buffer (current-buffer)))
     (alchemist-help--start-help-process search (lambda (output)

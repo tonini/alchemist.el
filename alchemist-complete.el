@@ -78,7 +78,7 @@ is `nil', otherwise it disable it."
                             (alchemist-complete--concat-prefix-with-functions search-term a-list t))
                            ((string-match-p "\\..+" search-term)
                             (alchemist-complete--concat-prefix-with-functions search-term a-list))
-                           (t (cdr a-list)))))
+                           (t a-list))))
     (delete-dups candidates)))
 
 (defun alchemist-complete--output-to-list (output)
