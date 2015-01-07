@@ -1,4 +1,4 @@
-;;; alchemist-compile.el --- Elixir's compile integration
+;;; alchemist-compile.el --- Elixir compilation functionality
 
 ;; Copyright © 2014-2015 Samuel Tonini
 
@@ -21,10 +21,12 @@
 
 ;;; Commentary:
 
+;;  Elixir compilation functionality
+
 ;;; Code:
 
 (defgroup alchemist-compile nil
-  "Elixir's compile integration"
+  "Elixir compilation functionality."
   :prefix "alchemist-compile-"
   :group 'alchemist)
 
