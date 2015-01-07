@@ -52,7 +52,7 @@
   "`company-mode' completion back-end for Elixir."
   (interactive (list 'interactive))
   (when alchemist-company-show-annotation
-    (set 'ompany-tooltip-align-annotations t))
+    (set 'company-tooltip-align-annotations t))
   (case command
     (interactive (company-begin-backend 'alchemist-company))
     (init (when (or (eq major-mode 'elixir-mode)

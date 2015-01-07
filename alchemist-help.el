@@ -246,7 +246,9 @@ AlchemistModule.get_modules |> Enum.map &IO.puts/1
           nil
           nil
           nil)))
-  (alchemist-help--execute search))
+  (alchemist-help--execute (if (string-match-p "\\.$" search)
+                               search
+                             (concat search "."))))
 
 (defun alchemist-help-history (search)
   "Load Elixir from the documentation history for SEARCH."

@@ -84,8 +84,7 @@ is `nil', otherwise it disable it."
 (defun alchemist-complete--output-to-list (output)
   (let* ((output (replace-regexp-in-string "^cmp:" "" output))
          (output (split-string output))
-         (output (delete nil output))
-         (modules (delete-dups output)))
+         (output (delete nil output)))
     output)
   )
 
