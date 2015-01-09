@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;  Elixir code inline evaluation functionality
+;; Elixir code inline evaluation functionality
 
 ;;; Code:
 
