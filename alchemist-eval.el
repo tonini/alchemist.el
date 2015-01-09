@@ -25,97 +25,6 @@
 
 ;;; Code:
 
-(defun alchemist-eval-current-line ()
-  "Evaluate the Elixir code on the current line."
-  (interactive)
-  (let ((current-line (thing-at-point 'line)))
-    (message (alchemist-eval--evaluate-code current-line))))
-
-(defun alchemist-eval-print-current-line ()
-  "Evaluate the Elixir code on the current line and
-insert the result."
-  (interactive)
-  (let ((current-line (thing-at-point 'line)))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code current-line))))
-
-(defun alchemist-eval-quoted-current-line ()
-  "Get the Elixir code representation of the expression on the current line."
-  (interactive)
-  (let ((current-line (thing-at-point 'line)))
-    (message (alchemist-eval--evaluate-code-as-quoted current-line))))
-
-(defun alchemist-eval-print-quoted-current-line ()
-  "Get the Elixir code representation of the expression on the current line
-and insert the result."
-  (interactive)
-  (let ((current-line (thing-at-point 'line)))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted current-line))))
-
-(defun alchemist-eval-region (beg end)
-  "Evaluate the Elixir code on marked region."
-  (interactive (list (point) (mark)))
-  (unless (and beg end)
-    (error "The mark is not set now, so there is no region"))
-  (let ((string (buffer-substring-no-properties beg end)))
-    (message (alchemist-eval--evaluate-code string))))
-
-(defun alchemist-eval-print-region (beg end)
-  "Evaluate the Elixir code on marked region and
-insert the result."
-  (interactive (list (point) (mark)))
-  (unless (and beg end)
-    (error "The mark is not set now, so there is no region"))
-  (let ((string (buffer-substring-no-properties beg end)))
-    (when (> end beg)
-      (exchange-point-and-mark))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code string))))
-
-(defun alchemist-eval-quoted-region (beg end)
-  "Get the Elixir code representation of the expression on marked region."
-  (interactive (list (point) (mark)))
-  (unless (and beg end)
-    (error "The mark is not set now, so there is no region"))
-  (let ((string (buffer-substring-no-properties beg end)))
-    (message (alchemist-eval--evaluate-code-as-quoted string))))
-
-(defun alchemist-eval-print-quoted-region (beg end)
-  "Get the Elixir code representation of the expression on marked region
-and insert the result."
-  (interactive (list (point) (mark)))
-  (unless (and beg end)
-    (error "The mark is not set now, so there is no region"))
-  (let ((string (buffer-substring-no-properties beg end)))
-    (when (> end beg)
-      (exchange-point-and-mark))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted string))))
-
-(defun alchemist-eval-buffer ()
-  "Evaluate the Elixir code in the current buffer."
-  (interactive)
-  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (message (alchemist-eval--evaluate-code string))))
-
-(defun alchemist-eval-print-buffer ()
-  "Evaluate the Elixir code in the current buffer and
-insert the result."
-  (interactive)
-  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (end-of-buffer)
-    (alchemist-eval--insert (alchemist-eval--evaluate-code string))))
-
-(defun alchemist-eval-quoted-buffer ()
-  "Get the Elixir code representation of the expression in the current buffer."
-  (interactive)
-  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (message (alchemist-eval--evaluate-code-as-quoted string))))
-
-(defun alchemist-eval-print-quoted-buffer ()
-  "Get the Elixir code representation of the expression in the current buffer
-and insert result."
-  (interactive)
-  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted string))))
-
 (defun alchemist-eval--insert (string)
   (let ((lines (split-string string "\n")))
     (if (> (length lines) 1)
@@ -170,6 +79,91 @@ and insert result."
   (if (alchemist-project-p)
       (format "%s run --no-compile" alchemist-mix-command)
     alchemist-execute-command))
+
+(defun alchemist-eval-current-line ()
+  "Evaluate the Elixir code on the current line."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (message (alchemist-eval--evaluate-code current-line))))
+
+(defun alchemist-eval-print-current-line ()
+  "Evaluate the Elixir code on the current line and insert the result."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (alchemist-eval--insert (alchemist-eval--evaluate-code current-line))))
+
+(defun alchemist-eval-quoted-current-line ()
+  "Get the Elixir code representation of the expression on the current line."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (message (alchemist-eval--evaluate-code-as-quoted current-line))))
+
+(defun alchemist-eval-print-quoted-current-line ()
+  "Get the Elixir code representation of the expression on the current line and insert the result."
+  (interactive)
+  (let ((current-line (thing-at-point 'line)))
+    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted current-line))))
+
+(defun alchemist-eval-region (beg end)
+  "Evaluate the Elixir code on marked region."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let ((string (buffer-substring-no-properties beg end)))
+    (message (alchemist-eval--evaluate-code string))))
+
+(defun alchemist-eval-print-region (beg end)
+  "Evaluate the Elixir code on marked region and insert the result."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let ((string (buffer-substring-no-properties beg end)))
+    (when (> end beg)
+      (exchange-point-and-mark))
+    (alchemist-eval--insert (alchemist-eval--evaluate-code string))))
+
+(defun alchemist-eval-quoted-region (beg end)
+  "Get the Elixir code representation of the expression on marked region."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let ((string (buffer-substring-no-properties beg end)))
+    (message (alchemist-eval--evaluate-code-as-quoted string))))
+
+(defun alchemist-eval-print-quoted-region (beg end)
+  "Get the Elixir code representation of the expression on marked region and insert the result."
+  (interactive (list (point) (mark)))
+  (unless (and beg end)
+    (error "The mark is not set now, so there is no region"))
+  (let ((string (buffer-substring-no-properties beg end)))
+    (when (> end beg)
+      (exchange-point-and-mark))
+    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted string))))
+
+(defun alchemist-eval-buffer ()
+  "Evaluate the Elixir code in the current buffer."
+  (interactive)
+  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
+    (message (alchemist-eval--evaluate-code string))))
+
+(defun alchemist-eval-print-buffer ()
+  "Evaluate the Elixir code in the current buffer and insert the result."
+  (interactive)
+  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
+    (end-of-buffer)
+    (alchemist-eval--insert (alchemist-eval--evaluate-code string))))
+
+(defun alchemist-eval-quoted-buffer ()
+  "Get the Elixir code representation of the expression in the current buffer."
+  (interactive)
+  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
+    (message (alchemist-eval--evaluate-code-as-quoted string))))
+
+(defun alchemist-eval-print-quoted-buffer ()
+  "Get the Elixir code representation of the expression in the current buffer and insert result."
+  (interactive)
+  (let ((string (buffer-substring-no-properties (point-min) (point-max))))
+    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted string))))
 
 (provide 'alchemist-eval)
 
