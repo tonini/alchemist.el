@@ -1,4 +1,4 @@
-;;; alchemist-hooks.el --- Hooks
+;;; alchemist-hooks.el --- Hooks functionality
 
 ;; Copyright © 2014-2015 Samuel Tonini
 
@@ -21,6 +21,8 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; Hooks functionality
 
 ;;; Code:
 
