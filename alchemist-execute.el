@@ -21,10 +21,12 @@
 
 ;;; Commentary:
 
+;; Elixir's script execution integration
+
 ;;; Code:
 
 (defgroup alchemist-execute nil
-  "Elixir's script execution integration"
+  "Elixir's script execution integration."
   :prefix "alchemist-execute-"
   :group 'alchemist)
 
