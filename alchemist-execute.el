@@ -38,6 +38,14 @@
 (defvar alchemist-execute-buffer-name "*elixir*"
   "Name of the elixir output buffer.")
 
+(defun alchemist-execute--file (filename)
+  (when (not (file-exists-p filename))
+    (error "The given file doesn't exists"))
+  (alchemist-execute (list alchemist-execute-command (expand-file-name filename))))
+
+(defun alchemist-execute--read-command (command)
+  (read-shell-command "elixir command: " (concat command " ")))
+
 (defun alchemist-execute-this-buffer ()
   "Run the current buffer through elixir."
   (interactive)
@@ -47,14 +55,6 @@
   "Run elixir with the given FILENAME."
   (interactive "Felixir: ")
   (alchemist-execute--file (expand-file-name filename)))
-
-(defun alchemist-execute--file (filename)
-  (when (not (file-exists-p filename))
-    (error "The given file doesn't exists"))
-  (alchemist-execute (list alchemist-execute-command (expand-file-name filename))))
-
-(defun alchemist-execute--read-command (command)
-  (read-shell-command "elixir command: " (concat command " ")))
 
 (defun alchemist-execute (cmdlist)
   "Run a elixir with CMDLIST."
