@@ -1,4 +1,4 @@
-;;; alchemist-message.el --- Internal message API
+;;; alchemist-message.el --- Internal message functionality
 
 ;; Copyright © 2014-2015 Samuel Tonini
 
@@ -21,9 +21,11 @@
 
 ;;; Commentary:
 
-;; Internal message API
+;; Internal message functionality
 
 ;;; Code:
+
+;; Variables
 
 (defvar alchemist-message--buffer-name "*alchemist message*")
 
