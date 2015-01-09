@@ -408,6 +408,10 @@ completion inside in IEx process buffer.
 
 Documention lookup inside an IEx process buffer will also be activated.
 
+When the keybinding <kbd>C-d</kbd> is used on one of the selected completion
+candidates, a documentation lookup for the candidate will be made and displayed in
+another window.
+
 ![IEx Completion and Docs lookup](logo/iex-complete-docs-lookup.gif)
 
 ## Eval
