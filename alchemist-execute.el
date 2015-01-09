@@ -30,6 +30,8 @@
   :prefix "alchemist-execute-"
   :group 'alchemist)
 
+;; Variables
+
 (defcustom alchemist-execute-command "elixir"
   "The shell command for elixir."
   :type 'string
