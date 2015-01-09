@@ -21,6 +21,8 @@
 
 ;;; Commentary:
 
+;; Emacs integration for Elixir's mix
+
 ;;; Code:
 
 (defgroup alchemist-mix nil
