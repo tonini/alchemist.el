@@ -27,6 +27,8 @@
 
 (require 'company)
 
+;; Variables
+
 (defcustom alchemist-company-show-annotation t
   "Show an annotation inline with the candidate."
   :type 'boolean
