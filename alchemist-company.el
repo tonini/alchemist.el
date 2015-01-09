@@ -63,8 +63,7 @@
     (candidates (cons :async
                       (lambda (cb) (alchemist-complete-candidates arg cb))))
     (annotation (when alchemist-company-show-annotation
-                  (alchemist-company--annotation arg)))
-    ))
+                  (alchemist-company--annotation arg)))))
 
 (add-to-list 'company-backends 'alchemist-company)
 
