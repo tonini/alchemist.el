@@ -26,9 +26,11 @@
 ;;; Code:
 
 (defgroup alchemist-mix nil
-  "Emacs integration for Elixir's mix"
+  "Emacs integration for Elixir's mix."
   :prefix "alchemist-mix-"
   :group 'alchemist)
+
+;; Variables
 
 (defcustom alchemist-mix-command "mix"
   "The shell command for mix."
@@ -49,14 +51,14 @@
 (defvar alchemist-mix--local-install-option-types '("path" "url")
   "List of local.install option types.")
 
+(defun alchemist-mix--completing-read (prompt cmdlist)
+  (completing-read prompt cmdlist nil t nil nil (car cmdlist)))
+
 (defun alchemist-mix-display-mix-buffer ()
   "Display the mix buffer when exists."
   (interactive)
   (when (get-buffer alchemist-mix-buffer-name)
     (display-buffer alchemist-mix-buffer-name)))
-
-(defun alchemist-mix--completing-read (prompt cmdlist)
-  (completing-read prompt cmdlist nil t nil nil (car cmdlist)))
 
 (defun alchemist-mix-new (name)
   "Create a new elixir project named by NAME."
@@ -169,5 +171,4 @@
 
 (provide 'alchemist-mix)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; alchemist-mix.el ends here
