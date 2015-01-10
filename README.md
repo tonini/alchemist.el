@@ -52,6 +52,8 @@ Alchemist comes with a bunch of features, which are:
 
 ## Installation
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tonini/alchemist.el?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ### Installation via package.el
 
 `package.el` is the built-in package manager in Emacs.
