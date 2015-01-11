@@ -472,7 +472,7 @@ Contributions are very welcome!
 
 ## License
 
-Copyright © 2014 Samuel Tonini and
+Copyright © 2014-2015 Samuel Tonini and
 [contributors](https://github.com/tonini/alchemist.el/contributors).
 
 Distributed under the GNU General Public License, version 3
