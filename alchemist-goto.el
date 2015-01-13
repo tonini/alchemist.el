@@ -25,7 +25,6 @@
 
 ;;; Code:
 
-
 (defun alchemist-goto-extract-function (code)
   "Extract function from CODE."
   (let* ((parts (split-string code "\\."))
@@ -35,7 +34,14 @@
                (string-match-p "^[a-z]+" function))
       function)))
 
-(alchemist-goto-extract-function ":gen_tcp.accept")
+(defun alchemist-goto-extract-module (code)
+  "Extract module from CODE."
+  (let* ((parts (split-string code "\\."))
+         (function (car (last parts)))
+         (case-fold-search nil))
+         (when (string-match-p "^[a-z]+" function)
+           (delete function parts))
+         (mapconcat 'concat parts ".")))
 
 (provide 'alchemist-goto)
 

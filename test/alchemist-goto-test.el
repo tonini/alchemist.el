@@ -35,6 +35,18 @@
   (should (equal (alchemist-goto-extract-function "String.Chars.Atom")
                  nil)))
 
+(ert-deftest extract-module ()
+  (should (equal (alchemist-goto-extract-module ":gen_tcp.accept")
+                 ":gen_tcp"))
+  (should (equal (alchemist-goto-extract-module ":erlang")
+                 ":erlang"))
+  (should (equal (alchemist-goto-extract-module "List.duplicate")
+                 "List"))
+  (should (equal (alchemist-goto-extract-module "String.Chars.impl_for")
+                 "String.Chars"))
+  (should (equal (alchemist-goto-extract-module "String.Chars.Atom")
+                 "String.Chars.Atom")))
+
 (provide 'alchemist-goto-test)
 
 ;;; alchemist-goto-test.el ends here

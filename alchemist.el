@@ -49,6 +49,7 @@
 (require 'alchemist-message)
 (require 'alchemist-iex)
 (require 'alchemist-eval)
+(require 'alchemist-goto)
 
 (eval-after-load 'company
   '(progn
