@@ -135,7 +135,41 @@ in a new window."
          (filename (format "%s/%s" (alchemist-project-root) filename)))
     (if (file-exists-p filename)
         (find-file-other-window filename)
-      (message "No test file found."))))
+      (if (y-or-n-p "No test file found; create one now?")
+          (alchemist-project--create-test-for-current-file
+           filename (current-buffer))
+        (message "No test file found.")))))
+
+(defun alchemist-project--create-test-for-current-file (filename buffer)
+  "Creates and populates a test module, FILENAME, for the code in BUFFER.
+The module name given to the test module is determined from the name of the
+first module defined in BUFFER."
+  (let* ((directory-name (file-name-directory filename))
+         (module-name (alchemist-project--grok-module-name buffer))
+         (test-module-name (concat module-name ".Test")))
+    (unless (file-exists-p directory-name)
+      (make-directory (file-name-directory filename) t))
+    (alchemist-project--insert-test-boilerplate
+     (find-file-other-window filename) test-module-name)))
+
+(defun alchemist-project--grok-module-name (buffer)
+  "Determines the name of the first module defined in BUFFER."
+  (save-excursion
+    (set-buffer buffer)
+    (goto-line 1)
+    (re-search-forward "defmodule\\s-\\(.+?\\)\\s-?,?\\s-do")
+    (match-string 1)))
+
+(defun alchemist-project--insert-test-boilerplate (buffer module)
+  "Inserts ExUnit boilerplate for MODULE in BUFFER.
+Point is left in a convenient location."
+  (set-buffer buffer)
+  (insert (concat "defmodule " module " do\n"
+                  "  use ExUnit.Case\n"
+                  "\n"
+                  "end\n"))
+  (goto-char (point-min))
+  (beginning-of-line 3))
 
 (defun alchemist-project-find-test ()
   "Open project test directory and list all test files."
