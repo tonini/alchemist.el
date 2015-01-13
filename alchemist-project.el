@@ -146,7 +146,7 @@ The module name given to the test module is determined from the name of the
 first module defined in BUFFER."
   (let* ((directory-name (file-name-directory filename))
          (module-name (alchemist-project--grok-module-name buffer))
-         (test-module-name (concat module-name ".Test")))
+         (test-module-name (concat module-name "Test")))
     (unless (file-exists-p directory-name)
       (make-directory (file-name-directory filename) t))
     (alchemist-project--insert-test-boilerplate
