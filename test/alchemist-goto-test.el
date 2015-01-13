@@ -45,7 +45,13 @@
   (should (equal (alchemist-goto-extract-module "String.Chars.impl_for")
                  "String.Chars"))
   (should (equal (alchemist-goto-extract-module "String.Chars.Atom")
-                 "String.Chars.Atom")))
+                 "String.Chars.Atom"))
+  (should (equal (alchemist-goto-extract-module "to_string")
+                 nil)))
+
+(ert-deftest get-module-source ()
+  (should (string-match-p "elixir\/lib\/list\\.ex" (alchemist-goto-get-module-source "List")))
+  )
 
 (provide 'alchemist-goto-test)
 
