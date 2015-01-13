@@ -2,6 +2,10 @@
 
 ## v0.13.0-dev (unreleased)
 
+### Enhancements
+
+  * [Help] Inform with message when no documentation is found for given search term.
+
 ## v0.12.0 (2015-01-08)
 
 ### Enhancements
