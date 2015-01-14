@@ -52,35 +52,40 @@
 (ert-deftest get-module-source ()
   (should (string-match-p "elixir\/lib\/list\\.ex" (alchemist-goto-get-module-source "List"))))
 
-(ert-deftest check-if-elixir-core-source ()
-  (should-not (equal (alchemist-goto-elixir-core-source-file-p
-                      "/private/tmp/elixir-QOyKyd/lib/elixir/lib/path.ex")
+(ert-deftest check-if-an-elixir-source-file ()
+  (should-not (equal (alchemist-goto--elixir-file-p "lib/elixir/lib/list.ex")
                      nil))
-  (should-not (equal (alchemist-goto-elixir-core-source-file-p
-                      "/private/tmp/elixir-QOyKyd/lib/iex/lib/iex.ex")
+  (should-not (equal (alchemist-goto--elixir-file-p "lib/elixir/lib/enum.exs")
                      nil))
-  (should-not (equal (alchemist-goto-elixir-core-source-file-p
-                      "/private/tmp/elixir-QOyKyd/lib/mix/lib/mix.ex")
-                     nil))
-  (should-not (equal (alchemist-goto-elixir-core-source-file-p
-                      "/private/tmp/elixir-QOyKyd/lib/eex/lib/eex.ex")
-                     nil))
-  (should-not (equal (alchemist-goto-elixir-core-source-file-p
-                      "/private/tmp/elixir-QOyKyd/lib/ex_unit/lib/ex_unit.ex")
-                     nil))
-  (should-not (equal (alchemist-goto-elixir-core-source-file-p
-                      "/private/tmp/elixir-QOyKyd/lib/logger/lib/logger.ex")
-                     nil))
-  (should (equal (alchemist-goto-elixir-core-source-file-p
-                  "/home/projects/phoenix/lib/phoenix/view.ex")
+  (should (equal (alchemist-goto--elixir-file-p "lib/kernel/lib/gen_tcp.erl")
                  nil)))
 
-(ert-deftest return-path-to-elixir-source-file ()
-  (set (make-local-variable 'alchemist-goto-elixir-source) "/elixir/")
-  (should (equal (alchemist-goto-build-elixir-source-file
-                  "/private/tmp/elixir-QOyKyd/lib/iex/lib/iex.ex")
-                 "/elixir/lib/iex/lib/iex.ex"))
-  )
+(ert-deftest check-if-an-erlang-source-file ()
+  (should-not (equal (alchemist-goto--erlang-file-p "lib/elixir/src/list.erl")
+                     nil))
+  (should-not (equal (alchemist-goto--erlang-file-p "lib/elixir/src/elixir.erl")
+                     nil))
+  (should (equal (alchemist-goto--erlang-file-p "lib/kernel/lib/enum.ex")
+                 nil)))
+
+(ert-deftest build-an-elixir-ex-core-file ()
+  (set (make-local-variable 'alchemist-goto-elixir-source-dir) "/elixir-source/")
+  (should (equal (alchemist-goto--build-elixir-ex-core-file
+                  "/private/tmp/elixir-asdASDq/lib/elixir/lib/elixir.ex")
+                 "/elixir-source/lib/elixir/lib/elixir.ex")))
+
+(ert-deftest build-an-elixir-erl-core-file ()
+  (set (make-local-variable 'alchemist-goto-elixir-source-dir) "/elixir-source/")
+  (should (equal (alchemist-goto--build-elixir-erl-core-file
+                  "/private/tmp/elixir-asdASDq/lib/elixir/src/elixir.erl")
+                 "/elixir-source/lib/elixir/src/elixir.erl")))
+
+(ert-deftest build-an-erlang-core-file ()
+  (set (make-local-variable 'alchemist-goto-erlang-source-dir) "/erlang-source/")
+  (should (equal (alchemist-goto--build-erlang-core-file
+                  "/private/tmp/erlang-vKyIIl/otp-OTP-17.4/lib/edoc/src/edoc_data.erl")
+                 "/erlang-source/lib/edoc/src/edoc_data.erl")))
+
 
 (provide 'alchemist-goto-test)
 

@@ -25,43 +25,8 @@
 
 ;;; Code:
 
-(defun alchemist-goto-extract-function (code)
-  "Extract function from CODE."
-  (let* ((parts (split-string code "\\."))
-         (function (car (last parts)))
-         (case-fold-search nil))
-    (when (and function
-               (string-match-p "^[a-z]+" function))
-      function)))
-
-(defvar alchemist-goto-elixir-source "~/Projects/elixir/")
-
-(defun alchemist-goto-elixir-source-relative-file (file)
-  (string-match "\\(elixir-[0-9]+\\.[0-9]+\\.[0-9a-z-_]+\\/\\)" file)
-  (substring-no-properties file (match-end 1)))
-
-(defun alchemist-goto-build-elixir-source-file (file)
-  (save-match-data
-    (when (or (string-match "\\/\\(lib\\/elixir\\/lib\\)" file)
-              (string-match "\\/\\(lib\\/iex\\/lib\\)" file)
-              (string-match "\\/\\(lib\\/mix\\/lib\\)" file)
-              (string-match "\\/\\(lib\\/eex\\/lib\\)" file)
-              (string-match "\\/\\(lib\\/ex_unit\\/lib\\)" file)
-              (string-match "\\/\\(lib\\/logger\\/lib\\)" file))
-      (concat alchemist-goto-elixir-source
-              (substring-no-properties file (match-beginning 1)))
-
-      )
-    )
-  )
-
-(defun alchemist-goto-elixir-core-source-file-p (file)
-  (or (string-match-p "\\/lib\\/elixir\\/lib" file)
-      (string-match-p "\\/lib\\/iex\\/lib" file)
-      (string-match-p "\\/lib\\/mix\\/lib" file)
-      (string-match-p "\\/lib\\/eex\\/lib" file)
-      (string-match-p "\\/lib\\/ex_unit\\/lib" file)
-      (string-match-p "\\/lib\\/logger\\/lib" file)))
+(defvar alchemist-goto-elixir-source-dir "~/Projects/elixir/")
+(defvar alchemist-goto-erlang-source-dir "~/Projects/otp_src_17.4/")
 
 (defun alchemist-goto-extract-module (code)
   "Extract module from CODE."
@@ -72,6 +37,15 @@
       (delete function parts))
     (unless (string-match-p "^[a-z]+" (car parts))
       (mapconcat 'concat parts "."))))
+
+(defun alchemist-goto-extract-function (code)
+  "Extract function from CODE."
+  (let* ((parts (split-string code "\\."))
+         (function (car (last parts)))
+         (case-fold-search nil))
+    (when (and function
+               (string-match-p "^[a-z]+" function))
+      function)))
 
 (defun alchemist-goto-definition-at-point ()
   "Return the expression under the cursor."
@@ -84,38 +58,72 @@
       (setq p2 (point))
       (alchemist-goto-open-definition (buffer-substring-no-properties p1 p2)))))
 
+(defun alchemist-goto--build-elixir-ex-core-file (file)
+  (when (string-match "\\/\\(lib\\/.+\\/lib\\)\\/.+\.ex$" file)
+    (let* ((file (substring-no-properties file (match-beginning 1)))
+           (source-directory (expand-file-name alchemist-goto-elixir-source-dir)))
+      (concat source-directory file))))
+
+(defun alchemist-goto--build-elixir-erl-core-file (file)
+  (when (string-match "\\/\\(lib\\/.+\\/src\\)\\/.+\.erl$" file)
+    (let* ((file (substring-no-properties file (match-beginning 1)))
+           (source-directory (expand-file-name alchemist-goto-elixir-source-dir)))
+      (concat source-directory file))))
+
+(defun alchemist-goto--build-erlang-core-file (file)
+  (when (string-match "\\/\\(lib\\/.+\\/src\\)\\/.+\.erl$" file)
+    (let* ((file (substring-no-properties file (match-beginning 1)))
+           (source-directory (expand-file-name alchemist-goto-erlang-source-dir)))
+      (concat source-directory file))))
+
 (defun alchemist-goto-open-definition (expr)
-  (let ((module (alchemist-goto-extract-module expr))
-        (function (alchemist-goto-extract-function expr)))
+  (let* ((module (alchemist-goto-extract-module expr))
+         (function (alchemist-goto-extract-function expr)))
     (if module
         (progn
-          (let ((source (alchemist-goto-get-module-source module)))
-            (cond ((equal source nil)
-                   (message "No source file available for: %s" expr))
-                  ((file-exists-p source)
-                   (progn
-                     (find-file-other-window source)
-                     (beginning-of-buffer)
-                     (when function
-                       (when (re-search-forward (format "^\s+\\(defp %s\(\\|def %s\(\\|defmacro %s\(\\)" function function function) nil t)
-                         (goto-char (match-beginning 0))))))
-                  ((alchemist-goto-elixir-core-source-file-p source)
-                   (if alchemist-goto-elixir-source
-                       (progn
-                         (if (file-exists-p (alchemist-goto-build-elixir-source-file source))
-                             (find-file-other-window (alchemist-goto-build-elixir-source-file source))
-                           (message "File does not exists: %s" (alchemist-goto-build-elixir-source-file source)))
+          (let* ((file (alchemist-goto-get-module-source module)))
+            (cond ((equal file nil)
+                   (message "No source file available."))
+                  ((file-exists-p file)
+                   (alchemist-goto--open-file file module function))
+                  ((alchemist-goto--elixir-file-p file)
+                   (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+                     (if (file-exists-p elixir-source-file)
+                         (alchemist-goto--open-file elixir-source-file module function)
+                       (message "File does not exists: %s" elixir-source-file))))
+                  ((alchemist-goto--erlang-file-p file)
+                   (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
+                          (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
+                     (cond ((file-exists-p elixir-source-file)
+                            (alchemist-goto--open-file elixir-source-file module function))
+                           ((file-exists-p erlang-source-file)
+                            (alchemist-goto--open-file erlang-source-file module function))
+                           (t
+                            (message "Source file does not exists for:" module)))))
+                  (t (message "File does not exists: %s" file)))))
+      (message "Could not find source for module: %s" file))))
 
-                         (beginning-of-buffer)
-                         (when function
-                           (when (re-search-forward (format "^\s+\\(defp %s\(\\|def %s\(\\|defmacro %s\(\\)" function function function) nil t)
-                             (goto-char (match-beginning 0)))))
-                     (message "No information about elixir source directory."))
-                   )
-                  (t (message "File does not exists: %s" source)))
-            )
-          )
-      (message "Could not find source for module: %s" module))))
+(defun alchemist-goto--elixir-file-p (file)
+  (string-match-p  "\\.ex\\(s\\)?$" file))
+
+(defun alchemist-goto--erlang-file-p (file)
+  (string-match-p  "\\.erl$" file))
+
+(defun alchemist-goto--open-file (file module function)
+  (find-file-other-window file)
+  (beginning-of-buffer)
+  (cond ((alchemist-goto--elixir-file-p file)
+         (if function
+             (when (re-search-forward (format "^\s+\\(defp %s\(\\|def %s\(\\|defmacro %s\(\\)" function function function) nil t)
+               (goto-char (match-beginning 0)))
+           (when (re-search-forward (format "\\(defmodule %s\s+do\\)" module) nil t)
+             (goto-char (match-beginning 0)))))
+        ((alchemist-goto--erlang-file-p file)
+         (if function
+             (when (re-search-forward (format "\\(^%s\(\\)" function) nil t)
+               (goto-char (match-beginning 0)))
+           (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
+             (goto-char (match-beginning 0)))))))
 
 (defun alchemist-goto--runner ()
   (if (alchemist-project-p)
@@ -130,7 +138,7 @@
                                                     (shell-command-to-string (format "%s -e '%s'"
                                                                                      (alchemist-goto--runner)
                                                                                      (alchemist-goto--get-module-source module)))))))
-    (if (string-empty-p source)
+    (if (string= source "")
         nil
       source)))
 
