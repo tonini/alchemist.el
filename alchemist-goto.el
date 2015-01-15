@@ -198,11 +198,12 @@ Source.find(%s, :%s)" module function))
   (interactive)
   (let (p1 p2)
     (save-excursion
-      (skip-chars-backward "-a-z0-9A-z./?!:")
+      (skip-chars-backward "-_A-Za-z0-9.?!:")
       (setq p1 (point))
-      (skip-chars-forward "-a-z0-9A-z./?!:")
+      (skip-chars-forward "-_A-Za-z0-9.?!:")
       (setq p2 (point))
       (alchemist-goto--open-definition (buffer-substring-no-properties p1 p2)))))
+
 (defalias 'alchemist-goto-jump-back 'pop-tag-mark)
 
 (provide 'alchemist-goto)
