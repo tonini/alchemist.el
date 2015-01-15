@@ -127,6 +127,12 @@
            (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
              (goto-char (match-beginning 0)))))))
 
+(defun alchemist-goto--clear-output (output)
+  (let* ((output (replace-regexp-in-string "\n" "" output))
+         (output (alchemist--utils-clear-ansi-sequences output))
+         (output (if (string= output "") nil output)))
+    output))
+
 (defun alchemist-goto--runner ()
   (if (alchemist-project-p)
       (format "%s run --no-compile" alchemist-mix-command)
@@ -136,13 +142,11 @@
   (let* ((default-directory (if (alchemist-project-p)
                                 (alchemist-project-root)
                               default-directory))
-         (source (replace-regexp-in-string "\n" "" (alchemist--utils-clear-ansi-sequences
-                                                    (shell-command-to-string (format "%s -e '%s'"
-                                                                                     (alchemist-goto--runner)
-                                                                                     (alchemist-goto--get-module-source-code module)))))))
-    (if (string= source "")
-        nil
-      source)))
+         (source-file (shell-command-to-string (format "%s -e '%s'"
+                                                       (alchemist-goto--runner)
+                                                       (alchemist-goto--get-module-source-code module))))
+         (source-file (alchemist-goto--clear-output source-file)))
+    source-file))
 
 (defun alchemist-goto--get-module-source-code (module)
   (format "
