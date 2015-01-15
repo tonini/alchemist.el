@@ -112,32 +112,42 @@
       (message "No source file available for: %s" module))))
 
 (defun alchemist-goto--open-file (file module function)
-  (find-file-other-window file)
-  (beginning-of-buffer)
-  (cond ((alchemist-goto--elixir-file-p file)
-         (alchemist-goto--jump-to-elixir-source module function))
-        ((alchemist-goto--erlang-file-p file)
-         (alchemist-goto--jump-to-erlang-source module function))))
+  (let* ((buf (find-file-noselect file)))
+    (pop-to-buffer buf)
+    (goto-char (point-min))
+    (cond ((alchemist-goto--elixir-file-p file)
+           (alchemist-goto--jump-to-elixir-source module function))
+          ((alchemist-goto--erlang-file-p file)
+           (alchemist-goto--jump-to-erlang-source module function)))))
 
 (defun alchemist-goto--jump-to-elixir-source (module function)
-  (if function
-      (when (re-search-forward (format "^\s+\\(defp %s\(\\|def %s\(\\|defmacro %s\(\\)" function function function) nil t)
-        (goto-char (match-beginning 0)))
-    (when (re-search-forward (format "\\(defmodule %s\s+do\\)" module) nil t)
-      (goto-char (match-beginning 0)))))
+  (when (re-search-forward (format "^\s+\\(defp\s+%s\(\\|def\s+%s\(\\|defmacro\s+%s\(\\)" function function function) nil t)
+    (goto-char (match-beginning 0)))
+  (when (re-search-forward (format "\\(defmodule %s\s+do\\)" module) nil t)
+    (goto-char (match-beginning 0))))
 
 (defun alchemist-goto--jump-to-erlang-source (module function)
-  (if function
-      (when (re-search-forward (format "\\(^%s\(\\)" function) nil t)
-        (goto-char (match-beginning 0)))
-    (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
-      (goto-char (match-beginning 0)))))
+  (when (re-search-forward (format "\\(^%s\(\\)" function) nil t)
+    (goto-char (match-beginning 0)))
+  (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
+    (goto-char (match-beginning 0))))
 
 (defun alchemist-goto--clear-output (output)
-  (let* ((output (replace-regexp-in-string "\n" "" output))
+  (let* ((output (replace-regexp-in-string "source-file-path:" "" output))
+         (output (replace-regexp-in-string "\n" "" output))
          (output (alchemist--utils-clear-ansi-sequences output))
          (output (if (string= output "") nil output)))
     output))
+
+(defun alchemist-goto--debug-message (output)
+  (alchemist-message (format "== ALCHEMIST GOTO FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
+                             output)))
+
+(defun alchemist-goto--report-errors (output)
+  (when (or (not (string-match-p "source-file-path:" output))
+            (not (alchemist-goto--clear-output output)))
+    (when alchemist-complete-debug-mode
+      (alchemist-goto--debug-message output))))
 
 (defun alchemist-goto--runner ()
   (if (alchemist-project-p)
@@ -151,6 +161,7 @@
          (source-file (shell-command-to-string (format "%s -e '%s'"
                                                        (alchemist-goto--runner)
                                                        (alchemist-goto--get-module-source-code module)))))
+    (alchemist-goto--report-errors source-file)
     (alchemist-goto--clear-output source-file)))
 
 (defun alchemist-goto--get-module-source-code (module)
@@ -167,7 +178,7 @@ defmodule Source do
 
     case source do
       nil -> nil
-      source -> List.to_string(source)
+      source -> \"source-file-path:\" <> List.to_string(source)
     end
   end
 end
