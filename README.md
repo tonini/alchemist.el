@@ -362,7 +362,9 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
 ## Definition lookup
 
 With the function `alchemist-goto-definition-at-point`, which is bound to <kbd>M-.</kbd>, you
-can jump to module and function definitions.
+can jump to module and function definitions. If you want to jump back, just use <kbd>M-,</kbd> which calls `alchemist-goto-jump-back`.
+
+You also can jump to the current selected completion candidate with just hit the same key as normally, <kbd>M-.</kbd>.
 
 By default you're able to jump to definitions of your own mix project codebase and dependencies.
 But if you would like to also jump to Elixir and Erlang source code you need to tell Alchemist where
@@ -377,6 +379,8 @@ For that purpose there're two variables you can set:
 ```el
 (setq alchemist-goto-elixir-source-dir "/path/to/elixir/source/")
 ```
+
+![Definition Lookup](http://i.imgur.com/KGIHEOh.gif)
 
 ## Auto-completion
 
