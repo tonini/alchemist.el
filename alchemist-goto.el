@@ -35,7 +35,7 @@
   :type 'string
   :group 'alchemist-goto)
 
-(defun alchemist-goto-extract-module (code)
+(defun alchemist-goto--extract-module (code)
   "Extract module from CODE."
   (let* ((parts (split-string code "\\."))
          (function (car (last parts)))
@@ -84,7 +84,7 @@
       (concat source-directory file))))
 
 (defun alchemist-goto-open-definition (expr)
-  (let* ((module (alchemist-goto-extract-module expr))
+  (let* ((module (alchemist-goto--extract-module expr))
          (function (alchemist-goto-extract-function expr)))
     (if module
         (progn
