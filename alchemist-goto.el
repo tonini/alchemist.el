@@ -87,6 +87,7 @@
   (let* ((module (alchemist-goto--extract-module expr))
          (function (alchemist-goto--extract-function expr))
          (file (alchemist-goto--get-module-source module function)))
+    (ring-insert find-tag-marker-ring (point-marker))
     (cond ((equal file nil)
            (message "No source file available for: %s" module))
           ((file-exists-p file)
@@ -106,12 +107,13 @@
                    (t
                     (message "No source file available for:" module)))))
           (t
+           (pop-tag-mark)
            (message "No source file available for: %s" module)))))
 
 (defun alchemist-goto--open-file (file module function)
   (let* ((buf (find-file-noselect file)))
-    (pop-to-buffer buf)
-    (goto-char (point-min))
+    (switch-to-buffer buf)
+    (beginning-of-buffer)
     (cond ((alchemist-goto--elixir-file-p file)
            (alchemist-goto--jump-to-elixir-source module function))
           ((alchemist-goto--erlang-file-p file)
@@ -198,6 +200,7 @@ Source.find(%s, :%s)" module function))
       (skip-chars-forward "-a-z0-9A-z./?!:")
       (setq p2 (point))
       (alchemist-goto--open-definition (buffer-substring-no-properties p1 p2)))))
+(defalias 'alchemist-goto-jump-back 'pop-tag-mark)
 
 (provide 'alchemist-goto)
 

@@ -104,6 +104,7 @@
     (define-key map (kbd "C-c a v e") 'alchemist-eval-quoted-buffer)
     (define-key map (kbd "C-c a v r") 'alchemist-eval-print-quoted-buffer)
     (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
+    (define-key map (kbd "M-,") 'alchemist-goto-jump-back)
     map)
   "The keymap used when `alchemist-mode' is active.")
 
