@@ -1,4 +1,4 @@
-;;; alchemist-goto.el ---
+;;; alchemist-goto.el --- Functionality to jump modules and function definitions
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -21,9 +21,14 @@
 
 ;;; Commentary:
 
-;;
+;; Functionality to jump modules and function definitions
 
 ;;; Code:
+
+(defgroup alchemist-goto nil
+  "Functionality to jump modules and function definitions."
+  :prefix "alchemist-goto-"
+  :group 'alchemist)
 
 (defcustom alchemist-goto-erlang-source-dir ""
   "Path to the erlang source code."
