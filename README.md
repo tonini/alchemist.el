@@ -380,6 +380,16 @@ For that purpose there're two variables you can set:
 (setq alchemist-goto-elixir-source-dir "/path/to/elixir/source/")
 ```
 
+If you inside an Erlang file and the `erlang-mode` is enabled you can't use `alchemist-goto-jump-back` anymore.
+But if you would like to use it also inside the `erlang-mode` just setup the following custom hook:
+
+```el
+(defun custom-erlang-mode-hook ()
+  (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
+
+(add-hook 'erlang-mode-hook 'custom-erlang-mode-hook)
+```
+
 ![Definition Lookup](http://i.imgur.com/KGIHEOh.gif)
 
 ## Auto-completion
