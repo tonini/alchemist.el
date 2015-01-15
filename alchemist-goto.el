@@ -54,17 +54,6 @@
                (string-match-p "^[a-z]+" function))
       function)))
 
-(defun alchemist-goto-definition-at-point ()
-  "Jump to the elixir expression definition at point."
-  (interactive)
-  (let (p1 p2)
-    (save-excursion
-      (skip-chars-backward "-a-z0-9A-z./?!:")
-      (setq p1 (point))
-      (skip-chars-forward "-a-z0-9A-z./?!:")
-      (setq p2 (point))
-      (alchemist-goto-open-definition (buffer-substring-no-properties p1 p2)))))
-
 (defun alchemist-goto--build-elixir-ex-core-file (file)
   (when (string-match "\\/\\(lib\\/.+\\/lib\\)\\/.+\.ex$" file)
     (let* ((file (substring-no-properties file (match-beginning 1)))
@@ -170,10 +159,16 @@ end
 
 Source.find(%s)" module))
 
-(defun alchemist-goto-get-source-path ()
-  (message "%s" (shell-command-to-string "elixir -e 'List.module_info[:exports] |> Enum.map &IO.inspect/1'")))
-
-;; (alchemist-goto-get-module-source)
+(defun alchemist-goto-definition-at-point ()
+  "Jump to the elixir expression definition at point."
+  (interactive)
+  (let (p1 p2)
+    (save-excursion
+      (skip-chars-backward "-a-z0-9A-z./?!:")
+      (setq p1 (point))
+      (skip-chars-forward "-a-z0-9A-z./?!:")
+      (setq p2 (point))
+      (alchemist-goto-open-definition (buffer-substring-no-properties p1 p2)))))
 
 (provide 'alchemist-goto)
 
