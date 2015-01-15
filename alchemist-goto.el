@@ -85,18 +85,20 @@
 
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
+         (module (if module module "AlchemistGoto"))
          (function (alchemist-goto--extract-function expr))
+         (function (if function function "\"\""))
          (file (alchemist-goto--get-module-source module function)))
     (ring-insert find-tag-marker-ring (point-marker))
     (cond ((equal file nil)
-           (message "No source file available for: %s" module))
+           (message "Don't know how to find: %s" expr))
           ((file-exists-p file)
            (alchemist-goto--open-file file module function))
           ((alchemist-goto--elixir-file-p file)
            (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
              (if (file-exists-p elixir-source-file)
                  (alchemist-goto--open-file elixir-source-file module function)
-               (message "File does not exists: %s" elixir-source-file))))
+               (message "Don't know how to find: %s" expr))))
           ((alchemist-goto--erlang-file-p file)
            (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
                   (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
@@ -105,10 +107,10 @@
                    ((file-exists-p erlang-source-file)
                     (alchemist-goto--open-file erlang-source-file module function))
                    (t
-                    (message "No source file available for:" module)))))
+                    (message "Don't know how to find: %s" expr)))))
           (t
            (pop-tag-mark)
-           (message "No source file available for: %s" module)))))
+           (message "Don't know how to find: %s" expr)))))
 
 (defun alchemist-goto--open-file (file module function)
   (let* ((buf (find-file-noselect file)))
@@ -144,8 +146,9 @@
                              output)))
 
 (defun alchemist-goto--report-errors (output)
-  (when (or (not (string-match-p "source-file-path:" output))
-            (not (alchemist-goto--clear-output output)))
+  (when (and (not (string-match-p "source-file-path:" output))
+             (not (string= (alchemist--utils-clear-ansi-sequences
+                            (replace-regexp-in-string "\n" "" output)) "")))
     (when alchemist-complete-debug-mode
       (alchemist-goto--debug-message output))))
 
