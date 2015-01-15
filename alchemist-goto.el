@@ -25,8 +25,15 @@
 
 ;;; Code:
 
-(defvar alchemist-goto-elixir-source-dir "~/Projects/elixir/")
-(defvar alchemist-goto-erlang-source-dir "~/Projects/otp_src_17.4/")
+(defcustom alchemist-goto-erlang-source-dir ""
+  "Path to the erlang source code."
+  :type 'string
+  :group 'alchemist-goto)
+
+(defcustom alchemist-goto-elixir-source-dir ""
+  "Path to the elixir source code."
+  :type 'string
+  :group 'alchemist-goto)
 
 (defun alchemist-goto-extract-module (code)
   "Extract module from CODE."
