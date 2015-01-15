@@ -115,17 +115,23 @@
   (find-file-other-window file)
   (beginning-of-buffer)
   (cond ((alchemist-goto--elixir-file-p file)
-         (if function
-             (when (re-search-forward (format "^\s+\\(defp %s\(\\|def %s\(\\|defmacro %s\(\\)" function function function) nil t)
-               (goto-char (match-beginning 0)))
-           (when (re-search-forward (format "\\(defmodule %s\s+do\\)" module) nil t)
-             (goto-char (match-beginning 0)))))
+         (alchemist-goto--jump-to-elixir-source module function))
         ((alchemist-goto--erlang-file-p file)
-         (if function
-             (when (re-search-forward (format "\\(^%s\(\\)" function) nil t)
-               (goto-char (match-beginning 0)))
-           (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
-             (goto-char (match-beginning 0)))))))
+         (alchemist-goto--jump-to-erlang-source module function))))
+
+(defun alchemist-goto--jump-to-elixir-source (module function)
+  (if function
+      (when (re-search-forward (format "^\s+\\(defp %s\(\\|def %s\(\\|defmacro %s\(\\)" function function function) nil t)
+        (goto-char (match-beginning 0)))
+    (when (re-search-forward (format "\\(defmodule %s\s+do\\)" module) nil t)
+      (goto-char (match-beginning 0)))))
+
+(defun alchemist-goto--jump-to-erlang-source (module function)
+  (if function
+      (when (re-search-forward (format "\\(^%s\(\\)" function) nil t)
+        (goto-char (match-beginning 0)))
+    (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
+      (goto-char (match-beginning 0)))))
 
 (defun alchemist-goto--clear-output (output)
   (let* ((output (replace-regexp-in-string "\n" "" output))
@@ -144,9 +150,8 @@
                               default-directory))
          (source-file (shell-command-to-string (format "%s -e '%s'"
                                                        (alchemist-goto--runner)
-                                                       (alchemist-goto--get-module-source-code module))))
-         (source-file (alchemist-goto--clear-output source-file)))
-    source-file))
+                                                       (alchemist-goto--get-module-source-code module)))))
+    (alchemist-goto--clear-output source-file)))
 
 (defun alchemist-goto--get-module-source-code (module)
   (format "
