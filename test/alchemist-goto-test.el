@@ -50,7 +50,7 @@
                  nil)))
 
 (ert-deftest get-module-source ()
-  (should (string-match-p "elixir\/lib\/list\\.ex" (alchemist-goto-get-module-source "List"))))
+  (should (string-match-p "elixir\/lib\/list\\.ex" (alchemist-goto--get-module-source "List" nil))))
 
 (ert-deftest check-if-an-elixir-source-file ()
   (should-not (equal (alchemist-goto--elixir-file-p "lib/elixir/lib/list.ex")
