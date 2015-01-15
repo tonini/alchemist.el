@@ -77,14 +77,20 @@
            (source-directory (expand-file-name alchemist-goto-erlang-source-dir)))
       (concat source-directory file))))
 
-(defun alchemist-goto-open-definition (expr)
+(defun alchemist-goto--elixir-file-p (file)
+  (string-match-p  "\\.ex\\(s\\)?$" file))
+
+(defun alchemist-goto--erlang-file-p (file)
+  (string-match-p  "\\.erl$" file))
+
+(defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
          (function (alchemist-goto--extract-function expr)))
     (if module
         (progn
-          (let* ((file (alchemist-goto-get-module-source module)))
+          (let* ((file (alchemist-goto--get-module-source module)))
             (cond ((equal file nil)
-                   (message "No source file available."))
+                   (message "No source file available for: %s" module))
                   ((file-exists-p file)
                    (alchemist-goto--open-file file module function))
                   ((alchemist-goto--elixir-file-p file)
@@ -100,15 +106,10 @@
                            ((file-exists-p erlang-source-file)
                             (alchemist-goto--open-file erlang-source-file module function))
                            (t
-                            (message "Source file does not exists for:" module)))))
-                  (t (message "File does not exists: %s" file)))))
-      (message "Could not find source for module: %s" file))))
-
-(defun alchemist-goto--elixir-file-p (file)
-  (string-match-p  "\\.ex\\(s\\)?$" file))
-
-(defun alchemist-goto--erlang-file-p (file)
-  (string-match-p  "\\.erl$" file))
+                            (message "No source file available for:" module)))))
+                  (t
+                   (message "No source file available for: %s" module)))))
+      (message "No source file available for: %s" module))))
 
 (defun alchemist-goto--open-file (file module function)
   (find-file-other-window file)
@@ -131,19 +132,19 @@
       (format "%s run --no-compile" alchemist-mix-command)
     alchemist-execute-command))
 
-(defun alchemist-goto-get-module-source (module)
+(defun alchemist-goto--get-module-source (module)
   (let* ((default-directory (if (alchemist-project-p)
                                 (alchemist-project-root)
                               default-directory))
          (source (replace-regexp-in-string "\n" "" (alchemist--utils-clear-ansi-sequences
                                                     (shell-command-to-string (format "%s -e '%s'"
                                                                                      (alchemist-goto--runner)
-                                                                                     (alchemist-goto--get-module-source module)))))))
+                                                                                     (alchemist-goto--get-module-source-code module)))))))
     (if (string= source "")
         nil
       source)))
 
-(defun alchemist-goto--get-module-source (module)
+(defun alchemist-goto--get-module-source-code (module)
   (format "
 defmodule Source do
   def find(module) do
@@ -173,7 +174,7 @@ Source.find(%s)" module))
       (setq p1 (point))
       (skip-chars-forward "-a-z0-9A-z./?!:")
       (setq p2 (point))
-      (alchemist-goto-open-definition (buffer-substring-no-properties p1 p2)))))
+      (alchemist-goto--open-definition (buffer-substring-no-properties p1 p2)))))
 
 (provide 'alchemist-goto)
 
