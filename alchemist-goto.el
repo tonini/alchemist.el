@@ -85,31 +85,28 @@
 
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
-         (function (alchemist-goto--extract-function expr)))
-    (if module
-        (progn
-          (let* ((file (alchemist-goto--get-module-source module)))
-            (cond ((equal file nil)
-                   (message "No source file available for: %s" module))
-                  ((file-exists-p file)
-                   (alchemist-goto--open-file file module function))
-                  ((alchemist-goto--elixir-file-p file)
-                   (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
-                     (if (file-exists-p elixir-source-file)
-                         (alchemist-goto--open-file elixir-source-file module function)
-                       (message "File does not exists: %s" elixir-source-file))))
-                  ((alchemist-goto--erlang-file-p file)
-                   (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
-                          (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
-                     (cond ((file-exists-p elixir-source-file)
-                            (alchemist-goto--open-file elixir-source-file module function))
-                           ((file-exists-p erlang-source-file)
-                            (alchemist-goto--open-file erlang-source-file module function))
-                           (t
-                            (message "No source file available for:" module)))))
-                  (t
-                   (message "No source file available for: %s" module)))))
-      (message "No source file available for: %s" module))))
+         (function (alchemist-goto--extract-function expr))
+         (file (alchemist-goto--get-module-source module function)))
+    (cond ((equal file nil)
+           (message "No source file available for: %s" module))
+          ((file-exists-p file)
+           (alchemist-goto--open-file file module function))
+          ((alchemist-goto--elixir-file-p file)
+           (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+             (if (file-exists-p elixir-source-file)
+                 (alchemist-goto--open-file elixir-source-file module function)
+               (message "File does not exists: %s" elixir-source-file))))
+          ((alchemist-goto--erlang-file-p file)
+           (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
+                  (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
+             (cond ((file-exists-p elixir-source-file)
+                    (alchemist-goto--open-file elixir-source-file module function))
+                   ((file-exists-p erlang-source-file)
+                    (alchemist-goto--open-file erlang-source-file module function))
+                   (t
+                    (message "No source file available for:" module)))))
+          (t
+           (message "No source file available for: %s" module)))))
 
 (defun alchemist-goto--open-file (file module function)
   (let* ((buf (find-file-noselect file)))
@@ -154,22 +151,27 @@
       (format "%s run --no-compile" alchemist-mix-command)
     alchemist-execute-command))
 
-(defun alchemist-goto--get-module-source (module)
+(defun alchemist-goto--get-module-source (module function)
   (let* ((default-directory (if (alchemist-project-p)
                                 (alchemist-project-root)
                               default-directory))
          (source-file (shell-command-to-string (format "%s -e '%s'"
                                                        (alchemist-goto--runner)
-                                                       (alchemist-goto--get-module-source-code module)))))
+                                                       (alchemist-goto--get-module-source-code module function)))))
     (alchemist-goto--report-errors source-file)
     (alchemist-goto--clear-output source-file)))
 
-(defun alchemist-goto--get-module-source-code (module)
+(defun alchemist-goto--get-module-source-code (module function)
   (format "
 defmodule Source do
-  def find(module) do
-    if Code.ensure_loaded?(module) do
-      IO.puts source(module)
+  def find(module, function) do
+    cond do
+      Code.ensure_loaded?(module) ->
+        IO.puts source(module)
+      List.keymember?(Kernel.module_info[:exports], function, 0) ->
+        IO.puts source(Kernel)
+      true ->
+        IO.puts \"\"
     end
   end
 
@@ -183,7 +185,7 @@ defmodule Source do
   end
 end
 
-Source.find(%s)" module))
+Source.find(%s, :%s)" module function))
 
 (defun alchemist-goto-definition-at-point ()
   "Jump to the elixir expression definition at point."
