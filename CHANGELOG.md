@@ -1,9 +1,13 @@
 # Changelog
 
-## v0.13.0-dev (unreleased)
+## v0.13.0  (2015-01-15)
 
 ### Enhancements
 
+  * [Goto] Functionality to jump to Module and Function definition. Works for Elixir and Erlang source.
+  * [Refcard] Update refcard with new keybindings.
+  * [Project] Add functionality to bootstrap a new test file when try to jump to it and
+    it's not existsing.
   * [Help] Inform with message when no documentation is found for given search term.
 
 ## v0.12.0 (2015-01-08)
