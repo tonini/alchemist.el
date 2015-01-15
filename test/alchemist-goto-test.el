@@ -24,15 +24,15 @@
 ;;; Code:
 
 (ert-deftest extract-function ()
-  (should (equal (alchemist-goto-extract-function ":gen_tcp.accept")
+  (should (equal (alchemist-goto--extract-function ":gen_tcp.accept")
                  "accept"))
-  (should (equal (alchemist-goto-extract-function ":erlang")
+  (should (equal (alchemist-goto--extract-function ":erlang")
                  nil))
-  (should (equal (alchemist-goto-extract-function "List.duplicate")
+  (should (equal (alchemist-goto--extract-function "List.duplicate")
                  "duplicate"))
-  (should (equal (alchemist-goto-extract-function "String.Chars.impl_for")
+  (should (equal (alchemist-goto--extract-function "String.Chars.impl_for")
                  "impl_for"))
-  (should (equal (alchemist-goto-extract-function "String.Chars.Atom")
+  (should (equal (alchemist-goto--extract-function "String.Chars.Atom")
                  nil)))
 
 (ert-deftest extract-module ()

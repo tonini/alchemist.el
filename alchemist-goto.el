@@ -45,7 +45,7 @@
     (unless (string-match-p "^[a-z]+" (car parts))
       (mapconcat 'concat parts "."))))
 
-(defun alchemist-goto-extract-function (code)
+(defun alchemist-goto--extract-function (code)
   "Extract function from CODE."
   (let* ((parts (split-string code "\\."))
          (function (car (last parts)))
@@ -85,7 +85,7 @@
 
 (defun alchemist-goto-open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
-         (function (alchemist-goto-extract-function expr)))
+         (function (alchemist-goto--extract-function expr)))
     (if module
         (progn
           (let* ((file (alchemist-goto-get-module-source module)))
