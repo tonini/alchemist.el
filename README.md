@@ -21,6 +21,7 @@ Alchemist comes with a bunch of features, which are:
 * Compile & Execution of Elixir code
 * Inline code evaluation
 * Documentation lookup
+* Definition lookup
 * Smart code completion
 * Elixir project management
 * Integration with [company-mode](http://company-mode.github.io/)
@@ -39,6 +40,7 @@ Alchemist comes with a bunch of features, which are:
 - [Project](#project)
 - [Documentation lookup](#documentation-lookup)
   - [Keymap](#alchemist-help-minor-mode-keymap)
+- [Definition lookup](#definition-lookup)
 - [Auto-completion](#auto-completion)
   - [Debug](#debug)
 - [IEx](#iex)
@@ -357,6 +359,39 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
     </tr>
 </table>
 
+## Definition lookup
+
+With the function `alchemist-goto-definition-at-point`, which is bound to <kbd>M-.</kbd>, you
+can jump to module and function definitions. If you want to jump back, just use <kbd>M-,</kbd> which calls `alchemist-goto-jump-back`.
+
+You also can jump to the current selected completion candidate with just hit the same key as normally, <kbd>M-.</kbd>.
+
+By default you're able to jump to definitions of your own mix project codebase and dependencies.
+But if you would like to also jump to Elixir and Erlang source code you need to tell Alchemist where
+it can find the source code of Elixir and Erlang.
+
+For that purpose there're two variables you can set:
+
+```el
+(setq alchemist-goto-erlang-source-dir "/path/to/erlang/source/")
+```
+
+```el
+(setq alchemist-goto-elixir-source-dir "/path/to/elixir/source/")
+```
+
+If you inside an Erlang file and the `erlang-mode` is enabled you can't use `alchemist-goto-jump-back` anymore.
+But if you would like to use it also inside the `erlang-mode` just setup the following custom hook:
+
+```el
+(defun custom-erlang-mode-hook ()
+  (define-key erlang-mode-map (kbd "M-,") 'alchemist-goto-jump-back))
+
+(add-hook 'erlang-mode-hook 'custom-erlang-mode-hook)
+```
+
+![Definition Lookup](http://i.imgur.com/KGIHEOh.gif)
+
 ## Auto-completion
 
 Alchemist users are advised to use
@@ -432,8 +467,6 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 |<kbd>C-c a v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
 |<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
 |<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
-
-
 
 ## Hooks
 

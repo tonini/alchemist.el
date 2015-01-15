@@ -42,8 +42,16 @@
       (alchemist-help--execute-without-complete candidate))))
 (put 'alchemist-company--show-documentation 'company-keep t)
 
+(defun alchemist-company--open-definition ()
+  (interactive)
+  (company--electric-do
+    (let* ((selected (nth company-selection company-candidates)))
+      (alchemist-goto--open-definition selected))))
+(put 'alchemist-company--open-definition 'company-keep t)
+
 (defun alchemist-company--keybindings ()
-  (define-key company-active-map (kbd "C-d") 'alchemist-company--show-documentation))
+  (define-key company-active-map (kbd "C-d") 'alchemist-company--show-documentation)
+  (define-key company-active-map (kbd "M-.") 'alchemist-company--open-definition))
 
 (add-hook 'company-mode-hook 'alchemist-company--keybindings)
 

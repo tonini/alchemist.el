@@ -5,7 +5,7 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 0.13.0-cvs
+;; Version: 0.13.0
 ;; Package-Requires: ((emacs "24"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
@@ -49,6 +49,7 @@
 (require 'alchemist-message)
 (require 'alchemist-iex)
 (require 'alchemist-eval)
+(require 'alchemist-goto)
 
 (eval-after-load 'company
   '(progn
@@ -58,7 +59,7 @@
   "Hook which enables `alchemist-mode'"
   (alchemist-mode 1))
 
-(defvar alchemist--version "0.13.0-cvs")
+(defvar alchemist--version "0.13.0")
 
 ;;;###autoload
 (defun alchemist-version (&optional show-version)
@@ -102,6 +103,8 @@
     (define-key map (kbd "C-c a v w") 'alchemist-eval-print-buffer)
     (define-key map (kbd "C-c a v e") 'alchemist-eval-quoted-buffer)
     (define-key map (kbd "C-c a v r") 'alchemist-eval-print-quoted-buffer)
+    (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
+    (define-key map (kbd "M-,") 'alchemist-goto-jump-back)
     map)
   "The keymap used when `alchemist-mode' is active.")
 
