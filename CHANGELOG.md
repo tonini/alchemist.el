@@ -1,6 +1,13 @@
 # Changelog
 
-## v0.14.0-dev (unreleased)
+## v0.13.1 (2015-01-16)
+
+### Bugfixes
+
+  * [Goto] Correct jump to definition inside the same file.
+  * [Goto] Simplify and make message about none found more understandable.
+  * [Help] Improve Regex for fetch expression under cursor.
+  * [Help] Handle long module constalations.
 
 ## v0.13.0 (2015-01-15)
 
