@@ -72,6 +72,13 @@ It walks the directory tree until it finds a elixir project root indicator."
 (defun alchemist-utils--remove-newline-at-end (string)
   (replace-regexp-in-string "\n$" "" string))
 
+(defun alchemist-utils--count-char-in-str (regexp str)
+  (loop with start = 0
+        for count from 0
+        while (string-match regexp str start)
+        do (setq start (match-end 0))
+        finally return count))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
