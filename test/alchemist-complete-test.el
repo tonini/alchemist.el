@@ -1,4 +1,4 @@
-;;; alchemist-complete-tests.el ---
+;;; alchemist-complete-test.el ---
 
 ;; Copyright © 2014-2015 Samuel Tonini
 ;;
@@ -60,10 +60,6 @@ cmp:to_string/1")
   (should (equal (alchemist-complete--build-help-candidates '("List.delete" "delete/2" "delete_at/2"))
                  '("List.delete/2" "List.delete_at/2")))
   (should (equal (alchemist-complete--build-help-candidates '("String.Chars." "delete/2" "delete_at/2"))
-                 '("String.Chars" "String.Chars.delete/2" "String.Chars.delete_at/2")))
-  )
+                 '("String.Chars" "String.Chars.delete/2" "String.Chars.delete_at/2"))))
 
-
-
-
-(provide 'alchemist-complete-tests)
+(provide 'alchemist-complete-test)
