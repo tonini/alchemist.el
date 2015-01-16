@@ -76,9 +76,8 @@ is `nil', otherwise it disable it."
   (let* ((search-term (car a-list))
          (candidates (cond ((string-match-p "\\.$" search-term)
                             (alchemist-complete--concat-prefix-with-functions search-term a-list t))
-                           ((string-match-p "\\..+" search-term)
-                            (alchemist-complete--concat-prefix-with-functions search-term a-list))
-                           (t a-list))))
+                           (t
+                            a-list))))
     (delete-dups candidates)))
 
 (defun alchemist-complete--output-to-list (output)
@@ -162,7 +161,7 @@ Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
   (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
          (command (alchemist-complete--command exp))
          (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
-    (alchemist-complete--sentinel proc callback)))
+    (alchemist-complete--sentinel proc callback #'alchemist-complete--build-help-candidates)))
 
 (defun alchemist-complete-candidates (exp callback)
   (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
