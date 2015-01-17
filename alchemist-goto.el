@@ -193,6 +193,21 @@ end
 
 Source.find(%s, :%s)" module function))
 
+(defun alchemist-goto--alises-of-current-buffer ()
+  (let* ((aliases '()))
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^\s+alias\s+\\(.+\\)\n" nil t)
+        (let* ((alias (replace-regexp-in-string "\s" "" (match-string 1)))
+               (alias (split-string alias ","))
+               (as (first (cdr alias)))
+               (alias (car alias))
+               (as (when as
+                     (replace-regexp-in-string "as:" "" as)))
+               (as (if as as (car (last (split-string alias "\\."))))))
+          (setq aliases (append aliases (list (list alias as)))))))
+    aliases))
+
 (defun alchemist-goto-definition-at-point ()
   "Jump to the elixir expression definition at point."
   (interactive)

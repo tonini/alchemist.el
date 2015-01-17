@@ -87,6 +87,28 @@
                  "/erlang-source/lib/edoc/src/edoc_data.erl")))
 
 
+(ert-deftest get-aliases-of-an-elixir-module ()
+  (should (equal (list '("Phoenix.Router.Resource" "Special")
+                       '("Phoenix.Router.Scope" "Scope"))
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  alias Phoenix.Router.Resource, as: Special
+  alias Phoenix.Router.Scope
+
+  @doc false
+  defmacro __using__(_) do
+    quote do
+      unquote(prelude())
+      unquote(plug())
+    end
+  end
+
+end")
+                   (alchemist-goto--alises-of-current-buffer)))))
+
 (provide 'alchemist-goto-test)
 
 ;;; alchemist-goto-test.el ends here
