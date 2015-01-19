@@ -2,6 +2,8 @@
 
 ## v0.14.0-dev (unreleased)
 
+  * [Goto] Handle alias of module name, so jump to defintion and modules also working.
+
 ## v0.13.1 (2015-01-16)
 
 ### Bugfixes
