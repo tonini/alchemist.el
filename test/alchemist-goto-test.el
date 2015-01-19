@@ -99,11 +99,15 @@ defmodule Phoenix.Router do
   alias Phoenix.Router.Scope
 
   @doc false
-  defmacro __using__(_) do
-    quote do
-      unquote(prelude())
-      unquote(plug())
+  defmacro scope(path, options, do: context) do
+    options = quote do
+      path = unquote(path)
+      case unquote(options) do
+        alias when is_atom(alias) -> [path: path, alias: alias]
+        options when is_list(options) -> Keyword.put(options, :path, path)
+      end
     end
+    do_scope(options, context)
   end
 
 end")
