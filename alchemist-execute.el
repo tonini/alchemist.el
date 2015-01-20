@@ -40,6 +40,8 @@
 (defvar alchemist-execute-buffer-name "*elixir*"
   "Name of the elixir output buffer.")
 
+;; Private functions
+
 (defun alchemist-execute--file (filename)
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
