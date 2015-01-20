@@ -48,6 +48,8 @@
 (defun alchemist-execute--read-command (command)
   (read-shell-command "elixir command: " (concat command " ")))
 
+;; Public functions
+
 (defun alchemist-execute-this-buffer ()
   "Run the current buffer through elixir."
   (interactive)
