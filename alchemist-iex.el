@@ -32,7 +32,10 @@
   :prefix "alchemist-iex-"
   :group 'alchemist)
 
-(defvar alchemist-iex-program-name "iex")
+(defcustom alchemist-iex-program-name "iex"
+  "The shell command for iex."
+  :type 'string
+  :group 'alchemist-iex)
 
 (defvar alchemist-iex-buffer nil
   "The buffer in which the Elixir IEx process is running.")
