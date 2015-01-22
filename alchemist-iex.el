@@ -27,6 +27,11 @@
 
 (require 'comint)
 
+(defgroup alchemist-iex nil
+  "Interaction with an Elixir IEx process."
+  :prefix "alchemist-iex-"
+  :group 'alchemist)
+
 (defvar alchemist-iex-program-name "iex")
 
 (defvar alchemist-iex-buffer nil
