@@ -1,4 +1,4 @@
-;;; alchemist.el --- Elixir tooling integration into emacs
+;;; alchemist.el --- Elixir tooling integration into Emacs
 
 ;; Copyright © 2014-2015 Samuel Tonini
 ;;
@@ -26,12 +26,12 @@
 
 ;;; Commentary:
 
-;;  Alchemist integrate Elixir's tooling into emacs.
+;; Alchemist integrate Elixir's tooling into Emacs
 
 ;;; Code:
 
 (defgroup alchemist nil
-  "Elixir Tooling Integration Into Emacs"
+  "Elixir Tooling Integration Into Emacs."
   :prefix "alchemist-"
   :group 'applications
   :link '(url-link :tag "Github" "https://github.com/tonini/alchemist.el")
