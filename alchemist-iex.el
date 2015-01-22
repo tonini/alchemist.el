@@ -133,6 +133,12 @@ and jump to the buffer."
       (move-marker comint-last-input-end (point))
       (comint-send-string proc str-no-newline))))
 
+(defun alchemist-iex-clear-buffer ()
+  "Clear the current iex process buffer."
+  (interactive)
+  (let ((comint-buffer-maximum-size 0))
+    (comint-truncate-buffer)))
+
 ;;;###autoload
 (defalias 'run-elixir 'alchemist-iex-run)
 (defalias 'inferior-elixir 'alchemist-iex-run)
