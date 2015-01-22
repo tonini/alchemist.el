@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;  Interaction with an Elixir IEx process
+;; Interaction with an Elixir IEx process
 
 ;;; Code:
 
