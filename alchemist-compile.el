@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;  Elixir compilation functionality
+;; Elixir compilation functionality.
 
 ;;; Code:
 
