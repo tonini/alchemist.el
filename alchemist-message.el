@@ -21,9 +21,14 @@
 
 ;;; Commentary:
 
-;; Internal message functionality
+;; Internal message functionality.
 
 ;;; Code:
+
+(defgroup alchemist-message nil
+  "Internal message functionality."
+  :prefix "alchemist-message-"
+  :group 'alchemist)
 
 ;; Variables
 
