@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; Functionality for Elixir documentation lookup
+;; Functionality for Elixir documentation lookup.
 
 ;;; Code:
 
