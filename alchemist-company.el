@@ -21,11 +21,16 @@
 
 ;;; Commentary:
 
-;; Elixir company-mode backend
+;; Elixir company-mode backend.
 
 ;;; Code:
 
 (require 'company)
+
+(defgroup alchemist-company nil
+  "Elixir company-mode backend."
+  :prefix "alchemist-company-"
+  :group 'alchemist)
 
 ;; Variables
 
