@@ -1,4 +1,4 @@
-;;; alchemist-company.el --- company-mode completion back-end for Elixir -*- lexical-binding: t -*-
+;;; alchemist-company.el --- Elixir company-mode backend -*- lexical-binding: t -*-
 
 ;; Copyright © 2014-2015 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; company-mode completion back-end for Elixir
+;; Elixir company-mode backend
 
 ;;; Code:
 
