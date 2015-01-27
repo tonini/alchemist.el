@@ -25,6 +25,11 @@
 
 ;;; Code:
 
+(defgroup alchemist-eval nil
+  "Elixir code inline evaluation functionality."
+  :prefix "alchemist-eval-"
+  :group 'alchemist)
+
 (defun alchemist-eval--insert (string)
   (let ((lines (split-string string "\n")))
     (if (> (length lines) 1)
