@@ -120,7 +120,7 @@ h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
                              ""
                            "--no-compile"))
          (command (if (alchemist-project-p)
-                      (format "%s %s -e \"%s\"" alchemist-help-mix-run-command compile-option string)
+                      (format "%s %s --no-start -e \"%s\"" alchemist-help-mix-run-command compile-option string)
                     (format "%s -e \"%s\"" alchemist-execute-command string))))
     command))
 
