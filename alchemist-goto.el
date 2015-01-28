@@ -164,7 +164,7 @@
 
 (defun alchemist-goto--runner ()
   (if (alchemist-project-p)
-      (format "%s run --no-compile" alchemist-mix-command)
+      (format "%s run --no-compile --no-start" alchemist-mix-command)
     alchemist-execute-command))
 
 (defun alchemist-goto--get-module-source (module function)
