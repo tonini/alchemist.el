@@ -2,6 +2,9 @@
 
 ## v0.14.0-dev (unreleased)
 
+### Enhancements
+
+  * [System] When executing `mix run` make sure the application don't start after compilation with `--no-start` argument.
   * [Goto] Handle alias of module name, so jump to defintion and modules also working.
 
 ## v0.13.1 (2015-01-16)
