@@ -128,7 +128,7 @@ Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
                              ""
                            "--no-compile"))
          (command (if (alchemist-project-p)
-                      (format "%s %s  --no-start -e \"%s\"" alchemist-help-mix-run-command compile-option elixir-code)
+                      (format "%s %s -e \"%s\"" alchemist-help-mix-run-command compile-option elixir-code)
                     (format "%s -e \"%s\"" alchemist-execute-command elixir-code)))
          )
     (when (alchemist-project-p)
