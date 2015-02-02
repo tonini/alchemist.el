@@ -76,6 +76,8 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
     (when orphan-proc
       (kill-process orphan-proc))))
 
+;; Private functions
+
 (defvar alchemist-buffer--save-buffers-predicate
   (lambda ()
     (not (string= (substring (buffer-name) 0 1) "*"))))
@@ -84,7 +86,7 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
   (delete-matching-lines "\\(-*- mode:\\|Compiled \\|elixir-compilation;\\|Elixir started\\|^$\\)" (point-min) (point-max))
   (remove-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output t))
 
-(defun alchemist-buffer-remove-dispensable-output-after-finish (buffer msg)
+(defun alchemist-buffer--remove-dispensable-output-after-finish (buffer msg)
   (delete-matching-lines "\\(Excluding tags\\|Including tags\\|Elixir exited\\|Elixir finished\\)" (point-min) (point-max)))
 
 (defun alchemist-buffer--handle-compilation ()
@@ -97,6 +99,8 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
           'alchemist-buffer--failed-face))
 
   (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
+
+;; Public functions
 
 (defun alchemist-buffer-initialize-modeline ()
   "Initialize the mode-line face."
@@ -133,7 +137,7 @@ Argument BUFFER-NAME for the compilation."
       (setq-local compilation-error-regexp-alist (cons 'elixir compilation-error-regexp-alist))
       (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation nil t)
       (add-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output nil t)
-      (add-to-list 'compilation-finish-functions 'alchemist-buffer-remove-dispensable-output-after-finish)
+      (add-to-list 'compilation-finish-functions 'alchemist-buffer--remove-dispensable-output-after-finish)
       (when alchemist-buffer-status-modeline
         (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))
 
