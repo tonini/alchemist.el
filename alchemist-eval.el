@@ -30,6 +30,8 @@
   :prefix "alchemist-eval-"
   :group 'alchemist)
 
+;; Private functions
+
 (defun alchemist-eval--insert (string)
   (let ((lines (split-string string "\n")))
     (if (> (length lines) 1)
@@ -84,6 +86,8 @@
   (if (alchemist-project-p)
       (format "%s run --no-compile" alchemist-mix-command)
     alchemist-execute-command))
+
+;; Public functions
 
 (defun alchemist-eval-current-line ()
   "Evaluate the Elixir code on the current line."
