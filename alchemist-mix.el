@@ -51,8 +51,24 @@
 (defvar alchemist-mix--local-install-option-types '("path" "url")
   "List of local.install option types.")
 
+;; Private functions
+
 (defun alchemist-mix--completing-read (prompt cmdlist)
   (completing-read prompt cmdlist nil t nil nil (car cmdlist)))
+
+(defun alchemist-mix--test-file (filename)
+  "Run a specific FILENAME as argument for the mix command test."
+  (when (not (file-exists-p filename))
+    (error "The given file doesn't exists"))
+  (alchemist-mix-execute (list "test" (expand-file-name filename))))
+
+(defun alchemist-mix--commands ()
+  (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
+    (mapcar (lambda (s)
+              (cdr (split-string (car (split-string s "#")))))
+            (cdr (split-string mix-cmd-list "\n")))))
+
+;; Public functions
 
 (defun alchemist-mix-display-mix-buffer ()
   "Display the mix buffer when exists."
@@ -80,12 +96,6 @@
   (interactive "Fmix test: ")
   (alchemist-mix--test-file (expand-file-name filename)))
 
-(defun alchemist-mix--test-file (filename)
-  "Run a specific FILENAME as argument for the mix command test."
-  (when (not (file-exists-p filename))
-    (error "The given file doesn't exists"))
-  (alchemist-mix-execute (list "test" (expand-file-name filename))))
-
 (defun alchemist-mix-test-at-point ()
   "Run the test at point."
   (interactive)
@@ -108,12 +118,6 @@
   (interactive
    (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)))
   (alchemist-mix-execute (list command)))
-
-(defun alchemist-mix--commands ()
-  (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
-    (mapcar (lambda (s)
-              (cdr (split-string (car (split-string s "#")))))
-            (cdr (split-string mix-cmd-list "\n")))))
 
 (defun alchemist-mix (command)
   "Prompt for mix commands."
