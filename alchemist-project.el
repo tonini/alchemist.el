@@ -125,16 +125,45 @@ completion will be work.
     (when project-root
       (setq default-directory project-root))))
 
+(defun alchemist-toggle-file-and-tests-other-window ()
+  "Toggle between a file and its tests in other window."
+  (interactive)
+  (if (alchemist--is-test-file-p)
+      (alchemist--project-open-file-for-current-tests 'find-file-other-window)
+    (alchemist--project-open-tests-for-current-file 'find-file-other-window)))
+
+(defun alchemist-toggle-file-and-tests ()
+  "Toggle between a file and its tests in the current window."
+  (interactive)
+  (if (alchemist--is-test-file-p)
+      (alchemist--project-open-file-for-current-tests 'find-file)
+    (alchemist--project-open-tests-for-current-file 'find-file)))
+
+(defun alchemist--is-test-file-p ()
+  "Check wether the visited file is a test file."
+  (string-match "_test\.exs$" (buffer-file-name)))
+
+(defun alchemist--project-open-file-for-current-tests (toggler)
+  "Open the appropriate implementation file for the current buffer by calling TOGGLER with filename."
+  (let* ((filename (file-relative-name (buffer-file-name) (alchemist-project-root)))
+         (filename (replace-regexp-in-string "^test/" "lib/" filename))
+         (filename (replace-regexp-in-string "_test\.exs$" "\.ex" filename))
+         (filename (format "%s/%s" (alchemist-project-root) filename)))
+    (funcall toggler filename)))
+
 (defun alchemist-project-open-tests-for-current-file ()
-  "Opens the appropriate test file for the current buffer file
-in a new window."
+  "Open the appropriate test file for the current buffer file in a new window."
+  (alchemist--project-open-tests-for-current-file 'find-file-other-window))
+
+(defun alchemist--project-open-tests-for-current-file (toggler)
+  "Opens the appropriate test file by calling TOGGLER with filename."
   (interactive)
   (let* ((filename (file-relative-name (buffer-file-name) (alchemist-project-root)))
          (filename (replace-regexp-in-string "^lib/" "test/" filename))
          (filename (replace-regexp-in-string "\.ex$" "_test\.exs" filename))
          (filename (format "%s/%s" (alchemist-project-root) filename)))
     (if (file-exists-p filename)
-        (find-file-other-window filename)
+        (funcall toggler filename)
       (if (y-or-n-p "No test file found; create one now?")
           (alchemist-project--create-test-for-current-file
            filename (current-buffer))
