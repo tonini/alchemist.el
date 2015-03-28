@@ -60,7 +60,7 @@
   "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
-  (alchemist-mix-execute (list "test" (expand-file-name filename))))
+  (alchemist-mix-execute (list "test" (expand-file-name filename) "--exclude pending:true")))
 
 (defun alchemist-mix--commands ()
   (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
@@ -84,7 +84,7 @@
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
   (interactive)
-  (alchemist-mix-execute (list "test")))
+  (alchemist-mix-execute (list "test --exclude pending:true")))
 
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
