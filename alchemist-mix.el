@@ -37,6 +37,11 @@
   :type 'string
   :group 'alchemist-mix)
 
+(defcustom alchemist-mix-test-default-options '("--exclude pending:true")
+  "Default options for alchemist test command."
+  :type 'list
+  :group 'alchemist-mix)
+
 (defvar alchemist-mix-buffer-name "*mix*"
   "Name of the mix output buffer.")
 
@@ -60,7 +65,7 @@
   "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
-  (alchemist-mix-execute (list "test" (expand-file-name filename) "--exclude pending:true")))
+  (alchemist-mix-execute `("test" ,(expand-file-name filename) ,@alchemist-mix-test-default-options)))
 
 (defun alchemist-mix--commands ()
   (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
@@ -84,7 +89,7 @@
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
   (interactive)
-  (alchemist-mix-execute (list "test --exclude pending:true")))
+  (alchemist-mix-execute `("test" ,@alchemist-mix-test-default-options)))
 
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
