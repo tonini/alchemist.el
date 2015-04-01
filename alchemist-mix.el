@@ -39,7 +39,7 @@
 
 (defcustom alchemist-mix-test-default-options '("--exclude pending:true")
   "Default options for alchemist test command."
-  :type 'list
+  :type '(repeat string)
   :group 'alchemist-mix)
 
 (defvar alchemist-mix-buffer-name "*mix*"
