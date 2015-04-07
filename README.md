@@ -491,11 +491,7 @@ via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] 
 
 Alchemist comes with a default keymap.
 
-You find and overview of all the key-bindings on the
-[Alchemist-Refcard](https://github.com/tonini/alchemist.el/blob/master/doc/alchemist-refcard.pdf?raw=true).
-
-You can also customize the keybinding prefix in the variable
-`alchemist-key-command-prefix` (whose default value is <kbd>C-c a</kbd>).
+You find and overview of all the key-bindings on the [Alchemist-Refcard](https://github.com/tonini/alchemist.el/blob/master/doc/alchemist-refcard.pdf?raw=true).
 
 ## Contributing
 
