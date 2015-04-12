@@ -108,6 +108,80 @@
     map)
   "The keymap used when `alchemist-mode' is active.")
 
+(easy-menu-define alchemist-mode-menu alchemist-mode-map
+  "Alchemist mode menu."
+  '("Alchemist"
+    ["Goto Defn at Point" alchemist-goto-definition-at-point]
+    ("Evaluate"
+     ["Current Line" alchemist-eval-current-line]
+     ["Current Line and Print" alchemist-eval-print-current-line]
+     ["Quoted Current Line" alchemist-eval-quoted-current-line]
+     ["Quoted Current Line and Print" alchemist-eval-print-quoted-current-line]
+     "---"
+     ["Region" alchemist-eval-region]
+     ["Region and Print" alchemist-eval-print-region]
+     ["Quoted Region" alchemist-eval-quoted-region]
+     ["Quoted Region and Print" alchemist-eval-print-quoted-region]
+     "---"
+     ["Buffer" alchemist-eval-buffer]
+     ["Buffer and Print" alchemist-eval-print-buffer]
+     ["Quoted Buffer" alchemist-eval-quoted-buffer]
+     ["Quoted Buffer and Print" alchemist-eval-print-quoted-buffer]
+     )
+    ("Compile"
+     ["Compile..." alchemist-compile]
+     ["Buffer" alchemist-compile-this-buffer]
+     ["File" alchemist-compile-file])
+    ("Mix"
+     ["Deps..." alchemist-mix-deps-with-prompt]
+     ["Compile..." alchemist-mix-compile]
+     ["Run..." alchemist-mix-run]
+     "---"
+     ["Test Buffer..." alchemist-mix-test-this-buffer]
+     ["Test File..." alchemist-mix-test-file]
+     ["Test at Point" alchemist-mix-test-at-point]
+     "---"
+     ["Mix..." alchemist-mix]
+     ["New..." alchemist-mix-new]
+     ["Hex Search..." alchemist-mix-hex-search]
+     "---"
+     ["Local..." alchemist-mix-local-with-prompt]
+     ["Local Install..." alchemist-mix-local-install]
+     ["Local Install (Path)..." alchemist-mix-local-install-with-path]
+     ["Local Install (URL)..." alchemist-mix-local-install-with-url]
+     "---"
+     ["Display Mix Buffer" alchemist-mix-display-mix-buffer]
+     "---"
+     ["Help for Command..." alchemist-mix-help])
+    ("IEx"
+     ["Send Current Line" alchemist-iex-send-current-line]
+     ["Send Current Line and Go" alchemist-iex-send-current-line-and-go]
+     "---"
+     ["Send Last Region" alchemist-iex-send-last-sexp]
+     ["Send Region" alchemist-iex-send-region]
+     ["Send Region and Go" alchemist-iex-send-region-and-go]
+     "---"
+     ["Compile Buffer" alchemist-iex-compile-this-buffer]
+     ["Recompile Buffer" alchemist-iex-recompile-this-buffer]
+     "---"
+     ["Start IEx Process" alchemist-iex-start-process]
+     ["Start Mix IEx Process" alchemist-mix-iex])
+    ("Project"
+     ["Find All Tests" alchemist-project-find-test]
+     ["Find Tests for File" alchemist-project-open-tests-for-current-file]
+     "---"
+     ["Compile When Needed" alchemist-project-toggle-compile-when-needed
+      :style toggle :selected alchemist-project-compile-when-needed])
+    ("Help"
+     ["Elixir Help..." alchemist-help]
+     ["Help History..." alchemist-help-history]
+     "---"
+     ["Search at Point..." alchemist-help-search-at-point]
+     ["Search Marked Region..." alchemist-help-search-marked-region]
+     "---"
+     ["Minor Mode Keybindings" alchemist-help-minor-mode-key-binding-summary])
+    ))
+
 ;;;###autoload
 (define-minor-mode alchemist-mode
   "Toggle alchemist mode.
