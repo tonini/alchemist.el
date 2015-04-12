@@ -193,7 +193,7 @@ Key bindings:
   " alchemist"
   :group 'alchemist
   :global nil
-  :keymap 'alchemist-mode-map
+  :keymap alchemist-mode-map
   (cond (alchemist-mode
          (alchemist-buffer-initialize-modeline))
         (t
