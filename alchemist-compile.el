@@ -43,9 +43,9 @@
 ;; Private functions
 
 (defun alchemist-compile--file (filename)
-  (when (not (file-exists-p filename))
-    (error "The given file doesn't exists"))
-  (alchemist-compile (list alchemist-compile-command (expand-file-name filename))))
+  (cond ((not (file-exists-p filename)) (error "The given file doesn't exist"))
+        ((string-match "\.exs$" filename) (error "The given file is an Elixir Script"))
+        (t (alchemist-compile (list alchemist-compile-command (expand-file-name filename))))))
 
 (defun alchemist-compile--read-command (command)
   (read-shell-command "elixirc command: " (concat command " ")))
