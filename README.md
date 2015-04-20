@@ -233,6 +233,8 @@ Example:
     </tr>
 </table>
 
+You can customize the default options passed to the `mix test` commands by
+customizing the value of the `alchemist-mix-test-default-options` variable.
 
 ## Compile And Execute
 
