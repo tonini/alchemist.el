@@ -132,9 +132,10 @@ Argument BUFFER-NAME for the compilation."
         (compilation-start (mapconcat 'concat cmdlist " ")
                            'alchemist-buffer-mode
                            (lambda (b) alchemist-buffer--buffer-name))
-      (setq-local compilation-error-regexp-alist-alist
-                  (cons alchemist-buffer--error-link-options compilation-error-regexp-alist-alist))
-      (setq-local compilation-error-regexp-alist (cons 'elixir compilation-error-regexp-alist))
+      (set (make-local-variable 'compilation-error-regexp-alist-alist)
+           (cons alchemist-buffer--error-link-options compilation-error-regexp-alist-alist))
+      (set (make-local-variable 'compilation-error-regexp-alist)
+           (cons 'elixir compilation-error-regexp-alist))
       (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation nil t)
       (add-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output nil t)
       (add-to-list 'compilation-finish-functions 'alchemist-buffer--remove-dispensable-output-after-finish)
