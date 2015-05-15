@@ -43,8 +43,21 @@
 (defvar alchemist-iex-mode-hook nil
   "Hook for customizing `alchemist-iex-mode'.")
 
+(defvar alchemist-iex-mode-map
+  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+    (define-key map "\t" 'completion-at-point)
+    map))
+
+(eval-after-load 'company
+  '(progn
+     (defun alchemist-iex--set-company-as-completion-at-point-function ()
+       (setq completion-at-point-functions '(company-complete)))
+     (add-hook 'alchemist-iex-mode-hook 'alchemist-iex--set-company-as-completion-at-point-function)))
+
 (define-derived-mode alchemist-iex-mode comint-mode "Alchemist-IEx"
-  "Major mode for interacting with an Elixir IEx process."
+  "Major mode for interacting with an Elixir IEx process.
+
+\\<alchemist-iex-mode-map>"
   nil "Alchemist-IEx"
   (set (make-local-variable 'comint-prompt-regexp)
        "^iex(\\([0-9]+\\|[a-zA-Z_@]+\\))> ")
