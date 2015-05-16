@@ -64,6 +64,39 @@
    (f-touch "mix.exs")
    (should (equal (alchemist-project-name) "sandbox"))))
 
+(ert-deftest test-project-toggle/is-test-file-p ()
+  "Should return t if visited file is a test file"
+  (with-sandbox
+   (f-touch "this_is_a_test.exs")
+   (find-file "this_is_a_test.exs")
+   (should (alchemist--is-test-file-p))))
+
+(ert-deftest test-project-toggle/from-test-to-implementation ()
+  (with-sandbox
+   (f-touch "mix.exs")
+   (f-mkdir "lib" "path" "to")
+   (f-mkdir "test" "path" "to")
+   (f-touch "lib/path/to/file.ex")
+   (f-touch "test/path/to/file_test.exs")
+   (find-file "test/path/to/file_test.exs")
+
+   (alchemist-toggle-file-and-tests)
+   (should (equal (file-name-nondirectory (buffer-file-name))
+                  "file.ex"))))
+
+(ert-deftest test-project-toggle/from-implementation-to-test ()
+  (with-sandbox
+   (f-touch "mix.exs")
+   (f-mkdir "lib" "path" "to")
+   (f-mkdir "test" "path" "to")
+   (f-touch "lib/path/to/other_file.ex")
+   (f-touch "test/path/to/other_file_test.exs")
+
+   (find-file "lib/path/to/other_file.ex")
+   (alchemist-toggle-file-and-tests)
+   (should (equal (file-name-nondirectory (buffer-file-name))
+                  "other_file_test.exs"))))
+
 (ert-deftest test-project-config/return-config ()
   "Should return a hash-table with the config."
   (with-sandbox
