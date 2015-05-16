@@ -1,8 +1,19 @@
 # Changelog
 
-## v0.14.0-dev (unreleased)
+## v0.14.0 (2015-05-16)
+
+### Enhancements
 
   * [Goto] Handle alias of module name, so jump to defintion and modules also working.
+  * [Project] Add functions to toggle between test and implementation.
+  * [Mix] Exclude pending tests by default.
+  * [Mix] Use a variable for default mix test options.
+  * [IEx] Use `company-complete` as default `completion-at-point` function if company is available.
+  * [Compile] Don't compile `*.exs` files.
+
+### Bugfixes
+
+  * [Buffer] `alchemist-buffer--error-link-options` should match compilation errors
 
 ## v0.13.1 (2015-01-16)
 
