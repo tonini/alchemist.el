@@ -125,14 +125,14 @@ completion will be work.
     (when project-root
       (setq default-directory project-root))))
 
-(defun alchemist-toggle-file-and-tests-other-window ()
+(defun alchemist-project-toggle-file-and-tests-other-window ()
   "Toggle between a file and its tests in other window."
   (interactive)
   (if (alchemist--is-test-file-p)
       (alchemist--project-open-file-for-current-tests 'find-file-other-window)
     (alchemist--project-open-tests-for-current-file 'find-file-other-window)))
 
-(defun alchemist-toggle-file-and-tests ()
+(defun alchemist-project-toggle-file-and-tests ()
   "Toggle between a file and its tests in the current window."
   (interactive)
   (if (alchemist--is-test-file-p)
