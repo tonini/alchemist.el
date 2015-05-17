@@ -286,6 +286,8 @@ customizing the value of the `alchemist-mix-test-default-options` variable.
 |-------------------|-------------|
 |<kbd>C-c a p f</kbd>|Open project test directory and list all test files. `alchemist-project-find-test`|
 |<kbd>C-c a p t</kbd>|Opens the appropriate test file for the current buffer file in a new window. `alchemist-project-open-tests-for-current-file`
+|<kbd>C-c a p s</kbd>|Toggle between a file and its tests in the current window. `alchemist-project-toggle-file-and-tests`
+|<kbd>C-c a p o</kbd>|Toggle between a file and its tests in other window. `alchemist-project-toggle-file-and-tests-other-window`
 
 ## Documentation lookup
 
