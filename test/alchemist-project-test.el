@@ -80,7 +80,7 @@
    (f-touch "test/path/to/file_test.exs")
    (find-file "test/path/to/file_test.exs")
 
-   (alchemist-toggle-file-and-tests)
+   (alchemist-project-toggle-file-and-tests)
    (should (equal (file-name-nondirectory (buffer-file-name))
                   "file.ex"))))
 
@@ -93,7 +93,7 @@
    (f-touch "test/path/to/other_file_test.exs")
 
    (find-file "lib/path/to/other_file.ex")
-   (alchemist-toggle-file-and-tests)
+   (alchemist-project-toggle-file-and-tests)
    (should (equal (file-name-nondirectory (buffer-file-name))
                   "other_file_test.exs"))))
 
