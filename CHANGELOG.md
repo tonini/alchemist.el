@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.15.0-dev (unreleased)
+
+### Enhancements
+
+  * [Refcard] Update refcard with new keybindings for project test files functionality.
+
 ## v0.14.0 (2015-05-16)
 
 ### Enhancements
