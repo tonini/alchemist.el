@@ -1,10 +1,10 @@
-\documentclass[a4paper,8pt]{article}
+\documentclass[a4paper,8pt]{extarticle}
 
 \usepackage{textcomp}
 \usepackage{fullpage}
 \usepackage{boxedminipage}
 \usepackage{multicol}
-\usepackage[a4paper,left=1cm,right=1cm,top=3cm,bottom=1cm]{geometry}
+\usepackage[a4paper,left=0.5cm,right=0.5cm,top=1.5cm,bottom=2cm]{geometry}
 \pagestyle{empty}
 
 \marginparwidth = 10pt
@@ -29,7 +29,7 @@
 
 \docheading
 
-\smallskip
+\bigskip
 
 \begin{boxedminipage}[t]{11cm}
 
@@ -47,8 +47,9 @@
 
 \end{boxedminipage}
 
-\setlength{\bigskipamount}{1.5cm}
+\setlength{\bigskipamount}{1cm}
 
+\bigskip
 \bigskip
 
 \setlength{\columnsep}{1cm}
@@ -74,15 +75,6 @@
 \key{C-c a e f}{alchemist-execute-file}
 \key{C-c a e b}{alchemist-execute-this-buffer}
 
-
-\group{Project}
-
-\key{C-c a p f}{alchemist-project-find-test}
-\key{C-c a p t}{alchemist-project-open-tests-for-current-file}
-
-
-\columnbreak
-
 \group{Documentation Lookup}
 
 \key{C-c a h h}{alchemist-help}
@@ -92,7 +84,14 @@
 \group{Definition Lookup}
 
 \key{M-.}{alchemist-goto-definition-at-point}
+\key{M-,}{alchemist-goto-jump-back}
 
+\group{Project}
+
+\key{C-c a p f}{alchemist-project-find-test}
+\key{C-c a p t}{alchemist-project-open-tests-for-current-file}
+\key{C-c a p s}{alchemist-project-toggle-file-and-tests}
+\key{C-c a p o}{alchemist-project-toggle-file-and-tests-other-window}
 
 \group{IEx}
 
