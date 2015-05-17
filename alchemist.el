@@ -113,7 +113,7 @@
 (easy-menu-define alchemist-mode-menu alchemist-mode-map
   "Alchemist mode menu."
   '("Alchemist"
-    ["Goto Defn at Point" alchemist-goto-definition-at-point]
+    ["Goto Definiton at Point" alchemist-goto-definition-at-point]
     ("Evaluate"
      ["Current Line" alchemist-eval-current-line]
      ["Current Line and Print" alchemist-eval-print-current-line]
@@ -171,6 +171,8 @@
     ("Project"
      ["Find All Tests" alchemist-project-find-test]
      ["Find Tests for File" alchemist-project-open-tests-for-current-file]
+     ["Toggle between File and Test" alchemist-project-toggle-file-and-tests]
+     ["Toggle between File and Test in other Window" alchemist-project-toggle-file-and-tests-other-window]
      "---"
      ["Compile When Needed" alchemist-project-toggle-compile-when-needed
       :style toggle :selected alchemist-project-compile-when-needed])
