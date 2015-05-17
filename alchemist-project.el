@@ -216,7 +216,7 @@ Point is left in a convenient location."
                                                     (shell-command-to-string
                                                      (concat
                                                       "find \"" directory
-                                                      "\" -type f | grep \"_test\.exs\" | grep -v \"/.git/\" | grep -v \"/.yardoc/\""))))))))
+                                                      "\" -type f | grep \"_test\.exs\" | grep -v \"/.git/\""))))))))
 
 (defun alchemist-project-name ()
   "Return the name of the current Elixir project."
