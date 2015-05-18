@@ -61,7 +61,7 @@ Alchemist comes with a bunch of features, which are:
 Alchemist.el is available on the three major community maintained repositories -
 [MELPA STABLE](http://melpa-stable.milkbox.net), [MELPA](http://melpa.milkbox.net) and [Marmalade](https://marmalade-repo.org/).
 
-You can install `Alchemist` with the following commnad:
+You can install `Alchemist` with the following command:
 
 <kbd>M-x package-install [RET] alchemist [RET]</kbd>
 
