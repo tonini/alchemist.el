@@ -402,14 +402,18 @@ Alchemist users are advised to use
 [company-mode](http://company-mode.github.io/) to enable auto-completion inside
 of Elixir source code.
 
-Alchemist enables a company-mode elixir backend by default if company-mode is
+Alchemist enables a [company-mode](http://company-mode.github.io/) elixir backend by default if company-mode is
 installed.
 
 ![Alchemist Company](logo/alchemist-company.gif)
 
-When the keybinding <kbd>C-d</kbd> is used on one of the selected completion
-candidates, a documentation lookup for the candidate will be made and displayed in
-another window.
+There are the same keybindings for documentation lookup and definition opening for the selected
+candidate available like [company-mode](http://company-mode.github.io/) [provides](https://github.com/company-mode/company-mode/blob/27c913afb9446971d1e0f1f3b272e5650a6206c5/company.el#L609).
+
+<kbd>C-h</kbd> and <kbd>\<f1\></kbd> for documentation lookup for the current selected candidate.
+<kbd>C-w</kbd> and <kbd>M-.</kbd> to jump to the definition of the current selected candidate.
+
+![Alchemist Completion Candidate Functionalities](logo/alchemist-company-doc-goto.gif)
 
 ### Debug
 
