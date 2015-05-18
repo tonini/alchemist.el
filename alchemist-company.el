@@ -55,7 +55,9 @@
 (put 'alchemist-company--open-definition 'company-keep t)
 
 (defun alchemist-company--keybindings ()
-  (define-key company-active-map (kbd "C-d") 'alchemist-company--show-documentation)
+  (define-key company-active-map (kbd "C-h") 'alchemist-company--show-documentation)
+  (define-key company-active-map (kbd "<f1>") 'alchemist-company--show-documentation)
+  (define-key company-active-map (kbd "C-w") 'alchemist-company--open-definition)
   (define-key company-active-map (kbd "M-.") 'alchemist-company--open-definition))
 
 (add-hook 'company-mode-hook 'alchemist-company--keybindings)
