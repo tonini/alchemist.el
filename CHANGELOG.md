@@ -4,6 +4,8 @@
 
 ### Enhancements
 
+  * [Completion] Make documentation lookup and jump to defintion for selected completion
+    candidate more accessable with using the same keybindings as company-mode uses.
   * [Refcard] Update refcard with new keybindings for project test files functionality.
 
 ## v0.14.0 (2015-05-16)
