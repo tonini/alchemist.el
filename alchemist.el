@@ -70,6 +70,7 @@
 (defvar alchemist-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c a t") 'alchemist-mix-test)
+    (define-key map (kbd "C-c a m c") 'alchemist-mix-compile)
     (define-key map (kbd "C-c a m t f") 'alchemist-mix-test-file)
     (define-key map (kbd "C-c a m t b") 'alchemist-mix-test-this-buffer)
     (define-key map (kbd "C-c a m t .") 'alchemist-mix-test-at-point)
