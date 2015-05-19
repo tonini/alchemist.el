@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Mix] Add keybinding for `alchemist-mix-compile`. (`C-c a m c`)
   * [Completion] Make documentation lookup and jump to defintion for selected completion
     candidate more accessable with using the same keybindings as company-mode uses.
   * [Refcard] Update refcard with new keybindings for project test files functionality.
