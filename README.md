@@ -447,15 +447,7 @@ before run <kbd>M-x alchemist-iex-run</kbd>
 ### Complete & Documentation lookup
 
 When Alchemist finds [company-mode](http://company-mode.github.io/) it enables
-completion inside in IEx process buffer.
-
-Documention lookup inside an IEx process buffer will also be activated.
-
-When the keybinding <kbd>C-d</kbd> is used on one of the selected completion
-candidates, a documentation lookup for the candidate will be made and displayed in
-another window.
-
-![IEx Completion and Docs lookup](logo/iex-complete-docs-lookup.gif)
+if for completion inside the IEx process buffer.
 
 ## Eval
 
