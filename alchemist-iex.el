@@ -64,8 +64,7 @@
 
 \\<alchemist-iex-mode-map>"
   nil "Alchemist-IEx"
-  (set (make-local-variable 'comint-prompt-regexp)
-       "^iex(\\([0-9]+\\|[a-zA-Z_@]+\\))> ")
+  (set (make-local-variable 'comint-prompt-regexp) "^iex\(.+\)>")
   (set (make-local-variable 'comint-prompt-read-only) alchemist-iex-prompt-read-only)
   (set (make-local-variable 'comint-input-autoexpand) nil))
 
