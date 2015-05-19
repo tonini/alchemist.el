@@ -37,6 +37,11 @@
   :type 'string
   :group 'alchemist-iex)
 
+(defcustom alchemist-iex-prompt-read-only t
+  "If non-nil, the prompt will be read-only."
+  :type 'boolean
+  :group 'alchemist-iex)
+
 (defvar alchemist-iex-buffer nil
   "The buffer in which the Elixir IEx process is running.")
 
@@ -61,6 +66,7 @@
   nil "Alchemist-IEx"
   (set (make-local-variable 'comint-prompt-regexp)
        "^iex(\\([0-9]+\\|[a-zA-Z_@]+\\))> ")
+  (set (make-local-variable 'comint-prompt-read-only) alchemist-iex-prompt-read-only)
   (set (make-local-variable 'comint-input-autoexpand) nil))
 
 (defun alchemist-iex-command (arg)
