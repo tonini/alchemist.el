@@ -114,77 +114,79 @@
 (easy-menu-define alchemist-mode-menu alchemist-mode-map
   "Alchemist mode menu."
   '("Alchemist"
-    ["Goto Definiton at Point" alchemist-goto-definition-at-point]
+    ("Goto"
+     ["Jump to definiton at point" alchemist-goto-definition-at-point]
+     ["Jump back" alchemist-goto-jump-back])
     ("Evaluate"
-     ["Current Line" alchemist-eval-current-line]
-     ["Current Line and Print" alchemist-eval-print-current-line]
-     ["Quoted Current Line" alchemist-eval-quoted-current-line]
-     ["Quoted Current Line and Print" alchemist-eval-print-quoted-current-line]
+     ["Evaluate current line" alchemist-eval-current-line]
+     ["Evaluate current line and print" alchemist-eval-print-current-line]
+     ["Evaluate quoted current line" alchemist-eval-quoted-current-line]
+     ["Evaluate quoted current line and print" alchemist-eval-print-quoted-current-line]
      "---"
-     ["Region" alchemist-eval-region]
-     ["Region and Print" alchemist-eval-print-region]
-     ["Quoted Region" alchemist-eval-quoted-region]
-     ["Quoted Region and Print" alchemist-eval-print-quoted-region]
+     ["Evaluate region" alchemist-eval-region]
+     ["Evaluate region and print" alchemist-eval-print-region]
+     ["Evaluate quoted region" alchemist-eval-quoted-region]
+     ["Evaluate quoted region and print" alchemist-eval-print-quoted-region]
      "---"
-     ["Buffer" alchemist-eval-buffer]
-     ["Buffer and Print" alchemist-eval-print-buffer]
-     ["Quoted Buffer" alchemist-eval-quoted-buffer]
-     ["Quoted Buffer and Print" alchemist-eval-print-quoted-buffer]
-     )
+     ["Evaluate buffer" alchemist-eval-buffer]
+     ["Evaluate buffer and print" alchemist-eval-print-buffer]
+     ["Evaluate quoted buffer" alchemist-eval-quoted-buffer]
+     ["Evaluate quoted buffer and print" alchemist-eval-print-quoted-buffer])
     ("Compile"
      ["Compile..." alchemist-compile]
-     ["Buffer" alchemist-compile-this-buffer]
-     ["File" alchemist-compile-file])
+     ["Compile this buffer" alchemist-compile-this-buffer]
+     ["Compile file" alchemist-compile-file])
+    ("Execute"
+     ["Execute..." alchemist-compile]
+     ["Execute this buffer" alchemist-execute-this-buffer]
+     ["Execute file" alchemist-execute-file])
     ("Mix"
-     ["Deps..." alchemist-mix-deps-with-prompt]
-     ["Compile..." alchemist-mix-compile]
-     ["Run..." alchemist-mix-run]
+     ["Mix deps..." alchemist-mix-deps-with-prompt]
+     ["Mix compile..." alchemist-mix-compile]
+     ["Mix run..." alchemist-mix-run]
      "---"
-     ["Test Buffer..." alchemist-mix-test-this-buffer]
-     ["Test File..." alchemist-mix-test-file]
-     ["Test at Point" alchemist-mix-test-at-point]
+     ["Mix test this buffer" alchemist-mix-test-this-buffer]
+     ["Mix test file..." alchemist-mix-test-file]
+     ["Mix test at point" alchemist-mix-test-at-point]
      "---"
      ["Mix..." alchemist-mix]
-     ["New..." alchemist-mix-new]
-     ["Hex Search..." alchemist-mix-hex-search]
+     ["Mix new..." alchemist-mix-new]
+     ["Mix hex search..." alchemist-mix-hex-search]
      "---"
-     ["Local..." alchemist-mix-local-with-prompt]
-     ["Local Install..." alchemist-mix-local-install]
-     ["Local Install (Path)..." alchemist-mix-local-install-with-path]
-     ["Local Install (URL)..." alchemist-mix-local-install-with-url]
+     ["Mix local..." alchemist-mix-local-with-prompt]
+     ["Mix local install..." alchemist-mix-local-install]
+     ["Mix local install (Path)..." alchemist-mix-local-install-with-path]
+     ["Mix local install (URL)..." alchemist-mix-local-install-with-url]
      "---"
-     ["Display Mix Buffer" alchemist-mix-display-mix-buffer]
+     ["Display mix buffer" alchemist-mix-display-mix-buffer]
      "---"
-     ["Help for Command..." alchemist-mix-help])
+     ["Mix help..." alchemist-mix-help])
     ("IEx"
-     ["Send Current Line" alchemist-iex-send-current-line]
-     ["Send Current Line and Go" alchemist-iex-send-current-line-and-go]
+     ["IEx send current line" alchemist-iex-send-current-line]
+     ["IEx send current line and go" alchemist-iex-send-current-line-and-go]
      "---"
-     ["Send Last Region" alchemist-iex-send-last-sexp]
-     ["Send Region" alchemist-iex-send-region]
-     ["Send Region and Go" alchemist-iex-send-region-and-go]
+     ["IEx send last region" alchemist-iex-send-last-sexp]
+     ["IEx send region" alchemist-iex-send-region]
+     ["IEx send region and go" alchemist-iex-send-region-and-go]
      "---"
-     ["Compile Buffer" alchemist-iex-compile-this-buffer]
-     ["Recompile Buffer" alchemist-iex-recompile-this-buffer]
+     ["IEx compile this buffer" alchemist-iex-compile-this-buffer]
+     ["IEx recompile this buffer" alchemist-iex-recompile-this-buffer]
      "---"
-     ["Start IEx Process" alchemist-iex-start-process]
-     ["Start Mix IEx Process" alchemist-mix-iex])
+     ["IEx run" alchemist-iex-run])
     ("Project"
-     ["Find All Tests" alchemist-project-find-test]
-     ["Find Tests for File" alchemist-project-open-tests-for-current-file]
-     ["Toggle between File and Test" alchemist-project-toggle-file-and-tests]
-     ["Toggle between File and Test in other Window" alchemist-project-toggle-file-and-tests-other-window]
+     ["Project find all tests" alchemist-project-find-test]
+     ["Project find tests for current file" alchemist-project-open-tests-for-current-file]
+     ["Project toggle between file and test" alchemist-project-toggle-file-and-tests]
+     ["Project toggle between file and test in other window" alchemist-project-toggle-file-and-tests-other-window]
      "---"
-     ["Compile When Needed" alchemist-project-toggle-compile-when-needed
+     ["Project toggle compile when needed" alchemist-project-toggle-compile-when-needed
       :style toggle :selected alchemist-project-compile-when-needed])
-    ("Help"
-     ["Elixir Help..." alchemist-help]
-     ["Help History..." alchemist-help-history]
+    ("Documentation"
+     ["Documentation search..." alchemist-help]
+     ["Documentation search history..." alchemist-help-history]
      "---"
-     ["Search at Point..." alchemist-help-search-at-point]
-     ["Search Marked Region..." alchemist-help-search-marked-region]
-     "---"
-     ["Minor Mode Keybindings" alchemist-help-minor-mode-key-binding-summary])
+     ["Documentation search at point..." alchemist-help-search-at-point]
+     ["Documentation search marked region..." alchemist-help-search-marked-region])
     ))
 
 ;;;###autoload
