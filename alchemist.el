@@ -67,49 +67,72 @@
   (interactive)
   (message "Alchemist %s" (replace-regexp-in-string "-cvs" "snapshot" alchemist--version)))
 
-(defvar alchemist-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c a t") 'alchemist-mix-test)
-    (define-key map (kbd "C-c a m c") 'alchemist-mix-compile)
-    (define-key map (kbd "C-c a m t f") 'alchemist-mix-test-file)
-    (define-key map (kbd "C-c a m t b") 'alchemist-mix-test-this-buffer)
-    (define-key map (kbd "C-c a m t .") 'alchemist-mix-test-at-point)
-    (define-key map (kbd "C-c a c c") 'alchemist-compile)
-    (define-key map (kbd "C-c a c f") 'alchemist-compile-file)
-    (define-key map (kbd "C-c a c b") 'alchemist-compile-this-buffer)
-    (define-key map (kbd "C-c a e e") 'alchemist-execute)
-    (define-key map (kbd "C-c a e f") 'alchemist-execute-file)
-    (define-key map (kbd "C-c a e b") 'alchemist-execute-this-buffer)
-    (define-key map (kbd "C-c a h h") 'alchemist-help)
-    (define-key map (kbd "C-c a h e") 'alchemist-help-search-at-point)
-    (define-key map (kbd "C-c a h m") 'alchemist-help-search-marked-region)
-    (define-key map (kbd "C-c a p f") 'alchemist-project-find-test)
-    (define-key map (kbd "C-c a p t") 'alchemist-project-open-tests-for-current-file)
-    (define-key map (kbd "C-c a p s") 'alchemist-project-toggle-file-and-tests)
-    (define-key map (kbd "C-c a p o") 'alchemist-project-toggle-file-and-tests-other-window)
-    (define-key map (kbd "C-c a i i") 'alchemist-iex-run)
-    (define-key map (kbd "C-c a i p") 'alchemist-iex-project-run)
-    (define-key map (kbd "C-c a i l") 'alchemist-iex-send-current-line)
-    (define-key map (kbd "C-c a i c") 'alchemist-iex-send-current-line-and-go)
-    (define-key map (kbd "C-c a i r") 'alchemist-iex-send-region)
-    (define-key map (kbd "C-c a i m") 'alchemist-iex-send-region-and-go)
-    (define-key map (kbd "C-c a i b") 'alchemist-iex-compile-this-buffer)
-    (define-key map (kbd "C-c a v l") 'alchemist-eval-current-line)
-    (define-key map (kbd "C-c a v k") 'alchemist-eval-print-current-line)
-    (define-key map (kbd "C-c a v j") 'alchemist-eval-quoted-current-line)
-    (define-key map (kbd "C-c a v h") 'alchemist-eval-print-quoted-current-line)
-    (define-key map (kbd "C-c a v o") 'alchemist-eval-region)
-    (define-key map (kbd "C-c a v i") 'alchemist-eval-print-region)
-    (define-key map (kbd "C-c a v u") 'alchemist-eval-quoted-region)
-    (define-key map (kbd "C-c a v y") 'alchemist-eval-print-quoted-region)
-    (define-key map (kbd "C-c a v q") 'alchemist-eval-buffer)
-    (define-key map (kbd "C-c a v w") 'alchemist-eval-print-buffer)
-    (define-key map (kbd "C-c a v e") 'alchemist-eval-quoted-buffer)
-    (define-key map (kbd "C-c a v r") 'alchemist-eval-print-quoted-buffer)
-    (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
-    (define-key map (kbd "M-,") 'alchemist-goto-jump-back)
-    map)
-  "The keymap used when `alchemist-mode' is active.")
+(defcustom alchemist-key-command-prefix
+  (kbd "C-c a")
+  "The prefix for alchemist related key commands."
+  :type 'string
+  :group 'alchemist)
+
+(define-prefix-command 'alchemist-mode-keymap)
+
+;;;###autoload
+(define-minor-mode alchemist-mode
+  "Toggle alchemist mode.
+
+Key bindings:
+\\{alchemist-mode-map}"
+  nil
+  ;; The indicator for the mode line.
+  " alchemist"
+  :group 'alchemist
+  :global nil
+  :keymap `((,alchemist-key-command-prefix . alchemist-mode-keymap))
+  (cond (alchemist-mode
+         (alchemist-buffer-initialize-modeline))
+        (t
+         (alchemist-buffer-reset-modeline))))
+
+(let ((map alchemist-mode-keymap))
+  (define-key map (kbd "t") 'alchemist-mix-test)
+  (define-key map (kbd "m c") 'alchemist-mix-compile)
+  (define-key map (kbd "m t f") 'alchemist-mix-test-file)
+  (define-key map (kbd "m t b") 'alchemist-mix-test-this-buffer)
+  (define-key map (kbd "m t .") 'alchemist-mix-test-at-point)
+  (define-key map (kbd "c c") 'alchemist-compile)
+  (define-key map (kbd "c f") 'alchemist-compile-file)
+  (define-key map (kbd "c b") 'alchemist-compile-this-buffer)
+  (define-key map (kbd "e e") 'alchemist-execute)
+  (define-key map (kbd "e f") 'alchemist-execute-file)
+  (define-key map (kbd "e b") 'alchemist-execute-this-buffer)
+  (define-key map (kbd "h h") 'alchemist-help)
+  (define-key map (kbd "h e") 'alchemist-help-search-at-point)
+  (define-key map (kbd "h m") 'alchemist-help-search-marked-region)
+  (define-key map (kbd "p f") 'alchemist-project-find-test)
+  (define-key map (kbd "p t") 'alchemist-project-open-tests-for-current-file)
+  (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
+  (define-key map (kbd "p o") 'alchemist-project-toggle-file-and-tests-other-window)
+  (define-key map (kbd "i i") 'alchemist-iex-run)
+  (define-key map (kbd "i p") 'alchemist-iex-project-run)
+  (define-key map (kbd "i l") 'alchemist-iex-send-current-line)
+  (define-key map (kbd "i c") 'alchemist-iex-send-current-line-and-go)
+  (define-key map (kbd "i r") 'alchemist-iex-send-region)
+  (define-key map (kbd "i m") 'alchemist-iex-send-region-and-go)
+  (define-key map (kbd "i b") 'alchemist-iex-compile-this-buffer)
+  (define-key map (kbd "v l") 'alchemist-eval-current-line)
+  (define-key map (kbd "v k") 'alchemist-eval-print-current-line)
+  (define-key map (kbd "v j") 'alchemist-eval-quoted-current-line)
+  (define-key map (kbd "v h") 'alchemist-eval-print-quoted-current-line)
+  (define-key map (kbd "v o") 'alchemist-eval-region)
+  (define-key map (kbd "v i") 'alchemist-eval-print-region)
+  (define-key map (kbd "v u") 'alchemist-eval-quoted-region)
+  (define-key map (kbd "v y") 'alchemist-eval-print-quoted-region)
+  (define-key map (kbd "v q") 'alchemist-eval-buffer)
+  (define-key map (kbd "v w") 'alchemist-eval-print-buffer)
+  (define-key map (kbd "v e") 'alchemist-eval-quoted-buffer)
+  (define-key map (kbd "v r") 'alchemist-eval-print-quoted-buffer))
+
+(define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
+(define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
 
 (easy-menu-define alchemist-mode-menu alchemist-mode-map
   "Alchemist mode menu."
@@ -188,23 +211,6 @@
      ["Documentation search at point..." alchemist-help-search-at-point]
      ["Documentation search marked region..." alchemist-help-search-marked-region])
     ))
-
-;;;###autoload
-(define-minor-mode alchemist-mode
-  "Toggle alchemist mode.
-
-Key bindings:
-\\{alchemist-mode-map}"
-  nil
-  ;; The indicator for the mode line.
-  " alchemist"
-  :group 'alchemist
-  :global nil
-  :keymap alchemist-mode-map
-  (cond (alchemist-mode
-         (alchemist-buffer-initialize-modeline))
-        (t
-         (alchemist-buffer-reset-modeline))))
 
 (add-hook 'elixir-mode-hook 'alchemist-mode-hook)
 
