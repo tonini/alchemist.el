@@ -109,6 +109,12 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 
 There are some ways Alchemist can be adjusted that certain workflows operating differently.
 
+* Use a different keybinding prefix than <kbd>C-c a</kbd>
+
+```el
+(setq alchemist-key-command-prefix (kbd "C-c ,")) ;; default: (kbd "C-c a")
+```
+
 * Disable ansi color formatted documentation:
 
 ```el

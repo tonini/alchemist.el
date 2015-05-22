@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Keybindings] Add customizable keybinding prefix (default: `C-c a`)
   * [IEx] IEx prompt should not be deletable, set it read-only.
   * [Mix] Add keybinding for `alchemist-mix-compile`. (`C-c a m c`)
   * [Completion] Make documentation lookup and jump to defintion for selected completion
