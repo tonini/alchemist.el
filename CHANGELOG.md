@@ -4,6 +4,8 @@
 
 ### Enhancements
 
+  * [Project] `alchemist-project-open-tests-for-current-file` needs to be an interactive function
+    and `alchemist--project-open-tests-for-current-file` not (it's a private function)
   * [Keybindings] Add customizable keybinding prefix (default: `C-c a`)
   * [IEx] IEx prompt should not be deletable, set it read-only.
   * [Mix] Add keybinding for `alchemist-mix-compile`. (`C-c a m c`)

@@ -153,11 +153,11 @@ completion will be work.
 
 (defun alchemist-project-open-tests-for-current-file ()
   "Open the appropriate test file for the current buffer file in a new window."
+  (interactive)
   (alchemist--project-open-tests-for-current-file 'find-file-other-window))
 
 (defun alchemist--project-open-tests-for-current-file (toggler)
   "Opens the appropriate test file by calling TOGGLER with filename."
-  (interactive)
   (let* ((filename (file-relative-name (buffer-file-name) (alchemist-project-root)))
          (filename (replace-regexp-in-string "^lib/" "test/" filename))
          (filename (replace-regexp-in-string "\.ex$" "_test\.exs" filename))
