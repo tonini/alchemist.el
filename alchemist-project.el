@@ -128,20 +128,16 @@ completion will be work.
 (defun alchemist-project-toggle-file-and-tests-other-window ()
   "Toggle between a file and its tests in other window."
   (interactive)
-  (if (alchemist--is-test-file-p)
+  (if (alchemist-utils--is-test-file-p)
       (alchemist--project-open-file-for-current-tests 'find-file-other-window)
     (alchemist--project-open-tests-for-current-file 'find-file-other-window)))
 
 (defun alchemist-project-toggle-file-and-tests ()
   "Toggle between a file and its tests in the current window."
   (interactive)
-  (if (alchemist--is-test-file-p)
+  (if (alchemist-utils--is-test-file-p)
       (alchemist--project-open-file-for-current-tests 'find-file)
     (alchemist--project-open-tests-for-current-file 'find-file)))
-
-(defun alchemist--is-test-file-p ()
-  "Check wether the visited file is a test file."
-  (string-match "_test\.exs$" (buffer-file-name)))
 
 (defun alchemist--project-open-file-for-current-tests (toggler)
   "Open the appropriate implementation file for the current buffer by calling TOGGLER with filename."

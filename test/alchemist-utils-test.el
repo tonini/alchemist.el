@@ -58,6 +58,13 @@ a text
 ") "This is
 a text")))
 
+(ert-deftest test-utils/is-test-file-p ()
+  "Should return t if visited file is a test file"
+  (with-sandbox
+   (f-touch "this_is_a_test.exs")
+   (find-file "this_is_a_test.exs")
+   (should (alchemist-utils--is-test-file-p))))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here

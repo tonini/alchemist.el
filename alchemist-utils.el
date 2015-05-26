@@ -79,6 +79,10 @@ It walks the directory tree until it finds a elixir project root indicator."
         do (setq start (match-end 0))
         finally return count))
 
+(defun alchemist-utils--is-test-file-p ()
+  "Check wether the visited file is a test file."
+  (string-match "_test\.exs$" (or (buffer-file-name) "")))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here

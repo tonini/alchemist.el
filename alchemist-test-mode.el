@@ -53,7 +53,7 @@ The following commands are available:
 
 ;;;###autoload
 (defun alchemist-test-enable-mode ()
-  (if (alchemist--is-test-file-p)
+  (if (alchemist-utils--is-test-file-p)
       (alchemist-test-mode)))
 
 ;;;###autoload

@@ -64,13 +64,6 @@
    (f-touch "mix.exs")
    (should (equal (alchemist-project-name) "sandbox"))))
 
-(ert-deftest test-project-toggle/is-test-file-p ()
-  "Should return t if visited file is a test file"
-  (with-sandbox
-   (f-touch "this_is_a_test.exs")
-   (find-file "this_is_a_test.exs")
-   (should (alchemist--is-test-file-p))))
-
 (ert-deftest test-project-toggle/from-test-to-implementation ()
   (with-sandbox
    (f-touch "mix.exs")
