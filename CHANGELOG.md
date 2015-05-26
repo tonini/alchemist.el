@@ -7,11 +7,17 @@
   * [Project] `alchemist-project-open-tests-for-current-file` needs to be an interactive function
     and `alchemist--project-open-tests-for-current-file` not (it's a private function)
   * [Keybindings] Add customizable keybinding prefix (default: `C-c a`)
+  * [Keybindings] Add keybinding for `alchemist-mix` (`C-c a x`)
   * [IEx] IEx prompt should not be deletable, set it read-only.
   * [Mix] Add keybinding for `alchemist-mix-compile`. (`C-c a m c`)
   * [Completion] Make documentation lookup and jump to defintion for selected completion
     candidate more accessable with using the same keybindings as company-mode uses.
+  * [Refcard] Update refcard with keybinding for `alchemist-mix` (`C-c a x`)
   * [Refcard] Update refcard with new keybindings for project test files functionality.
+
+### Bugfixes
+
+  * [Goto] To avoid issues with void `find-tag-marker-ring` variable require `etags` package.
 
 ## v0.14.0 (2015-05-16)
 
