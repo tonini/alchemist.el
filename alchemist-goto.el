@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'etags)
+
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."
   :prefix "alchemist-goto-"
