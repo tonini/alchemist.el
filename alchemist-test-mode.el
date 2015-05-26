@@ -1,4 +1,4 @@
-;;; alchemist-test-mode.el ---
+;;; alchemist-test-mode.el --- Minor mode for Elixir ExUnit files.
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;
+;; Minor mode for Elixir ExUnit files.
 
 ;;; Code:
 
