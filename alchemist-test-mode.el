@@ -41,6 +41,8 @@
     map)
   "Keymap for alchemist-test-mode.")
 
+;; Public functions
+
 ;;;###autoload
 (define-minor-mode alchemist-test-mode
   "Minor mode for Elixir ExUnit files.
