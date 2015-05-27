@@ -1,4 +1,4 @@
-;;; alchemist-test-mode.el --- Minor mode for Elixir ExUnit files.
+;;; alchemist-test-mode.el --- Minor mode for Elixir test files.
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; Minor mode for Elixir ExUnit files.
+;; Minor mode for Elixir test files.
 
 ;;; Code:
 
@@ -32,12 +32,17 @@
   :prefix "alchemist-test-mode-"
   :group 'alchemist)
 
+(defvar alchemist-test-at-point 'alchemist-mix-test-at-point)
+(defvar alchemist-test-this-buffer 'alchemist-mix-test-this-buffer)
+(defvar alchemist-test 'alchemist-mix-test)
+(defvar alchemist-test-file 'alchemist-mix-test-file)
+
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c , s") #'alchemist-mix-test-at-point)
-    (define-key map (kbd "C-c , v") #'alchemist-mix-test-this-buffer)
-    (define-key map (kbd "C-c , a") #'alchemist-mix-test)
-    (define-key map (kbd "C-c , f") #'alchemist-mix-test-file)
+    (define-key map (kbd "C-c , s") alchemist-test-at-point)
+    (define-key map (kbd "C-c , v") #'alchemist-test-this-buffer)
+    (define-key map (kbd "C-c , a") #'alchemist-test)
+    (define-key map (kbd "C-c , f") #'alchemist-test-file)
     map)
   "Keymap for alchemist-test-mode.")
 
