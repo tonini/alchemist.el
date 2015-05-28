@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'etags)
+(require 'imenu)
 
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."
@@ -42,14 +43,17 @@
   :type 'string
   :group 'alchemist-goto)
 
+(defvar alchemist-goto--symbol-name-and-pos '())
+(defvar alchemist-goto--symbol-list '())
+
 (defun alchemist-goto--extract-module (code)
   "Extract module from CODE."
   (let* ((parts (split-string code "\\."))
          (function (car (last parts)))
          (case-fold-search nil))
-    (when (string-match-p "^[a-z]+" function)
+    (when (string-match-p "^[a-z_\?!]+" function)
       (delete function parts))
-    (unless (string-match-p "^[a-z]+" (car parts))
+    (unless (string-match-p "^[a-z_\?!]+" (car parts))
       (mapconcat 'concat parts "."))))
 
 (defun alchemist-goto--extract-function (code)
@@ -58,7 +62,7 @@
          (function (car (last parts)))
          (case-fold-search nil))
     (when (and function
-               (string-match-p "^[a-z]+" function))
+               (string-match-p "^[a-z_\?!]+" function))
       function)))
 
 (defun alchemist-goto--build-elixir-ex-core-file (file)
@@ -100,29 +104,34 @@
          (module (if module module "nil"))
          (function (alchemist-goto--extract-function expr))
          (function (if function function "\"\""))
-         (file (alchemist-goto--get-module-source module function)))
+         )
     (ring-insert find-tag-marker-ring (point-marker))
-    (cond ((equal file nil)
-           (message "Don't know how to find: %s" expr))
-          ((file-exists-p file)
-           (alchemist-goto--open-file file module function))
-          ((alchemist-goto--elixir-file-p file)
-           (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
-             (if (file-exists-p elixir-source-file)
-                 (alchemist-goto--open-file elixir-source-file module function)
-               (message "Don't know how to find: %s" expr))))
-          ((alchemist-goto--erlang-file-p file)
-           (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
-                  (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
-             (cond ((file-exists-p elixir-source-file)
-                    (alchemist-goto--open-file elixir-source-file module function))
-                   ((file-exists-p erlang-source-file)
-                    (alchemist-goto--open-file erlang-source-file module function))
-                   (t
-                    (message "Don't know how to find: %s" expr)))))
-          (t
-           (pop-tag-mark)
-           (message "Don't know how to find: %s" expr)))))
+    (cond
+     ((and (string-equal module "nil")
+           (alchemist-goto--symbol-p function))
+      (alchemist-goto--goto-symbol function))
+     (t (let* ((file (alchemist-goto--get-module-source module function)))
+          (cond ((equal file nil)
+                 (message "Don't know how to find: %s" expr))
+                ((file-exists-p file)
+                 (alchemist-goto--open-file file module function))
+                ((alchemist-goto--elixir-file-p file)
+                 (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+                   (if (file-exists-p elixir-source-file)
+                       (alchemist-goto--open-file elixir-source-file module function)
+                     (message "Don't know how to find: %s" expr))))
+                ((alchemist-goto--erlang-file-p file)
+                 (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
+                        (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
+                   (cond ((file-exists-p elixir-source-file)
+                          (alchemist-goto--open-file elixir-source-file module function))
+                         ((file-exists-p erlang-source-file)
+                          (alchemist-goto--open-file erlang-source-file module function))
+                         (t
+                          (message "Don't know how to find: %s" expr)))))
+                (t
+                 (pop-tag-mark)
+                 (message "Don't know how to find: %s" expr))))))))
 
 (defun alchemist-goto--open-file (file module function)
   (let* ((buf (find-file-noselect file)))
@@ -178,6 +187,44 @@
                                                        (alchemist-goto--get-module-source-code module function)))))
     (alchemist-goto--report-errors source-file)
     (alchemist-goto--clear-output source-file)))
+
+(defun alchemist-goto--symbols ()
+  "Return the symbols in the current buffer."
+  (imenu--make-index-alist)
+  (setq alchemist-goto--symbol-name-and-pos '())
+  (setq alchemist-goto--symbol-list '())
+  (flet ((addsymbols (symbol-list)
+                     (when (listp symbol-list)
+                       (dolist (symbol (reverse symbol-list))
+                         (let ((name nil) (position nil))
+                           (cond
+                            ((and (listp symbol) (imenu--subalist-p symbol))
+                             (addsymbols symbol))
+
+                            ((listp symbol)
+                             (setq name (car symbol))
+                             (setq position (cdr symbol)))
+
+                            ((stringp symbol)
+                             (setq name symbol)
+                             (setq position
+                                   (get-text-property 1 'org-imenu-marker
+                                                      symbol))))
+
+                           (unless (or (null position) (null name))
+                             (add-to-list 'alchemist-goto--symbol-list name)
+                             (add-to-list 'alchemist-goto--symbol-name-and-pos (cons name position))))))))
+    (addsymbols imenu--index-alist)
+    alchemist-goto--symbol-list))
+
+(defun alchemist-goto--symbol-p (symbol)
+  (if (member symbol (alchemist-goto--symbols))
+      t
+    nil))
+
+(defun alchemist-goto--goto-symbol (function)
+  (let ((position (cdr (assoc function alchemist-goto--symbol-name-and-pos))))
+    (goto-char (if (overlayp position) (overlay-start position) position))))
 
 (defun alchemist-goto--get-module-source-code (module function)
   (format "
