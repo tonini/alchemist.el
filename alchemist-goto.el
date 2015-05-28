@@ -97,7 +97,7 @@
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
          (module (alchemist-goto--get-full-path-of-alias module))
-         (module (if module module "AlchemistGoto"))
+         (module (if module module "nil"))
          (function (alchemist-goto--extract-function expr))
          (function (if function function "\"\""))
          (file (alchemist-goto--get-module-source module function)))
@@ -182,12 +182,26 @@
 (defun alchemist-goto--get-module-source-code (module function)
   (format "
 defmodule Source do
+
+  def find(nil, function) do
+    cond do
+      List.keymember?(get_module_funs(Kernel), function, 0) ->
+        IO.puts source(Kernel)
+      List.keymember?(get_module_funs(Kernel.SpecialForms), function, 0) ->
+        IO.puts source(Kernel.SpecialForms)
+      true ->
+        IO.puts \"\"
+    end
+  end
+
   def find(module, function) do
     cond do
       Code.ensure_loaded?(module) ->
         IO.puts source(module)
       List.keymember?(Kernel.module_info[:exports], function, 0) ->
         IO.puts source(Kernel)
+      List.keymember?(Kernel.SpecialForms.module_info[:exports], function, 0) ->
+        IO.puts source(Kernel.SpecialForms)
       true ->
         IO.puts \"\"
     end
@@ -199,6 +213,18 @@ defmodule Source do
     case source do
       nil -> nil
       source -> \"source-file-path:\" <> List.to_string(source)
+    end
+  end
+
+  defp get_module_funs(mod) do
+    if function_exported?(mod, :__info__, 1) do
+      if docs = Code.get_docs(mod, :docs) do
+        for {tuple, _line, _kind, _sign, doc} <- docs, doc != false, do: tuple
+      else
+        (mod.__info__(:functions) -- [__info__: 1]) ++ mod.__info__(:macros)
+      end
+    else
+      mod.module_info(:exports)
     end
   end
 end

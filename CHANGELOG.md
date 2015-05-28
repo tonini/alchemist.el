@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Goto] Support jumping to `Kernel` and `Kernel.Specialforms` functions
   * [Project] `alchemist-project-open-tests-for-current-file` needs to be an interactive function
     and `alchemist--project-open-tests-for-current-file` not (it's a private function)
   * [Keybindings] Add customizable keybinding prefix (default: `C-c a`)
