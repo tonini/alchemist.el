@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.15.0-dev (unreleased)
+## v0.15.0 (2015-5-28)
 
 ### Enhancements
 
