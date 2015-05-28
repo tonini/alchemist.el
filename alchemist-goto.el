@@ -43,6 +43,9 @@
   :type 'string
   :group 'alchemist-goto)
 
+(defvar alchemist-goto--symbol-name-and-pos '())
+(defvar alchemist-goto--symbol-list '())
+
 (defun alchemist-goto--extract-module (code)
   "Extract module from CODE."
   (let* ((parts (split-string code "\\."))
@@ -101,33 +104,34 @@
          (module (if module module "nil"))
          (function (alchemist-goto--extract-function expr))
          (function (if function function "\"\""))
-         (file (alchemist-goto--get-module-source module function)))
+         )
     (ring-insert find-tag-marker-ring (point-marker))
     (cond
      ((and (string-equal module "nil")
            (alchemist-goto--symbol-p function))
       (alchemist-goto--goto-symbol function))
-     (t (cond ((equal file nil)
-               (message "Don't know how to find: %s" expr))
-              ((file-exists-p file)
-               (alchemist-goto--open-file file module function))
-              ((alchemist-goto--elixir-file-p file)
-               (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
-                 (if (file-exists-p elixir-source-file)
-                     (alchemist-goto--open-file elixir-source-file module function)
-                   (message "Don't know how to find: %s" expr))))
-              ((alchemist-goto--erlang-file-p file)
-               (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
-                      (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
-                 (cond ((file-exists-p elixir-source-file)
-                        (alchemist-goto--open-file elixir-source-file module function))
-                       ((file-exists-p erlang-source-file)
-                        (alchemist-goto--open-file erlang-source-file module function))
-                       (t
-                        (message "Don't know how to find: %s" expr)))))
-              (t
-               (pop-tag-mark)
-               (message "Don't know how to find: %s" expr)))))))
+     (t (let* ((file (alchemist-goto--get-module-source module function)))
+          (cond ((equal file nil)
+                 (message "Don't know how to find: %s" expr))
+                ((file-exists-p file)
+                 (alchemist-goto--open-file file module function))
+                ((alchemist-goto--elixir-file-p file)
+                 (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+                   (if (file-exists-p elixir-source-file)
+                       (alchemist-goto--open-file elixir-source-file module function)
+                     (message "Don't know how to find: %s" expr))))
+                ((alchemist-goto--erlang-file-p file)
+                 (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
+                        (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
+                   (cond ((file-exists-p elixir-source-file)
+                          (alchemist-goto--open-file elixir-source-file module function))
+                         ((file-exists-p erlang-source-file)
+                          (alchemist-goto--open-file erlang-source-file module function))
+                         (t
+                          (message "Don't know how to find: %s" expr)))))
+                (t
+                 (pop-tag-mark)
+                 (message "Don't know how to find: %s" expr))))))))
 
 (defun alchemist-goto--open-file (file module function)
   (let* ((buf (find-file-noselect file)))
@@ -187,31 +191,31 @@
 (defun alchemist-goto--symbols ()
   "Return the symbols in the current buffer."
   (imenu--make-index-alist)
-  (let ((name-and-pos '())
-        (symbol-names '()))
-    (flet ((addsymbols (symbol-list)
-                       (when (listp symbol-list)
-                         (dolist (symbol (reverse symbol-list))
-                           (let ((name nil) (position nil))
-                             (cond
-                              ((and (listp symbol) (imenu--subalist-p symbol))
-                               (addsymbols symbol))
+  (setq alchemist-goto--symbol-name-and-pos '())
+  (setq alchemist-goto--symbol-list '())
+  (flet ((addsymbols (symbol-list)
+                     (when (listp symbol-list)
+                       (dolist (symbol (reverse symbol-list))
+                         (let ((name nil) (position nil))
+                           (cond
+                            ((and (listp symbol) (imenu--subalist-p symbol))
+                             (addsymbols symbol))
 
-                              ((listp symbol)
-                               (setq name (car symbol))
-                               (setq position (cdr symbol)))
+                            ((listp symbol)
+                             (setq name (car symbol))
+                             (setq position (cdr symbol)))
 
-                              ((stringp symbol)
-                               (setq name symbol)
-                               (setq position
-                                     (get-text-property 1 'org-imenu-marker
-                                                        symbol))))
+                            ((stringp symbol)
+                             (setq name symbol)
+                             (setq position
+                                   (get-text-property 1 'org-imenu-marker
+                                                      symbol))))
 
-                             (unless (or (null position) (null name))
-                               (add-to-list 'symbol-names name)
-                               (add-to-list 'name-and-pos (cons name position))))))))
-      (addsymbols imenu--index-alist))
-    symbol-names))
+                           (unless (or (null position) (null name))
+                             (add-to-list 'alchemist-goto--symbol-list name)
+                             (add-to-list 'alchemist-goto--symbol-name-and-pos (cons name position))))))))
+    (addsymbols imenu--index-alist)
+    alchemist-goto--symbol-list))
 
 (defun alchemist-goto--symbol-p (symbol)
   (if (member symbol (alchemist-goto--symbols))
@@ -219,34 +223,8 @@
     nil))
 
 (defun alchemist-goto--goto-symbol (function)
-  (imenu--make-index-alist)
-  (let ((name-and-pos '())
-        (symbol-names '()))
-    (flet ((addsymbols (symbol-list)
-                       (when (listp symbol-list)
-                         (dolist (symbol (reverse symbol-list))
-                           (let ((name nil) (position nil))
-                             (cond
-                              ((and (listp symbol) (imenu--subalist-p symbol))
-                               (addsymbols symbol))
-
-                              ((listp symbol)
-                               (setq name (car symbol))
-                               (setq position (cdr symbol)))
-
-                              ((stringp symbol)
-                               (setq name symbol)
-                               (setq position
-                                     (get-text-property 1 'org-imenu-marker
-                                                        symbol))))
-
-                             (unless (or (null position) (null name))
-                               (add-to-list 'symbol-names name)
-                               (add-to-list 'name-and-pos (cons name position))))))))
-      (addsymbols imenu--index-alist))
-    (let* ((selected-symbol function)
-           (position (cdr (assoc selected-symbol name-and-pos))))
-      (goto-char (if (overlayp position) (overlay-start position) position)))))
+  (let ((position (cdr (assoc function alchemist-goto--symbol-name-and-pos))))
+    (goto-char (if (overlayp position) (overlay-start position) position))))
 
 (defun alchemist-goto--get-module-source-code (module function)
   (format "
