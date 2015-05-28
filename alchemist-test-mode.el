@@ -32,17 +32,17 @@
   :prefix "alchemist-test-mode-"
   :group 'alchemist)
 
-(defvar alchemist-test-at-point 'alchemist-mix-test-at-point)
-(defvar alchemist-test-this-buffer 'alchemist-mix-test-this-buffer)
-(defvar alchemist-test 'alchemist-mix-test)
-(defvar alchemist-test-file 'alchemist-mix-test-file)
+(defvar alchemist-test-at-point #'alchemist-mix-test-at-point)
+(defvar alchemist-test-this-buffer #'alchemist-mix-test-this-buffer)
+(defvar alchemist-test #'alchemist-mix-test)
+(defvar alchemist-test-file #'alchemist-mix-test-file)
 
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c , s") alchemist-test-at-point)
-    (define-key map (kbd "C-c , v") #'alchemist-test-this-buffer)
-    (define-key map (kbd "C-c , a") #'alchemist-test)
-    (define-key map (kbd "C-c , f") #'alchemist-test-file)
+    (define-key map (kbd "C-c , v") alchemist-test-this-buffer)
+    (define-key map (kbd "C-c , a") alchemist-test)
+    (define-key map (kbd "C-c , f") alchemist-test-file)
     (define-key map (kbd "C-c , p") #'alchemist-test-mode-jump-to-previous-test)
     (define-key map (kbd "C-c , n") #'alchemist-test-mode-jump-to-next-test)
     map)
