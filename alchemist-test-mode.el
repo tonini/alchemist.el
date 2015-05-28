@@ -43,10 +43,50 @@
     (define-key map (kbd "C-c , v") #'alchemist-test-this-buffer)
     (define-key map (kbd "C-c , a") #'alchemist-test)
     (define-key map (kbd "C-c , f") #'alchemist-test-file)
+    (define-key map (kbd "C-c , p") #'alchemist-test-mode-jump-to-previous-test)
+    (define-key map (kbd "C-c , n") #'alchemist-test-mode-jump-to-next-test)
     map)
-  "Keymap for alchemist-test-mode.")
+  "Keymap for `alchemist-test-mode'.")
+
+(defvar alchemist-test-mode--test-regex
+  "^[[:space:]]*test .+ do[[:space:]]*$")
+
+;; Private functions
+
+(defun alchemist-test-mode--buffer-contains-tests-p ()
+  "Return nil if the current buffer contains no tests, non-nil if it does."
+  (save-excursion
+    (save-match-data
+      (beginning-of-buffer)
+      (re-search-forward alchemist-test-mode--test-regex nil t))))
+
+(defun alchemist-test-mode--jump-to-test (search-fn reset-fn)
+  "Move the point to the next/previous test, based on `search-fn' (which is the
+function that searches for the next test, can be re-search-forward or
+re-search-backward) and `reset-fn' (which is used when wrapping at the
+beginning/end of the buffer if no results were found)."
+  (when (alchemist-test-mode--buffer-contains-tests-p)
+    (save-match-data
+      (unless (funcall search-fn alchemist-test-mode--test-regex nil t)
+        (funcall reset-fn)
+        (funcall search-fn alchemist-test-mode--test-regex nil t))
+      (back-to-indentation))))
 
 ;; Public functions
+
+(defun alchemist-test-mode-jump-to-next-test ()
+  "Jump to the next ExUnit test. If there are no tests after the current
+position, jump to the first test in the buffer. Do nothing if there are no tests
+in this buffer."
+  (interactive)
+  (alchemist-test-mode--jump-to-test 're-search-forward 'beginning-of-buffer))
+
+(defun alchemist-test-mode-jump-to-previous-test ()
+  "Jump to the previous ExUnit test. If there are no tests before the current
+position, jump to the last test in the buffer. Do nothing if there are no tests
+in this buffer."
+  (interactive)
+  (alchemist-test-mode--jump-to-test 're-search-backward 'end-of-buffer))
 
 ;;;###autoload
 (define-minor-mode alchemist-test-mode
