@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.16.0 (unreleased)
+
+### Enhancements
+
+  * [Test-Mode] Introduce a ExUnit minor mode for *_test.exs files.
+  * [Test-Mode] Default keybindings with prefix `C-c ,` for running specific test functions.
+  * [Test-Mode] Functionality to go to next/previous test block.
+
 ## v0.15.0 (2015-5-28)
 
 ### Enhancements
