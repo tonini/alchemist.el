@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Goto] Open a prompt with all the modules/function/macros definitions inside the current file. `alchemist-goto-definitions-in-current-file`
   * [Goto] Jump to definition inside the current file.
   * [Test-Mode] Introduce a ExUnit minor mode for `*_test.exs` files.
   * [Test-Mode] Default keybindings with prefix `C-c ,` for running specific test functions.
