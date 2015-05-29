@@ -223,6 +223,7 @@
     (goto-char (if (overlayp position) (overlay-start position) position))))
 
 (defun alchemist-goto-definitions-in-current-file ()
+  "Lists all the modules/functions/macros definitions in a prompt."
   (interactive)
   (alchemist-goto--symbols)
   (let* ((selected-symbol (ido-completing-read "Elixir modules/functions/macros > " (reverse alchemist-goto--symbol-list)))
