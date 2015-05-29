@@ -201,17 +201,12 @@
                            (cond
                             ((and (listp symbol) (imenu--subalist-p symbol))
                              (addsymbols symbol))
-
                             ((listp symbol)
                              (setq name (car symbol))
                              (setq position (cdr symbol)))
-
                             ((stringp symbol)
                              (setq name symbol)
-                             (setq position
-                                   (get-text-property 1 'org-imenu-marker
-                                                      symbol))))
-
+                             (setq position (get-text-property 1 symbol))))
                            (unless (or (null position) (null name))
                              (add-to-list 'alchemist-goto--symbol-list name)
                              (add-to-list 'alchemist-goto--symbol-name-and-pos (cons name position))))))))
@@ -225,6 +220,13 @@
 
 (defun alchemist-goto--goto-symbol (function)
   (let ((position (cdr (assoc function alchemist-goto--symbol-name-and-pos))))
+    (goto-char (if (overlayp position) (overlay-start position) position))))
+
+(defun alchemist-goto-definitions-in-current-file ()
+  (interactive)
+  (alchemist-goto--symbols)
+  (let* ((selected-symbol (ido-completing-read "Elixir modules/functions/macros > " (reverse alchemist-goto--symbol-list)))
+         (position (cdr (assoc selected-symbol alchemist-goto--symbol-name-and-pos))))
     (goto-char (if (overlayp position) (overlay-start position) position))))
 
 (defun alchemist-goto--get-module-source-code (module function)
