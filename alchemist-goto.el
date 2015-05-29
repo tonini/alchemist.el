@@ -222,6 +222,13 @@
   (let ((position (cdr (assoc function alchemist-goto--symbol-name-and-pos))))
     (goto-char (if (overlayp position) (overlay-start position) position))))
 
+(defun alchemist-goto-definitions-in-current-file ()
+  (interactive)
+  (alchemist-goto--symbols)
+  (let* ((selected-symbol (ido-completing-read "Elixir modules/functions/macros > " (reverse alchemist-goto--symbol-list)))
+         (position (cdr (assoc selected-symbol alchemist-goto--symbol-name-and-pos))))
+    (goto-char (if (overlayp position) (overlay-start position) position))))
+
 (defun alchemist-goto--get-module-source-code (module function)
   (format "
 defmodule Source do
