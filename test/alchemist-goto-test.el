@@ -58,6 +58,10 @@
                  "String.Chars"))
   (should (equal (alchemist-goto--extract-module "String.Chars.Atom")
                  "String.Chars.Atom"))
+  (should (equal (alchemist-goto--extract-module "String.Chars.")
+                 "String.Chars"))
+  (should (equal (alchemist-goto--extract-module "String.concat")
+                 "String"))
   (should (equal (alchemist-goto--extract-module "to_string")
                  nil)))
 

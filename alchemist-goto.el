@@ -54,7 +54,7 @@
     (when (string-match-p "^[a-z_\?!]+" function)
       (delete function parts))
     (unless (string-match-p "^[a-z_\?!]+" (car parts))
-      (mapconcat 'concat parts "."))))
+      (replace-regexp-in-string "\\.$" "" (mapconcat 'concat parts ".")))))
 
 (defun alchemist-goto--extract-function (code)
   "Extract function from CODE."
