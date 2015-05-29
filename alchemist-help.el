@@ -229,15 +229,22 @@ AlchemistModule.get_modules |> Enum.map &IO.puts/1
       (alchemist-project--establish-root-directory))
     (alchemist-help--elixir-modules-to-list (shell-command-to-string command))))
 
+(defvar alchemist-help-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "q") #'quit-window)
+    (define-key map (kbd "e") #'alchemist-help-search-at-point)
+    (define-key map (kbd "m") #'alchemist-help-search-marked-region)
+    (define-key map (kbd "s") #'alchemist-help)
+    (define-key map (kbd "h") #'alchemist-help-history)
+    (define-key map (kbd "M-.") #'alchemist-goto-definition-at-point)
+    (define-key map (kbd "?") #'alchemist-help-minor-mode-key-binding-summary)
+    map)
+  "Keymap for `alchemist-help-minor-mode'.")
+
 (define-minor-mode alchemist-help-minor-mode
   "Minor mode for displaying elixir help."
   :group 'alchemist-help
-  :keymap '(("q" . quit-window)
-            ("e" . alchemist-help-search-at-point)
-            ("m" . alchemist-help-search-marked-region)
-            ("s" . alchemist-help)
-            ("h" . alchemist-help-history)
-            ("?" . alchemist-help-minor-mode-key-binding-summary)))
+  :keymap alchemist-help-minor-mode-map)
 
 (defun alchemist-help (search)
   "Load Elixir documentation for SEARCH."
