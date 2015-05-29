@@ -226,6 +226,7 @@
   "Lists all the modules/functions/macros definitions in a prompt."
   (interactive)
   (alchemist-goto--symbols)
+  (ring-insert find-tag-marker-ring (point-marker))
   (let* ((selected-symbol (ido-completing-read "Elixir modules/functions/macros > " (reverse alchemist-goto--symbol-list)))
          (position (cdr (assoc selected-symbol alchemist-goto--symbol-name-and-pos))))
     (goto-char (if (overlayp position) (overlay-start position) position))))
