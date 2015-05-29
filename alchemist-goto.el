@@ -108,6 +108,7 @@
     (ring-insert find-tag-marker-ring (point-marker))
     (cond
      ((and (string-equal module "nil")
+           (string-equal major-mode "elixir-mode")
            (alchemist-goto--symbol-p function))
       (alchemist-goto--goto-symbol function))
      (t (let* ((file (alchemist-goto--get-module-source module function)))
