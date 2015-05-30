@@ -36,6 +36,8 @@
 (defvar alchemist-test-this-buffer #'alchemist-mix-test-this-buffer)
 (defvar alchemist-test #'alchemist-mix-test)
 (defvar alchemist-test-file #'alchemist-mix-test-file)
+(defvar alchemist-test-jump-to-previous-test #'alchemist-test-mode-jump-to-previous-test)
+(defvar alchemist-test-jump-to-next-test #'alchemist-test-mode-jump-to-next-test)
 
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
@@ -43,8 +45,8 @@
     (define-key map (kbd "C-c , v") alchemist-test-this-buffer)
     (define-key map (kbd "C-c , a") alchemist-test)
     (define-key map (kbd "C-c , f") alchemist-test-file)
-    (define-key map (kbd "C-c , p") #'alchemist-test-mode-jump-to-previous-test)
-    (define-key map (kbd "C-c , n") #'alchemist-test-mode-jump-to-next-test)
+    (define-key map (kbd "C-c , p") alchemist-test-jump-to-previous-test)
+    (define-key map (kbd "C-c , n") alchemist-test-jump-to-next-test)
     map)
   "Keymap for `alchemist-test-mode'.")
 
