@@ -4,7 +4,7 @@
 \usepackage{fullpage}
 \usepackage{boxedminipage}
 \usepackage{multicol}
-\usepackage[a4paper,left=0.5cm,right=0.5cm,top=1.5cm,bottom=2cm]{geometry}
+\usepackage[a4paper,left=0.5cm,right=0.5cm,top=1.5cm,bottom=1.5cm]{geometry}
 \pagestyle{empty}
 
 \marginparwidth = 10pt
@@ -121,5 +121,26 @@
 \key{C-c a v r}{alchemist-eval-print-quoted-buffer}
 
 \end{multicols}
+
+\setlength{\bigskipamount}{1cm}
+
+\bigskip
+
+\begin{boxedminipage}[t]{8cm}
+
+\medskip
+
+\helpgroup{Alchemist Test Mode}
+
+\helpkey{C-c , a}{alchemist-test}
+\helpkey{C-c , v}{alchemist-test-this-buffer}
+\helpkey{C-c , s}{alchemist-test-at-point}
+\helpkey{C-c , f}{alchemist-test-file}
+\helpkey{C-c , p}{alchemist-test-jump-to-previous-test}
+\helpkey{C-c , n}{alchemist-test-jump-to-next-test}
+
+\medskip
+
+\end{boxedminipage}
 
 \end{document}
