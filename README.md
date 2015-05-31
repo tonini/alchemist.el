@@ -46,6 +46,7 @@ Alchemist comes with a bunch of features, which are:
 - [IEx](#iex)
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
+- [Testing Mode](#testing-mode)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -473,6 +474,19 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 |<kbd>C-c a v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
 |<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
 |<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
+
+## Testing Mode
+
+Alchemist comes with an minor mode for testing which will be enabled by default inside `*_test.exs` files.
+
+| Keybinding | Description |
+|--------------------|------------------------------------------|
+|<kbd>C-c , s</kbd>| Run the test at point. `alchemist-mix-test-at-point` |
+|<kbd>C-c , v</kbd>| Run all tests in the current file. `alchemist-mix-test-this-buffer` |
+|<kbd>C-c , a</kbd>| Run the whole elixir test suite. `alchemist-mix-test` |
+|<kbd>C-c , f</kbd>| Run all tests of a specific file `alchemist-mix-test-file` |
+|<kbd>C-c , n</kbd>| Jump to the next test inside the current file. `alchemist-test-mode-jump-to-next-test` |
+|<kbd>C-c , p</kbd>| Jump to the previous test inside the current file `alchemist-test-mode-jump-to-previous-test` |
 
 ## Hooks
 
