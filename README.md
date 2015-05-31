@@ -243,6 +243,9 @@ Example:
 You can customize the default options passed to the `mix test` commands by
 customizing the value of the `alchemist-mix-test-default-options` variable.
 
+Mix tasks could also be executed in a specific environment with the usage of `C-u` (universal-argument).
+Default environments are `prod`, `dev` and `test`. [Mix environments](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html#environments)
+
 ## Compile And Execute
 
 ### Compile functions

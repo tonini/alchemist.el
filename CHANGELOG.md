@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Mix] Mix commands can be executed in a specific environment with the usage of `C-u` (universal-argument)
   * [Goto] Open a prompt with all the modules/function/macros definitions inside the current file. `alchemist-goto-definitions-in-current-file`
   * [Goto] Jump to definition inside the current file.
   * [Test-Mode] Introduce a ExUnit minor mode for `*_test.exs` files.
