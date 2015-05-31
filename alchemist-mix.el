@@ -42,8 +42,17 @@
   :type '(repeat string)
   :group 'alchemist-mix)
 
+(defcustom alchemist-mix-env nil
+  "The default mix env to run mix commands with.  If nil, the mix env is
+not set explicitly."
+  :type '(string boolean)
+  :group 'alchemist-mix)
+
 (defvar alchemist-mix-buffer-name "*mix*"
   "Name of the mix output buffer.")
+
+(defvar alchemist-mix--envs '("dev" "prod" "test")
+  "The list of mix envs to use as defaults.")
 
 (defvar alchemist-mix--deps-commands
   '("deps" "deps.clean" "deps.compile" "deps.get" "deps.unlock" "deps.unlock")
@@ -108,28 +117,32 @@
          (file-and-line (format "%s:%s" buffer-file-name line)))
     (alchemist-mix-execute (list "test" file-and-line))))
 
-(defun alchemist-mix-compile (command)
-  "Compile the whole elixir project."
-  (interactive "Mmix compile: ")
-  (alchemist-mix-execute (list "compile" command)))
+(defun alchemist-mix-compile (command &optional prefix)
+  "Compile the whole elixir project. Prompt for the mix env if the prefix
+arg is set."
+  (interactive "Mmix compile: \nP")
+  (alchemist-mix-execute (list "compile" command) prefix))
 
-(defun alchemist-mix-run (command)
-  "Runs the given file or expression in the context of the application."
-  (interactive "Mmix run: ")
-  (alchemist-mix-execute (list "run" command)))
+(defun alchemist-mix-run (command &optional prefix)
+  "Runs the given file or expression in the context of the application.
+Prompt for the mix env if the prefix arg is set."
+  (interactive "Mmix run: \nP")
+  (alchemist-mix-execute (list "run" command) prefix))
 
-(defun alchemist-mix-deps-with-prompt (command)
+(defun alchemist-mix-deps-with-prompt (command &optional prefix)
   "Prompt for mix deps commands."
   (interactive
-   (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)))
-  (alchemist-mix-execute (list command)))
+   (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)
+         current-prefix-arg))
+  (alchemist-mix-execute (list command) prefix))
 
-(defun alchemist-mix (command)
-  "Prompt for mix commands."
+(defun alchemist-mix (command &optional prefix)
+  "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
   (interactive
-   (list (alchemist-mix--completing-read "mix: " (alchemist-mix--commands))))
+   (list (alchemist-mix--completing-read "mix: " (alchemist-mix--commands))
+         current-prefix-arg))
   (let ((command (read-string "mix " (concat command " "))))
-    (alchemist-mix-execute (list command))))
+    (alchemist-mix-execute (list command) prefix)))
 
 (defun alchemist-mix-local-with-prompt (command)
   "Prompt for mix local commands."
@@ -159,22 +172,30 @@
   (interactive "Mmix local.install URL: ")
   (alchemist-mix-execute (list "local.install" url)))
 
-(defun alchemist-mix-hex-search (command)
-  "Display packages matching the given search query."
-  (interactive "Mmix hex.search: ")
-  (alchemist-mix-execute (list "hex.search" command)))
+(defun alchemist-mix-hex-search (command &optional prefix)
+  "Display packages matching the given search query. Prompt for the mix env
+if the prefix arg is set."
+  (interactive "Mmix hex.search: \nP")
+  (alchemist-mix-execute (list "hex.search" command) prefix))
 
-(defun alchemist-mix-help (command)
-  "Show help output for a specific mix command."
-  (interactive "Mmix help: ")
-  (alchemist-mix-execute (list "help" command)))
+(defun alchemist-mix-help (command &optional prefix)
+  "Show help output for a specific mix command. Prompt for the mix env if
+the prefix arg is set."
+  (interactive "Mmix help: \nP")
+  (alchemist-mix-execute (list "help" command) prefix))
 
-(defun alchemist-mix-execute (cmdlist)
-  "Run a mix command."
-  (interactive "Mmix: ")
-  (let ((old-directory default-directory))
+(defun alchemist-mix-execute (cmdlist &optional prefix)
+  "Run a mix command. Prompt for the mix env if the prefix arg is set."
+  (interactive "Mmix: \nP")
+  (let ((old-directory default-directory)
+        (mix-env (if prefix
+                     (completing-read "mix env: "
+                                      alchemist-mix--envs nil nil alchemist-mix-env)
+                   alchemist-mix-env)))
     (alchemist-project--establish-root-directory)
-    (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist (list alchemist-mix-command cmdlist))
+    (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist
+                           (list (if mix-env (concat "MIX_ENV=" mix-env) "")
+                                 alchemist-mix-command cmdlist))
                           alchemist-mix-buffer-name)
     (cd old-directory)))
 
