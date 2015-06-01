@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.16.1 (2015-06-01)
+
+### Bugfix
+
+  * [Completion] Completion process buffer will not be deleted after usage because there are know issues with `evil-mode` users.
+
 ## v0.16.0 (2015-06-01)
 
 ### Enhancements
