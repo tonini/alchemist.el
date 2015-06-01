@@ -43,8 +43,10 @@
   :type 'string
   :group 'alchemist-goto)
 
-(defvar alchemist-goto--symbol-name-and-pos '())
 (defvar alchemist-goto--symbol-list '())
+(defvar alchemist-goto--symbol-name-and-pos '())
+(defvar alchemist-goto--symbol-list-bare '())
+(defvar alchemist-goto--symbol-name-and-pos-bare '())
 
 (defun alchemist-goto--extract-module (code)
   "Extract module from CODE."
@@ -98,6 +100,112 @@
         (car aliases)
       module)))
 
+(defun alchemist-goto--string-at-point-p ()
+  "Return non-nil if cursor is at a string."
+  (or (and (nth 3 (parse-partial-sexp 1 (point)))
+           (nth 8 (parse-partial-sexp 1 (point))))
+      (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
+           (match-beginning 0))))
+
+(defun alchemist-goto--symbol-definition-p (symbol)
+  (alchemist-goto--fetch-symbol-definitions)
+  (if (member symbol alchemist-goto--symbol-list-bare)
+      t
+    nil))
+
+(defun alchemist-goto--goto-symbol (symbol)
+  (let ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos-bare))))
+    (goto-char (if (overlayp position) (overlay-start position) position))))
+
+(defun alchemist-goto-list-symbol-definitions ()
+  "List all symbol definitions in the current file like functions/macros/modules.
+
+It will jump to the position of the symbol definition after selection."
+  (interactive)
+  (alchemist-goto--fetch-symbol-definitions)
+  (ring-insert find-tag-marker-ring (point-marker))
+  (let* ((selected-def (completing-read "Symbol definitions:" alchemist-goto--symbol-list))
+        (position (cdr (assoc selected-def alchemist-goto--symbol-name-and-pos))))
+    (goto-char (if (overlayp position) (overlay-start position) position))))
+
+(defun alchemist-goto--fetch-symbol-definitions ()
+  (alchemist-goto--search-for-symbols "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s.*"))
+
+(defface alchemist-goto--def-face
+  '((t (:inherit font-lock-constant-face)))
+  ""
+  :group 'alchemist-goto)
+
+(defface alchemist-goto--name-face
+  '((t (:bold t)))
+  ""
+  :group 'alchemist-goto)
+
+(defun alchemist-goto--extract-symbol (str)
+  (save-match-data
+    (when (string-match "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\s+do" str)
+      (let ((type (substring str (match-beginning 1) (match-end 1)))
+            (name (substring str (match-beginning 2) (match-end 2)))
+            (arguments (substring str (match-beginning 3) (match-end 3))))
+        (concat
+         (propertize type
+                     'face 'alchemist-goto--def-face)
+         " "
+         (propertize name
+                     'face 'alchemist-goto--name-face)
+         arguments)))))
+
+(defun alchemist-goto--extract-symbol-bare (str)
+  (save-match-data
+    (when (string-match "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\s+do" str)
+      (let ((type (substring str (match-beginning 1) (match-end 1)))
+            (name (substring str (match-beginning 2) (match-end 2)))
+            (arguments (substring str (match-beginning 3) (match-end 3))))
+        name))))
+
+(defun alchemist-goto--get-symbol-from-position (position)
+  (with-current-buffer (buffer-name)
+    (save-excursion
+      (goto-char position)
+      (end-of-line)
+      (let* ((end-position (point))
+             (line (buffer-substring-no-properties position end-position)))
+        (alchemist-goto--extract-symbol line)))))
+
+(defun alchemist-goto--get-symbol-from-position-bare (position)
+  (with-current-buffer (buffer-name)
+    (save-excursion
+      (goto-char position)
+      (end-of-line)
+      (let* ((end-position (point))
+             (line (buffer-substring-no-properties position end-position)))
+        (alchemist-goto--extract-symbol-bare line)))))
+
+
+(defun alchemist-goto--search-for-symbols (regex)
+  (setq alchemist-goto--symbol-list '())
+  (setq alchemist-goto--symbol-name-and-pos '())
+  (with-current-buffer (buffer-name)
+    (save-excursion
+      (goto-char (point-max))
+      (goto-char (point-min))
+      (let ()
+        (save-match-data
+          (while (re-search-forward regex nil t)
+            (when (not (alchemist-goto--string-at-point-p))
+              (when (alchemist-goto--get-symbol-from-position (car (match-data)))
+                (let* ((position (car (match-data)))
+                       (symbol (alchemist-goto--get-symbol-from-position position))
+                       (symbol-bare (alchemist-goto--get-symbol-from-position-bare position))
+                       )
+                  (setq alchemist-goto--symbol-list (append alchemist-goto--symbol-list (list symbol)))
+                  (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position))))
+
+                  (setq alchemist-goto--symbol-list-bare (append alchemist-goto--symbol-list-bare (list symbol-bare)))
+                  (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position))))
+
+                  )))))))))
+
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
          (module (alchemist-goto--get-full-path-of-alias module))
@@ -109,7 +217,7 @@
     (cond
      ((and (string-equal module "nil")
            (string-equal major-mode "elixir-mode")
-           (alchemist-goto--symbol-p function))
+           (alchemist-goto--symbol-definition-p function))
       (alchemist-goto--goto-symbol function))
      (t (let* ((file (alchemist-goto--get-module-source module function)))
           (cond ((equal file nil)
@@ -188,48 +296,6 @@
                                                        (alchemist-goto--get-module-source-code module function)))))
     (alchemist-goto--report-errors source-file)
     (alchemist-goto--clear-output source-file)))
-
-(defun alchemist-goto--symbols ()
-  "Return the symbols in the current buffer."
-  (imenu--make-index-alist)
-  (setq alchemist-goto--symbol-name-and-pos '())
-  (setq alchemist-goto--symbol-list '())
-  (flet ((addsymbols (symbol-list)
-                     (when (listp symbol-list)
-                       (dolist (symbol (reverse symbol-list))
-                         (let ((name nil) (position nil))
-                           (cond
-                            ((and (listp symbol) (imenu--subalist-p symbol))
-                             (addsymbols symbol))
-                            ((listp symbol)
-                             (setq name (car symbol))
-                             (setq position (cdr symbol)))
-                            ((stringp symbol)
-                             (setq name symbol)
-                             (setq position (get-text-property 1 symbol))))
-                           (unless (or (null position) (null name))
-                             (add-to-list 'alchemist-goto--symbol-list name)
-                             (add-to-list 'alchemist-goto--symbol-name-and-pos (cons name position))))))))
-    (addsymbols imenu--index-alist)
-    alchemist-goto--symbol-list))
-
-(defun alchemist-goto--symbol-p (symbol)
-  (if (member symbol (alchemist-goto--symbols))
-      t
-    nil))
-
-(defun alchemist-goto--goto-symbol (function)
-  (let ((position (cdr (assoc function alchemist-goto--symbol-name-and-pos))))
-    (goto-char (if (overlayp position) (overlay-start position) position))))
-
-(defun alchemist-goto-definitions-in-current-file ()
-  "Lists all the modules/functions/macros definitions in a prompt."
-  (interactive)
-  (alchemist-goto--symbols)
-  (ring-insert find-tag-marker-ring (point-marker))
-  (let* ((selected-symbol (ido-completing-read "Elixir modules/functions/macros > " (reverse alchemist-goto--symbol-list)))
-         (position (cdr (assoc selected-symbol alchemist-goto--symbol-name-and-pos))))
-    (goto-char (if (overlayp position) (overlay-start position) position))))
 
 (defun alchemist-goto--get-module-source-code (module function)
   (format "
