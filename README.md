@@ -41,6 +41,7 @@ Alchemist comes with a bunch of features, which are:
 - [Documentation lookup](#documentation-lookup)
   - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Definition lookup](#definition-lookup)
+  - [Symbol definitions](#symbol-definitions)
 - [Auto-completion](#auto-completion)
   - [Debug](#debug)
 - [IEx](#iex)
@@ -405,6 +406,10 @@ But if you would like to use it also inside the `erlang-mode` just setup the fol
 ```
 
 ![Definition Lookup](http://i.imgur.com/KGIHEOh.gif)
+
+### Symbol definitions
+
+There is the function `alchemist-goto-list-symbol-definitions` which lets you jump to a specific module, function or macro definitions in the current file.
 
 ## Auto-completion
 
