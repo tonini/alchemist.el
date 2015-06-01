@@ -45,6 +45,8 @@
 
 (defvar alchemist-goto--symbol-list '())
 (defvar alchemist-goto--symbol-name-and-pos '())
+(defvar alchemist-goto--symbol-list-bare '())
+(defvar alchemist-goto--symbol-name-and-pos-bare '())
 
 (defun alchemist-goto--extract-module (code)
   "Extract module from CODE."
@@ -107,12 +109,12 @@
 
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)
-  (if (member symbol alchemist-goto--symbol-list)
+  (if (member symbol alchemist-goto--symbol-list-bare)
       t
     nil))
 
 (defun alchemist-goto--goto-symbol (symbol)
-  (let ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos))))
+  (let ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos-bare))))
     (goto-char (if (overlayp position) (overlay-start position) position))))
 
 (defun alchemist-goto-list-symbol-definitions ()
@@ -153,6 +155,14 @@ It will jump to the position of the symbol definition after selection."
                      'face 'alchemist-goto--name-face)
          arguments)))))
 
+(defun alchemist-goto--extract-symbol-bare (str)
+  (save-match-data
+    (when (string-match "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\s+do" str)
+      (let ((type (substring str (match-beginning 1) (match-end 1)))
+            (name (substring str (match-beginning 2) (match-end 2)))
+            (arguments (substring str (match-beginning 3) (match-end 3))))
+        name))))
+
 (defun alchemist-goto--get-symbol-from-position (position)
   (with-current-buffer (buffer-name)
     (save-excursion
@@ -161,6 +171,16 @@ It will jump to the position of the symbol definition after selection."
       (let* ((end-position (point))
              (line (buffer-substring-no-properties position end-position)))
         (alchemist-goto--extract-symbol line)))))
+
+(defun alchemist-goto--get-symbol-from-position-bare (position)
+  (with-current-buffer (buffer-name)
+    (save-excursion
+      (goto-char position)
+      (end-of-line)
+      (let* ((end-position (point))
+             (line (buffer-substring-no-properties position end-position)))
+        (alchemist-goto--extract-symbol-bare line)))))
+
 
 (defun alchemist-goto--search-for-symbols (regex)
   (setq alchemist-goto--symbol-list '())
@@ -175,9 +195,16 @@ It will jump to the position of the symbol definition after selection."
             (when (not (alchemist-goto--string-at-point-p))
               (when (alchemist-goto--get-symbol-from-position (car (match-data)))
                 (let* ((position (car (match-data)))
-                       (symbol (alchemist-goto--get-symbol-from-position position)))
+                       (symbol (alchemist-goto--get-symbol-from-position position))
+                       (symbol-bare (alchemist-goto--get-symbol-from-position-bare position))
+                       )
                   (setq alchemist-goto--symbol-list (append alchemist-goto--symbol-list (list symbol)))
-                  (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position)))))))))))))
+                  (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position))))
+
+                  (setq alchemist-goto--symbol-list-bare (append alchemist-goto--symbol-list-bare (list symbol-bare)))
+                  (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position))))
+
+                  )))))))))
 
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
