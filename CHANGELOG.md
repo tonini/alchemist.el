@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.16.0 (unreleased)
+## v0.16.0 (2015-06-01)
 
 ### Enhancements
 
@@ -12,7 +12,7 @@
   * [Test-Mode] Functionality to go to next/previous test block.
   * [Completion] Completion process buffer will be deleted after usage, there is no need to have it around after it.
 
-## v0.15.0 (2015-5-28)
+## v0.15.0 (2015-05-28)
 
 ### Enhancements
 
