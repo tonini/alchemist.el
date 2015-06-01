@@ -150,7 +150,7 @@ Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
                                       (when alchemist-complete-debug-mode
                                         (alchemist-complete--debug-message (alchemist-utils--get-buffer-content (process-buffer process))))
                                       (funcall callback '())))
-                               (kill-buffer (process-buffer process)))))
+                               (alchemist-utils--erase-buffer (process-buffer process)))))
 
 (defun alchemist-complete--debug-message (content)
   (alchemist-message (format "== ALCHEMIST COMPLETION FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
