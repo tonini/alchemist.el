@@ -12,3 +12,6 @@ TAGS
 .DS_STORE
 dist
 TODO.md
+alchemist-components-menu.el
+.gitignore
+commit.txt
