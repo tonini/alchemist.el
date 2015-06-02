@@ -141,9 +141,12 @@ It will jump to the position of the symbol definition after selection."
   ""
   :group 'alchemist-goto)
 
+(defvar alchemist-goto--symbol-def-extract-regex
+  "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
+
 (defun alchemist-goto--extract-symbol (str)
   (save-match-data
-    (when (string-match "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\s+do" str)
+    (when (string-match alchemist-goto--symbol-def-extract-regex str)
       (let ((type (substring str (match-beginning 1) (match-end 1)))
             (name (substring str (match-beginning 2) (match-end 2)))
             (arguments (substring str (match-beginning 3) (match-end 3))))
@@ -153,11 +156,12 @@ It will jump to the position of the symbol definition after selection."
          " "
          (propertize name
                      'face 'alchemist-goto--name-face)
-         arguments)))))
+         (replace-regexp-in-string " do:.*$" "" (replace-regexp-in-string " do$" "" arguments))
+)))))
 
 (defun alchemist-goto--extract-symbol-bare (str)
   (save-match-data
-    (when (string-match "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\s+do" str)
+    (when (string-match alchemist-goto--symbol-def-extract-regex str)
       (let ((type (substring str (match-beginning 1) (match-end 1)))
             (name (substring str (match-beginning 2) (match-end 2)))
             (arguments (substring str (match-beginning 3) (match-end 3))))
