@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.17.0 (unreleased)
+
+### Enhancements
+
+  * [Goto] Improvement of symbols for one line definitions.
+
 ## v0.16.1 (2015-06-01)
 
 ### Bugfix
