@@ -30,6 +30,8 @@
 
 ;;; Code:
 
+(require 'easymenu)
+
 (defgroup alchemist nil
   "Elixir Tooling Integration Into Emacs."
   :prefix "alchemist-"
