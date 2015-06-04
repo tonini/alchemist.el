@@ -60,8 +60,6 @@
   (define-key company-active-map (kbd "C-w") 'alchemist-company--open-definition)
   (define-key company-active-map (kbd "M-.") 'alchemist-company--open-definition))
 
-(add-hook 'company-mode-hook 'alchemist-company--keybindings)
-
 (defun alchemist-company--annotation (candidate)
   (get-text-property 0 'meta candidate))
 
@@ -82,7 +80,11 @@
     (annotation (when alchemist-company-show-annotation
                   (alchemist-company--annotation arg)))))
 
-(add-to-list 'company-backends 'alchemist-company)
+(add-hook 'alchemist-mode-hook
+          (lambda ()
+            (make-local-variable 'company-active-map)
+            (alchemist-company--keybindings)
+            (setq-local company-backends (cons 'alchemist-company company-backends))))
 
 (provide 'alchemist-company)
 
