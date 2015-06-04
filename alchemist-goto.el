@@ -101,8 +101,14 @@
 
 (defun alchemist-goto--string-at-point-p ()
   "Return non-nil if cursor is at a string."
-  (or (and (nth 3 (parse-partial-sexp 1 (point)))
-           (nth 8 (parse-partial-sexp 1 (point))))
+  (or (and (nth 3 (save-excursion
+                    (let ((pos (point)))
+                      (end-of-buffer)
+                      (parse-partial-sexp 1 pos))))
+           (nth 8 (save-excursion (save-excursion
+                    (let ((pos (point)))
+                      (end-of-buffer)
+                      (parse-partial-sexp 1 pos))))))
       (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
            (match-beginning 0))))
 
