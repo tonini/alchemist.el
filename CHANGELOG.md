@@ -6,6 +6,10 @@
 
   * [Goto] Improvement of symbols for one line definitions.
 
+### Bugfix
+
+  * [Goto] `save-excursion` have to be used to restore the last position informations after `parse-partial-sexp` call.
+
 ## v0.16.1 (2015-06-01)
 
 ### Bugfix
