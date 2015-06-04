@@ -26,7 +26,6 @@
 ;;; Code:
 
 (require 'etags)
-(require 'imenu)
 
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."
