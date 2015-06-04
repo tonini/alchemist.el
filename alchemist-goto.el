@@ -101,8 +101,14 @@
 
 (defun alchemist-goto--string-at-point-p ()
   "Return non-nil if cursor is at a string."
-  (or (and (nth 3 (parse-partial-sexp 1 (point)))
-           (nth 8 (parse-partial-sexp 1 (point))))
+  (or (and (nth 3 (save-excursion
+                    (let ((pos (point)))
+                      (end-of-buffer)
+                      (parse-partial-sexp 1 pos))))
+           (nth 8 (save-excursion (save-excursion
+                    (let ((pos (point)))
+                      (end-of-buffer)
+                      (parse-partial-sexp 1 pos))))))
       (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
            (match-beginning 0))))
 
@@ -198,23 +204,18 @@ It will jump to the position of the symbol definition after selection."
               (when (alchemist-goto--get-symbol-from-position (car (match-data)))
                 (let* ((position (car (match-data)))
                        (symbol (alchemist-goto--get-symbol-from-position position))
-                       (symbol-bare (alchemist-goto--get-symbol-from-position-bare position))
-                       )
+                       (symbol-bare (alchemist-goto--get-symbol-from-position-bare position)))
                   (setq alchemist-goto--symbol-list (append alchemist-goto--symbol-list (list symbol)))
                   (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position))))
-
                   (setq alchemist-goto--symbol-list-bare (append alchemist-goto--symbol-list-bare (list symbol-bare)))
-                  (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position))))
-
-                  )))))))))
+                  (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position)))))))))))))
 
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-goto--extract-module expr))
          (module (alchemist-goto--get-full-path-of-alias module))
          (module (if module module "nil"))
          (function (alchemist-goto--extract-function expr))
-         (function (if function function "\"\""))
-         )
+         (function (if function function "\"\"")))
     (ring-insert find-tag-marker-ring (point-marker))
     (cond
      ((and (string-equal module "nil")
