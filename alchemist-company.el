@@ -74,9 +74,7 @@
     (annotation (when alchemist-company-show-annotation
                   (alchemist-company--annotation arg)))))
 
-(add-hook 'alchemist-mode-hook
-          (lambda ()
-            (setq-local company-backends (cons 'alchemist-company company-backends))))
+(add-to-list 'company-backends 'alchemist-company)
 
 (provide 'alchemist-company)
 

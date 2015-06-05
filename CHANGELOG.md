@@ -4,10 +4,9 @@
 
 ### Enhancements
 
-  * [Completion] Alchemist company backend should just be available inside the Alchemist-Mode.
+  * [Completion] Use the company-mode specific functions for doc and location lookup
     The functionality to open the doc and jumpt to location for the current selected completion candidate is now called through the proper company-mode functions.
   * [Goto] Improvement of symbols for one line definitions.
-
 
 ### Bugfix
 
