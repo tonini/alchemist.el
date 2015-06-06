@@ -32,6 +32,8 @@
   :prefix "alchemist-goto-"
   :group 'alchemist)
 
+;; Variables
+
 (defcustom alchemist-goto-erlang-source-dir ""
   "Path to the erlang source code."
   :type 'string
