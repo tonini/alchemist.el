@@ -2,7 +2,6 @@
 [![Build Status](https://img.shields.io/travis/tonini/alchemist.el.svg)](https://travis-ci.org/tonini/alchemist.el)
 [![MELPA](http://melpa.org/packages/alchemist-badge.svg)](http://melpa.org/#/alchemist)
 [![MELPA Stable](http://stable.melpa.org/packages/alchemist-badge.svg)](http://stable.melpa.org/#/alchemist)
-[![Gratipay](https://img.shields.io/gratipay/tonini.svg)](https://gratipay.com/tonini/)
 [![Paypal](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=tonini%2esamuel%40gmail%2ecom&lc=CH&item_name=Support%20Alchemist%20maintainer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest)
 
 <br/>
