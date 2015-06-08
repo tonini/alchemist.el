@@ -137,7 +137,7 @@ Key bindings:
 
 (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
 (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
-(define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-definitions-in-current-file)
+(define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-list-symbol-definitions)
 
 (easy-menu-define alchemist-mode-menu alchemist-mode-map
   "Alchemist mode menu."
