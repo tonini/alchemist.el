@@ -25,10 +25,8 @@
 
 ;;; Code:
 
-(require 'f)
-
 (defvar alchemist-server
-  (f-join (f-dirname load-file-name) "alchemist.exs")
+  (concat (file-name-directory load-file-name) "alchemist.exs")
   "Script file with alchemist server.")
 
 (defvar alchemist-server-processes '())
