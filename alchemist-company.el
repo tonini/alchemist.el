@@ -70,7 +70,9 @@
     (doc-buffer (alchemist-company--show-documentation arg))
     (location (alchemist-company--open-definition arg))
     (candidates (cons :async
-                      (lambda (cb) (alchemist-complete-candidates arg cb))))
+                      (lambda (cb)
+                        (setq alchemist-server-company-callback cb)
+                        (alchemist-server-complete-candidates arg))))
     (annotation (when alchemist-company-show-annotation
                   (alchemist-company--annotation arg)))))
 

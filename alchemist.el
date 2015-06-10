@@ -41,6 +41,7 @@
 
 (require 'alchemist-utils)
 (require 'alchemist-project)
+(require 'alchemist-server)
 (require 'alchemist-buffer)
 (require 'alchemist-compile)
 (require 'alchemist-execute)

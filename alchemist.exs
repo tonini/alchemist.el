@@ -97,8 +97,10 @@ defmodule Alchemist do
       case line |> String.split(" ", parts: 2) do
         ["COMPLETE", exp] ->
           Autocomplete.expand(exp) |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
+          IO.puts "END-OF-COMPLETE"
         ["DOC", exp] ->
-          Documentation.search(exp)
+            Documentation.search(exp)
+            IO.puts "END-OF-DOC"
         ["SOURCE", exp] ->
           [module, function] = String.split(exp, ",", parts: 2)
           module = String.to_char_list module
