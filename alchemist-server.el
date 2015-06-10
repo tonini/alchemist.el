@@ -68,35 +68,37 @@
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-COMPLETE$" output)
       (let* ((string (apply #'concat (reverse alchemist-server--output)))
-            (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
-            (candidates (alchemist-complete--output-to-list
-                         (alchemist--utils-clear-ansi-sequences string)))
-            (candidates (alchemist-complete--build-candidates candidates)))
+             (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
+             (candidates (alchemist-complete--output-to-list
+                          (alchemist--utils-clear-ansi-sequences string)))
+             (candidates (alchemist-complete--build-candidates candidates)))
         (funcall alchemist-server-company-callback candidates))))
 
 (defun alchemist-server-complete-filter (process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-COMPLETE$" output)
-      (let* ((string (apply #'concat (reverse alchemist-server--output)))
-            (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
-            (candidates (alchemist-complete--output-to-list
-                         (alchemist--utils-clear-ansi-sequences string))))
-        (funcall alchemist-server-help-callback candidates))))
+  (with-local-quit
+    (setq alchemist-server--output (cons output alchemist-server--output))
+    (if (string-match "END-OF-COMPLETE$" output)
+        (let* ((string (apply #'concat (reverse alchemist-server--output)))
+               (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
+               (candidates (alchemist-complete--output-to-list
+                            (alchemist--utils-clear-ansi-sequences string))))
+          (funcall alchemist-server-help-callback candidates)))))
 
 (defun alchemist-server-help-complete-modules-filter (process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-MODULES$" output)
-      (let* ((output (apply #'concat (reverse alchemist-server--output)))
-             (modules (alchemist-help--elixir-modules-to-list output))
-             (search (completing-read
-                      "Elixir help: "
-                      modules
-                      nil
-                      nil
-                      nil)))
-        (alchemist-help--execute (if (string-match-p "\\.$" search)
-                                     search
-                                   (concat search "."))))))
+  (with-local-quit
+    (setq alchemist-server--output (cons output alchemist-server--output))
+    (if (string-match "END-OF-MODULES$" output)
+        (let* ((output (apply #'concat (reverse alchemist-server--output)))
+               (modules (alchemist-help--elixir-modules-to-list output))
+               (search (completing-read
+                        "Elixir help: "
+                        modules
+                        nil
+                        nil
+                        nil)))
+          (alchemist-help--execute (if (string-match-p "\\.$" search)
+                                       search
+                                     (concat search ".")))))))
 
 (defun alchemist-server-goto-filter (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
