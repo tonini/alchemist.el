@@ -88,12 +88,12 @@
 
 (defun alchemist-help--execute-without-complete (search)
   (setq alchemist-help-current-search-text search)
-  (let ((last-directory default-directory)
-        (last-buffer (current-buffer)))
-    (alchemist-help--start-help-process search (lambda (output)
-                                                 (alchemist-help--initialize-buffer output)
-                                                 (with-current-buffer last-buffer
-                                                   (cd last-directory))))))
+  (setq alchemist-server--output nil)
+  (unless (alchemist-server-process-p)
+    (alchemist-server-start))
+  (setq alchemist-server--output nil)
+  (set-process-filter (alchemist-server-process) #'alchemist-server-doc-filter)
+  (process-send-string (alchemist-server-process) (format "DOC %s\n" search)))
 
 (defun alchemist-help--build-code-for-search (string)
   (format "import IEx.Helpers
