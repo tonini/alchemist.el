@@ -130,6 +130,7 @@ defmodule Alchemist do
           module = String.to_char_list module
           function = String.to_atom function
           Code.eval_string("Source.find(#{module}, :#{function})", [], __ENV__)
+          IO.puts "END-OF-SOURCE"
         _ ->
           nil
       end

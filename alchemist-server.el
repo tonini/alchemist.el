@@ -100,6 +100,44 @@
                                      search
                                    (concat search "."))))))
 
+(defun alchemist-server-goto-filter (process output)
+  (setq alchemist-server--output (cons output alchemist-server--output))
+  (if (string-match "END-OF-SOURCE$" output)
+      (let* ((output (apply #'concat (reverse alchemist-server--output)))
+             (output (replace-regexp-in-string "END-OF-SOURCE" "" output))
+             (output (replace-regexp-in-string "\n" "" output))
+             (file (replace-regexp-in-string "source-file-path:" "" output)))
+        (funcall alchemist-server-goto-callback file))))
+
+(defun alchemist-server-goto (module function expr)
+  (setq alchemist-server--output nil)
+  (unless (alchemist-server-process-p)
+    (alchemist-server-start))
+  (setq alchemist-server-goto-callback (lambda (file)
+                                         (cond ((equal file nil)
+                                                (message "Don't know how to find: %s" expr))
+                                               ((file-exists-p file)
+                                                (alchemist-goto--open-file file module function))
+                                               ((alchemist-goto--elixir-file-p file)
+                                                (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+                                                  (if (file-exists-p elixir-source-file)
+                                                      (alchemist-goto--open-file elixir-source-file module function)
+                                                    (message "Don't know how to find: %s" expr))))
+                                               ((alchemist-goto--erlang-file-p file)
+                                                (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
+                                                       (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
+                                                  (cond ((file-exists-p elixir-source-file)
+                                                         (alchemist-goto--open-file elixir-source-file module function))
+                                                        ((file-exists-p erlang-source-file)
+                                                         (alchemist-goto--open-file erlang-source-file module function))
+                                                        (t
+                                                         (message "Don't know how to find: %s" expr)))))
+                                               (t
+                                                (pop-tag-mark)
+                                                (message "Don't know how to find: %s" expr)))))
+  (set-process-filter (alchemist-server-process) #'alchemist-server-goto-filter)
+  (process-send-string (alchemist-server-process) (format "SOURCE %s,%s\n" module function)))
+
 (defun alchemist-server-help ()
   (setq alchemist-server--output nil)
   (unless (alchemist-server-process-p)
@@ -133,6 +171,7 @@
 
 ;; kill-emacs-hook
 ;; Kill running process before kill emacs
+;; handle quit functionality inside filters
 
 (provide 'alchemist-server)
 
