@@ -165,10 +165,6 @@
   (set-process-filter (alchemist-server-process) #'alchemist-server-complete-filter)
   (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" search)))
 
-;; (rplacd (assoc 'y values) 201)
-
-;; kill-emacs-hook
-;; Kill running process before kill emacs
 ;; handle quit functionality inside filters
 
 (provide 'alchemist-server)
