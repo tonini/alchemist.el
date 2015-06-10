@@ -85,6 +85,28 @@
                          (alchemist--utils-clear-ansi-sequences string))))
         (funcall alchemist-server-help-callback candidates))))
 
+(defun alchemist-server-help-complete-modules-filter (process output)
+  (setq alchemist-server--output (cons output alchemist-server--output))
+  (if (string-match "END-OF-MODULES$" output)
+      (let* ((output (apply #'concat (reverse alchemist-server--output)))
+             (modules (alchemist-help--elixir-modules-to-list output))
+             (search (completing-read
+                      "Elixir help: "
+                      modules
+                      nil
+                      nil
+                      nil)))
+        (alchemist-help--execute (if (string-match-p "\\.$" search)
+                                     search
+                                   (concat search "."))))))
+
+(defun alchemist-server-help ()
+  (setq alchemist-server--output nil)
+  (unless (alchemist-server-process-p)
+    (alchemist-server-start))
+  (set-process-filter (alchemist-server-process) #'alchemist-server-help-complete-modules-filter)
+  (process-send-string (alchemist-server-process) "MODULES\n"))
+
 (defun alchemist-server-complete-candidates (exp)
   (setq alchemist-server--output nil)
   (unless (alchemist-server-process-p)

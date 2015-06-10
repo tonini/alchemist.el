@@ -236,18 +236,10 @@ AlchemistModule.get_modules |> Enum.map &IO.puts/1
   :group 'alchemist-help
   :keymap alchemist-help-minor-mode-map)
 
-(defun alchemist-help (search)
+(defun alchemist-help ()
   "Load Elixir documentation for SEARCH."
-  (interactive
-   (list (completing-read
-          "Elixir help: "
-          (alchemist-help--get-modules)
-          nil
-          nil
-          nil)))
-  (alchemist-help--execute (if (string-match-p "\\.$" search)
-                               search
-                             (concat search "."))))
+  (interactive)
+  (alchemist-server-help))
 
 (defun alchemist-help-history (search)
   "Load Elixir from the documentation history for SEARCH."

@@ -71,6 +71,28 @@ defmodule Alchemist do
     end
   end
 
+  defmodule Modules do
+    def get_modules do
+      modules = Enum.map(:code.all_loaded, fn({m, _}) -> Atom.to_string(m) end)
+
+      modules = if :code.get_mode() === :interactive do
+                  modules ++ get_modules_from_applications()
+                else
+                  modules
+                end
+      modules |> Enum.map &IO.puts/1
+    end
+
+    defp get_modules_from_applications do
+      for {app, _, _} <- :application.loaded_applications,
+      {_, modules} = :application.get_key(app, :modules),
+      module <- modules,
+      has_doc = Code.get_docs(module, :moduledoc), elem(has_doc, 1) do
+        Atom.to_string(module)
+      end
+    end
+  end
+
   defmodule Server do
     def start([env]) do
       # Preload Enum so we load basic Elixir/Erlang code
@@ -100,6 +122,9 @@ defmodule Alchemist do
         ["DOC", exp] ->
             Documentation.search(exp)
             IO.puts "END-OF-DOC"
+        ["MODULES"] ->
+            Modules.get_modules
+            IO.puts "END-OF-MODULES"
         ["SOURCE", exp] ->
           [module, function] = String.split(exp, ",", parts: 2)
           module = String.to_char_list module
