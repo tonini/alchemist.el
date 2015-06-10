@@ -25,7 +25,6 @@
 
 ;;; Code:
 
-
 (require 'f)
 
 (defvar alchemist-server
@@ -46,18 +45,18 @@
          (process (start-process-shell-command process-name "*alchemist-server*" alchemist-server-command)))
     (add-to-list 'alchemist-server-processes (cons process-name process))))
 
+(defun alchemist-server-process-p ()
+  (process-live-p (alchemist-server-process)))
+
+(defun alchemist-server-process ()
+  (cdr (assoc (alchemist-server-process-name) alchemist-server-processes)))
+
 (defun alchemist-server-process-name ()
   (let* ((process-name (alchemist-project-root))
          (process-name (if process-name
                            process-name
                          "alchemist-server")))
     process-name))
-
-(defun alchemist-server-process-p ()
-  (process-live-p (alchemist-server-process)))
-
-(defun alchemist-server-process ()
-  (cdr (assoc (alchemist-server-process-name) alchemist-server-processes)))
 
 (defun alchemist-server-doc-filter (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
