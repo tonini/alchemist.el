@@ -168,8 +168,6 @@
   (set-process-filter (alchemist-server-process) #'alchemist-server-complete-filter)
   (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" search)))
 
-;; handle quit functionality inside filters
-
 (provide 'alchemist-server)
 
 ;;; alchemist-server.el ends here
