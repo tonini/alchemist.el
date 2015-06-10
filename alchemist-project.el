@@ -26,68 +26,11 @@
 ;;; Code:
 
 (require 'cl)
-(require 'json)
 
 (defgroup alchemist-project nil
   "API to identify Elixir mix projects."
   :prefix "alchemist-help-"
   :group 'alchemist)
-
-(defcustom alchemist-project-config-filename ".alchemist"
-  "Name of the file which holds the Elixir project setup."
-  :type 'string
-  :group 'alchemist)
-
-(defcustom alchemist-project-compile-when-needed nil
-  "When `t', it compiles the Elixir project codebase when needed.
-
-For example:
-If documentation lookup or completion for code is made, it first tries to
-compile the current Elixir project codebase. This makes sure that the
-documentation and completion is always up to date with the codebase.
-
-Please be aware that when the compilation fails, no documentation or
-completion will be work.
-"
-  :type 'string
-  :group 'alchemist)
-
-(defun alchemist-project-toggle-compile-when-needed ()
-  ""
-  (interactive)
-  (if alchemist-project-compile-when-needed
-      (setq alchemist-project-compile-when-needed nil)
-    (setq alchemist-project-compile-when-needed t))
-  (if alchemist-project-compile-when-needed
-      (message "Compilation of project when needed is enabled")
-    (message "Compilation of project when needed is disabled")))
-
-(defun alchemist-project--load-compile-when-needed-setting ()
-  (let ((config (gethash "compile-when-needed" (alchemist-project-config))))
-    (if config
-        (intern config)
-      alchemist-project-compile-when-needed)))
-
-(defun alchemist-project--config-filepath ()
-  "Return the path to the config file."
-  (format "%s/%s"
-          (alchemist-project-root)
-          alchemist-project-config-filename))
-
-(defun alchemist-project--config-exists-p ()
-  "Check if project config file exists."
-  (file-exists-p (alchemist-project--config-filepath)))
-
-(defun alchemist-project-config ()
-  "Return the current Elixir project configs."
-  (let* ((json-object-type 'hash-table)
-         (config (if (alchemist-project--config-exists-p)
-                     (json-read-from-string
-                      (with-temp-buffer
-                        (insert-file-contents (alchemist-project--config-filepath))
-                        (buffer-string)))
-                   (make-hash-table :test 'equal))))
-    config))
 
 (defvar alchemist-project-root-indicators
   '("mix.exs")

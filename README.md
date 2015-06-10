@@ -117,57 +117,6 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 (setq alchemist-key-command-prefix (kbd "C-c ,")) ;; default: (kbd "C-c a")
 ```
 
-* Disable ansi color formatted documentation:
-
-```el
-(setq alchemist-help-ansi-color-docs nil) ;; default: t
-```
-
-* Enable compilation if needed when do documentation lookup or completion on
-Elixir project current codebase.
-
-```el
-(setq alchemist-project-compile-when-needed t) ;; default nil
-```
-
-* The function `alchemist-project-toggle-compile-when-needed` can also be used to enable/disable
-compilation on the fly.
-
-* By default, the error output of failed completions will be displayed in a
-separat buffer.
-
-Example output:
-
-```shell
-== ALCHEMIST COMPLETION FAILED ==
-== OUTPUT BEGIN:
-** (CompileError) mix.exs:5: function asdas/0 undefined
-    (stdlib) lists.erl:1336: :lists.foreach/2
-    (stdlib) erl_eval.erl:657: :erl_eval.do_apply/6
-
-== OUTPUT END:
-```
-
-This behavior can be disabled with set the following variable.
-
-```el
-(setq alchemist-complete-debug-mode nil) ;; default t
-```
-
-### Project configuration file
-
-To setup custom configurations for different Elixir projects, create a
-`.alchemist` file in the root of the project.
-
-Example:
-
-```json
-{
-  "ansi-color-docs": "nil",
-  "compile-when-needed": "t"
-}
-```
-
 ## Mix
 
 <table>
