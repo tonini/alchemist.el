@@ -68,7 +68,6 @@ defmodule Alchemist do
   defmodule Documentation do
     def search(exp) do
       Code.eval_string("import IEx.Helpers \nApplication.put_env(:iex, :colors, [enabled: true])\nh(#{exp})", [], __ENV__)
-      IO.puts "DOC-END-MARKER"
     end
   end
 
