@@ -131,6 +131,9 @@
 
 ;; (rplacd (assoc 'y values) 201)
 
+;; kill-emacs-hook
+;; Kill running process before kill emacs
+
 (provide 'alchemist-server)
 
 ;;; alchemist-server.el ends here

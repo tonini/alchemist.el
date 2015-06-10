@@ -32,18 +32,10 @@
 
 ;; Variables
 
-(defcustom alchemist-help-ansi-color-docs t
-  "If t, `alchemist-help' will present ansi colored documentation."
-  :type 'boolean
-  :group 'alchemist-help)
-
 (defcustom alchemist-help-buffer-name "*elixir help*"
   "Name of the Elixir help buffer."
   :type 'string
   :group 'alchemist-help)
-
-(defvar alchemist-help-mix-run-command "mix run"
-  "The shell command for 'mix run'.")
 
 (defvar alchemist-help-search-history '()
   "Storage for the search history.")
@@ -58,12 +50,6 @@
   "Fontface for the letter keys in the summary."
   :group 'alchemist-help)
 
-(defun alchemist-help--load-ansi-color-setting ()
-  (let ((config (gethash "ansi-color-docs" (alchemist-project-config))))
-    (if config
-        (intern config)
-      alchemist-help-ansi-color-docs)))
-
 (defun alchemist-help--exp-at-point ()
   "Return the expression under the cursor."
   (let (p1 p2)
@@ -73,15 +59,6 @@
       (skip-chars-forward "-_A-Za-z0-9.?!:")
       (setq p2 (point))
       (buffer-substring-no-properties p1 p2))))
-
-(defun alchemist-help--start-help-process (exp callback)
-  (let* ((buffer (get-buffer-create "alchemist-help-buffer"))
-         (command (alchemist-help--eval-string-command (alchemist-help--build-code-for-search exp)))
-         (proc (start-process-shell-command "alchemist-help-proc" buffer command)))
-    (set-process-sentinel proc (lambda (process signal)
-                                 (when (equal signal "finished\n")
-                                   (funcall callback (alchemist-utils--get-buffer-content (process-buffer process))))
-                                 (alchemist-utils--erase-buffer (process-buffer process))))))
 
 (defun alchemist-help--execute (search)
   (alchemist-server-help-with-complete search))
@@ -94,25 +71,6 @@
   (setq alchemist-server--output nil)
   (set-process-filter (alchemist-server-process) #'alchemist-server-doc-filter)
   (process-send-string (alchemist-server-process) (format "DOC %s\n" search)))
-
-(defun alchemist-help--build-code-for-search (string)
-  (format "import IEx.Helpers
-
-Application.put_env(:iex, :colors, [enabled: %s])
-
-h(%s)" (if (alchemist-help--load-ansi-color-setting) "true" "false") string))
-
-(defun alchemist-help--eval-string-command (string)
-  (when (alchemist-project-p)
-    (alchemist-project--establish-root-directory))
-  (let* ((compile-option (if (and (alchemist-project-p)
-                                  (alchemist-project--load-compile-when-needed-setting))
-                             ""
-                           "--no-compile"))
-         (command (if (alchemist-project-p)
-                      (format "%s %s -e \"%s\"" alchemist-help-mix-run-command compile-option string)
-                    (format "%s -e \"%s\"" alchemist-execute-command string))))
-    command))
 
 (defun alchemist-help--bad-search-output-p (string)
   (let ((match (or (string-match-p "No documentation for " string)
@@ -183,41 +141,7 @@ Argument END where the mark ends."
          (modules (delete nil modules))
          (modules (cl-sort modules 'string-lessp :key 'downcase))
          (modules (delete-dups modules)))
-    modules)
-  )
-
-(defun alchemist-help--get-modules ()
-  (let* ((elixir-code "
-defmodule AlchemistModule do
-  def get_modules do
-    modules = Enum.map(:code.all_loaded, fn({m, _}) -> Atom.to_string(m) end)
-
-    if :code.get_mode() === :interactive do
-      modules ++ get_modules_from_applications()
-    else
-      modules
-    end
-  end
-
-  defp get_modules_from_applications do
-    for {app, _, _} <- :application.loaded_applications,
-        {_, modules} = :application.get_key(app, :modules),
-             module <- modules,
-             has_doc = Code.get_docs(module, :moduledoc), elem(has_doc, 1) do
-      Atom.to_string(module)
-    end
-  end
-end
-
-AlchemistModule.get_modules |> Enum.map &IO.puts/1
-")
-         (command (if (alchemist-project-p)
-                      (format "%s -e \"%s\"" alchemist-help-mix-run-command elixir-code)
-                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code))))
-    (when (alchemist-project-p)
-
-      (alchemist-project--establish-root-directory))
-    (alchemist-help--elixir-modules-to-list (shell-command-to-string command))))
+    modules))
 
 (defvar alchemist-help-minor-mode-map
   (let ((map (make-sparse-keymap)))
