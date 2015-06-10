@@ -1,4 +1,4 @@
-;;; alchemist-server.el ---
+;;; alchemist-server.el --- -*- lexical-binding: t -*-
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -62,7 +62,9 @@
 (defun alchemist-server-doc-filter (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-DOC$" output)
-      (alchemist-help--initialize-buffer (apply #'concat (reverse alchemist-server--output)))))
+      (let* ((string (apply #'concat (reverse alchemist-server--output)))
+             (string (replace-regexp-in-string "END-OF-DOC$" "" string)))
+        (alchemist-help--initialize-buffer string))))
 
 (defun alchemist-server-complete-canidates-filter (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
@@ -74,12 +76,36 @@
             (candidates (alchemist-complete--build-candidates candidates)))
         (funcall alchemist-server-company-callback candidates))))
 
+(defun alchemist-server-complete-filter (process output)
+  (setq alchemist-server--output (cons output alchemist-server--output))
+  (if (string-match "END-OF-COMPLETE$" output)
+      (let* ((string (apply #'concat (reverse alchemist-server--output)))
+            (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
+            (candidates (alchemist-complete--output-to-list
+                         (alchemist--utils-clear-ansi-sequences string))))
+        (funcall alchemist-server-help-callback candidates))))
+
 (defun alchemist-server-complete-candidates (exp)
   (setq alchemist-server--output nil)
   (unless (alchemist-server-process-p)
     (alchemist-server-start))
   (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter)
   (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" exp)))
+
+(defun alchemist-server-help-with-complete (search)
+  (setq alchemist-server--output nil)
+  (unless (alchemist-server-process-p)
+    (alchemist-server-start))
+  (setq alchemist-server-help-callback (lambda (candidates)
+                                         (if candidates
+                                             (let* ((search (alchemist-complete--completing-prompt search candidates)))
+                                               (setq alchemist-help-current-search-text search)
+                                               (setq alchemist-server--output nil)
+                                               (set-process-filter (alchemist-server-process) #'alchemist-server-doc-filter)
+                                               (process-send-string (alchemist-server-process) (format "DOC %s\n" search))))
+                                         (message "No documentation found for '%s'" search)))
+  (set-process-filter (alchemist-server-process) #'alchemist-server-complete-filter)
+  (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" search)))
 
 ;; (rplacd (assoc 'y values) 201)
 

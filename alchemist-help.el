@@ -84,17 +84,7 @@
                                  (alchemist-utils--erase-buffer (process-buffer process))))))
 
 (defun alchemist-help--execute (search)
-  (let ((last-directory default-directory)
-        (last-buffer (current-buffer)))
-    (alchemist-complete search (lambda (candidates)
-                                 (if candidates
-                                     (let* ((search (alchemist-complete--completing-prompt search candidates)))
-                                       (setq alchemist-help-current-search-text search)
-                                       (alchemist-help--start-help-process search (lambda (output)
-                                                                                    (alchemist-help--initialize-buffer output)
-                                                                                    (with-current-buffer last-buffer
-                                                                                      (cd last-directory)))))
-                                   (message "No documentation found for '%s'" search))))))
+  (alchemist-server-help-with-complete search))
 
 (defun alchemist-help--execute-without-complete (search)
   (setq alchemist-help-current-search-text search)
