@@ -43,7 +43,14 @@
                                 process-name))
            (process (start-process-shell-command process-name "*alchemist-server*" alchemist-server-command)))
       (set-process-query-on-exit-flag process nil)
-      (add-to-list 'alchemist-server-processes (cons process-name process)))))
+      (alchemist-server--store-process process))))
+
+(defun alchemist-server--store-process (process)
+  (let ((process-name (alchemist-server-process-name)))
+    (if (cdr (assoc process-name alchemist-server-processes))
+        (setq alchemist-server-processes
+              (delq (assoc process-name alchemist-server-processes) alchemist-server-processes)))
+    (add-to-list 'alchemist-server-processes (cons process-name process))))
 
 (defun alchemist-server-process-p ()
   (process-live-p (alchemist-server-process)))
