@@ -114,7 +114,7 @@
   (unless (alchemist-server-process-p)
     (alchemist-server-start))
   (setq alchemist-server-goto-callback (lambda (file)
-                                         (cond ((equal file nil)
+                                         (cond ((alchemist-utils--empty-string-p file)
                                                 (message "Don't know how to find: %s" expr))
                                                ((file-exists-p file)
                                                 (alchemist-goto--open-file file module function))

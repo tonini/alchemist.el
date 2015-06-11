@@ -83,6 +83,10 @@ It walks the directory tree until it finds a elixir project root indicator."
   "Check wether the visited file is a test file."
   (string-match "_test\.exs$" (or (buffer-file-name) "")))
 
+(defun alchemist-utils--empty-string-p (string)
+  (or (null string)
+      (string= (s-trim string) "")))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
