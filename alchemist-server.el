@@ -41,6 +41,7 @@
                                 default-directory
                               process-name))
          (process (start-process-shell-command process-name "*alchemist-server*" alchemist-server-command)))
+    (message "Starting an Alchemist server for: %s" process-name)
     (set-process-query-on-exit-flag process nil)
     (add-to-list 'alchemist-server-processes (cons process-name process))))
 
@@ -56,6 +57,14 @@
                            process-name
                          "alchemist-server")))
     process-name))
+
+(defun alchemist-server-eval-filter (process output)
+  (setq alchemist-server--output (cons output alchemist-server--output))
+  (if (string-match "END-OF-EVAL$" output)
+      (let* ((output (apply #'concat (reverse alchemist-server--output)))
+             (output (replace-regexp-in-string "END-OF-EVAL" "" output))
+             (output (replace-regexp-in-string "\n$" "" output)))
+        (funcall alchemist-server-eval-callback output))))
 
 (defun alchemist-server-doc-filter (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
@@ -144,6 +153,24 @@
     (alchemist-server-start))
   (set-process-filter (alchemist-server-process) #'alchemist-server-help-complete-modules-filter)
   (process-send-string (alchemist-server-process) "MODULES\n"))
+
+(defun alchemist-server-eval (exp)
+  (setq alchemist-server--output nil)
+  (unless (alchemist-server-process-p)
+    (alchemist-server-start))
+  (setq alchemist-server-eval-callback (lambda (string)
+                                         (message "%s" string)))
+  (set-process-filter (alchemist-server-process) #'alchemist-server-eval-filter)
+  (process-send-string (alchemist-server-process) (format "EVAL %s\n" exp)))
+
+(defun alchemist-server-eval-and-insert (exp)
+  (setq alchemist-server--output nil)
+  (unless (alchemist-server-process-p)
+    (alchemist-server-start))
+  (setq alchemist-server-eval-callback (lambda (string)
+                                         (alchemist-eval--insert string)))
+  (set-process-filter (alchemist-server-process) #'alchemist-server-eval-filter)
+  (process-send-string (alchemist-server-process) (format "EVAL %s\n" exp)))
 
 (defun alchemist-server-complete-candidates (exp)
   (setq alchemist-server--output nil)

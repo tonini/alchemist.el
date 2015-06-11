@@ -93,6 +93,20 @@ defmodule Alchemist do
     end
   end
 
+  defmodule Eval do
+    def expression(file) do
+      try do
+        File.read!("#{file}")
+        |> Code.eval_string
+        |> Tuple.to_list
+        |> List.first
+        |> IO.inspect
+      rescue
+        e -> IO.inspect e
+      end
+    end
+  end
+
   defmodule Server do
     def start([env]) do
       # Preload Enum so we load basic Elixir/Erlang code
@@ -125,6 +139,9 @@ defmodule Alchemist do
         ["MODULES"] ->
             Modules.get_modules
             IO.puts "END-OF-MODULES"
+        ["EVAL", exp] ->
+            Eval.expression(exp)
+            IO.puts "END-OF-EVAL"
         ["SOURCE", exp] ->
           [module, function] = String.split(exp, ",", parts: 2)
           module = String.to_char_list module
