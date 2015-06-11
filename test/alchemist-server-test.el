@@ -27,6 +27,7 @@
 
 (ert-deftest not-inside-project/start-default-server ()
   (alchemist-server-start)
+  (sleep-for 1)
   (should (string= "alchemist-server"
                    (process-name (alchemist-server-process))))
   (should (string= "run"
