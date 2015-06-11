@@ -36,13 +36,14 @@
   (format "elixir %s %s" alchemist-server alchemist-server-env))
 
 (defun alchemist-server-start ()
-  (let* ((process-name (alchemist-server-process-name))
-         (default-directory (if (string= process-name "alchemist-server")
-                                default-directory
-                              process-name))
-         (process (start-process-shell-command process-name "*alchemist-server*" alchemist-server-command)))
-    (set-process-query-on-exit-flag process nil)
-    (add-to-list 'alchemist-server-processes (cons process-name process))))
+  (unless (alchemist-server-process-p)
+    (let* ((process-name (alchemist-server-process-name))
+           (default-directory (if (string= process-name "alchemist-server")
+                                  default-directory
+                                process-name))
+           (process (start-process-shell-command process-name "*alchemist-server*" alchemist-server-command)))
+      (set-process-query-on-exit-flag process nil)
+      (add-to-list 'alchemist-server-processes (cons process-name process)))))
 
 (defun alchemist-server-process-p ()
   (process-live-p (alchemist-server-process)))
@@ -127,8 +128,7 @@
 
 (defun alchemist-server-goto (module function expr)
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (setq alchemist-server-goto-callback (lambda (file)
                                          (cond ((alchemist-utils--empty-string-p file)
                                                 (message "Don't know how to find: %s" expr))
@@ -156,15 +156,13 @@
 
 (defun alchemist-server-help ()
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (set-process-filter (alchemist-server-process) #'alchemist-server-help-complete-modules-filter)
   (process-send-string (alchemist-server-process) "MODULES\n"))
 
 (defun alchemist-server-eval (exp)
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (setq alchemist-server-eval-callback (lambda (string)
                                          (message "%s" string)))
   (set-process-filter (alchemist-server-process) #'alchemist-server-eval-filter)
@@ -172,8 +170,7 @@
 
 (defun alchemist-server-eval-and-insert (exp)
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (setq alchemist-server-eval-callback (lambda (string)
                                          (alchemist-eval--insert string)))
   (set-process-filter (alchemist-server-process) #'alchemist-server-eval-filter)
@@ -181,8 +178,7 @@
 
 (defun alchemist-server-eval-quote (exp)
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (setq alchemist-server-eval-callback (lambda (string)
                                          (message "%s" string)))
   (set-process-filter (alchemist-server-process) #'alchemist-server-eval-quoted-filter)
@@ -190,8 +186,7 @@
 
 (defun alchemist-server-eval-quote-and-insert (exp)
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (setq alchemist-server-eval-callback (lambda (string)
                                          (alchemist-eval--insert string)))
   (set-process-filter (alchemist-server-process) #'alchemist-server-eval-quoted-filter)
@@ -199,15 +194,13 @@
 
 (defun alchemist-server-complete-candidates (exp)
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter)
   (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" exp)))
 
 (defun alchemist-server-help-with-complete (search)
   (setq alchemist-server--output nil)
-  (unless (alchemist-server-process-p)
-    (alchemist-server-start))
+  (alchemist-server-start)
   (setq alchemist-server-help-callback (lambda (candidates)
                                          (if candidates
                                              (let* ((search (alchemist-complete--completing-prompt search candidates)))
