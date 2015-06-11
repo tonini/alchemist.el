@@ -49,26 +49,6 @@
                   "** (CompileError) nofile:5:")
                  t)))
 
-(ert-deftest test-load-config/ansi-color ()
-  "Should test different cases how ansi-color is set."
-  (should (equal (alchemist-help--load-ansi-color-setting)
-                 t))
-  (with-current-variable alchemist-help-ansi-color-docs t
-                         (should (equal (alchemist-help--load-ansi-color-setting) t)))
-  (with-sandbox
-   (f-touch ".alchemist")
-   (f-touch "mix.exs")
-   (f-write "{
-  \"ansi-color-docs\": \"t\"
-}" 'utf-8 ".alchemist")
-   (should (equal (alchemist-help--load-ansi-color-setting) t)))
-  (with-sandbox
-   (f-touch ".alchemist")
-   (f-touch "mix.exs")
-   (f-write "{
-}" 'utf-8 ".alchemist")
-   (should (equal (alchemist-help--load-ansi-color-setting) t))))
-
 (provide 'alchemist-help-tests)
 
 ;;; alchemist-help-tests.el ends here

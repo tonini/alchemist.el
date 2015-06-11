@@ -90,34 +90,4 @@
    (should (equal (file-name-nondirectory (buffer-file-name))
                   "other_file_test.exs"))))
 
-(ert-deftest test-project-config/return-config ()
-  "Should return a hash-table with the config."
-  (with-sandbox
-   (f-touch ".alchemist")
-   (f-touch "mix.exs")
-   (f-write "{
-  \"compile-when-needed\": \"t\"
-}" 'utf-8 ".alchemist")
-   (should (equal (gethash "compile-when-needed" (alchemist-project-config))
-                  "t"))))
-
-(ert-deftest test-project-config/return-nil ()
-  "Should return empty hash-table if no config exists."
-  (with-sandbox
-   (f-touch "mix.exs")
-   (should (equal (gethash "ansi-color-docs" (alchemist-project-config))
-                  nil))))
-
-(ert-deftest test-project-variable/toggle-compilation ()
-  "Test toggle function to enable/disable the compilation for
-for Elixir project when needed."
-  (with-current-variable alchemist-project-compile-when-needed nil
-                         (alchemist-project-toggle-compile-when-needed)
-                         (should (eq alchemist-project-compile-when-needed
-                                     t)))
-  (with-current-variable alchemist-project-compile-when-needed t
-                         (alchemist-project-toggle-compile-when-needed)
-                         (should (eq alchemist-project-compile-when-needed
-                                     nil))))
-
 (provide 'alchemist-project-tests)
