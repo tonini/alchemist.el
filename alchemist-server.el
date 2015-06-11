@@ -41,7 +41,6 @@
                                 default-directory
                               process-name))
          (process (start-process-shell-command process-name "*alchemist-server*" alchemist-server-command)))
-    (message "Starting an Alchemist server for: %s" process-name)
     (set-process-query-on-exit-flag process nil)
     (add-to-list 'alchemist-server-processes (cons process-name process))))
 
