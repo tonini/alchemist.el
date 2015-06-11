@@ -73,21 +73,6 @@
       (cd old-directory)
       (alchemist-utils--remove-newline-at-end output))))
 
-(defun alchemist-eval--build-code-evaluation-command (file)
-  (format "%s -e 'IO.inspect(elem(Code.eval_string(File.read!(\"%s\")), 0))'"
-          (alchemist-eval--runner)
-          file))
-
-(defun alchemist-eval--build-code-evaluation-as-quoted-command (file)
-  (format "%s -e 'IO.puts inspect(elem(Code.string_to_quoted(File.read!(\"%s\")), 1), pretty: true)'"
-          (alchemist-eval--runner)
-          file))
-
-(defun alchemist-eval--runner ()
-  (if (alchemist-project-p)
-      (format "%s run --no-compile" alchemist-mix-command)
-    alchemist-execute-command))
-
 (defun alchemist-eval--expression (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
@@ -99,6 +84,18 @@
     (with-temp-file file
       (insert expression))
     (alchemist-server-eval-and-insert file)))
+
+(defun alchemist-eval--quote-expression (expression)
+  (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
+    (with-temp-file file
+      (insert expression))
+    (alchemist-server-eval-quote file)))
+
+(defun alchemist-eval--quote-expression-and-print (expression)
+  (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
+    (with-temp-file file
+      (insert expression))
+    (alchemist-server-eval-quote-and-insert file)))
 
 ;; Public functions
 
@@ -146,14 +143,12 @@
 (defun alchemist-eval-quoted-current-line ()
   "Get the Elixir code representation of the expression on the current line."
   (interactive)
-  (let ((current-line (thing-at-point 'line)))
-    (message (alchemist-eval--evaluate-code-as-quoted current-line))))
+  (alchemist-eval--quote-expression (thing-at-point 'line)))
 
 (defun alchemist-eval-print-quoted-current-line ()
   "Get the Elixir code representation of the expression on the current line and insert the result."
   (interactive)
-  (let ((current-line (thing-at-point 'line)))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted current-line))))
+  (alchemist-eval--quote-expression-and-print (thing-at-point 'line)))
 
 (defun alchemist-eval-quoted-region (beg end)
   "Get the Elixir code representation of the expression on marked region."
@@ -161,7 +156,7 @@
   (unless (and beg end)
     (error "The mark is not set now, so there is no region"))
   (let ((string (buffer-substring-no-properties beg end)))
-    (message (alchemist-eval--evaluate-code-as-quoted string))))
+    (alchemist-eval--quote-expression string)))
 
 (defun alchemist-eval-print-quoted-region (beg end)
   "Get the Elixir code representation of the expression on marked region and insert the result."
@@ -171,19 +166,19 @@
   (let ((string (buffer-substring-no-properties beg end)))
     (when (> end beg)
       (exchange-point-and-mark))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted string))))
+    (alchemist-eval--quote-expression-and-print string)))
 
 (defun alchemist-eval-quoted-buffer ()
   "Get the Elixir code representation of the expression in the current buffer."
   (interactive)
   (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (message (alchemist-eval--evaluate-code-as-quoted string))))
+    (alchemist-eval--quote-expression string)))
 
 (defun alchemist-eval-print-quoted-buffer ()
   "Get the Elixir code representation of the expression in the current buffer and insert result."
   (interactive)
   (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (alchemist-eval--insert (alchemist-eval--evaluate-code-as-quoted string))))
+    (alchemist-eval--quote-expression-and-print string)))
 
 (provide 'alchemist-eval)
 

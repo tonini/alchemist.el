@@ -107,6 +107,20 @@ defmodule Alchemist do
     end
   end
 
+  defmodule Quote do
+    def expression(file) do
+      try do
+        File.read!("#{file}")
+        |> Code.string_to_quoted
+        |> Tuple.to_list
+        |> List.last
+        |> IO.inspect
+      rescue
+        e -> IO.inspect e
+      end
+    end
+  end
+
   defmodule Server do
     def start([env]) do
       # Preload Enum so we load basic Elixir/Erlang code
@@ -142,6 +156,9 @@ defmodule Alchemist do
         ["EVAL", exp] ->
             Eval.expression(exp)
             IO.puts "END-OF-EVAL"
+        ["QUOTE", exp] ->
+            Quote.expression(exp)
+            IO.puts "END-OF-QUOTE"
         ["SOURCE", exp] ->
           [module, function] = String.split(exp, ",", parts: 2)
           module = String.to_char_list module
