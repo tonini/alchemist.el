@@ -3,9 +3,6 @@ otp_release:
   - 17.0
 cache: apt
 env:
-  - EVM_EMACS=emacs-24.1-bin
-  - EVM_EMACS=emacs-24.2-bin
-  - EVM_EMACS=emacs-24.3-bin
   - EVM_EMACS=emacs-24.4-bin
 before_install:
   - wget http://s3.hex.pm/builds/elixir/v1.0.0.zip
