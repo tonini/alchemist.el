@@ -146,6 +146,17 @@ defmodule Phoenix.Router do
 end")
                    (alchemist-goto--alises-of-current-buffer)))))
 
+(ert-deftest match-functions-inside-buffer ()
+  (should (string-match-p (alchemist-gogo--symbol-definition-regex "cwd!")
+                          "  def cwd! do"))
+  (should (string-match-p (alchemist-gogo--symbol-definition-regex "delete")
+                          "  def delete(list, item) do"))
+  (should (string-match-p (alchemist-gogo--symbol-definition-regex "do_zip")
+                          "  defp do_zip(list, acc) do"))
+  (should (string-match-p (alchemist-gogo--symbol-definition-regex "keymember?")
+                          "  def keymember?(list, key, position) do"))
+  (should (string-match-p (alchemist-gogo--symbol-definition-regex "has_key?")
+                          "  def has_key?(map, key), do: :maps.is_key(key, map)")))
 (provide 'alchemist-goto-test)
 
 ;;; alchemist-goto-test.el ends here

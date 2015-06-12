@@ -236,9 +236,12 @@ It will jump to the position of the symbol definition after selection."
           ((alchemist-goto--erlang-file-p file)
            (alchemist-goto--jump-to-erlang-source module function)))))
 
+(defun alchemist-gogo--symbol-definition-regex (symbol)
+  (format "^\s+\\(defp?\s+%s\(?\\|defmacrop?\s+%s\?(\\)" symbol symbol))
+
 (defun alchemist-goto--jump-to-elixir-source (module function)
   (let ((function (replace-regexp-in-string "\?" "\\?" function)))
-    (when (re-search-forward (format "^\s+\\(defp?\s+%s\(?\\|defmacrop?\s+%s\?(\\)" function function) nil t)
+    (when (re-search-forward (alchemist-gogo--symbol-definition-regex function) nil t)
       (goto-char (match-beginning 0)))
     (when (re-search-forward (format "\\(defmodule\\|defimpl\\|defprotocol\\)\s+%s\s+do" module) nil t)
       (goto-char (match-beginning 0)))))
