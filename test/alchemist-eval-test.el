@@ -50,7 +50,7 @@
                                           (insert "1 + 1")
                                           (goto-char (point-min))
                                           (alchemist-eval-current-line)
-                                          (wait 1))))))
+                                          (wait 3))))))
 
 (ert-deftest evaluate-code-of-current-line-and-print-inline ()
   "Evalute code on current line and print result inline."
@@ -59,7 +59,7 @@
                                    (insert "1 + 1")
                                    (goto-char (point-min))
                                    (alchemist-eval-print-current-line)
-                                   (wait 1)
+                                   (wait 3)
                                    (buffer-substring-no-properties (point-min) (point-max))))))
 
 
@@ -71,7 +71,7 @@
                                                     b = 2
                                                     a + b")
                                            (alchemist-eval-region (point-min) (point-max))
-                                           (wait 1))))))
+                                           (wait 3))))))
 
 (ert-deftest evaluate-code-of-marked-region-and-print-inline ()
   "Evalute code on region and print result inline."
@@ -88,7 +88,7 @@ a = 10
 b = 2
 a + b")
              (alchemist-eval-print-region (point-max) (point-min))
-             (wait 1)
+             (wait 3)
              (buffer-substring-no-properties (point-min) (point-max))))))
 
 ;; The following two tests doesn't work, and I have no clue why.
