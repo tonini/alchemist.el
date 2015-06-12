@@ -256,7 +256,7 @@ It will jump to the position of the symbol definition after selection."
   (let* ((aliases '()))
     (save-excursion
       (goto-char (point-min))
-      (while (re-search-forward "^\s+alias\s+\\([-_A-Za-z0-9,\.\?!\]+\\)\\(\s*,\s*as:\s*\\)?\\([-_A-Za-z0-9,\.\?!\]+\\)?\n" nil t)
+      (while (re-search-forward "^\s+alias\s+\\([-:_A-Za-z0-9,\.\?!\]+\\)\\(\s*,\s*as:\s*\\)?\\([-_A-Za-z0-9,\.\?!\]+\\)?\n" nil t)
         (let* ((alias (match-string 1))
                (as (if (match-string 3) (match-string 3) nil))
                (as (if as as (car (last (split-string alias "\\."))))))
