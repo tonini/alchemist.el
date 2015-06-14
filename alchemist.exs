@@ -189,8 +189,14 @@ defmodule Alchemist do
           IO.puts "END-OF-COMPLETE"
         ["COMPLETE-WITH-CONTEXT", exp] ->
           [hint, modules] = String.split(exp, ",", parts: 2)
-          Function.get_functions(modules, hint) ++ Autocomplete.expand(hint)
+          {modules, _} = Code.eval_string(modules)
+
+          Autocomplete.expand(hint)
           |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
+          Enum.each modules, fn(module) ->
+            Function.get_functions(module, hint)
+            |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
+          end
           IO.puts "END-OF-COMPLETE-WITH-CONTEXT"
         ["COMPLETE"] ->
           Autocomplete.expand('') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
@@ -215,8 +221,8 @@ defmodule Alchemist do
           IO.puts "END-OF-SOURCE"
         _ ->
           nil
+      end
     end
-  end
 
     defp all_loaded() do
       for {m,_} <- :code.all_loaded, do: m

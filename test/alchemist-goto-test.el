@@ -120,6 +120,75 @@
   (should (equal (alchemist-goto--extract-symbol "defmacro __using__(_) do")
                  "defmacro __using__(_)")))
 
+(ert-deftest get-use-modules-in-the-current-module-context ()
+  (should (equal '("GenServer" "Behaviour")
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  use GenServer
+  use Behaviour
+
+end")
+                   (goto-line 6)
+                   (alchemist-goto--use-modules-in-the-current-module-context)))))
+
+(ert-deftest get-use-modules-in-the-current-module-context/nested-modules ()
+  (should (equal '("Macro")
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  use GenServer
+  use Behaviour
+
+  defmodule Parser do
+
+    use Macro
+
+  end
+
+end")
+                   (goto-line 10)
+                   (alchemist-goto--use-modules-in-the-current-module-context)))))
+
+
+(ert-deftest get-import-modules-in-the-current-module-context ()
+  (should (equal '("Test" "ExUnit")
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  import Test
+  import ExUnit
+
+end")
+                   (goto-line 6)
+                   (alchemist-goto--import-modules-in-the-current-module-context)))))
+
+(ert-deftest get-import-modules-in-the-current-module-context/nested-modules ()
+  (should (equal '("Love")
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  import Test
+  import ExUnit
+
+  defmodule Parser do
+
+    import Love
+
+  end
+
+end")
+                   (goto-line 10)
+                   (alchemist-goto--import-modules-in-the-current-module-context)))))
+
 (ert-deftest get-aliases-of-an-elixir-module ()
   (should (equal (list '("Phoenix.Router.Resource" "Special")
                        '("Phoenix.Router.Scope" "Scope"))

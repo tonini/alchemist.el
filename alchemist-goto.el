@@ -65,6 +65,30 @@ declaration has been found."
             (setq found-flag-p t)))
         module-name))))
 
+(defun alchemist-goto--use-modules-in-the-current-module-context ()
+  (let ((modules '())
+        (context (alchemist-goto--current-module-name)))
+    (save-excursion
+      (while (re-search-backward "^\s+use\s+\\([A-Za-z0-9]+\\)" nil t)
+        (if (and (match-string 1)
+                 (not (alchemist-goto--string-at-point-p))
+                 (equal context (alchemist-goto--current-module-name)))
+            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))
+            ))
+      modules)))
+
+(defun alchemist-goto--import-modules-in-the-current-module-context ()
+  (let ((modules '())
+        (context (alchemist-goto--current-module-name)))
+    (save-excursion
+      (while (re-search-backward "^\s+import\s+\\([A-Za-z0-9]+\\)" nil t)
+        (if (and (match-string 1)
+                 (not (alchemist-goto--string-at-point-p))
+                 (equal context (alchemist-goto--current-module-name)))
+            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))
+            ))
+    modules)))
+
 (defun alchemist-goto--extract-module (code)
   "Extract module from CODE."
   (let* ((parts (split-string code "\\."))
@@ -283,6 +307,8 @@ It will jump to the position of the symbol definition after selection."
     (goto-char (match-beginning 0)))
   (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
     (goto-char (match-beginning 0))))
+
+
 
 (defun alchemist-goto--alises-of-current-buffer ()
   (let* ((aliases '()))
