@@ -44,6 +44,9 @@
 
 (defun alchemist-complete--build-candidates (a-list)
   (let* ((search-term (car a-list))
+         (candidates (if (string-match-p "^.+\/" search-term)
+                         a-list
+                       (cdr a-list)))
          (candidates (mapcar (lambda (f)
                                (let* ((candidate f)
                                       (meta (if (string-match-p "^.+/" f)
@@ -57,7 +60,7 @@
                                    (propertize (alchemist-complete--add-prefix-to-function search-term
                                                                                            (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta))
                                   (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
-                             (cdr a-list))))
+                             candidates)))
     candidates))
 
 (defun alchemist-complete--build-help-candidates (a-list)

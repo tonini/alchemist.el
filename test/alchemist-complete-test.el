@@ -47,7 +47,10 @@ cmp:to_string/1")
   (should (equal (alchemist-complete--build-candidates '(":file" "filename" "file_server" "file_io_server"))
                  '(":filename" ":file_server" ":file_io_server")))
   (should (equal (alchemist-complete--build-candidates '(":file." "pid2name/1" "set_cwd/1" "rename/2"))
-                 '(":file.pid2name" ":file.set_cwd" ":file.rename"))))
+                 '(":file.pid2name" ":file.set_cwd" ":file.rename")))
+  (should (equal (alchemist-complete--build-candidates '("pid2name/1"))
+                 '("pid2name")))
+  )
 
 (ert-deftest test-complete-candidates/build-help-candidates ()
   "Build a candidates list"

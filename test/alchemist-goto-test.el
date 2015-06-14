@@ -168,6 +168,74 @@ end")
   (should (string-match-p (alchemist-gogo--symbol-definition-regex "read")
                           "  defmacro read(source) do")))
 
+(ert-deftest get-current-module-name ()
+  (should (equal "Phoenix.Router"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  defmacro scope(path, options, do: context) do
+    options = quote do
+      path = unquote(path)
+      case unquote(options) do
+        alias when is_atom(alias) -> [path: path, alias: alias]
+        options when is_list(options) -> Keyword.put(options, :path, path)
+      end
+    end
+    do_scope(options, context)
+  end
+
+end")
+                   (goto-line 6)
+                   (alchemist-goto--current-module-name)))))
+
+(ert-deftest get-current-module-name/skip-heredoc ()
+  (should (equal "Module.Name"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Module.Name do
+
+  @moduledoc \"\"\"
+  ## Examples
+
+  Phoenix defines the view template at `web/web.ex`:
+
+      defmodule YourApp.Web do
+        def view do
+          quote do
+            use Phoenix.View, root: \"web/templates\"
+
+            # Import common functionality
+            import YourApp.Router.Helpers
+
+            # Use Phoenix.HTML to import all HTML functions (forms, tags, etc)
+            use Phoenix.HTML
+          end
+        end
+
+        # ...
+      end
+  \"\"\"
+
+end")
+                   (goto-line 12)
+                   (alchemist-goto--current-module-name)))))
+
+(ert-deftest get-current-module-name/nested-modules ()
+  (should (equal "Inside"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Outside do
+  defmodule Inside do
+
+  end
+end")
+                   (goto-line 4)
+                   (alchemist-goto--current-module-name)))))
+
 (provide 'alchemist-goto-test)
 
 ;;; alchemist-goto-test.el ends here

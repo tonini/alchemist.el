@@ -90,13 +90,29 @@
 
 (defun alchemist-server-complete-canidates-filter (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-COMPLETE$" output)
+  (unless (alchemist-utils--empty-string-p output)
+    (if (string-match "END-OF-COMPLETE$" output)
       (let* ((string (apply #'concat (reverse alchemist-server--output)))
              (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
              (candidates (alchemist-complete--output-to-list
                           (alchemist--utils-clear-ansi-sequences string)))
              (candidates (alchemist-complete--build-candidates candidates)))
+        (funcall alchemist-server-company-callback candidates)))))
+
+(defun alchemist-server-complete-canidates-filter-with-context (process output)
+  (setq alchemist-server--output (cons output alchemist-server--output))
+  (if (string-match "END-OF-COMPLETE-WITH-CONTEXT$" output)
+      (let* ((string (apply #'concat (reverse alchemist-server--output)))
+             (string (replace-regexp-in-string "END-OF-COMPLETE-WITH-CONTEXT$" "" string))
+             (candidates (if (not (alchemist-utils--empty-string-p string))
+                             (alchemist-complete--output-to-list
+                              (alchemist--utils-clear-ansi-sequences string))
+                           '()))
+             (candidates (if candidates
+                             (alchemist-complete--build-candidates candidates)
+                           '())))
         (funcall alchemist-server-company-callback candidates))))
+
 
 (defun alchemist-server-complete-filter (process output)
   (with-local-quit
@@ -203,7 +219,17 @@
   (setq alchemist-server--output nil)
   (alchemist-server-start)
   (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter)
-  (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" exp)))
+  (let ((module (alchemist-goto--current-module-name)))
+    (if (alchemist-utils--empty-string-p module)
+        (progn
+          (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter)
+          (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" exp))
+          )
+      (progn
+        (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter-with-context)
+        (process-send-string (alchemist-server-process) (format "COMPLETE-WITH-CONTEXT %s,%s\n" exp module))
+        )
+      )))
 
 (defun alchemist-server-help-with-complete (search)
   (setq alchemist-server--output nil)

@@ -2,6 +2,7 @@ defmodule Alchemist do
 
   defmodule Autocomplete do
     def expand(exp) do
+
       code = case is_bitstring(exp) do
                true -> exp |> String.to_char_list
                _ -> exp
@@ -14,6 +15,44 @@ defmodule Alchemist do
         { :yes, [], _ } -> List.insert_at(list, 0, exp)
         { :yes, _,  _ } -> expand(code ++ result)
       end
+    end
+  end
+
+  defmodule Function do
+    def get_functions(mod, hint) do
+      {mod, _} = Code.eval_string(mod)
+      falist = get_module_funs(mod)
+
+      list = Enum.reduce falist, [], fn({f, a}, acc) ->
+        case :lists.keyfind(f, 1, acc) do
+          {f, aa} -> :lists.keyreplace(f, 1, acc, {f, [a|aa]})
+          false -> [{f, [a]}|acc]
+        end
+      end
+
+      case hint do
+        "" ->
+          for {fun, arities} <- list,
+          name = Atom.to_string(fun) do
+            "#{name}/#{List.first(arities)}"
+          end |> :lists.sort()
+        _otherwise ->
+          for {fun, arities} <- list,
+          name = Atom.to_string(fun),
+          String.starts_with?(name, hint) do
+            "#{name}/#{List.first(arities)}"
+          end |> :lists.sort()
+      end
+    end
+
+    defp get_module_funs(mod) do
+      case Code.ensure_loaded(mod) do
+        {:module, _} ->
+          mod.module_info(:functions) ++ mod.__info__(:macros)
+        _otherwise ->
+          []
+      end
+
     end
   end
 
@@ -145,20 +184,29 @@ defmodule Alchemist do
     def read_input(line) do
       case line |> String.split(" ", parts: 2) do
         ["COMPLETE", exp] ->
-          Autocomplete.expand(exp) |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
+          Autocomplete.expand(exp)
+          |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
+          IO.puts "END-OF-COMPLETE"
+        ["COMPLETE-WITH-CONTEXT", exp] ->
+          [hint, modules] = String.split(exp, ",", parts: 2)
+          Function.get_functions(modules, hint) ++ Autocomplete.expand(hint)
+          |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
+          IO.puts "END-OF-COMPLETE-WITH-CONTEXT"
+        ["COMPLETE"] ->
+          Autocomplete.expand('') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
           IO.puts "END-OF-COMPLETE"
         ["DOC", exp] ->
-            Documentation.search(exp)
-            IO.puts "END-OF-DOC"
+          Documentation.search(exp)
+          IO.puts "END-OF-DOC"
         ["MODULES"] ->
-            Modules.get_modules
-            IO.puts "END-OF-MODULES"
+          Modules.get_modules
+          IO.puts "END-OF-MODULES"
         ["EVAL", exp] ->
-            Eval.expression(exp)
-            IO.puts "END-OF-EVAL"
+          Eval.expression(exp)
+          IO.puts "END-OF-EVAL"
         ["QUOTE", exp] ->
-            Quote.expression(exp)
-            IO.puts "END-OF-QUOTE"
+          Quote.expression(exp)
+          IO.puts "END-OF-QUOTE"
         ["SOURCE", exp] ->
           [module, function] = String.split(exp, ",", parts: 2)
           module = String.to_char_list module
@@ -167,8 +215,8 @@ defmodule Alchemist do
           IO.puts "END-OF-SOURCE"
         _ ->
           nil
-      end
     end
+  end
 
     defp all_loaded() do
       for {m,_} <- :code.all_loaded, do: m

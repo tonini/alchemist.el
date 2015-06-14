@@ -49,6 +49,22 @@
 (defvar alchemist-goto--symbol-list-bare '())
 (defvar alchemist-goto--symbol-name-and-pos-bare '())
 
+(defun alchemist-goto--current-module-name ()
+  "Searches backward in the current buffer until a module
+declaration has been found."
+  (save-excursion
+    (let ((found-flag-p nil)
+          (module-name ""))
+      (save-match-data
+        (while (not found-flag-p)
+          (when (and (re-search-backward "defmodule \\([A-Za-z\._]+\\)\s+" nil t)
+                     (not (alchemist-goto--string-at-point-p)))
+            (setq module-name (match-string 1))
+            (setq found-flag-p t))
+          (when (equal 1 (line-number-at-pos (point)))
+            (setq found-flag-p t)))
+        module-name))))
+
 (defun alchemist-goto--extract-module (code)
   "Extract module from CODE."
   (let* ((parts (split-string code "\\."))
@@ -101,18 +117,34 @@
         (car aliases)
       module)))
 
-(defun alchemist-goto--string-at-point-p ()
+(defun alchemist-goto--string-at-point-p (&optional complete)
   "Return non-nil if cursor is at a string."
+  (save-excursion
   (or (and (nth 3 (save-excursion
                     (let ((pos (point)))
-                      (end-of-buffer)
+                      (when complete
+                        (end-of-buffer))
                       (parse-partial-sexp 1 pos))))
-           (nth 8 (save-excursion (save-excursion
+           (nth 8 (save-excursion
                     (let ((pos (point)))
-                      (end-of-buffer)
-                      (parse-partial-sexp 1 pos))))))
+                      (when complete
+                        (end-of-buffer))
+                      (parse-partial-sexp 1 pos)))))
       (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
-           (match-beginning 0))))
+           (match-beginning 0)))))
+
+(defun alchemist-goto--string-at-current-point-p ()
+  "Return non-nil if cursor is at a string."
+  (save-excursion
+  (or (and (nth 3 (save-excursion
+                    (let ((pos (point)))
+                      (parse-partial-sexp 1 pos))))
+           (nth 8 (save-excursion
+                    (let ((pos (point)))
+                      (parse-partial-sexp 1 pos)))))
+      (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
+           (match-beginning 0)))))
+
 
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)
@@ -202,7 +234,7 @@ It will jump to the position of the symbol definition after selection."
       (let ()
         (save-match-data
           (while (re-search-forward regex nil t)
-            (when (not (alchemist-goto--string-at-point-p))
+            (when (not (alchemist-goto--string-at-point-p t))
               (when (alchemist-goto--get-symbol-from-position (car (match-data)))
                 (let* ((position (car (match-data)))
                        (symbol (alchemist-goto--get-symbol-from-position position))
