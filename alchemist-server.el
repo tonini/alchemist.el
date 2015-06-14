@@ -218,12 +218,15 @@
 (defun alchemist-server-complete-candidates (exp)
   (setq alchemist-server--output nil)
   (alchemist-server-start)
-  (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter)
+  (if (equal major-mode 'alchemist-iex-mode)
+      (alchemist-server--iex-complete exp)
+    (alchemist-server--complete-with-context exp)))
+
+(defun alchemist-server--complete-with-context (exp)
   (let* ((module (alchemist-goto--current-module-name))
          (modules '())
          (use-modules (alchemist-goto--use-modules-in-the-current-module-context))
-         (import-modules (alchemist-goto--import-modules-in-the-current-module-context))
-         )
+         (import-modules (alchemist-goto--import-modules-in-the-current-module-context)))
     (if (not (alchemist-utils--empty-string-p module))
         (push module modules))
     (push use-modules modules)
@@ -231,13 +234,14 @@
     (if (not modules)
         (progn
           (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter)
-          (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" exp))
-          )
+          (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" exp)))
       (progn
         (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter-with-context)
-        (process-send-string (alchemist-server-process) (format "COMPLETE-WITH-CONTEXT %s,[%s]\n" exp (mapconcat #'identity (alchemist-utils--flatten modules) ",")))
-        )
-      )))
+        (process-send-string (alchemist-server-process) (format "COMPLETE-WITH-CONTEXT %s,[%s]\n" exp (mapconcat #'identity (alchemist-utils--flatten modules) ",")))))))
+
+(defun alchemist-server--iex-complete (exp)
+  (set-process-filter (alchemist-server-process) #'alchemist-server-complete-canidates-filter)
+  (process-send-string (alchemist-server-process) (format "COMPLETE %s\n" exp)))
 
 (defun alchemist-server-help-with-complete (search)
   (setq alchemist-server--output nil)

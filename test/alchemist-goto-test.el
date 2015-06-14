@@ -135,7 +135,7 @@ end")
                    (alchemist-goto--use-modules-in-the-current-module-context)))))
 
 (ert-deftest get-use-modules-in-the-current-module-context/nested-modules ()
-  (should (equal '("Macro")
+  (should (equal '("Macro" "Nice.Macro")
                  (with-temp-buffer
                    (alchemist-mode)
                    (insert "
@@ -147,11 +147,11 @@ defmodule Phoenix.Router do
   defmodule Parser do
 
     use Macro
-
+    use Nice.Macro
   end
 
 end")
-                   (goto-line 10)
+                   (goto-line 12)
                    (alchemist-goto--use-modules-in-the-current-module-context)))))
 
 
@@ -164,6 +164,7 @@ defmodule Phoenix.Router do
 
   import Test
   import ExUnit
+  import Mix.Generator
 
 end")
                    (goto-line 6)

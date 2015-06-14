@@ -69,7 +69,7 @@ declaration has been found."
   (let ((modules '())
         (context (alchemist-goto--current-module-name)))
     (save-excursion
-      (while (re-search-backward "^\s+use\s+\\([A-Za-z0-9]+\\)" nil t)
+      (while (re-search-backward "^\s+use\s+\\([A-Za-z0-9\.]+\\)" nil t)
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
@@ -81,7 +81,7 @@ declaration has been found."
   (let ((modules '())
         (context (alchemist-goto--current-module-name)))
     (save-excursion
-      (while (re-search-backward "^\s+import\s+\\([A-Za-z0-9]+\\)" nil t)
+      (while (re-search-backward "^\s+import\s+\\([A-Za-z0-9\.]+\\)" nil t)
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
