@@ -298,7 +298,7 @@ There are the same keybindings for documentation lookup and definition opening f
 candidate available like [company-mode](http://company-mode.github.io/) [provides](https://github.com/company-mode/company-mode/blob/27c913afb9446971d1e0f1f3b272e5650a6206c5/company.el#L609).
 
 <kbd>C-h</kbd> and <kbd>\<f1\></kbd> for documentation lookup for the current selected candidate.
-<kbd>C-w</kbd> and <kbd>M-.</kbd> to jump to the definition of the current selected candidate.
+<kbd>C-w</kbd> to jump to the definition of the current selected candidate.
 
 ![Alchemist Completion Candidate Functionalities](logo/alchemist-company-doc-goto.gif)
 
