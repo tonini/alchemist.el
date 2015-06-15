@@ -113,7 +113,6 @@ Key bindings:
   (define-key map (kbd "h e") 'alchemist-help-search-at-point)
   (define-key map (kbd "h m") 'alchemist-help-search-marked-region)
   (define-key map (kbd "p f") 'alchemist-project-find-test)
-  (define-key map (kbd "p t") 'alchemist-project-open-tests-for-current-file)
   (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
   (define-key map (kbd "p o") 'alchemist-project-toggle-file-and-tests-other-window)
   (define-key map (kbd "i i") 'alchemist-iex-run)
@@ -204,7 +203,6 @@ Key bindings:
      ["IEx run" alchemist-iex-run])
     ("Project"
      ["Project find all tests" alchemist-project-find-test]
-     ["Project find tests for current file" alchemist-project-open-tests-for-current-file]
      ["Project toggle between file and test" alchemist-project-toggle-file-and-tests]
      ["Project toggle between file and test in other window" alchemist-project-toggle-file-and-tests-other-window]
      "---"

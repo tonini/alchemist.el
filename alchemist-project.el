@@ -90,11 +90,6 @@
          (filename (format "%s/%s" (alchemist-project-root) filename)))
     (funcall toggler filename)))
 
-(defun alchemist-project-open-tests-for-current-file ()
-  "Open the appropriate test file for the current buffer file in a new window."
-  (interactive)
-  (alchemist--project-open-tests-for-current-file 'find-file-other-window))
-
 (defun alchemist--project-open-tests-for-current-file (toggler)
   "Opens the appropriate test file by calling TOGGLER with filename."
   (let* ((filename (file-relative-name (buffer-file-name) (alchemist-project-root)))

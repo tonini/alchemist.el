@@ -16,6 +16,10 @@
     The functionality to open the doc and jumpt to location for the current selected completion candidate is now called through the proper company-mode functions.
   * [Goto] Improvement of symbols for one line definitions.
 
+### Changes
+
+  * [Project] remove legacy `alchemist-project-open-tests-for-current-file` function
+
 ### Bugfix
 
   * [Help] Fix wrong message about not existing doc
