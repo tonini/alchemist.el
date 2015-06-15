@@ -92,12 +92,16 @@
   (setq alchemist-server--output (cons output alchemist-server--output))
   (unless (alchemist-utils--empty-string-p output)
     (if (string-match "END-OF-COMPLETE$" output)
-      (let* ((string (apply #'concat (reverse alchemist-server--output)))
-             (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
-             (candidates (alchemist-complete--output-to-list
-                          (alchemist--utils-clear-ansi-sequences string)))
-             (candidates (alchemist-complete--build-candidates candidates)))
-        (funcall alchemist-server-company-callback candidates)))))
+        (let* ((string (apply #'concat (reverse alchemist-server--output)))
+               (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
+               (candidates (if (not (alchemist-utils--empty-string-p string))
+                               (alchemist-complete--output-to-list
+                                (alchemist--utils-clear-ansi-sequences string))
+                             '()))
+               (candidates (if candidates
+                               (alchemist-complete--build-candidates candidates)
+                             '())))
+          (funcall alchemist-server-company-callback candidates)))))
 
 (defun alchemist-server-complete-canidates-filter-with-context (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
@@ -218,7 +222,8 @@
 (defun alchemist-server-complete-candidates (exp)
   (setq alchemist-server--output nil)
   (alchemist-server-start)
-  (if (equal major-mode 'alchemist-iex-mode)
+  (if (or (equal major-mode 'alchemist-iex-mode)
+          (not (alchemist-goto--context-exists-p)))
       (alchemist-server--iex-complete exp)
     (alchemist-server--complete-with-context exp)))
 

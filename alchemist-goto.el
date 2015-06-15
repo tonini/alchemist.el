@@ -308,7 +308,13 @@ It will jump to the position of the symbol definition after selection."
   (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
     (goto-char (match-beginning 0))))
 
-
+(defun alchemist-goto--context-exists-p ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward "defmodule \\([A-Za-z\._]+\\)\s+" nil t)
+        t
+      nil)))
 
 (defun alchemist-goto--alises-of-current-buffer ()
   (let* ((aliases '()))
