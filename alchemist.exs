@@ -1,5 +1,12 @@
 defmodule Alchemist do
 
+  defmodule Utils do
+    def clear_context_list(modules) do
+      cleared = Regex.replace ~r/\.\]/, modules, "]"
+      Regex.replace ~r/\.\,/, cleared, ","
+    end
+  end
+
   defmodule Autocomplete do
     def expand(exp) do
 
@@ -56,8 +63,7 @@ defmodule Alchemist do
     end
   end
 
-  defmodule Source do
-
+  defmodule Definition do
     def find(nil, function) do
       cond do
         List.keymember?(get_module_funs(Kernel), function, 0) ->
@@ -104,58 +110,110 @@ defmodule Alchemist do
     end
   end
 
-  defmodule Documentation do
-    def search(exp) do
-      Code.eval_string("import IEx.Helpers \nApplication.put_env(:iex, :colors, [enabled: true])\nh(#{exp})", [], __ENV__)
-    end
-  end
 
-  defmodule Modules do
-    def get_modules do
-      modules = Enum.map(:code.all_loaded, fn({m, _}) -> Atom.to_string(m) end)
+  defmodule Case do
+    defmodule Complete do
+      def process! do
+        Autocomplete.expand('')
+        |> Enum.map &IO.puts('cmp:' ++ &1)
+        print_end_of_complete_signal
+      end
 
-      modules = if :code.get_mode() === :interactive do
-                  modules ++ get_modules_from_applications()
-                else
-                  modules
-                end
-      modules |> Enum.map &IO.puts/1
-    end
+      def process!(hint) do
+        Autocomplete.expand(hint)
+        |> Enum.map &IO.puts('cmp:' ++ &1)
+        print_end_of_complete_signal
+      end
 
-    defp get_modules_from_applications do
-      for {app, _, _} <- :application.loaded_applications,
-      {_, modules} = :application.get_key(app, :modules),
-      module <- modules,
-      has_doc = Code.get_docs(module, :moduledoc), elem(has_doc, 1) do
-        Atom.to_string(module)
+      defp print_end_of_complete_signal do
+        IO.puts "END-OF-COMPLETE"
+      end
+
+      def process_with_context!(hint) do
+        [hint, modules] = String.split(hint, ",", parts: 2)
+        modules = Utils.clear_context_list(modules)
+        {modules, _} = Code.eval_string(modules)
+
+        Autocomplete.expand(hint)
+        |> Enum.map &IO.puts('cmp:' ++ &1)
+        Enum.each modules, fn(module) ->
+          Function.get_functions(module, hint)
+          |> Enum.map &IO.puts('cmp:' ++ &1)
+        end
+        IO.puts "END-OF-COMPLETE-WITH-CONTEXT"
       end
     end
-  end
 
-  defmodule Eval do
-    def expression(file) do
-      try do
-        File.read!("#{file}")
-        |> Code.eval_string
-        |> Tuple.to_list
-        |> List.first
-        |> IO.inspect
-      rescue
-        e -> IO.inspect e
+    defmodule Modules do
+      def process! do
+        get_modules |> Enum.map &IO.puts/1
+        IO.puts "END-OF-MODULES"
+      end
+
+      def get_modules do
+        modules = Enum.map(:code.all_loaded, fn({m, _}) -> Atom.to_string(m) end)
+
+        if :code.get_mode() === :interactive do
+          modules ++ get_modules_from_applications()
+        else
+          modules
+        end
+      end
+
+      defp get_modules_from_applications do
+        for {app, _, _} <- :application.loaded_applications,
+        {_, modules} = :application.get_key(app, :modules),
+        module <- modules,
+        has_doc = Code.get_docs(module, :moduledoc), elem(has_doc, 1) do
+          Atom.to_string(module)
+        end
       end
     end
-  end
 
-  defmodule Quote do
-    def expression(file) do
-      try do
-        File.read!("#{file}")
-        |> Code.string_to_quoted
-        |> Tuple.to_list
-        |> List.last
-        |> IO.inspect
-      rescue
-        e -> IO.inspect e
+    defmodule Doc do
+      def process!(exp) do
+        Code.eval_string("import IEx.Helpers \nApplication.put_env(:iex, :colors, [enabled: true])\nh(#{exp})", [], __ENV__)
+        IO.puts "END-OF-DOC"
+      end
+    end
+
+    defmodule Eval do
+      def process!(file) do
+        try do
+          File.read!("#{file}")
+          |> Code.eval_string
+          |> Tuple.to_list
+          |> List.first
+          |> IO.inspect
+        rescue
+          e -> IO.inspect e
+        end
+        IO.puts "END-OF-EVAL"
+      end
+    end
+
+    defmodule Quote do
+      def process!(file) do
+        try do
+          File.read!("#{file}")
+          |> Code.string_to_quoted
+          |> Tuple.to_list
+          |> List.last
+          |> IO.inspect
+        rescue
+          e -> IO.inspect e
+        end
+        IO.puts "END-OF-QUOTE"
+      end
+    end
+
+    defmodule Source do
+      def process!(exp) do
+        [module, function] = String.split(exp, ",", parts: 2)
+        module = String.to_char_list module
+        function = String.to_atom function
+        Code.eval_string("Definition.find(#{module}, :#{function})", [], __ENV__)
+        IO.puts "END-OF-SOURCE"
       end
     end
   end
@@ -181,52 +239,24 @@ defmodule Alchemist do
       loop(loaded, env)
     end
 
-    defmodule Utils do
-      def clear_context_list(modules) do
-        cleared = Regex.replace ~r/\.\]/, modules, "]"
-        Regex.replace ~r/\.\,/, cleared, ","
-      end
-    end
-
     def read_input(line) do
       case line |> String.split(" ", parts: 2) do
-        ["COMPLETE", exp] ->
-          Autocomplete.expand(exp)
-          |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
-          IO.puts "END-OF-COMPLETE"
-        ["COMPLETE-WITH-CONTEXT", exp] ->
-          [hint, modules] = String.split(exp, ",", parts: 2)
-          modules = Utils.clear_context_list(modules)
-          {modules, _} = Code.eval_string(modules)
-
-          Autocomplete.expand(hint)
-          |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
-          Enum.each modules, fn(module) ->
-            Function.get_functions(module, hint)
-            |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
-          end
-          IO.puts "END-OF-COMPLETE-WITH-CONTEXT"
         ["COMPLETE"] ->
-          Autocomplete.expand('') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
-          IO.puts "END-OF-COMPLETE"
+          Case.Complete.process!
+        ["COMPLETE", hint] ->
+          Case.Complete.process!(hint)
+        ["COMPLETE-WITH-CONTEXT", hint] ->
+          Case.Complete.process_with_context!(hint)
         ["DOC", exp] ->
-          Documentation.search(exp)
-          IO.puts "END-OF-DOC"
+          Case.Doc.process!(exp)
         ["MODULES"] ->
-          Modules.get_modules
-          IO.puts "END-OF-MODULES"
+          Case.Modules.process!
         ["EVAL", exp] ->
-          Eval.expression(exp)
-          IO.puts "END-OF-EVAL"
-        ["QUOTE", exp] ->
-          Quote.expression(exp)
-          IO.puts "END-OF-QUOTE"
+          Case.Eval.process!(exp)
+        ["QUOTE", file] ->
+          Case.Quote.process!(file)
         ["SOURCE", exp] ->
-          [module, function] = String.split(exp, ",", parts: 2)
-          module = String.to_char_list module
-          function = String.to_atom function
-          Code.eval_string("Source.find(#{module}, :#{function})", [], __ENV__)
-          IO.puts "END-OF-SOURCE"
+          Case.Source.process!(exp)
         _ ->
           nil
       end
