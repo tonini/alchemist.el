@@ -30,15 +30,15 @@
   "Script file with alchemist server.")
 
 (defvar alchemist-server--processes '())
-(defvar alchemist-server-env "dev")
+(defvar alchemist-server--env "dev")
 
 (defvar alchemist-server-command
-  (format "elixir %s %s" alchemist-server alchemist-server-env))
+  (format "elixir %s %s" alchemist-server alchemist-server--env))
 
 (defun alchemist-server-start (env)
   "Start alchemist server for the current mix project in specific ENV."
   (interactive (list
-                (completing-read (format "(Alchemist-Server) run in environment: (default: %s) " alchemist-server-env)
+                (completing-read (format "(Alchemist-Server) run in environment: (default: %s) " alchemist-server--env)
                                  alchemist-mix--envs nil nil nil)))
   (when (alchemist-server--process-p)
     (kill-process (alchemist-server--process)))
@@ -46,7 +46,7 @@
 
 (defun alchemist-server--start ()
   (unless (alchemist-server--process-p)
-    (alchemist-server--start-with-env alchemist-server-env)))
+    (alchemist-server--start-with-env alchemist-server--env)))
 
 (defun alchemist-server--start-with-env (env)
   (let* ((process-name (alchemist-server--process-name))
