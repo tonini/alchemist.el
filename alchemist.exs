@@ -181,6 +181,13 @@ defmodule Alchemist do
       loop(loaded, env)
     end
 
+    defmodule Utils do
+      def clear_context_list(modules) do
+        cleared = Regex.replace ~r/\.\]/, modules, "]"
+        Regex.replace ~r/\.\,/, cleared, ","
+      end
+    end
+
     def read_input(line) do
       case line |> String.split(" ", parts: 2) do
         ["COMPLETE", exp] ->
@@ -189,6 +196,7 @@ defmodule Alchemist do
           IO.puts "END-OF-COMPLETE"
         ["COMPLETE-WITH-CONTEXT", exp] ->
           [hint, modules] = String.split(exp, ",", parts: 2)
+          modules = Utils.clear_context_list(modules)
           {modules, _} = Code.eval_string(modules)
 
           Autocomplete.expand(hint)
