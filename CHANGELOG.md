@@ -1,15 +1,26 @@
 # Changelog
 
-## v0.17.0 (unreleased)
+## v1.0 (unreleased)
 
 ### Enhancements
 
+  * [Server] Implement a server which runs as background process for each mix project or one for project independent work.
+  * [Completion] Use the server background process for all the completion related functionality.
+  * [Goto] Use the server background process for all the go to code definition related functionality.
+  * [Eval] Use the server background process for all the inline code evaluation related functionality.
+  * [Help] Use the server background process for all the documentation lookup related functionality.
+  * [Completion] Functions of modules which are used inside a context with `use` or `import` will be completed.
+  * [Completion] Functions in the context of the current module will be completed.
+  * [Goto] Handle Erlang syntax specific aliases
   * [Completion] Use the company-mode specific functions for doc and location lookup
     The functionality to open the doc and jumpt to location for the current selected completion candidate is now called through the proper company-mode functions.
   * [Goto] Improvement of symbols for one line definitions.
 
 ### Bugfix
 
+  * [Help] Fix wrong message about not existing doc
+  * [Goto] Fix regex for jumping to functions inside file
+  * [Goto] Fix issue that jumping to functions inside file without function parentheses
   * [Goto] `save-excursion` have to be used to restore the last position informations after `parse-partial-sexp` call.
 
 ## v0.16.1 (2015-06-01)
