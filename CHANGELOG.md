@@ -18,6 +18,7 @@
 
 ### Changes
 
+  * [Project] remove `.alchemist` setup file. There is no need anymore for controlling the compiling in special cases.
   * [Project] remove legacy `alchemist-project-open-tests-for-current-file` function
 
 ### Bugfix
