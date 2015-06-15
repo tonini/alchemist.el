@@ -43,7 +43,6 @@ Alchemist comes with a bunch of features, which are:
 - [Definition lookup](#definition-lookup)
   - [Symbol definitions](#symbol-definitions)
 - [Auto-completion](#auto-completion)
-  - [Debug](#debug)
 - [IEx](#iex)
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
@@ -119,6 +118,16 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 
 ## Mix
 
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a x</kbd>|Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
+|<kbd>C-c a t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
+|<kbd>C-c a t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
+|<kbd>C-c a t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
+|<kbd>C-c a t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
+|<kbd>C-c a m c</kbd>|Compile the whole elixir project. Prompt for the mix env if the prefix arg is set. `alchemist-mix-compile`|
+
+
 <table>
     <tr>
         <th>Command (For the <code>M-x</code> prompt.)</th>
@@ -131,26 +140,6 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
     <tr>
         <td><code>alchemist-mix-new</code></td>
         <td>Create a new Elixir application.</td>
-    </tr>
-     <tr>
-        <td><code>alchemist-mix-test</code></td>
-        <td>Run the whole Elixir application test suite.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-test-this-buffer</code></td>
-        <td>Run the current buffer through <code>mix test</code> command.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-test-file</code></td>
-        <td>Run a file through <code>mix test</code> command.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-test-at-point</code></td>
-        <td>Run the test at point.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-compile</code></td>
-        <td>Compile the whole Elixir application.</td>
     </tr>
     <tr>
         <td><code>alchemist-mix-run</code></td>
@@ -200,45 +189,19 @@ Default environments are `prod`, `dev` and `test`. [Mix environments](http://eli
 
 ### Compile functions
 
-<table>
-    <tr>
-        <th>Command (For the <code>M-x</code> prompt.)</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>alchemist-compile-this-buffer</code></td>
-        <td>Compile the current buffer with <code>elixirc</code>.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-compile-file</code></td>
-        <td>Compile the given <code>FILENAME</code>.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-compile</code></td>
-        <td>Run a custom compile command with <code>elixirc</code>.</td>
-    </tr>
-</table>
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a c c</kbd>|Compile the current buffer with the `elixirc` command. `alchemist-compile-this-buffer`|
+|<kbd>C-c a c f</kbd>|Compile the given `FILENAME` with the `elixirc` command. `alchemist-compile-file`|
+|<kbd>C-c a c b</kbd>|Run a custom compile command with `elixirc`. `alchemist-compile`|
 
 ### Execute functions
 
-<table>
-    <tr>
-      <th>Command (For the <code>M-x</code> prompt.)</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td><code>alchemist-execute-this-buffer</code></td>
-      <td>Run the current buffer through <code>elixir</code>.</th>
-    </tr>
-    <tr>
-      <td><code>alchemist-execute-file</code></th>
-      <td>Run <code>elixir</code> with the given <code>FILENAME</code>.</th>
-    </tr>
-    <tr>
-      <td><code>alchemist-execute</code></th>
-      <td>Run a custom execute command with <code>elixir</code>.</th>
-    </tr>
-</table>
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a e e</kbd>|Run the current buffer through `elixir` command. `alchemist-execute-this-buffer`|
+|<kbd>C-c a e f</kbd>|Run `elixir` command with the given `FILENAME`. `alchemist-execute-file` |
+|<kbd>C-c a e b</kbd>|Run a custom execute command with `elixir`. `alchemist-execute` |
 
 ## Project
 
@@ -258,29 +221,12 @@ What does that mean? It means no matter which Elixir version is currently
 installed on the system, the documentation you get by `alchemist` is the same
 `IEx` would deliver.
 
-<table>
-    <tr>
-        <th>Command (For the <code>M-x</code> prompt.)</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>alchemist-help</code></td>
-        <td>Run a custom search.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-help-history</code></td>
-        <td>Toggle through search history.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-help-search-at-point</code></td>
-        <td>Run <code>alchemist-help</code> with the expression under the
-    cursor. (example: <code>is_binary</code> or <code>Code.eval_string</code>)</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-help-search-marked-region</code></td>
-        <td>Run <code>alchemist-help</code> with the current marked region.</td>
-    </tr>
-</table>
+| Keybinding | Description                                     |
+|------------|-------------------------------------------------|
+|<kbd>C-c a h h</kbd>| Run a custom search. `alchemist-help`              |
+|<kbd>C-c a h i</kbd>| Look through search history. `alchemist-help-history` |
+|<kbd>C-c a h e</kbd>| Run `alchemist-help` with the expression under the cursor. (example: `is_binary`  or `Code.eval_string`). `alchemist-help-search-at-point`              |
+|<kbd>C-c a h m</kbd>| Run `alchemist-help` with the current marked region. `alchemist-help-search-marked-region`|
 
 ### Alchemist Help Minor Mode Keymap
 
@@ -291,36 +237,14 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
 
 ![Alchemist Help Minor Mode Key Summary](logo/help_summary.png)
 
-<table>
-    <tr>
-        <th>Key</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>q</code></td>
-        <td>Quit <code>*elixir help*</code> buffer window</td>
-    </tr>
-    <tr>
-        <td><code>e</code></td>
-        <td><code>alchemist-help-search-at-point</code></td>
-    </tr>
-    <tr>
-        <td><code>m</code></td>
-        <td><code>alchemist-help-search-marked-region</code></td>
-    </tr>
-    <tr>
-        <td><code>s</code></td>
-        <td><code>alchemist-help</code></td>
-    </tr>
-    <tr>
-        <td><code>h</code></td>
-        <td><code>alchemist-help-history</code></td>
-    </tr>
-    <tr>
-        <td><code>?</code></td>
-        <td><code>alchemist-help-minor-mode-key-binding-summary</code></td>
-    </tr>
-</table>
+| Keybinding | Description                                     |
+|------------|-------------------------------------------------|
+|<kbd>q</kbd>| Quit `*elixir help*` buffer window              |
+|<kbd>e</kbd>| `alchemist-help-search-at-point`                |
+|<kbd>m</kbd>| alchemist-help-search-marked-region             |
+|<kbd>s</kbd>| `alchemist-help`                                |
+|<kbd>h</kbd>| `alchemist-help-history`                        |
+|<kbd>?</kbd>| `alchemist-help-minor-mode-key-binding-summary` |
 
 ## Definition lookup
 
@@ -378,11 +302,6 @@ candidate available like [company-mode](http://company-mode.github.io/) [provide
 
 ![Alchemist Completion Candidate Functionalities](logo/alchemist-company-doc-goto.gif)
 
-### Debug
-
-The function `alchemist-complete-debug-mode` can be used to enable/disable the
-debug mode. When disabled, the error output from the completion will not be displayed.
-
 ## IEx
 
 Alchemist provides a `REPL` buffer, connected to an
@@ -395,7 +314,6 @@ To start an IEx process in the context of an Elixir project (`iex -S mix`) just 
 To start a custom IEx process with additional arguments (like: `iex --sname custom`) just use the
 [universal-argument](http://www.gnu.org/software/emacs/manual/html_node/emacs/Arguments.html) <kbd>C-u</kbd>
 before run <kbd>M-x alchemist-iex-run</kbd>
-
 
 | Keybinding | Description |
 |--------------------|------------------------------------------|

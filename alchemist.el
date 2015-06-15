@@ -110,6 +110,7 @@ Key bindings:
   (define-key map (kbd "e f") 'alchemist-execute-file)
   (define-key map (kbd "e b") 'alchemist-execute-this-buffer)
   (define-key map (kbd "h h") 'alchemist-help)
+  (define-key map (kbd "h i") 'alchemist-help-history)
   (define-key map (kbd "h e") 'alchemist-help-search-at-point)
   (define-key map (kbd "h m") 'alchemist-help-search-marked-region)
   (define-key map (kbd "p f") 'alchemist-project-find-test)
