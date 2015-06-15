@@ -267,14 +267,20 @@
   (setq alchemist-server-help-callback (lambda (candidates)
                                          (if candidates
                                              (let* ((search (alchemist-complete--completing-prompt search candidates)))
-                                               (setq alchemist-help-current-search-text search)
-                                               (setq alchemist-server--output nil)
-                                               (set-process-filter (alchemist-server--process) #'alchemist-server-doc-filter)
-                                               (process-send-string (alchemist-server--process) (format "DOC %s\n" search)))
+                                               (alchemist-server-help-without-complete search))
                                            (message "No documentation found for '%s'" search))
                                          ))
   (set-process-filter (alchemist-server--process) #'alchemist-server-complete-filter)
   (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" search)))
+
+(defun alchemist-server-help-without-complete (search)
+  (setq alchemist-help-current-search-text search)
+  (setq alchemist-server--output nil)
+  (alchemist-server--start)
+  (setq alchemist-server--output nil)
+  (set-process-filter (alchemist-server--process) #'alchemist-server-doc-filter)
+  (process-send-string (alchemist-server--process) (format "DOC %s\n" search)))
+
 
 (provide 'alchemist-server)
 

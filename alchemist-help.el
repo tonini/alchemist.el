@@ -64,12 +64,7 @@
   (alchemist-server-help-with-complete search))
 
 (defun alchemist-help--execute-without-complete (search)
-  (setq alchemist-help-current-search-text search)
-  (setq alchemist-server--output nil)
-  (alchemist-server--start)
-  (setq alchemist-server--output nil)
-  (set-process-filter (alchemist-server--process) #'alchemist-server-doc-filter)
-  (process-send-string (alchemist-server--process) (format "DOC %s\n" search)))
+  (alchemist-server-help-without-complete search))
 
 (defun alchemist-help--bad-search-output-p (string)
   (let ((match (or (string-match-p "No documentation for " string)
