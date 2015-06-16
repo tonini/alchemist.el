@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.1 (2015-06-16)
+
+### Bugfix
+
+  * [Utils] Remove `s-trim` function from the library `s.el` and replace it with native emacs lisp.
+
 ## v1.0 (2015-06-16)
 
 ### Enhancements
