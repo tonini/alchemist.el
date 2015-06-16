@@ -33,6 +33,8 @@ Alchemist comes with a bunch of features, which are:
   - [Via el-get](#via-el-get)
   - [Manual](#manual)
 - [Configuration](#configuration)
+  - [Keybindings](#keybindings)
+  - [Testing-Mode](#testing-mode)
 - [Mix](#mix)
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
@@ -110,11 +112,21 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 
 There are some ways Alchemist can be adjusted that certain workflows operating differently.
 
+### Keybindings
+
 * Use a different keybinding prefix than <kbd>C-c a</kbd>
 
 ```el
 (setq alchemist-key-command-prefix (kbd "C-c ,")) ;; default: (kbd "C-c a")
 ```
+
+### Testing Mode
+
+* Disable the use of a more significant syntax highlighting on functions like `test`, `assert_*` and `refute_*`
+
+```el
+(setq alchemist-test-mode-highlight-tests nil) ;; default t
+``
 
 ## Mix
 

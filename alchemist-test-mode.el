@@ -25,12 +25,18 @@
 
 ;;; Code:
 
-;; Variables
-
 (defgroup alchemist-test-mode nil
   "Minor mode for Elixir ExUnit files."
   :prefix "alchemist-test-mode-"
   :group 'alchemist)
+
+;; Variables
+
+(defcustom alchemist-test-mode-highlight-tests t
+  "Non-nil means that specific functions for testing will
+be highlighted with more significant font faces."
+  :type 'boolean
+  :group 'alchemist-test-mode)
 
 (defvar alchemist-test-at-point #'alchemist-mix-test-at-point)
 (defvar alchemist-test-this-buffer #'alchemist-mix-test-this-buffer)
@@ -90,6 +96,16 @@ in this buffer."
   (interactive)
   (alchemist-test-mode--jump-to-test 're-search-backward 'end-of-buffer))
 
+(defun alchemist-test-mode--highlight-syntax ()
+  (if alchemist-test-mode-highlight-tests
+      (font-lock-add-keywords nil
+                              '(("^\s+\\(test\\)\s+" 1
+                                 font-lock-variable-name-face t)
+                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\s+" 1
+                                 font-lock-type-face t)
+                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\(" 1
+                                 font-lock-type-face t)))))
+
 ;;;###autoload
 (define-minor-mode alchemist-test-mode
   "Minor mode for Elixir ExUnit files.
@@ -98,7 +114,9 @@ The following commands are available:
 
 \\{alchemist-test-mode-map}"
   :lighter "" :keymap alchemist-test-mode-map
-  :group 'alchemist)
+  :group 'alchemist
+  (when alchemist-test-mode
+      (alchemist-test-mode--highlight-syntax)))
 
 ;;;###autoload
 (defun alchemist-test-enable-mode ()

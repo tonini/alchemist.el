@@ -1,5 +1,11 @@
 # Changelog
 
+## v.1.1.0 (unreleased)
+
+### Enhancements
+
+  * [Test-Mode] Make the `test`, `asssert_*` and `refute_*` syntax highlighting more significant within the test mode.
+
 ## v1.0.1 (2015-06-16)
 
 ### Bugfix
