@@ -85,7 +85,9 @@ It walks the directory tree until it finds a elixir project root indicator."
 
 (defun alchemist-utils--empty-string-p (string)
   (or (null string)
-      (string= (s-trim string) "")))
+      (let* ((string (replace-regexp-in-string "^\s+" "" string ))
+             (string (replace-regexp-in-string "\s+$" "" string)))
+        (string= string ""))))
 
 (provide 'alchemist-utils)
 

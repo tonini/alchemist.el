@@ -73,7 +73,9 @@ a text")))
   (should (equal (alchemist-utils--empty-string-p " ")
                  t))
   (should (equal (alchemist-utils--empty-string-p "story")
-                 nil)))
+                 nil))
+  (should (equal (alchemist-utils--empty-string-p "    ")
+                 t)))
 
 (provide 'alchemist-utils-tests)
 
