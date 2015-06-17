@@ -112,6 +112,9 @@
                                 (alchemist--utils-clear-ansi-sequences string))
                              '()))
                (candidates (if candidates
+                               (remove-duplicates candidates)
+                             '()))
+               (candidates (if candidates
                                (alchemist-complete--build-candidates candidates)
                              '())))
           (funcall alchemist-server-company-callback candidates)))))
@@ -125,6 +128,9 @@
                              (alchemist-complete--output-to-list
                               (alchemist--utils-clear-ansi-sequences string))
                            '()))
+             (candidates (if candidates
+                             (remove-duplicates candidates)
+                             '()))
              (candidates (if candidates
                              (alchemist-complete--build-candidates candidates)
                            '())))
@@ -244,11 +250,15 @@
   (let* ((module (alchemist-goto--current-module-name))
          (modules '())
          (aliases (mapcar (lambda (a)
+                            (if (not (or (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
+                                         (string= (replace-regexp-in-string "\\.$" "" (car (cdr a)))
+                                                  (replace-regexp-in-string "\\.$" "" (car a)))))
                             (format "{%s, %s}"
-
-                                    (replace-regexp-in-string "\\.$" "" (car (cdr a)))
+                                    (if (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
+                                        (replace-regexp-in-string "\\.$" "" (car a))
+                                      (replace-regexp-in-string "\\.$" "" (car (cdr a))))
                                     (replace-regexp-in-string "\\.$" "" (car a))
-                                    )) (alchemist-goto--alises-of-current-buffer)))
+                                    ))) (alchemist-goto--alises-of-current-buffer)))
          (use-modules (alchemist-goto--use-modules-in-the-current-module-context))
          (import-modules (alchemist-goto--import-modules-in-the-current-module-context)))
     (if (not (alchemist-utils--empty-string-p module))
@@ -266,9 +276,7 @@
                                                                  (mapconcat #'identity (alchemist-utils--flatten modules) ",")
                                                                  (format "[%s]" (if (mapconcat #'identity aliases ",")
                                                                                     (mapconcat #'identity aliases ",")
-                                                                                  "")
-                                                                         )
-                                                                 ))))))
+                                                                                  ""))))))))
 
 (defun alchemist-server--iex-complete (exp)
   (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
