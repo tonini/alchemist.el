@@ -126,7 +126,7 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 
 ```el
 (setq alchemist-test-mode-highlight-tests nil) ;; default t
-``
+```
 
 ## Mix
 
