@@ -56,9 +56,9 @@ declaration has been found."
     (let ((found-flag-p nil)
           (module-name ""))
       (save-match-data
-        (while (not found-flag-p)
-          (when (and (re-search-backward "defmodule \\([A-Za-z\._]+\\)\s+" nil t)
-                     (not (alchemist-goto--string-at-point-p)))
+        (while (and (not found-flag-p)
+                    (re-search-backward "defmodule \\([A-Za-z\._]+\\)\s+" nil t))
+          (when (not (alchemist-goto--string-at-point-p))
             (setq module-name (match-string 1))
             (setq found-flag-p t))
           (when (equal 1 (line-number-at-pos (point)))
