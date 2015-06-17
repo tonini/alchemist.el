@@ -123,7 +123,27 @@
 (defun alchemist-help-search-at-point ()
   "Search through `alchemist-help' with the expression under the cursor."
   (interactive)
-  (alchemist-help--execute (alchemist-help--exp-at-point)))
+  (let* ((expr (alchemist-help--exp-at-point))
+         (module (alchemist-goto--extract-module expr))
+         (module (alchemist-goto--get-full-path-of-alias module))
+         (module (if module module "nil"))
+         (function (alchemist-goto--extract-function expr))
+         (function (if function function ""))
+         (expr (cond
+                ((and (not (alchemist-utils--empty-string-p module))
+                      (not (alchemist-utils--empty-string-p function)))
+                 (format "%s.%s" module function))
+                ((not (alchemist-utils--empty-string-p module))
+                 module)
+                (t
+                 expr))))
+
+    (alchemist-help--execute expr))
+    )
+
+
+
+
 
 (defun alchemist-help-search-marked-region (begin end)
   "Run `alchemist-help' with the marked region.
