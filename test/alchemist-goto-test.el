@@ -236,7 +236,27 @@ defmodule Foo do
   alias Phoenix.Endpoint.Watcher
 
 end")
-                   (alchemist-goto--get-full-path-of-alias "Watcher.Everywhere")))))
+                   (alchemist-goto--get-full-path-of-alias "Watcher.Everywhere"))))
+  (should (equal "def"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias Phoenix.Endpoint.Watcher
+
+end")
+                   (alchemist-goto--get-full-path-of-alias "def"))))
+  (should (equal nil
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias Phoenix.Endpoint.Watcher
+
+end")
+                   (alchemist-goto--get-full-path-of-alias "")))))
 
 (ert-deftest match-functions-inside-buffer ()
   (should (string-match-p (alchemist-gogo--symbol-definition-regex "cwd!")

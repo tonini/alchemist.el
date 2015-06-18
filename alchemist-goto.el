@@ -133,14 +133,15 @@ declaration has been found."
   (string-match-p  "\\.erl$" file))
 
 (defun alchemist-goto--get-full-path-of-alias (module)
-  (let* ((aliases (mapcar (lambda (m)
-                            (when (string-match-p (format "^%s" (car (cdr m))) module)
-                              (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module)))
-                          (alchemist-goto--alises-of-current-buffer)))
-         (aliases (delete nil aliases)))
-    (if aliases
-        (car aliases)
-      module)))
+  (if (not (alchemist-utils--empty-string-p module))
+      (let* ((aliases (mapcar (lambda (m)
+                                (when (string-match-p (format "^%s" (car (cdr m))) module)
+                                  (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module)))
+                              (alchemist-goto--alises-of-current-buffer)))
+             (aliases (delete nil aliases)))
+        (if aliases
+            (car aliases)
+          module))))
 
 (defun alchemist-goto--string-at-point-p (&optional complete)
   "Return non-nil if cursor is at a string."
