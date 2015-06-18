@@ -3,7 +3,6 @@ defmodule Alchemist.Case do
   alias Alchemist.Completer
   alias Alchemist.Utils
   alias Alchemist.Informant
-  alias Alchemist.Source
 
   defmodule Complete do
     def process! do
@@ -85,12 +84,12 @@ defmodule Alchemist.Case do
     end
   end
 
-  defmodule Source do
+  defmodule Find do
     def process!(exp) do
       [module, function] = String.split(exp, ",", parts: 2)
       module = String.to_char_list module
       function = String.to_atom function
-      Code.eval_string("Source.find(#{module}, :#{function})", [], __ENV__)
+      Code.eval_string("Alchemist.Source.find(#{module}, :#{function})", [], __ENV__)
       IO.puts "END-OF-SOURCE"
     end
   end

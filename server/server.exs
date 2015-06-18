@@ -48,7 +48,7 @@ defmodule Alchemist.Server do
       ["QUOTE", file] ->
         Case.Quote.process!(file)
       ["SOURCE", exp] ->
-        Case.Source.process!(exp)
+        Case.Find.process!(exp)
       _ ->
         nil
     end
