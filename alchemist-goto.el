@@ -56,9 +56,9 @@ declaration has been found."
     (let ((found-flag-p nil)
           (module-name ""))
       (save-match-data
-        (while (not found-flag-p)
-          (when (and (re-search-backward "defmodule \\([A-Za-z\._]+\\)\s+" nil t)
-                     (not (alchemist-goto--string-at-point-p)))
+        (while (and (not found-flag-p)
+                    (re-search-backward "defmodule \\([A-Za-z\._]+\\)\s+" nil t))
+          (when (not (alchemist-goto--string-at-point-p))
             (setq module-name (match-string 1))
             (setq found-flag-p t))
           (when (equal 1 (line-number-at-pos (point)))
@@ -133,13 +133,15 @@ declaration has been found."
   (string-match-p  "\\.erl$" file))
 
 (defun alchemist-goto--get-full-path-of-alias (module)
-  (let* ((aliases (mapcar (lambda (m)
-                            (when (string= module (car (cdr m)))
-                              (car m))) (alchemist-goto--alises-of-current-buffer)))
-         (aliases (delete nil aliases)))
-    (if aliases
-        (car aliases)
-      module)))
+  (if (not (alchemist-utils--empty-string-p module))
+      (let* ((aliases (mapcar (lambda (m)
+                                (when (string-match-p (format "^%s" (car (cdr m))) module)
+                                  (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module)))
+                              (alchemist-goto--alises-of-current-buffer)))
+             (aliases (delete nil aliases)))
+        (if aliases
+            (car aliases)
+          module))))
 
 (defun alchemist-goto--string-at-point-p (&optional complete)
   "Return non-nil if cursor is at a string."

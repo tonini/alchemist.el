@@ -26,7 +26,7 @@
 ;;; Code:
 
 (defvar alchemist-server
-  (concat (file-name-directory load-file-name) "alchemist.exs")
+  (concat (file-name-directory load-file-name) "server/server.exs")
   "Script file with alchemist server.")
 
 (defvar alchemist-server--processes '())
@@ -112,6 +112,9 @@
                                 (alchemist--utils-clear-ansi-sequences string))
                              '()))
                (candidates (if candidates
+                               (remove-duplicates candidates)
+                             '()))
+               (candidates (if candidates
                                (alchemist-complete--build-candidates candidates)
                              '())))
           (funcall alchemist-server-company-callback candidates)))))
@@ -125,6 +128,9 @@
                              (alchemist-complete--output-to-list
                               (alchemist--utils-clear-ansi-sequences string))
                            '()))
+             (candidates (if candidates
+                             (remove-duplicates candidates)
+                             '()))
              (candidates (if candidates
                              (alchemist-complete--build-candidates candidates)
                            '())))
@@ -243,6 +249,16 @@
 (defun alchemist-server--complete-with-context (exp)
   (let* ((module (alchemist-goto--current-module-name))
          (modules '())
+         (aliases (mapcar (lambda (a)
+                            (if (not (or (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
+                                         (string= (replace-regexp-in-string "\\.$" "" (car (cdr a)))
+                                                  (replace-regexp-in-string "\\.$" "" (car a)))))
+                            (format "{%s, %s}"
+                                    (if (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
+                                        (replace-regexp-in-string "\\.$" "" (car a))
+                                      (replace-regexp-in-string "\\.$" "" (car (cdr a))))
+                                    (replace-regexp-in-string "\\.$" "" (car a))
+                                    ))) (alchemist-goto--alises-of-current-buffer)))
          (use-modules (alchemist-goto--use-modules-in-the-current-module-context))
          (import-modules (alchemist-goto--import-modules-in-the-current-module-context)))
     (if (not (alchemist-utils--empty-string-p module))
@@ -255,7 +271,12 @@
           (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
       (progn
         (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter-with-context)
-        (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s,[%s]\n" exp (mapconcat #'identity (alchemist-utils--flatten modules) ",")))))))
+        (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s;[%s];%s\n"
+                                                                 exp
+                                                                 (mapconcat #'identity (alchemist-utils--flatten modules) ",")
+                                                                 (format "[%s]" (if (mapconcat #'identity aliases ",")
+                                                                                    (mapconcat #'identity aliases ",")
+                                                                                  ""))))))))
 
 (defun alchemist-server--iex-complete (exp)
   (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
