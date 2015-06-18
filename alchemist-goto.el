@@ -134,8 +134,9 @@ declaration has been found."
 
 (defun alchemist-goto--get-full-path-of-alias (module)
   (let* ((aliases (mapcar (lambda (m)
-                            (when (string= module (car (cdr m)))
-                              (car m))) (alchemist-goto--alises-of-current-buffer)))
+                            (when (string-match-p (format "^%s" (car (cdr m))) module)
+                              (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module)))
+                          (alchemist-goto--alises-of-current-buffer)))
          (aliases (delete nil aliases)))
     (if aliases
         (car aliases)

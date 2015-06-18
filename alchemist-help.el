@@ -137,9 +137,7 @@
                  module)
                 (t
                  expr))))
-
-    (alchemist-help--execute expr))
-    )
+    (alchemist-help--execute expr)))
 
 
 

@@ -216,6 +216,28 @@ defmodule Phoenix.Router do
 end")
                    (alchemist-goto--alises-of-current-buffer)))))
 
+(ert-deftest get-full-path-of-an-alias ()
+  (should (equal "Phoenix.Router.Scope"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  alias Phoenix.Router, as: Special
+
+end")
+                   (alchemist-goto--get-full-path-of-alias "Special.Scope"))))
+  (should (equal "Phoenix.Endpoint.Watcher.Everywhere"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias Phoenix.Endpoint.Watcher
+
+end")
+                   (alchemist-goto--get-full-path-of-alias "Watcher.Everywhere")))))
+
 (ert-deftest match-functions-inside-buffer ()
   (should (string-match-p (alchemist-gogo--symbol-definition-regex "cwd!")
                           "  def cwd! do"))
