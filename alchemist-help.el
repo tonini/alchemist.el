@@ -126,7 +126,7 @@
   (let* ((expr (alchemist-help--exp-at-point))
          (module (alchemist-goto--extract-module expr))
          (module (alchemist-goto--get-full-path-of-alias module))
-         (module (if module module "nil"))
+         (module (if module module ""))
          (function (alchemist-goto--extract-function expr))
          (function (if function function ""))
          (expr (cond
@@ -138,10 +138,6 @@
                 (t
                  expr))))
     (alchemist-help--execute expr)))
-
-
-
-
 
 (defun alchemist-help-search-marked-region (begin end)
   "Run `alchemist-help' with the marked region.
