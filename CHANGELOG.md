@@ -9,6 +9,8 @@
   * [Help] Jump to documentation of aliased modules implemented.
   * [Server] Refine the server to be more structured and maintainable.
   * [Server] Implement a custom version of the IEx.Autocompleter to handle context aliases.
+  * [IEx] Add keybindings for documentation lookup and jump to definition.
+  * [IEx] Add keybinding for open a buffer with the history of the current session to choose from.
   * [Test-Mode] Make the `test`, `asssert_*` and `refute_*` syntax highlighting more significant within the test mode.
 
 ## v1.0.1 (2015-06-16)
