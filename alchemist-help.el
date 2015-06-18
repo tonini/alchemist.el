@@ -144,8 +144,21 @@
 Argument BEGIN where the mark starts.
 Argument END where the mark ends."
   (interactive "r")
-  (let ((region (filter-buffer-substring begin end)))
-    (alchemist-help--execute region)))
+  (let* ((expr (filter-buffer-substring begin end))
+        (module (alchemist-goto--extract-module expr))
+        (module (alchemist-goto--get-full-path-of-alias module))
+        (module (if module module ""))
+        (function (alchemist-goto--extract-function expr))
+        (function (if function function ""))
+        (expr (cond
+               ((and (not (alchemist-utils--empty-string-p module))
+                     (not (alchemist-utils--empty-string-p function)))
+                (format "%s.%s" module function))
+               ((not (alchemist-utils--empty-string-p module))
+                module)
+               (t
+                expr))))
+    (alchemist-help--execute expr)))
 
 (defun alchemist-help--elixir-modules-to-list (str)
   (let* ((modules (split-string str))
