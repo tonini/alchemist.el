@@ -51,6 +51,11 @@
 (defvar alchemist-iex-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     (define-key map "\t" 'completion-at-point)
+    (define-key map (kbd (format "%s i r" alchemist-key-command-prefix)) 'alchemist-iex-open-input-ring)
+    (define-key map (kbd (format "%s i c" alchemist-key-command-prefix)) 'alchemist-iex-clear-buffer)
+    (define-key map (kbd (format "%s h e" alchemist-key-command-prefix)) 'alchemist-help-search-at-point)
+    (define-key map (kbd (format "%s h m" alchemist-key-command-prefix)) 'alchemist-help-search-marked-region)
+    (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
     map))
 
 (eval-after-load 'company
@@ -156,6 +161,13 @@ and jump to the buffer."
   (interactive)
   (let ((comint-buffer-maximum-size 0))
     (comint-truncate-buffer)))
+
+(defun alchemist-iex-open-input-ring ()
+    "Open the buffer containing the input history."
+    (interactive)
+    (progn
+      (comint-dynamic-list-input-ring)
+      (other-window 1)))
 
 ;;;###autoload
 (defalias 'run-elixir 'alchemist-iex-run)

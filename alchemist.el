@@ -39,6 +39,12 @@
   :link '(url-link :tag "Github" "https://github.com/tonini/alchemist.el")
   :link '(emacs-commentary-link :tag "Commentary" "alchemist"))
 
+(defcustom alchemist-key-command-prefix
+  (kbd "C-c a")
+  "The prefix for alchemist related key commands."
+  :type 'string
+  :group 'alchemist)
+
 (require 'alchemist-utils)
 (require 'alchemist-project)
 (require 'alchemist-server)
@@ -70,12 +76,6 @@
   "Display Alchemist's version."
   (interactive)
   (message "Alchemist %s" (replace-regexp-in-string "-cvs" "snapshot" alchemist--version)))
-
-(defcustom alchemist-key-command-prefix
-  (kbd "C-c a")
-  "The prefix for alchemist related key commands."
-  :type 'string
-  :group 'alchemist)
 
 (define-prefix-command 'alchemist-mode-keymap)
 
