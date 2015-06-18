@@ -348,6 +348,36 @@ end")
                    (goto-line 4)
                    (alchemist-goto--current-module-name)))))
 
+(ert-deftest check-if-currently-inside-heredoc ()
+  (should (with-temp-buffer
+            (alchemist-mode)
+            (insert "
+defmodule Module.Name do
+
+  @moduledoc \"\"\"
+  ## Examples
+
+  ....
+  \"\"\"
+
+end")
+            (goto-line 7)
+            (alchemist-goto--string-at-point-p)))
+  (should (not (with-temp-buffer
+                 (alchemist-mode)
+                 (insert "
+defmodule Module.Name do
+
+  @moduledoc \"\"\"
+  ## Examples
+
+  ....
+  \"\"\"
+
+end")
+                 (goto-line 3)
+                 (alchemist-goto--string-at-point-p)))))
+
 (provide 'alchemist-goto-test)
 
 ;;; alchemist-goto-test.el ends here

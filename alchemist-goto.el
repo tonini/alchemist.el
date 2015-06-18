@@ -159,19 +159,6 @@ declaration has been found."
       (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
            (match-beginning 0)))))
 
-(defun alchemist-goto--string-at-current-point-p ()
-  "Return non-nil if cursor is at a string."
-  (save-excursion
-  (or (and (nth 3 (save-excursion
-                    (let ((pos (point)))
-                      (parse-partial-sexp 1 pos))))
-           (nth 8 (save-excursion
-                    (let ((pos (point)))
-                      (parse-partial-sexp 1 pos)))))
-      (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
-           (match-beginning 0)))))
-
-
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)
   (if (member symbol alchemist-goto--symbol-list-bare)
