@@ -6,6 +6,7 @@
 
   * [Completion] Implement completion for alias modules.
   * [Goto] Jump to definition of aliased modules implemented.
+  * [Goto] Refine regex extraction of symbol defintion for one line def (remove `,`).
   * [Help] Jump to documentation of aliased modules implemented.
   * [Server] Refine the server to be more structured and maintainable.
   * [Server] Implement a custom version of the IEx.Autocompleter to handle context aliases.
