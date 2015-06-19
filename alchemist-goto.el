@@ -210,7 +210,7 @@ It will jump to the position of the symbol definition after selection."
          " "
          (propertize name
                      'face 'alchemist-goto--name-face)
-         (replace-regexp-in-string " do:.*$" "" (replace-regexp-in-string " do$" "" arguments)))))))
+         (replace-regexp-in-string ",?\s+do:.*$" "" (replace-regexp-in-string "\s+do$" "" arguments)))))))
 
 (defun alchemist-goto--extract-symbol-bare (str)
   (save-match-data
@@ -237,7 +237,6 @@ It will jump to the position of the symbol definition after selection."
       (let* ((end-position (point))
              (line (buffer-substring-no-properties position end-position)))
         (alchemist-goto--extract-symbol-bare line)))))
-
 
 (defun alchemist-goto--search-for-symbols (regex)
   (setq alchemist-goto--symbol-list '())

@@ -118,7 +118,11 @@
   (should (equal (alchemist-goto--extract-symbol "defp render! do")
                  "defp render!"))
   (should (equal (alchemist-goto--extract-symbol "defmacro __using__(_) do")
-                 "defmacro __using__(_)")))
+                 "defmacro __using__(_)"))
+  (should (equal (alchemist-goto--extract-symbol "def __pubsub_server__, do: @pubsub_server")
+                 "def __pubsub_server__")))
+
+
 
 (ert-deftest get-use-modules-in-the-current-module-context ()
   (should (equal '("GenServer" "Behaviour")
