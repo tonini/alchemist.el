@@ -49,6 +49,8 @@
 (defvar alchemist-goto--symbol-list-bare '())
 (defvar alchemist-goto--symbol-name-and-pos-bare '())
 
+;; Private functions
+
 (defun alchemist-goto--current-module-name ()
   "Searches backward in the current buffer until a module
 declaration has been found."
@@ -315,6 +317,8 @@ It will jump to the position of the symbol definition after selection."
                (as (if as as (car (last (split-string alias "\\."))))))
           (setq aliases (append aliases (list (list alias as)))))))
     aliases))
+
+;; Public functions
 
 (defun alchemist-goto-definition-at-point ()
   "Jump to the elixir expression definition at point."
