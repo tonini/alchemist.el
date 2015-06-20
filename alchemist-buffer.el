@@ -82,6 +82,10 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
   (lambda ()
     (not (string= (substring (buffer-name) 0 1) "*"))))
 
+(defun alchemist-buffer-init-test-report (buffer status)
+  (when (string= "*alchemist-test-report*" (buffer-name buffer))
+    (alchemist-test-mode)))
+
 (defun alchemist-buffer--remove-dispensable-output ()
   (delete-matching-lines "\\(-*- mode:\\|Compiled \\|elixir-compilation;\\|Elixir started\\|^$\\)" (point-min) (point-max))
   (remove-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output t))
@@ -138,6 +142,7 @@ Argument BUFFER-NAME for the compilation."
            (cons 'elixir compilation-error-regexp-alist))
       (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation nil t)
       (add-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output nil t)
+      (add-to-list 'compilation-finish-functions 'alchemist-buffer-init-test-report)
       (add-to-list 'compilation-finish-functions 'alchemist-buffer--remove-dispensable-output-after-finish)
       (when alchemist-buffer-status-modeline
         (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))

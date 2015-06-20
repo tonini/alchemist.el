@@ -32,6 +32,9 @@
 
 ;; Variables
 
+(defvar alchemist-test-mode-buffer-name "*alchemist-test-report*"
+  "Name of the test report buffer.")
+
 (defcustom alchemist-test-mode-highlight-tests t
   "Non-nil means that specific functions for testing will
 be highlighted with more significant font faces."
@@ -56,8 +59,8 @@ be highlighted with more significant font faces."
     map)
   "Keymap for `alchemist-test-mode'.")
 
-(defvar alchemist-test-mode--test-regex
-  "^[[:space:]]*test .+ do[[:space:]]*$")
+(setq alchemist-test-mode--test-regex
+  "\\(^[[:space:]]*test .+ do[[:space:]]*$\\|^[[:space:]]* [0-9]+) test .+\\)")
 
 ;; Private functions
 
@@ -116,7 +119,7 @@ The following commands are available:
   :lighter "" :keymap alchemist-test-mode-map
   :group 'alchemist
   (when alchemist-test-mode
-      (alchemist-test-mode--highlight-syntax)))
+    (alchemist-test-mode--highlight-syntax)))
 
 ;;;###autoload
 (defun alchemist-test-enable-mode ()

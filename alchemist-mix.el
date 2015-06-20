@@ -74,7 +74,8 @@ not set explicitly."
   "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
-  (alchemist-mix-execute `("test" ,(expand-file-name filename) ,@alchemist-mix-test-default-options)))
+  (alchemist-mix-execute `("test" ,(expand-file-name filename) ,@alchemist-mix-test-default-options)
+                         alchemist-test-mode-buffer-name))
 
 (defun alchemist-mix--commands ()
   (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
@@ -93,12 +94,14 @@ not set explicitly."
 (defun alchemist-mix-new (name)
   "Create a new elixir project named by NAME."
   (interactive "Gmix new: ")
-  (alchemist-mix-execute (list "new" (expand-file-name name))))
+  (alchemist-mix-execute (list "new" (expand-file-name name))
+                         alchemist-mix-buffer-name))
 
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
   (interactive)
-  (alchemist-mix-execute `("test" ,@alchemist-mix-test-default-options)))
+  (alchemist-mix-execute `("test" ,@alchemist-mix-test-default-options)
+                         alchemist-test-mode-buffer-name))
 
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
@@ -115,26 +118,30 @@ not set explicitly."
   (interactive)
   (let* ((line (line-number-at-pos (point)))
          (file-and-line (format "%s:%s" buffer-file-name line)))
-    (alchemist-mix-execute (list "test" file-and-line))))
+    (alchemist-mix-execute (list "test" file-and-line)
+                           alchemist-test-mode-buffer-name)))
 
 (defun alchemist-mix-compile (command &optional prefix)
   "Compile the whole elixir project. Prompt for the mix env if the prefix
 arg is set."
   (interactive "Mmix compile: \nP")
-  (alchemist-mix-execute (list "compile" command) prefix))
+  (alchemist-mix-execute (list "compile" command)
+                         alchemist-mix-buffer-name prefix))
 
 (defun alchemist-mix-run (command &optional prefix)
   "Runs the given file or expression in the context of the application.
 Prompt for the mix env if the prefix arg is set."
   (interactive "Mmix run: \nP")
-  (alchemist-mix-execute (list "run" command) prefix))
+  (alchemist-mix-execute (list "run" command)
+                         alchemist-mix-buffer-name prefix))
 
 (defun alchemist-mix-deps-with-prompt (command &optional prefix)
   "Prompt for mix deps commands."
   (interactive
    (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)
          current-prefix-arg))
-  (alchemist-mix-execute (list command) prefix))
+  (alchemist-mix-execute (list command)
+                         alchemist-mix-buffer-name prefix))
 
 (defun alchemist-mix (command &optional prefix)
   "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
@@ -142,7 +149,8 @@ Prompt for the mix env if the prefix arg is set."
    (list (alchemist-mix--completing-read "mix: " (alchemist-mix--commands))
          current-prefix-arg))
   (let ((command (read-string "mix " (concat command " "))))
-    (alchemist-mix-execute (list command) prefix)))
+    (alchemist-mix-execute (list command)
+                           alchemist-mix-buffer-name prefix)))
 
 (defun alchemist-mix-local-with-prompt (command)
   "Prompt for mix local commands."
@@ -150,7 +158,8 @@ Prompt for the mix env if the prefix arg is set."
    (list (alchemist-mix--completing-read "mix local: " alchemist-mix--local-commands)))
   (if (string= command "local.install")
       (call-interactively 'alchemist-mix-local-install)
-    (alchemist-mix-execute (list command))))
+    (alchemist-mix-execute (list command)
+                           alchemist-mix-buffer-name)))
 
 (defun alchemist-mix-local-install (path-or-url)
   "Prompt for mix local.install PATH-OR-URL."
@@ -165,26 +174,30 @@ Prompt for the mix env if the prefix arg is set."
 (defun alchemist-mix-local-install-with-path (path)
   "Runs local.install and prompt for a PATH as argument."
   (interactive "fmix local.install PATH: ")
-  (alchemist-mix-execute (list "local.install" path)))
+  (alchemist-mix-execute (list "local.install" path)
+                         alchemist-mix-buffer-name))
 
 (defun alchemist-mix-local-install-with-url (url)
   "Runs local.install and prompt for a URL as argument."
   (interactive "Mmix local.install URL: ")
-  (alchemist-mix-execute (list "local.install" url)))
+  (alchemist-mix-execute (list "local.install" url)
+                         alchemist-mix-buffer-name))
 
 (defun alchemist-mix-hex-search (command &optional prefix)
   "Display packages matching the given search query. Prompt for the mix env
 if the prefix arg is set."
   (interactive "Mmix hex.search: \nP")
-  (alchemist-mix-execute (list "hex.search" command) prefix))
+  (alchemist-mix-execute (list "hex.search" command)
+                         alchemist-mix-buffer-name prefix))
 
 (defun alchemist-mix-help (command &optional prefix)
   "Show help output for a specific mix command. Prompt for the mix env if
 the prefix arg is set."
   (interactive "Mmix help: \nP")
-  (alchemist-mix-execute (list "help" command) prefix))
+  (alchemist-mix-execute (list "help" command)
+                         alchemist-mix-buffer-name prefix))
 
-(defun alchemist-mix-execute (cmdlist &optional prefix)
+(defun alchemist-mix-execute (cmdlist buffer-name &optional prefix)
   "Run a mix command. Prompt for the mix env if the prefix arg is set."
   (interactive "Mmix: \nP")
   (let ((old-directory default-directory)
@@ -196,7 +209,7 @@ the prefix arg is set."
     (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist
                            (list (if mix-env (concat "MIX_ENV=" mix-env) "")
                                  alchemist-mix-command cmdlist))
-                          alchemist-mix-buffer-name)
+                          buffer-name)
     (cd old-directory)))
 
 (provide 'alchemist-mix)
