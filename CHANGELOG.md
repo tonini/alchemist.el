@@ -12,6 +12,9 @@
   * [Server] Implement a custom version of the IEx.Autocompleter to handle context aliases.
   * [IEx] Add keybindings for documentation lookup and jump to definition.
   * [IEx] Add keybinding for open a buffer with the history of the current session to choose from.
+  * [Test] The test keybindings are now also available inside the test report.
+  * [Test] Toggle through tests inside the `*alchemist-test-report*`
+  * [Mix] Separate the buffer in which task will run. (example: `*alchemist-test-report*` or `*mix* `)
   * [Test-Mode] Make the `test`, `asssert_*` and `refute_*` syntax highlighting more significant within the test mode.
 
 ## v1.0.1 (2015-06-16)
