@@ -125,7 +125,7 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 * Disable the use of a more significant syntax highlighting on functions like `test`, `assert_*` and `refute_*`
 
 ```el
-(setq alchemist-test-mode-highlight-tests nil) ;; default t
+(setq alchemist-test-highlight-tests nil) ;; default t
 ```
 
 ## Mix
@@ -371,8 +371,8 @@ Alchemist comes with an minor mode for testing which will be enabled by default 
 |<kbd>C-c , v</kbd>| Run all tests in the current file. `alchemist-mix-test-this-buffer` |
 |<kbd>C-c , a</kbd>| Run the whole elixir test suite. `alchemist-mix-test` |
 |<kbd>C-c , f</kbd>| Run all tests of a specific file `alchemist-mix-test-file` |
-|<kbd>C-c , n</kbd>| Jump to the next test inside the current file. `alchemist-test-mode-jump-to-next-test` |
-|<kbd>C-c , p</kbd>| Jump to the previous test inside the current file `alchemist-test-mode-jump-to-previous-test` |
+|<kbd>C-c , n</kbd>| Jump to the next test inside the current file. `alchemist-test-jump-to-next-test` |
+|<kbd>C-c , p</kbd>| Jump to the previous test inside the current file `alchemist-test-jump-to-previous-test` |
 
 ## Hooks
 

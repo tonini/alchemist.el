@@ -75,7 +75,7 @@ not set explicitly."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
   (alchemist-mix-execute `("test" ,(expand-file-name filename) ,@alchemist-mix-test-default-options)
-                         alchemist-test-mode-buffer-name))
+                         alchemist-test-buffer-name))
 
 (defun alchemist-mix--commands ()
   (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
@@ -101,7 +101,7 @@ not set explicitly."
   "Run the whole elixir test suite."
   (interactive)
   (alchemist-mix-execute `("test" ,@alchemist-mix-test-default-options)
-                         alchemist-test-mode-buffer-name))
+                         alchemist-test-buffer-name))
 
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
@@ -119,7 +119,7 @@ not set explicitly."
   (let* ((line (line-number-at-pos (point)))
          (file-and-line (format "%s:%s" buffer-file-name line)))
     (alchemist-mix-execute (list "test" file-and-line)
-                           alchemist-test-mode-buffer-name)))
+                           alchemist-test-buffer-name)))
 
 (defun alchemist-mix-compile (command &optional prefix)
   "Compile the whole elixir project. Prompt for the mix env if the prefix

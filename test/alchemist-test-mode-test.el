@@ -1,4 +1,4 @@
-;;; alchemist-test-mode-test.el --- Test suite for Alchemist testing mode
+;;; alchemist-test-test.el --- Test suite for Alchemist testing mode
 
 ;; Copyright © 2015 Samuel Tonini
 ;;
@@ -83,6 +83,6 @@ end
    (should (eq (alchemist-test-face-at 237) 'font-lock-type-face))
    (should (eq (alchemist-test-face-at 267) 'font-lock-variable-name-face))))
 
-(provide 'alchemist-test-mode-test)
+(provide 'alchemist-test-test)
 
-;;; alchemist-test-mode-test.el ends here
+;;; alchemist-test-test.el ends here

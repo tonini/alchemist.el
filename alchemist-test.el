@@ -1,4 +1,4 @@
-;;; alchemist-test-mode.el --- Minor mode for Elixir test files.
+;;; alchemist-test.el --- Minor mode for Elixir test files.
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -25,17 +25,17 @@
 
 ;;; Code:
 
-(defgroup alchemist-test-mode nil
+(defgroup alchemist-test nil
   "Minor mode for Elixir ExUnit files."
-  :prefix "alchemist-test-mode-"
+  :prefix "alchemist-test-"
   :group 'alchemist)
 
 ;; Variables
 
-(defvar alchemist-test-mode-buffer-name "*alchemist-test-report*"
+(defvar alchemist-test-buffer-name "*alchemist-test-report*"
   "Name of the test report buffer.")
 
-(defcustom alchemist-test-mode-highlight-tests t
+(defcustom alchemist-test-highlight-tests t
   "Non-nil means that specific functions for testing will
 be highlighted with more significant font faces."
   :type 'boolean
@@ -45,8 +45,8 @@ be highlighted with more significant font faces."
 (defvar alchemist-test-this-buffer #'alchemist-mix-test-this-buffer)
 (defvar alchemist-test #'alchemist-mix-test)
 (defvar alchemist-test-file #'alchemist-mix-test-file)
-(defvar alchemist-test-jump-to-previous-test #'alchemist-test-mode-jump-to-previous-test)
-(defvar alchemist-test-jump-to-next-test #'alchemist-test-mode-jump-to-next-test)
+(defvar alchemist-test-jump-to-previous-test #'alchemist-test-jump-to-previous-test)
+(defvar alchemist-test-jump-to-next-test #'alchemist-test-jump-to-next-test)
 
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
@@ -59,48 +59,48 @@ be highlighted with more significant font faces."
     map)
   "Keymap for `alchemist-test-mode'.")
 
-(setq alchemist-test-mode--test-regex
+(setq alchemist-test--test-regex
   "\\(^[[:space:]]*test .+ do[[:space:]]*$\\|^[[:space:]]* [0-9]+) test .+\\)")
 
 ;; Private functions
 
-(defun alchemist-test-mode--buffer-contains-tests-p ()
+(defun alchemist-test--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
   (save-excursion
     (save-match-data
       (beginning-of-buffer)
-      (re-search-forward alchemist-test-mode--test-regex nil t))))
+      (re-search-forward alchemist-test--test-regex nil t))))
 
-(defun alchemist-test-mode--jump-to-test (search-fn reset-fn)
+(defun alchemist-test--jump-to-test (search-fn reset-fn)
   "Move the point to the next/previous test, based on `search-fn' (which is the
 function that searches for the next test, can be re-search-forward or
 re-search-backward) and `reset-fn' (which is used when wrapping at the
 beginning/end of the buffer if no results were found)."
-  (when (alchemist-test-mode--buffer-contains-tests-p)
+  (when (alchemist-test--buffer-contains-tests-p)
     (save-match-data
-      (unless (funcall search-fn alchemist-test-mode--test-regex nil t)
+      (unless (funcall search-fn alchemist-test--test-regex nil t)
         (funcall reset-fn)
-        (funcall search-fn alchemist-test-mode--test-regex nil t))
+        (funcall search-fn alchemist-test--test-regex nil t))
       (back-to-indentation))))
 
 ;; Public functions
 
-(defun alchemist-test-mode-jump-to-next-test ()
+(defun alchemist-test-jump-to-next-test ()
   "Jump to the next ExUnit test. If there are no tests after the current
 position, jump to the first test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
-  (alchemist-test-mode--jump-to-test 're-search-forward 'beginning-of-buffer))
+  (alchemist-test--jump-to-test 're-search-forward 'beginning-of-buffer))
 
-(defun alchemist-test-mode-jump-to-previous-test ()
+(defun alchemist-test-jump-to-previous-test ()
   "Jump to the previous ExUnit test. If there are no tests before the current
 position, jump to the last test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
-  (alchemist-test-mode--jump-to-test 're-search-backward 'end-of-buffer))
+  (alchemist-test--jump-to-test 're-search-backward 'end-of-buffer))
 
-(defun alchemist-test-mode--highlight-syntax ()
-  (if alchemist-test-mode-highlight-tests
+(defun alchemist-test--highlight-syntax ()
+  (if alchemist-test-highlight-tests
       (font-lock-add-keywords nil
                               '(("^\s+\\(test\\)\s+" 1
                                  font-lock-variable-name-face t)
@@ -116,10 +116,11 @@ in this buffer."
 The following commands are available:
 
 \\{alchemist-test-mode-map}"
-  :lighter "" :keymap alchemist-test-mode-map
+  :lighter ""
   :group 'alchemist
+  :keymap alchemist-test-mode-map
   (when alchemist-test-mode
-    (alchemist-test-mode--highlight-syntax)))
+    (alchemist-test--highlight-syntax)))
 
 ;;;###autoload
 (defun alchemist-test-enable-mode ()
@@ -130,6 +131,6 @@ The following commands are available:
 (dolist (hook '(alchemist-mode-hook))
   (add-hook hook 'alchemist-test-enable-mode))
 
-(provide 'alchemist-test-mode)
+(provide 'alchemist-test)
 
-;;; alchemist-test-mode.el ends here
+;;; alchemist-test.el ends here
