@@ -241,6 +241,16 @@ defmodule Foo do
 
 end")
                    (alchemist-goto--get-full-path-of-alias "Watcher.Everywhere"))))
+  (should (equal "List"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias List, as: LT
+
+end")
+                   (alchemist-goto--get-full-path-of-alias "LT"))))
   (should (equal "def"
                  (with-temp-buffer
                    (alchemist-mode)

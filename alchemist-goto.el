@@ -138,7 +138,7 @@ declaration has been found."
   (if (not (alchemist-utils--empty-string-p module))
       (let* ((aliases (mapcar (lambda (m)
                                 (when (string-match-p (format "^%s" (car (cdr m))) module)
-                                  (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module)))
+                                  (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module t)))
                               (alchemist-goto--alises-of-current-buffer)))
              (aliases (delete nil aliases)))
         (if aliases
