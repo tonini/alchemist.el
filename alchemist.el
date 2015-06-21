@@ -59,7 +59,7 @@
 (require 'alchemist-iex)
 (require 'alchemist-eval)
 (require 'alchemist-goto)
-(require 'alchemist-test)
+(require 'alchemist-test-mode)
 
 (eval-after-load 'company
   '(progn
