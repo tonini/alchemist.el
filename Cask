@@ -3,7 +3,7 @@
 
 (package-file "alchemist.el")
 
-(files "*.el" "*.exs")
+(files "*.el" ("server" "server/*.exs"))
 
 (development
  (depends-on "f")
