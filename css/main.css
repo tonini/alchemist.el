@@ -199,7 +199,7 @@ textarea {
 }
 
 #container {
-  padding: 80px 0 0 0;
+  padding: 50px 0 0 0;
   width: 600px;
   margin: 0 auto;
   text-align: center;
@@ -211,10 +211,12 @@ h1 {
   color: #333;
 }
 
+
 p {
   color: #777;
   font-size: 18px;
   font-weight: 300;
+  margin-bottom: 30px;
 }
 
 .logo {
@@ -224,7 +226,7 @@ p {
 .slogan {
   width: 500px;
   text-align: left;
-  margin-bottom: 80px;
+  margin-bottom: 55px;
 }
 
 .slogan p {
@@ -232,4 +234,36 @@ p {
   font-size: 18px;
   font-weight: 200;
   color: #777;
+}
+
+.features {
+  width: 200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+ul {
+  width: 300px;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+ul li {
+  color: #777;
+  font-size: 18px;
+  font-weight: 300;
+  margin: 0;
+  padding: 2px 0;
+}
+
+.footer p {
+  padding: 20px 0;
+  font-size: 14px;
+}
+
+a {
+  color: #333;
+
 }
