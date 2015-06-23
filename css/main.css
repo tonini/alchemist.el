@@ -243,7 +243,7 @@ p {
 }
 
 ul {
-  width: 300px;
+  width: 220px;
   text-align: left;
   margin: 0;
   padding: 0;
@@ -265,5 +265,11 @@ ul li {
 
 a {
   color: #333;
+}
 
+.go {
+  padding: 40px 0 10px 0;
+  width: 250px;
+  margin: 0 auto;
+  text-align: center;
 }
