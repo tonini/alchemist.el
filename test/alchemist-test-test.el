@@ -83,6 +83,21 @@ end
    (should (eq (alchemist-test-face-at 237) 'font-lock-type-face))
    (should (eq (alchemist-test-face-at 267) 'font-lock-variable-name-face))))
 
+(ert-deftest get-list-of-all-tests-in-buffer ()
+  (should (equal '("\"create a pkg file/dir skeleton\"" ":symbol")
+                 (with-temp-buffer
+                   (alchemist-test-mode)
+                   (insert "
+defmodule MyTest do
+  test \"create a pkg file/dir skeleton\" do
+  end
+
+  test :symbol do
+  end
+end
+")
+                   (mapcar 'car (alchemist-test-mode--tests-in-buffer))))))
+
 (provide 'alchemist-test-mode-test)
 
 ;;; alchemist-test-mode-test.el ends here
