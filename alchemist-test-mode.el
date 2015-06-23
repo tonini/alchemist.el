@@ -102,13 +102,8 @@ macro) while the values are the position at which the test matched."
         (while (re-search-forward alchemist-test-mode--test-regex nil t)
           (let* ((position (car (match-data)))
                  (matched-string (match-string 10)))
-<<<<<<< Updated upstream
-            (remove-text-properties 0 (- (length matched-string) 1) '(face nil) matched-string)
-            (add-to-list 'tests (cons matched-string position))))
-=======
             (set-text-properties 0 (length matched-string) nil matched-string)
             (add-to-list 'tests (cons matched-string position) t)))
->>>>>>> Stashed changes
         tests))))
 
 ;; Public functions
