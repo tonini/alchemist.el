@@ -199,7 +199,7 @@ textarea {
 }
 
 #container {
-  padding: 50px 0 0 0;
+  padding: 80px 0 0 0;
   width: 600px;
   margin: 0 auto;
   text-align: center;
@@ -226,7 +226,7 @@ p {
 .slogan {
   width: 500px;
   text-align: left;
-  margin-bottom: 55px;
+  margin-bottom: 75px;
 }
 
 .slogan p {
