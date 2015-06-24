@@ -1,4 +1,4 @@
-;;; alchemist-server.el --- -*- lexical-binding: t -*-
+;;; alchemist-server.el --- Interface to the Alchemist Elixir server. -*- lexical-binding: t -*-
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;
+;; Interface to the Alchemist Elixir server.
 
 ;;; Code:
 
