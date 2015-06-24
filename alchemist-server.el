@@ -30,6 +30,8 @@
   :prefix "alchemist-server-"
   :group 'alchemist)
 
+;; Variables
+
 (defvar alchemist-server--envs '("dev" "prod" "test" "shared")
   "The list of server environments to use.")
 
