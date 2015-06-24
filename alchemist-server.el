@@ -25,6 +25,11 @@
 
 ;;; Code:
 
+(defgroup alchemist-server nil
+  "Interface to the Alchemist Elixir server."
+  :prefix "alchemist-server-"
+  :group 'alchemist)
+
 (defvar alchemist-server
   (concat (file-name-directory load-file-name) "server/server.exs")
   "Script file with alchemist server.")
