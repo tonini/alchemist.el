@@ -118,35 +118,13 @@ will be started instead."
   (setq alchemist-server--output (cons output alchemist-server--output))
   (unless (alchemist-utils--empty-string-p output)
     (if (string-match "END-OF-COMPLETE$" output)
-        (let* ((string (apply #'concat (reverse alchemist-server--output)))
-               (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
-               (candidates (if (not (alchemist-utils--empty-string-p string))
-                               (alchemist-complete--output-to-list
-                                (alchemist--utils-clear-ansi-sequences string))
-                             '()))
-               (candidates (if candidates
-                               (remove-duplicates candidates)
-                             '()))
-               (candidates (if candidates
-                               (alchemist-complete--build-candidates candidates)
-                             '())))
+        (let ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-server--output)))
           (alchemist-complete--serve-candidates-to-company candidates)))))
 
 (defun alchemist-server-complete-canidates-filter-with-context (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-COMPLETE-WITH-CONTEXT$" output)
-      (let* ((string (apply #'concat (reverse alchemist-server--output)))
-             (string (replace-regexp-in-string "END-OF-COMPLETE-WITH-CONTEXT$" "" string))
-             (candidates (if (not (alchemist-utils--empty-string-p string))
-                             (alchemist-complete--output-to-list
-                              (alchemist--utils-clear-ansi-sequences string))
-                           '()))
-             (candidates (if candidates
-                             (remove-duplicates candidates)
-                           '()))
-             (candidates (if candidates
-                             (alchemist-complete--build-candidates candidates)
-                           '())))
+      (let ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-server--output)))
         (alchemist-complete--serve-candidates-to-company candidates))))
 
 (defun alchemist-server-complete-filter (process output)
@@ -302,8 +280,7 @@ will be started instead."
                                          (if candidates
                                              (let* ((search (alchemist-complete--completing-prompt search candidates)))
                                                (alchemist-server-help-without-complete search))
-                                           (message "No documentation found for '%s'" search))
-                                         ))
+                                           (message "No documentation found for '%s'" search))))
   (set-process-filter (alchemist-server--process) #'alchemist-server-complete-filter)
   (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" search)))
 
@@ -314,7 +291,6 @@ will be started instead."
   (setq alchemist-server--output nil)
   (set-process-filter (alchemist-server--process) #'alchemist-server-doc-filter)
   (process-send-string (alchemist-server--process) (format "DOC %s\n" search)))
-
 
 (provide 'alchemist-server)
 
