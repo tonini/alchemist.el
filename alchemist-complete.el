@@ -108,6 +108,28 @@
             (replace-regexp-in-string "\\.$" "" initial)))
           (t initial))))
 
+(defun alchemsit-complete--dabbrev-code-candidates ()
+  "This function uses a piece of functionality of company-dabbrev-code backend.
+
+Please have a look at the company-dabbrev-code function for more
+detailed information."
+  (let ((case-fold-search company-dabbrev-code-ignore-case)
+        (candidates (company-dabbrev--search
+                     (company-dabbrev-code--make-regexp alchemist-server--last-completion-exp)
+                     company-dabbrev-code-time-limit
+                     (pcase company-dabbrev-code-other-buffers
+                       (`t (list major-mode))
+                       (`code company-dabbrev-code-modes)
+                       (`all `all))
+                     t)))
+    (delete-dups candidates)))
+
+(defun alchemist-complete--serve-candidates-to-company (candidates)
+  (let ((candidates (if candidates
+                        candidates
+                      (alchemsit-complete--dabbrev-code-candidates))))
+    (funcall alchemist-server-company-callback candidates)))
+
 (provide 'alchemist-complete)
 
 ;;; alchemist-complete.el ends here

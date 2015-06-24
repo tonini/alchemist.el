@@ -117,7 +117,7 @@
                (candidates (if candidates
                                (alchemist-complete--build-candidates candidates)
                              '())))
-          (funcall alchemist-server-company-callback candidates)))))
+          (alchemist-complete--serve-candidates-to-company candidates)))))
 
 (defun alchemist-server-complete-canidates-filter-with-context (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
@@ -130,12 +130,11 @@
                            '()))
              (candidates (if candidates
                              (remove-duplicates candidates)
-                             '()))
+                           '()))
              (candidates (if candidates
                              (alchemist-complete--build-candidates candidates)
                            '())))
-        (funcall alchemist-server-company-callback candidates))))
-
+        (alchemist-complete--serve-candidates-to-company candidates))))
 
 (defun alchemist-server-complete-filter (process output)
   (with-local-quit
@@ -240,6 +239,7 @@
 
 (defun alchemist-server-complete-candidates (exp)
   (setq alchemist-server--output nil)
+  (setq alchemist-server--last-completion-exp exp)
   (alchemist-server--start)
   (if (or (equal major-mode 'alchemist-iex-mode)
           (not (alchemist-goto--context-exists-p)))
@@ -253,12 +253,12 @@
                             (if (not (or (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
                                          (string= (replace-regexp-in-string "\\.$" "" (car (cdr a)))
                                                   (replace-regexp-in-string "\\.$" "" (car a)))))
-                            (format "{%s, %s}"
-                                    (if (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
+                                (format "{%s, %s}"
+                                        (if (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
+                                            (replace-regexp-in-string "\\.$" "" (car a))
+                                          (replace-regexp-in-string "\\.$" "" (car (cdr a))))
                                         (replace-regexp-in-string "\\.$" "" (car a))
-                                      (replace-regexp-in-string "\\.$" "" (car (cdr a))))
-                                    (replace-regexp-in-string "\\.$" "" (car a))
-                                    ))) (alchemist-goto--alises-of-current-buffer)))
+                                        ))) (alchemist-goto--alises-of-current-buffer)))
          (use-modules (alchemist-goto--use-modules-in-the-current-module-context))
          (import-modules (alchemist-goto--import-modules-in-the-current-module-context)))
     (if (not (alchemist-utils--empty-string-p module))
