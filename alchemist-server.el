@@ -30,6 +30,9 @@
   :prefix "alchemist-server-"
   :group 'alchemist)
 
+(defvar alchemist-server--envs '("dev" "prod" "test" "shared")
+  "The list of server environments to use.")
+
 (defvar alchemist-server
   (concat (file-name-directory load-file-name) "server/server.exs")
   "Script file with alchemist server.")
@@ -41,10 +44,13 @@
   (format "elixir %s %s" alchemist-server alchemist-server--env))
 
 (defun alchemist-server-start (env)
-  "Start alchemist server for the current mix project in specific ENV."
+  "Start alchemist server for the current mix project in specific ENV.
+
+If a server already running, the current one will be killed and new one
+will be started instead."
   (interactive (list
                 (completing-read (format "(Alchemist-Server) run in environment: (default: %s) " alchemist-server--env)
-                                 alchemist-mix--envs nil nil nil)))
+                                 alchemist-server--envs nil nil nil)))
   (when (alchemist-server--process-p)
     (kill-process (alchemist-server--process)))
   (alchemist-server--start-with-env env))
