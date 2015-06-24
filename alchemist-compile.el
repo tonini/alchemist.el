@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;  Elixir compilation functionality
+;; Elixir compilation functionality.
 
 ;;; Code:
 
@@ -30,6 +30,8 @@
   :prefix "alchemist-compile-"
   :group 'alchemist)
 
+;; Variables
+
 (defcustom alchemist-compile-command "elixirc"
   "The shell command for elixirc."
   :type 'string
@@ -37,6 +39,18 @@
 
 (defvar alchemist-compile-buffer-name "*elixirc*"
   "Name of the elixir output buffer.")
+
+;; Private functions
+
+(defun alchemist-compile--file (filename)
+  (cond ((not (file-exists-p filename)) (error "The given file doesn't exist"))
+        ((string-match "\.exs$" filename) (error "The given file is an Elixir Script"))
+        (t (alchemist-compile (list alchemist-compile-command (expand-file-name filename))))))
+
+(defun alchemist-compile--read-command (command)
+  (read-shell-command "elixirc command: " (concat command " ")))
+
+;; Public functions
 
 (defun alchemist-compile-this-buffer ()
   "Compile the current buffer with elixirc."
@@ -47,14 +61,6 @@
   "Compile the given FILENAME."
   (interactive "Felixirc: ")
   (alchemist-compile--file (expand-file-name filename)))
-
-(defun alchemist-compile--file (filename)
-  (when (not (file-exists-p filename))
-    (error "The given file doesn't exists"))
-  (alchemist-compile (list alchemist-compile-command (expand-file-name filename))))
-
-(defun alchemist-compile--read-command (command)
-  (read-shell-command "elixirc command: " (concat command " ")))
 
 (defun alchemist-compile (cmdlist)
   "Compile CMDLIST with elixirc."

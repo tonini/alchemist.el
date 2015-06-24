@@ -1,4 +1,4 @@
-;;; alchemist-complete-tests.el ---
+;;; alchemist-complete-test.el ---
 
 ;; Copyright © 2014-2015 Samuel Tonini
 ;;
@@ -40,6 +40,8 @@ cmp:to_string/1")
                  '("List.delete" "List.delete" "List.to_string")))
   (should (equal (alchemist-complete--build-candidates '("Enum" "Enum" "Enumerable"))
                  '("Enum" "Enumerable")))
+  (should (equal (alchemist-complete--build-candidates '("List" "List"))
+                 '("List")))
   (should (equal (alchemist-complete--build-candidates '("def" "def/2" "defdelegate/2" "defexception/1"))
                  '("def" "defdelegate" "defexception")))
   (should (equal (alchemist-complete--build-candidates '("List.delete" "delete/2" "delete_at/2"))
@@ -47,7 +49,10 @@ cmp:to_string/1")
   (should (equal (alchemist-complete--build-candidates '(":file" "filename" "file_server" "file_io_server"))
                  '(":filename" ":file_server" ":file_io_server")))
   (should (equal (alchemist-complete--build-candidates '(":file." "pid2name/1" "set_cwd/1" "rename/2"))
-                 '(":file.pid2name" ":file.set_cwd" ":file.rename"))))
+                 '(":file.pid2name" ":file.set_cwd" ":file.rename")))
+  (should (equal (alchemist-complete--build-candidates '("pid2name/1"))
+                 '("pid2name")))
+  )
 
 (ert-deftest test-complete-candidates/build-help-candidates ()
   "Build a candidates list"
@@ -59,9 +64,9 @@ cmp:to_string/1")
                  '("List" "def/2" "defdelegate/2" "defexception/1")))
   (should (equal (alchemist-complete--build-help-candidates '("List.delete" "delete/2" "delete_at/2"))
                  '("List.delete/2" "List.delete_at/2")))
-  )
+  (should (equal (alchemist-complete--build-help-candidates '("String.Chars." "delete/2" "delete_at/2"))
+                 '("String.Chars" "String.Chars.delete/2" "String.Chars.delete_at/2")))
+  (should (equal (alchemist-complete--build-help-candidates '("String.Chars.Atom.to_string" "to_string/1"))
+                 '("String.Chars.Atom" "String.Chars.Atom.to_string/1"))))
 
-
-
-
-(provide 'alchemist-complete-tests)
+(provide 'alchemist-complete-test)

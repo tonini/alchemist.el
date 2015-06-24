@@ -7,6 +7,7 @@ elpa
 .depend
 alchemist-pkg.el
 packages/*
+test/sandbox
 TAGS
 .DS_STORE
 dist

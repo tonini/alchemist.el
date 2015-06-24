@@ -2,7 +2,7 @@
 [![Build Status](https://img.shields.io/travis/tonini/alchemist.el.svg)](https://travis-ci.org/tonini/alchemist.el)
 [![MELPA](http://melpa.org/packages/alchemist-badge.svg)](http://melpa.org/#/alchemist)
 [![MELPA Stable](http://stable.melpa.org/packages/alchemist-badge.svg)](http://stable.melpa.org/#/alchemist)
-[![Gratipay](https://img.shields.io/gratipay/tonini.svg)](https://gratipay.com/tonini/)
+[![Paypal](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=tonini%2esamuel%40gmail%2ecom&lc=CH&item_name=Support%20Alchemist%20maintainer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest)
 
 <br/>
 
@@ -33,6 +33,8 @@ Alchemist comes with a bunch of features, which are:
   - [Via el-get](#via-el-get)
   - [Manual](#manual)
 - [Configuration](#configuration)
+  - [Keybindings](#keybindings)
+  - [Testing-Mode](#testing-mode)
 - [Mix](#mix)
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
@@ -41,11 +43,12 @@ Alchemist comes with a bunch of features, which are:
 - [Documentation lookup](#documentation-lookup)
   - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Definition lookup](#definition-lookup)
+  - [Symbol definitions](#symbol-definitions)
 - [Auto-completion](#auto-completion)
-  - [Debug](#debug)
 - [IEx](#iex)
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
+- [Testing Mode](#testing-mode)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -59,9 +62,9 @@ Alchemist comes with a bunch of features, which are:
 `package.el` is the built-in package manager in Emacs.
 
 Alchemist.el is available on the three major community maintained repositories -
-[MELPA STABLE](melpa-stable.milkbox.net), [MELPA](http://melpa.milkbox.net) and [Marmalade](https://marmalade-repo.org/).
+[MELPA STABLE](http://melpa-stable.milkbox.net), [MELPA](http://melpa.milkbox.net) and [Marmalade](https://marmalade-repo.org/).
 
-You can install `Alchemist` with the following commnad:
+You can install `Alchemist` with the following command:
 
 <kbd>M-x package-install [RET] alchemist [RET]</kbd>
 
@@ -109,58 +112,33 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 
 There are some ways Alchemist can be adjusted that certain workflows operating differently.
 
-* Disable ansi color formatted documentation:
+### Keybindings
+
+* Use a different keybinding prefix than <kbd>C-c a</kbd>
 
 ```el
-(setq alchemist-help-ansi-color-docs nil) ;; default: t
+(setq alchemist-key-command-prefix (kbd "C-c ,")) ;; default: (kbd "C-c a")
 ```
 
-* Enable compilation if needed when do documentation lookup or completion on
-Elixir project current codebase.
+### Testing Mode
+
+* Disable the use of a more significant syntax highlighting on functions like `test`, `assert_*` and `refute_*`
 
 ```el
-(setq alchemist-project-compile-when-needed t) ;; default nil
-```
-
-* The function `alchemist-project-toggle-compile-when-needed` can also be used to enable/disable
-compilation on the fly.
-
-* By default, the error output of failed completions will be displayed in a
-separat buffer.
-
-Example output:
-
-```shell
-== ALCHEMIST COMPLETION FAILED ==
-== OUTPUT BEGIN:
-** (CompileError) mix.exs:5: function asdas/0 undefined
-    (stdlib) lists.erl:1336: :lists.foreach/2
-    (stdlib) erl_eval.erl:657: :erl_eval.do_apply/6
-
-== OUTPUT END:
-```
-
-This behavior can be disabled with set the following variable.
-
-```el
-(setq alchemist-complete-debug-mode nil) ;; default t
-```
-
-### Project configuration file
-
-To setup custom configurations for different Elixir projects, create a
-`.alchemist` file in the root of the project.
-
-Example:
-
-```json
-{
-  "ansi-color-docs": "nil",
-  "compile-when-needed": "t"
-}
+(setq alchemist-test-mode-highlight-tests nil) ;; default t
 ```
 
 ## Mix
+
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a x</kbd>|Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
+|<kbd>C-c a t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
+|<kbd>C-c a t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
+|<kbd>C-c a t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
+|<kbd>C-c a t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
+|<kbd>C-c a m c</kbd>|Compile the whole elixir project. Prompt for the mix env if the prefix arg is set. `alchemist-mix-compile`|
+
 
 <table>
     <tr>
@@ -174,26 +152,6 @@ Example:
     <tr>
         <td><code>alchemist-mix-new</code></td>
         <td>Create a new Elixir application.</td>
-    </tr>
-     <tr>
-        <td><code>alchemist-mix-test</code></td>
-        <td>Run the whole Elixir application test suite.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-test-this-buffer</code></td>
-        <td>Run the current buffer through <code>mix test</code> command.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-test-file</code></td>
-        <td>Run a file through <code>mix test</code> command.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-test-at-point</code></td>
-        <td>Run the test at point.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-compile</code></td>
-        <td>Compile the whole Elixir application.</td>
     </tr>
     <tr>
         <td><code>alchemist-mix-run</code></td>
@@ -233,57 +191,37 @@ Example:
     </tr>
 </table>
 
+You can customize the default options passed to the `mix test` commands by
+customizing the value of the `alchemist-mix-test-default-options` variable.
+
+Mix tasks could also be executed in a specific environment with the usage of `C-u` (universal-argument).
+Default environments are `prod`, `dev` and `test`. [Mix environments](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html#environments)
 
 ## Compile And Execute
 
 ### Compile functions
 
-<table>
-    <tr>
-        <th>Command (For the <code>M-x</code> prompt.)</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>alchemist-compile-this-buffer</code></td>
-        <td>Compile the current buffer with <code>elixirc</code>.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-compile-file</code></td>
-        <td>Compile the given <code>FILENAME</code>.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-compile</code></td>
-        <td>Run a custom compile command with <code>elixirc</code>.</td>
-    </tr>
-</table>
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a c c</kbd>|Compile the current buffer with the `elixirc` command. `alchemist-compile-this-buffer`|
+|<kbd>C-c a c f</kbd>|Compile the given `FILENAME` with the `elixirc` command. `alchemist-compile-file`|
+|<kbd>C-c a c b</kbd>|Run a custom compile command with `elixirc`. `alchemist-compile`|
 
 ### Execute functions
 
-<table>
-    <tr>
-      <th>Command (For the <code>M-x</code> prompt.)</th>
-      <th>Description</th>
-    </tr>
-    <tr>
-      <td><code>alchemist-execute-this-buffer</code></td>
-      <td>Run the current buffer through <code>elixir</code>.</th>
-    </tr>
-    <tr>
-      <td><code>alchemist-execute-file</code></th>
-      <td>Run <code>elixir</code> with the given <code>FILENAME</code>.</th>
-    </tr>
-    <tr>
-      <td><code>alchemist-execute</code></th>
-      <td>Run a custom execute command with <code>elixir</code>.</th>
-    </tr>
-</table>
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a e e</kbd>|Run the current buffer through `elixir` command. `alchemist-execute-this-buffer`|
+|<kbd>C-c a e f</kbd>|Run `elixir` command with the given `FILENAME`. `alchemist-execute-file` |
+|<kbd>C-c a e b</kbd>|Run a custom execute command with `elixir`. `alchemist-execute` |
 
 ## Project
 
 | Keybinding | Description |
 |-------------------|-------------|
 |<kbd>C-c a p f</kbd>|Open project test directory and list all test files. `alchemist-project-find-test`|
-|<kbd>C-c a p t</kbd>|Opens the appropriate test file for the current buffer file in a new window. `alchemist-project-open-tests-for-current-file`
+|<kbd>C-c a p s</kbd>|Toggle between a file and its tests in the current window. `alchemist-project-toggle-file-and-tests`
+|<kbd>C-c a p o</kbd>|Toggle between a file and its tests in other window. `alchemist-project-toggle-file-and-tests-other-window`
 
 ## Documentation lookup
 
@@ -295,29 +233,12 @@ What does that mean? It means no matter which Elixir version is currently
 installed on the system, the documentation you get by `alchemist` is the same
 `IEx` would deliver.
 
-<table>
-    <tr>
-        <th>Command (For the <code>M-x</code> prompt.)</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>alchemist-help</code></td>
-        <td>Run a custom search.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-help-history</code></td>
-        <td>Toggle through search history.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-help-search-at-point</code></td>
-        <td>Run <code>alchemist-help</code> with the expression under the
-    cursor. (example: <code>is_binary</code> or <code>Code.eval_string</code>)</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-help-search-marked-region</code></td>
-        <td>Run <code>alchemist-help</code> with the current marked region.</td>
-    </tr>
-</table>
+| Keybinding | Description                                     |
+|------------|-------------------------------------------------|
+|<kbd>C-c a h h</kbd>| Run a custom search. `alchemist-help`              |
+|<kbd>C-c a h i</kbd>| Look through search history. `alchemist-help-history` |
+|<kbd>C-c a h e</kbd>| Run `alchemist-help` with the expression under the cursor. (example: `is_binary`  or `Code.eval_string`). `alchemist-help-search-at-point`              |
+|<kbd>C-c a h m</kbd>| Run `alchemist-help` with the current marked region. `alchemist-help-search-marked-region`|
 
 ### Alchemist Help Minor Mode Keymap
 
@@ -328,36 +249,14 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
 
 ![Alchemist Help Minor Mode Key Summary](logo/help_summary.png)
 
-<table>
-    <tr>
-        <th>Key</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>q</code></td>
-        <td>Quit <code>*elixir help*</code> buffer window</td>
-    </tr>
-    <tr>
-        <td><code>e</code></td>
-        <td><code>alchemist-help-search-at-point</code></td>
-    </tr>
-    <tr>
-        <td><code>m</code></td>
-        <td><code>alchemist-help-search-marked-region</code></td>
-    </tr>
-    <tr>
-        <td><code>s</code></td>
-        <td><code>alchemist-help</code></td>
-    </tr>
-    <tr>
-        <td><code>h</code></td>
-        <td><code>alchemist-help-history</code></td>
-    </tr>
-    <tr>
-        <td><code>?</code></td>
-        <td><code>alchemist-help-minor-mode-key-binding-summary</code></td>
-    </tr>
-</table>
+| Keybinding | Description                                     |
+|------------|-------------------------------------------------|
+|<kbd>q</kbd>| Quit `*elixir help*` buffer window              |
+|<kbd>e</kbd>| `alchemist-help-search-at-point`                |
+|<kbd>m</kbd>| alchemist-help-search-marked-region             |
+|<kbd>s</kbd>| `alchemist-help`                                |
+|<kbd>h</kbd>| `alchemist-help-history`                        |
+|<kbd>?</kbd>| `alchemist-help-minor-mode-key-binding-summary` |
 
 ## Definition lookup
 
@@ -392,25 +291,28 @@ But if you would like to use it also inside the `erlang-mode` just setup the fol
 
 ![Definition Lookup](http://i.imgur.com/KGIHEOh.gif)
 
+### Symbol definitions
+
+There is the function `alchemist-goto-list-symbol-definitions` which lets you jump to a specific module, function or macro definitions in the current file.
+
 ## Auto-completion
 
 Alchemist users are advised to use
 [company-mode](http://company-mode.github.io/) to enable auto-completion inside
 of Elixir source code.
 
-Alchemist enables a company-mode elixir backend by default if company-mode is
+Alchemist enables a [company-mode](http://company-mode.github.io/) elixir backend by default if company-mode is
 installed.
 
 ![Alchemist Company](logo/alchemist-company.gif)
 
-When the keybinding <kbd>C-d</kbd> is used on one of the selected completion
-candidates, a documentation lookup for the candidate will be made and displayed in
-another window.
+There are the same keybindings for documentation lookup and definition opening for the selected
+candidate available like [company-mode](http://company-mode.github.io/) [provides](https://github.com/company-mode/company-mode/blob/27c913afb9446971d1e0f1f3b272e5650a6206c5/company.el#L609).
 
-### Debug
+<kbd>C-h</kbd> and <kbd>\<f1\></kbd> for documentation lookup for the current selected candidate.
+<kbd>C-w</kbd> to jump to the definition of the current selected candidate.
 
-The function `alchemist-complete-debug-mode` can be used to enable/disable the
-debug mode. When disabled, the error output from the completion will not be displayed.
+![Alchemist Completion Candidate Functionalities](logo/alchemist-company-doc-goto.gif)
 
 ## IEx
 
@@ -425,7 +327,6 @@ To start a custom IEx process with additional arguments (like: `iex --sname cust
 [universal-argument](http://www.gnu.org/software/emacs/manual/html_node/emacs/Arguments.html) <kbd>C-u</kbd>
 before run <kbd>M-x alchemist-iex-run</kbd>
 
-
 | Keybinding | Description |
 |--------------------|------------------------------------------|
 |<kbd>C-c a i i</kbd>| Start an IEx process. `alchemist-iex-run`|
@@ -439,15 +340,7 @@ before run <kbd>M-x alchemist-iex-run</kbd>
 ### Complete & Documentation lookup
 
 When Alchemist finds [company-mode](http://company-mode.github.io/) it enables
-completion inside in IEx process buffer.
-
-Documention lookup inside an IEx process buffer will also be activated.
-
-When the keybinding <kbd>C-d</kbd> is used on one of the selected completion
-candidates, a documentation lookup for the candidate will be made and displayed in
-another window.
-
-![IEx Completion and Docs lookup](logo/iex-complete-docs-lookup.gif)
+if for completion inside the IEx process buffer.
 
 ## Eval
 
@@ -467,6 +360,19 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 |<kbd>C-c a v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
 |<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
 |<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
+
+## Testing Mode
+
+Alchemist comes with an minor mode for testing which will be enabled by default inside `*_test.exs` files.
+
+| Keybinding | Description |
+|--------------------|------------------------------------------|
+|<kbd>C-c , s</kbd>| Run the test at point. `alchemist-mix-test-at-point` |
+|<kbd>C-c , v</kbd>| Run all tests in the current file. `alchemist-mix-test-this-buffer` |
+|<kbd>C-c , a</kbd>| Run the whole elixir test suite. `alchemist-mix-test` |
+|<kbd>C-c , f</kbd>| Run all tests of a specific file `alchemist-mix-test-file` |
+|<kbd>C-c , n</kbd>| Jump to the next test inside the current file. `alchemist-test-mode-jump-to-next-test` |
+|<kbd>C-c , p</kbd>| Jump to the previous test inside the current file `alchemist-test-mode-jump-to-previous-test` |
 
 ## Hooks
 

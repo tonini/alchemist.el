@@ -50,7 +50,7 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
 (make-variable-buffer-local 'alchemist-buffer--buffer-name)
 
 (defvar alchemist-buffer--error-link-options
-  '(elixir "^\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)\\(: warning\\)?$" 1 2 nil (3) 1)
+  '(elixir "\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)\\(?: warning\\)?" 1 2 nil (3) 1)
   "File link matcher for `compilation-error-regexp-alist-alist' (matches path/to/file:line).")
 
 ;; Faces
@@ -76,15 +76,21 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
     (when orphan-proc
       (kill-process orphan-proc))))
 
+;; Private functions
+
 (defvar alchemist-buffer--save-buffers-predicate
   (lambda ()
     (not (string= (substring (buffer-name) 0 1) "*"))))
+
+(defun alchemist-buffer-init-test-report (buffer status)
+  (when (string= "*alchemist-test-report*" (buffer-name buffer))
+    (alchemist-test-mode)))
 
 (defun alchemist-buffer--remove-dispensable-output ()
   (delete-matching-lines "\\(-*- mode:\\|Compiled \\|elixir-compilation;\\|Elixir started\\|^$\\)" (point-min) (point-max))
   (remove-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output t))
 
-(defun alchemist-buffer-remove-dispensable-output-after-finish (buffer msg)
+(defun alchemist-buffer--remove-dispensable-output-after-finish (buffer msg)
   (delete-matching-lines "\\(Excluding tags\\|Including tags\\|Elixir exited\\|Elixir finished\\)" (point-min) (point-max)))
 
 (defun alchemist-buffer--handle-compilation ()
@@ -97,6 +103,8 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
           'alchemist-buffer--failed-face))
 
   (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
+
+;; Public functions
 
 (defun alchemist-buffer-initialize-modeline ()
   "Initialize the mode-line face."
@@ -128,12 +136,14 @@ Argument BUFFER-NAME for the compilation."
         (compilation-start (mapconcat 'concat cmdlist " ")
                            'alchemist-buffer-mode
                            (lambda (b) alchemist-buffer--buffer-name))
-      (setq-local compilation-error-regexp-alist-alist
-                  (cons alchemist-buffer--error-link-options compilation-error-regexp-alist-alist))
-      (setq-local compilation-error-regexp-alist (cons 'elixir compilation-error-regexp-alist))
+      (set (make-local-variable 'compilation-error-regexp-alist-alist)
+           (cons alchemist-buffer--error-link-options compilation-error-regexp-alist-alist))
+      (set (make-local-variable 'compilation-error-regexp-alist)
+           (cons 'elixir compilation-error-regexp-alist))
       (add-hook 'compilation-filter-hook 'alchemist-buffer--handle-compilation nil t)
       (add-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output nil t)
-      (add-to-list 'compilation-finish-functions 'alchemist-buffer-remove-dispensable-output-after-finish)
+      (add-to-list 'compilation-finish-functions 'alchemist-buffer-init-test-report)
+      (add-to-list 'compilation-finish-functions 'alchemist-buffer--remove-dispensable-output-after-finish)
       (when alchemist-buffer-status-modeline
         (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))
 

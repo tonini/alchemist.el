@@ -21,13 +21,26 @@
 
 ;;; Commentary:
 
-;;  Interaction with an Elixir IEx process
+;; Interaction with an Elixir IEx process
 
 ;;; Code:
 
 (require 'comint)
 
-(defvar alchemist-iex-program-name "iex")
+(defgroup alchemist-iex nil
+  "Interaction with an Elixir IEx process."
+  :prefix "alchemist-iex-"
+  :group 'alchemist)
+
+(defcustom alchemist-iex-program-name "iex"
+  "The shell command for iex."
+  :type 'string
+  :group 'alchemist-iex)
+
+(defcustom alchemist-iex-prompt-read-only t
+  "If non-nil, the prompt will be read-only."
+  :type 'boolean
+  :group 'alchemist-iex)
 
 (defvar alchemist-iex-buffer nil
   "The buffer in which the Elixir IEx process is running.")
@@ -35,11 +48,29 @@
 (defvar alchemist-iex-mode-hook nil
   "Hook for customizing `alchemist-iex-mode'.")
 
+(defvar alchemist-iex-mode-map
+  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+    (define-key map "\t" 'completion-at-point)
+    (define-key map (kbd (format "%s i r" alchemist-key-command-prefix)) 'alchemist-iex-open-input-ring)
+    (define-key map (kbd (format "%s i c" alchemist-key-command-prefix)) 'alchemist-iex-clear-buffer)
+    (define-key map (kbd (format "%s h e" alchemist-key-command-prefix)) 'alchemist-help-search-at-point)
+    (define-key map (kbd (format "%s h m" alchemist-key-command-prefix)) 'alchemist-help-search-marked-region)
+    (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
+    map))
+
+(eval-after-load 'company
+  '(progn
+     (defun alchemist-iex--set-company-as-completion-at-point-function ()
+       (setq completion-at-point-functions '(company-complete)))
+     (add-hook 'alchemist-iex-mode-hook 'alchemist-iex--set-company-as-completion-at-point-function)))
+
 (define-derived-mode alchemist-iex-mode comint-mode "Alchemist-IEx"
-  "Major mode for interacting with an Elixir IEx process."
+  "Major mode for interacting with an Elixir IEx process.
+
+\\<alchemist-iex-mode-map>"
   nil "Alchemist-IEx"
-  (set (make-local-variable 'comint-prompt-regexp)
-       "^iex(\\([0-9]+\\|[a-zA-Z_@]+\\))> ")
+  (set (make-local-variable 'comint-prompt-regexp) "^iex\(.+\)>")
+  (set (make-local-variable 'comint-prompt-read-only) alchemist-iex-prompt-read-only)
   (set (make-local-variable 'comint-input-autoexpand) nil))
 
 (defun alchemist-iex-command (arg)
@@ -124,6 +155,19 @@ and jump to the buffer."
       (insert-before-markers str)
       (move-marker comint-last-input-end (point))
       (comint-send-string proc str-no-newline))))
+
+(defun alchemist-iex-clear-buffer ()
+  "Clear the current iex process buffer."
+  (interactive)
+  (let ((comint-buffer-maximum-size 0))
+    (comint-truncate-buffer)))
+
+(defun alchemist-iex-open-input-ring ()
+    "Open the buffer containing the input history."
+    (interactive)
+    (progn
+      (comint-dynamic-list-input-ring)
+      (other-window 1)))
 
 ;;;###autoload
 (defalias 'run-elixir 'alchemist-iex-run)

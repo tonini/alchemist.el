@@ -1,10 +1,10 @@
-\documentclass[a4paper,8pt]{article}
+\documentclass[a4paper,8pt]{extarticle}
 
 \usepackage{textcomp}
 \usepackage{fullpage}
 \usepackage{boxedminipage}
 \usepackage{multicol}
-\usepackage[a4paper,left=1cm,right=1cm,top=3cm,bottom=1cm]{geometry}
+\usepackage[a4paper,left=0.5cm,right=0.5cm,top=1.5cm,bottom=1.5cm]{geometry}
 \pagestyle{empty}
 
 \marginparwidth = 10pt
@@ -29,7 +29,7 @@
 
 \docheading
 
-\smallskip
+\bigskip
 
 \begin{boxedminipage}[t]{11cm}
 
@@ -47,8 +47,9 @@
 
 \end{boxedminipage}
 
-\setlength{\bigskipamount}{1.5cm}
+\setlength{\bigskipamount}{1cm}
 
+\bigskip
 \bigskip
 
 \setlength{\columnsep}{1cm}
@@ -57,7 +58,9 @@
 
 \group{Mix}
 
+\key{C-c a x}{alchemist-mix}
 \key{C-c a t}{alchemist-mix-test}
+\key{C-c a m c}{alchemist-mix-compile}
 \key{C-c a m t f}{alchemist-mix-test-file}
 \key{C-c a m t b}{alchemist-mix-test-this-buffer}
 \key{C-c a m t .}{alchemist-mix-test-at-point}
@@ -74,25 +77,24 @@
 \key{C-c a e f}{alchemist-execute-file}
 \key{C-c a e b}{alchemist-execute-this-buffer}
 
-
-\group{Project}
-
-\key{C-c a p f}{alchemist-project-find-test}
-\key{C-c a p t}{alchemist-project-open-tests-for-current-file}
-
-
-\columnbreak
-
 \group{Documentation Lookup}
 
 \key{C-c a h h}{alchemist-help}
+\key{C-c a h i}{alchemist-help-history}
 \key{C-c a h e}{alchemist-help-search-at-point}
 \key{C-c a h m}{alchemist-help-search-marked-region}
 
 \group{Definition Lookup}
 
 \key{M-.}{alchemist-goto-definition-at-point}
+\key{M-,}{alchemist-goto-jump-back}
+\key{C-c , .}{alchemist-goto-list-symbol-definitions}
 
+\group{Project}
+
+\key{C-c a p f}{alchemist-project-find-test}
+\key{C-c a p s}{alchemist-project-toggle-file-and-tests}
+\key{C-c a p o}{alchemist-project-toggle-file-and-tests-other-window}
 
 \group{IEx}
 
@@ -120,5 +122,26 @@
 \key{C-c a v r}{alchemist-eval-print-quoted-buffer}
 
 \end{multicols}
+
+\setlength{\bigskipamount}{1cm}
+
+\bigskip
+
+\begin{boxedminipage}[t]{8cm}
+
+\medskip
+
+\helpgroup{Alchemist Test Mode}
+
+\helpkey{C-c , a}{alchemist-test}
+\helpkey{C-c , v}{alchemist-test-this-buffer}
+\helpkey{C-c , s}{alchemist-test-at-point}
+\helpkey{C-c , f}{alchemist-test-file}
+\helpkey{C-c , p}{alchemist-test-jump-to-previous-test}
+\helpkey{C-c , n}{alchemist-test-jump-to-next-test}
+
+\medskip
+
+\end{boxedminipage}
 
 \end{document}

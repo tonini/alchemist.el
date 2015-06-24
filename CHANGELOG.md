@@ -1,6 +1,117 @@
 # Changelog
 
-## v0.14.0-dev (unreleased)
+## v.1.1.0 (2015-06-22)
+
+### Enhancements
+
+  * [Completion] Implement completion for alias modules.
+  * [Goto] Jump to definition of aliased modules implemented.
+  * [Goto] Refine regex extraction of symbol defintion for one line def (remove `,`).
+  * [Help] Jump to documentation of aliased modules implemented.
+  * [Server] Refine the server to be more structured and maintainable.
+  * [Server] Implement a custom version of the IEx.Autocompleter to handle context aliases.
+  * [IEx] Add keybindings for documentation lookup and jump to definition.
+  * [IEx] Add keybinding for open a buffer with the history of the current session to choose from.
+  * [Test] The test keybindings are now also available inside the test report.
+  * [Test] Toggle through tests inside the `*alchemist-test-report*`
+  * [Mix] Separate the buffer in which task will run. (example: `*alchemist-test-report*` or `*mix* `)
+  * [Test-Mode] Make the `test`, `asssert_*` and `refute_*` syntax highlighting more significant within the test mode.
+
+## v1.0.1 (2015-06-16)
+
+### Bugfix
+
+  * [Utils] Remove `s-trim` function from the library `s.el` and replace it with native emacs lisp.
+
+## v1.0 (2015-06-16)
+
+### Enhancements
+
+  * [Server] Implement a server which runs as background process for each mix project or one for project independent work.
+  * [Completion] Use the server background process for all the completion related functionality.
+  * [Goto] Use the server background process for all the go to code definition related functionality.
+  * [Eval] Use the server background process for all the inline code evaluation related functionality.
+  * [Help] Use the server background process for all the documentation lookup related functionality.
+  * [Completion] Functions of modules which are used inside a context with `use` or `import` will be completed.
+  * [Completion] Functions in the context of the current module will be completed.
+  * [Goto] Handle Erlang syntax specific aliases
+  * [Completion] Use the company-mode specific functions for doc and location lookup
+    The functionality to open the doc and jumpt to location for the current selected completion candidate is now called through the proper company-mode functions.
+  * [Goto] Improvement of symbols for one line definitions.
+
+### Changes
+
+  * [Project] remove `.alchemist` setup file. There is no need anymore for controlling the compiling in special cases.
+  * [Project] remove legacy `alchemist-project-open-tests-for-current-file` function
+
+### Bugfix
+
+  * [Help] Fix wrong message about not existing doc
+  * [Goto] Fix regex for jumping to functions inside file
+  * [Goto] Fix issue that jumping to functions inside file without function parentheses
+  * [Goto] `save-excursion` have to be used to restore the last position informations after `parse-partial-sexp` call.
+
+## v0.16.1 (2015-06-01)
+
+### Bugfix
+
+  * [Completion] Completion process buffer will not be deleted after usage because there are know issues with `evil-mode` users.
+
+## v0.16.0 (2015-06-01)
+
+### Enhancements
+
+  * [Mix] Mix commands can be executed in a specific environment with the usage of `C-u` (universal-argument)
+  * [Goto] Open a prompt with all the modules/function/macros definitions inside the current file. `alchemist-goto-list-symbol-definitions`
+  * [Goto] Jump to definition inside the current file.
+  * [Test-Mode] Introduce a ExUnit minor mode for `*_test.exs` files.
+  * [Test-Mode] Default keybindings with prefix `C-c ,` for running specific test functions.
+  * [Test-Mode] Functionality to go to next/previous test block.
+  * [Completion] Completion process buffer will be deleted after usage, there is no need to have it around after it.
+
+## v0.15.0 (2015-05-28)
+
+### Enhancements
+
+  * [Goto] Support jumping to `Kernel` and `Kernel.Specialforms` functions
+  * [Project] `alchemist-project-open-tests-for-current-file` needs to be an interactive function
+    and `alchemist--project-open-tests-for-current-file` not (it's a private function)
+  * [Keybindings] Add customizable keybinding prefix (default: `C-c a`)
+  * [Keybindings] Add keybinding for `alchemist-mix` (`C-c a x`)
+  * [IEx] IEx prompt should not be deletable, set it read-only.
+  * [Mix] Add keybinding for `alchemist-mix-compile`. (`C-c a m c`)
+  * [Completion] Make documentation lookup and jump to defintion for selected completion
+    candidate more accessable with using the same keybindings as company-mode uses.
+  * [Refcard] Update refcard with keybinding for `alchemist-mix` (`C-c a x`)
+  * [Refcard] Update refcard with new keybindings for project test files functionality.
+
+### Bugfixes
+
+  * [Goto] To avoid issues with void `find-tag-marker-ring` variable require `etags` package.
+
+## v0.14.0 (2015-05-16)
+
+### Enhancements
+
+  * [Goto] Handle alias of module name, so jump to defintion and modules also working.
+  * [Project] Add functions to toggle between test and implementation.
+  * [Mix] Exclude pending tests by default.
+  * [Mix] Use a variable for default mix test options.
+  * [IEx] Use `company-complete` as default `completion-at-point` function if company is available.
+  * [Compile] Don't compile `*.exs` files.
+
+### Bugfixes
+
+  * [Buffer] `alchemist-buffer--error-link-options` should match compilation errors
+
+## v0.13.1 (2015-01-16)
+
+### Bugfixes
+
+  * [Goto] Correct jump to definition inside the same file.
+  * [Goto] Simplify and make message about none found more understandable.
+  * [Help] Improve Regex for fetch expression under cursor.
+  * [Help] Handle long module constalations.
 
 ## v0.13.0 (2015-01-15)
 

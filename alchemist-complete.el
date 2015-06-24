@@ -30,18 +30,6 @@
   :prefix "alchemist-complete-"
   :group 'alchemist)
 
-(defvar alchemist-complete-debug-mode t)
-
-(defun alchemist-complete-debug-mode ()
-  "Enables the debug mode for completion if `alchemist-complete-debug-mode'
-is `nil', otherwise it disable it."
-  (interactive)
-  (setq alchemist-complete-debug-mode (not alchemist-complete-debug-mode))
-  (let ((state (if alchemist-complete-debug-mode
-                   "ENABLED"
-                 "DISABLED")))
-    (message "Alchemist complete debug mode is: %s" state)))
-
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
          (candidates (mapcar (lambda (c) (concat prefix "." c)) (cdr functions))))
@@ -56,6 +44,9 @@ is `nil', otherwise it disable it."
 
 (defun alchemist-complete--build-candidates (a-list)
   (let* ((search-term (car a-list))
+         (candidates (if (string-match-p "^.+\/" search-term)
+                         a-list
+                       (cdr a-list)))
          (candidates (mapcar (lambda (f)
                                (let* ((candidate f)
                                       (meta (if (string-match-p "^.+/" f)
@@ -69,16 +60,27 @@ is `nil', otherwise it disable it."
                                    (propertize (alchemist-complete--add-prefix-to-function search-term
                                                                                            (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta))
                                   (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
-                             (cdr a-list))))
+                             candidates)))
     candidates))
 
 (defun alchemist-complete--build-help-candidates (a-list)
   (let* ((search-term (car a-list))
-         (candidates (cond ((string-match-p "\\.$" search-term)
+         (candidates (cond ((> (alchemist-utils--count-char-in-str "\\." search-term) 1)
+                            (let ((search (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
+                                              (list (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "" search-term))
+                                            (list (replace-regexp-in-string "\\.$" "" search-term))))
+                                  (candidates (mapcar (lambda (c)
+                                                        (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
+                                                            (concat (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "." search-term) c)
+                                                          (concat search-term c)))
+                                                      (cdr a-list))))
+                              (append search candidates)))
+                            ((string-match-p "\\.$" search-term)
                             (alchemist-complete--concat-prefix-with-functions search-term a-list t))
-                           ((string-match-p "\\..+" search-term)
+                           ((string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                             (alchemist-complete--concat-prefix-with-functions search-term a-list))
-                           (t a-list))))
+                           (t
+                            a-list))))
     (delete-dups candidates)))
 
 (defun alchemist-complete--output-to-list (output)
@@ -93,58 +95,6 @@ is `nil', otherwise it disable it."
   (with-current-buffer buffer
     (delete-non-matching-lines "^cmp:" (point-min) (point-max))))
 
-(defun alchemist-complete--elixir-complete-code (exp)
-  (format "
-defmodule Alchemist do
-  def expand(exp) do
-    {status, result, list } = IEx.Autocomplete.expand(Enum.reverse(exp))
-
-    case { status, result, list } do
-      { :no, _, _ }  -> ''
-      { :yes, [], _ } -> List.insert_at(list, 0, exp)
-      { :yes, _,  _ } -> expand(exp ++ result)
-    end
-  end
-end
-
-Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
-" exp))
-
-(defun alchemist-complete--command (exp)
-  (let* ((elixir-code (alchemist-complete--elixir-complete-code exp))
-         (compile-option (if (and (alchemist-project-p)
-                                  (alchemist-project--load-compile-when-needed-setting))
-                             ""
-                           "--no-compile"))
-         (command (if (alchemist-project-p)
-                      (format "%s %s -e \"%s\"" alchemist-help-mix-run-command compile-option elixir-code)
-                    (format "%s -e \"%s\"" alchemist-execute-command elixir-code)))
-         )
-    (when (alchemist-project-p)
-      (alchemist-project--establish-root-directory))
-    command))
-
-(defun alchemist-complete--sentinel (proc callback &optional format-function)
-  (set-process-sentinel proc (lambda (process signal)
-                               (cond ((equal signal "finished\n")
-                                      (alchemist-complete--clear-buffer (process-buffer process))
-                                      (let* ((candidates (alchemist-complete--output-to-list
-                                                          (alchemist--utils-clear-ansi-sequences
-                                                           (alchemist-utils--get-buffer-content (process-buffer process)))))
-                                             (candidates (if format-function
-                                                             (funcall format-function candidates)
-                                                           candidates)))
-                                        (funcall callback candidates)))
-                                     (t
-                                      (when alchemist-complete-debug-mode
-                                        (alchemist-complete--debug-message (alchemist-utils--get-buffer-content (process-buffer process))))
-                                      (funcall callback '())))
-                               (alchemist-utils--erase-buffer (process-buffer process)))))
-
-(defun alchemist-complete--debug-message (content)
-  (alchemist-message (format "== ALCHEMIST COMPLETION FAILED ==\n== OUTPUT BEGIN:\n%s== OUTPUT END:"
-                             content)))
-
 (defun alchemist-complete--completing-prompt (initial completing-collection)
   (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
     (cond ((equal (length completing-collection) 1)
@@ -158,17 +108,27 @@ Alchemist.expand('%s') |> Enum.map fn (f) -> IO.puts('cmp:' ++ f) end
             (replace-regexp-in-string "\\.$" "" initial)))
           (t initial))))
 
-(defun alchemist-complete (exp callback)
-  (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
-         (command (alchemist-complete--command exp))
-         (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
-    (alchemist-complete--sentinel proc callback)))
+(defun alchemsit-complete--dabbrev-code-candidates ()
+  "This function uses a piece of functionality of company-dabbrev-code backend.
 
-(defun alchemist-complete-candidates (exp callback)
-  (let* ((buffer (get-buffer-create "alchemist-complete-buffer"))
-         (command (alchemist-complete--command exp))
-         (proc (start-process-shell-command "alchemist-complete-proc" buffer command)))
-    (alchemist-complete--sentinel proc callback #'alchemist-complete--build-candidates)))
+Please have a look at the company-dabbrev-code function for more
+detailed information."
+  (let ((case-fold-search company-dabbrev-code-ignore-case)
+        (candidates (company-dabbrev--search
+                     (company-dabbrev-code--make-regexp alchemist-server--last-completion-exp)
+                     company-dabbrev-code-time-limit
+                     (pcase company-dabbrev-code-other-buffers
+                       (`t (list major-mode))
+                       (`code company-dabbrev-code-modes)
+                       (`all `all))
+                     t)))
+    (delete-dups candidates)))
+
+(defun alchemist-complete--serve-candidates-to-company (candidates)
+  (let ((candidates (if candidates
+                        candidates
+                      (alchemsit-complete--dabbrev-code-candidates))))
+    (funcall alchemist-server-company-callback candidates)))
 
 (provide 'alchemist-complete)
 

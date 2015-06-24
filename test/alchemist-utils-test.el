@@ -58,6 +58,25 @@ a text
 ") "This is
 a text")))
 
+(ert-deftest test-utils/is-test-file-p ()
+  "Should return t if visited file is a test file"
+  (with-sandbox
+   (f-touch "this_is_a_test.exs")
+   (find-file "this_is_a_test.exs")
+   (should (alchemist-utils--is-test-file-p))))
+
+(ert-deftest test-if-string-is-empty ()
+  (should (equal (alchemist-utils--empty-string-p nil)
+                 t))
+  (should (equal (alchemist-utils--empty-string-p "")
+                 t))
+  (should (equal (alchemist-utils--empty-string-p " ")
+                 t))
+  (should (equal (alchemist-utils--empty-string-p "story")
+                 nil))
+  (should (equal (alchemist-utils--empty-string-p "    ")
+                 t)))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here

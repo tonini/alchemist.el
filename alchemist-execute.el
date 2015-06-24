@@ -40,6 +40,8 @@
 (defvar alchemist-execute-buffer-name "*elixir*"
   "Name of the elixir output buffer.")
 
+;; Private functions
+
 (defun alchemist-execute--file (filename)
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
@@ -47,6 +49,8 @@
 
 (defun alchemist-execute--read-command (command)
   (read-shell-command "elixir command: " (concat command " ")))
+
+;; Public functions
 
 (defun alchemist-execute-this-buffer ()
   "Run the current buffer through elixir."
