@@ -39,6 +39,7 @@ Alchemist comes with a bunch of features, which are:
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
+  - [Hooks](#hooks)
 - [Project](#project)
 - [Documentation lookup](#documentation-lookup)
   - [Keymap](#alchemist-help-minor-mode-keymap)
@@ -49,7 +50,6 @@ Alchemist comes with a bunch of features, which are:
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
 - [Testing](#testing)
-- [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
 - [Contributing](#contributing)
@@ -126,6 +126,14 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 
 ```el
 (setq alchemist-test-mode-highlight-tests nil) ;; default t
+```
+
+### Hooks
+
+* Run the whole test suite with `alchemist-mix-test` after saving a buffer.
+
+```el
+(setq alchemist-hooks-test-on-save t)
 ```
 
 ## Mix
@@ -373,15 +381,6 @@ Alchemist comes with an minor mode for testing which will be enabled by default 
 |<kbd>C-c , f</kbd>| Run all tests of a specific file `alchemist-mix-test-file` |
 |<kbd>C-c , n</kbd>| Jump to the next test inside the current file. `alchemist-test-mode-jump-to-next-test` |
 |<kbd>C-c , p</kbd>| Jump to the previous test inside the current file `alchemist-test-mode-jump-to-previous-test` |
-
-## Hooks
-
-There is a `after-save-hook` called `alchemist-hooks--test-on-save` which runs
-the whole elixir test suite via `alchemist-mix-test`. The `alchemist-mix-test`
-will just run if the current buffer is in major `elixir-mode`.
-
-If you would like to use it just set the `alchemist-hooks-test-on-save` variable
-via `(setq alchemist-hooks-test-on-save t)` or `M-x customize-group [RET] alchemist-hooks`
 
 ## Modeline
 
