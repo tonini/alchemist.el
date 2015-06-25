@@ -170,6 +170,10 @@ Argument END where the mark ends."
          (modules (delete-dups modules)))
     modules))
 
+(defun alchemist-help--eldoc-function ()
+  (let ((exp (alchemist-help--exp-at-point)))
+    (alchemist-server-prototype exp)))
+
 (defvar alchemist-help-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") #'quit-window)

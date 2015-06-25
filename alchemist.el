@@ -67,7 +67,10 @@
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
-  (alchemist-mode 1))
+  (alchemist-mode 1)
+  (eldoc-mode 1)
+  (set (make-local-variable 'eldoc-documentation-function) 'alchemist-help--eldoc-function)
+  )
 
 (defvar alchemist--version "1.1.0")
 

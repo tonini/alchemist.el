@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'cl)
+
 (defvar alchemist-server
   (concat (file-name-directory load-file-name) "server/server.exs")
   "Script file with alchemist server.")
@@ -34,6 +36,11 @@
 
 (defvar alchemist-server-command
   (format "elixir %s %s" alchemist-server alchemist-server--env))
+
+(defvar alchemist-server--proto-latch-process (let* (( process (start-process "alchemist-proto-latch" nil nil)))
+                                          (set-process-query-on-exit-flag process nil)
+                                          process))
+(defvar alchemist-server--proto-latch-value nil)
 
 (defun alchemist-server-start (env)
   "Start alchemist server for the current mix project in specific ENV."
@@ -302,6 +309,41 @@
   (set-process-filter (alchemist-server--process) #'alchemist-server-doc-filter)
   (process-send-string (alchemist-server--process) (format "DOC %s\n" search)))
 
+
+(defun alchemist-server-proto-filter (process output)
+  (setq alchemist-server--output (cons output alchemist-server--output))
+  (let* ((res
+          (if (string-match "END-OF-DOC$" output)
+              (let* ((string (apply #'concat (reverse alchemist-server--output)))
+                     (string (mapconcat 'identity
+                                        (reverse (delete-dups
+                                         (save-match-data
+                                           (let ((pos 0)
+                                                 matches)
+                                             (while (string-match "\\[7m\\[33m\\s-+\\(.*?\\)\\s-+\\(\\[0m\\)" string pos)
+                                               (push (match-string 1 string) matches)
+                                               (setq pos (match-end 2))
+                                               )
+                                             matches))))
+                                        "  |  ")))
+                string)
+            )))
+    (setq alchemist-server--proto-latch-value res)
+    (process-send-string alchemist-server--proto-latch-process "\n")
+    ))
+
+(defun alchemist-server-prototype (search)
+  (setq alchemist-server--output nil)
+  (alchemist-server--start)
+  (setq alchemist-server--output nil)
+  (setq alchemist-server--proto-latch-value nil)
+
+  (set-process-filter (alchemist-server--process) #'alchemist-server-proto-filter)
+  (process-send-string (alchemist-server--process) (format "DOC %s\n" search))
+
+  (while (accept-process-output alchemist-server--proto-latch-process 0.1) ;just a hack to simulate synchronous response
+    't)
+  alchemist-server--proto-latch-value)
 
 (provide 'alchemist-server)
 
