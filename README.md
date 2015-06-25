@@ -48,7 +48,7 @@ Alchemist comes with a bunch of features, which are:
 - [IEx](#iex)
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
-- [Testing Mode](#testing-mode)
+- [Testing](#testing)
 - [Hooks](#hooks)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -361,7 +361,7 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 |<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
 |<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
 
-## Testing Mode
+## Testing
 
 Alchemist comes with an minor mode for testing which will be enabled by default inside `*_test.exs` files.
 
