@@ -91,6 +91,25 @@ will be started instead."
                          "alchemist-server")))
     process-name))
 
+(defun alchemist-server--complete-with-context (exp)
+  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+                   (alchemist-goto--get-context-modules)))
+         (aliases (alchemist-utils--prepare-aliases-for-elixir
+                   (alchemist-goto--alises-of-current-buffer))))
+    (cond
+     ((not (string= modules "[]"))
+      (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter-with-context)
+      (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s;%s;%s\n"
+                                                               exp
+                                                               modules
+                                                               aliases)))
+     (t
+      (alchemist-server--complete exp)))))
+
+(defun alchemist-server--complete (exp)
+  (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
+  (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
+
 (defun alchemist-server-eval-filter (process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-EVAL$" output)
@@ -234,44 +253,8 @@ will be started instead."
   (alchemist-server--start)
   (if (or (equal major-mode 'alchemist-iex-mode)
           (not (alchemist-goto--context-exists-p)))
-      (alchemist-server--iex-complete exp)
+      (alchemist-server--complete exp)
     (alchemist-server--complete-with-context exp)))
-
-(defun alchemist-server--complete-with-context (exp)
-  (let* ((module (alchemist-goto--current-module-name))
-         (modules '())
-         (aliases (mapcar (lambda (a)
-                            (if (not (or (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
-                                         (string= (replace-regexp-in-string "\\.$" "" (car (cdr a)))
-                                                  (replace-regexp-in-string "\\.$" "" (car a)))))
-                                (format "{%s, %s}"
-                                        (if (alchemist-utils--empty-string-p (replace-regexp-in-string "\\.$" "" (car (cdr a))))
-                                            (replace-regexp-in-string "\\.$" "" (car a))
-                                          (replace-regexp-in-string "\\.$" "" (car (cdr a))))
-                                        (replace-regexp-in-string "\\.$" "" (car a))
-                                        ))) (alchemist-goto--alises-of-current-buffer)))
-         (use-modules (alchemist-goto--use-modules-in-the-current-module-context))
-         (import-modules (alchemist-goto--import-modules-in-the-current-module-context)))
-    (if (not (alchemist-utils--empty-string-p module))
-        (push module modules))
-    (push use-modules modules)
-    (push import-modules modules)
-    (if (not modules)
-        (progn
-          (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
-          (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
-      (progn
-        (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter-with-context)
-        (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s;[%s];%s\n"
-                                                                 exp
-                                                                 (mapconcat #'identity (alchemist-utils--flatten modules) ",")
-                                                                 (format "[%s]" (if (mapconcat #'identity aliases ",")
-                                                                                    (mapconcat #'identity aliases ",")
-                                                                                  ""))))))))
-
-(defun alchemist-server--iex-complete (exp)
-  (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
-  (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
 
 (defun alchemist-server-help-with-complete (search)
   (setq alchemist-server--output nil)

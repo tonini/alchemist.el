@@ -89,6 +89,24 @@ It walks the directory tree until it finds a elixir project root indicator."
              (string (replace-regexp-in-string "\s+$" "" string)))
         (string= string ""))))
 
+(defun alchemist-utils--prepare-aliases-for-elixir (aliases)
+  (let* ((aliases (mapcar (lambda (a)
+                            (let ((module (replace-regexp-in-string "\\.$" "" (car a)))
+                                  (alias (replace-regexp-in-string "\\.$" "" (car (cdr a)))))
+                            (if (not (or (alchemist-utils--empty-string-p alias)
+                                         (string= alias module)))
+                                (format "{%s, %s}"
+                                        (if (alchemist-utils--empty-string-p alias)
+                                            module
+                                          alias)
+                                        module)))) aliases))
+         (aliases (mapconcat #'identity aliases ",")))
+    (format "[%s]" aliases)))
+
+(defun alchemist-utils--prepare-modules-for-elixir (modules)
+  (let* ((modules (mapconcat #'identity modules ",")))
+    (format "[%s]" modules)))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here

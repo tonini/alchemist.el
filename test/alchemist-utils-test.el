@@ -77,6 +77,19 @@ a text")))
   (should (equal (alchemist-utils--empty-string-p "    ")
                  t)))
 
+(ert-deftest test-utils/prepare-aliases-for-elixir ()
+  (should (equal "[{MyList, List},{AlreadySentError, Plug.Conn.AlreadySentError}]"
+                 (alchemist-utils--prepare-aliases-for-elixir
+                  (list (list "List" "MyList") (list "Plug.Conn.AlreadySentError" "AlreadySentError")))))
+  (should (equal "[]" (alchemist-utils--prepare-aliases-for-elixir '()))))
+
+(ert-deftest test-utils/prepare-modules-for-elixir ()
+  (should (equal "[Ek,Behaviour,Plug.Conn]"
+                 (alchemist-utils--prepare-modules-for-elixir
+                  (list "Ek" "Behaviour" "Plug.Conn"))))
+  (should (equal "[]" (alchemist-utils--prepare-modules-for-elixir '("")))))
+
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here

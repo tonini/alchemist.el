@@ -67,6 +67,16 @@ declaration has been found."
             (setq found-flag-p t)))
         module-name))))
 
+(defun alchemist-goto--get-context-modules ()
+  (let ((current-module (alchemist-goto--current-module-name))
+        (use-modules (alchemist-goto--use-modules-in-the-current-module-context))
+        (import-modules (alchemist-goto--import-modules-in-the-current-module-context))
+        (modules '()))
+    (push current-module modules)
+    (push use-modules modules)
+    (push import-modules modules)
+    (alchemist-utils--flatten modules)))
+
 (defun alchemist-goto--use-modules-in-the-current-module-context ()
   (let ((modules '())
         (context (alchemist-goto--current-module-name)))
