@@ -39,17 +39,19 @@
   :type 'boolean
   :group 'alchemist-company)
 
-(defun alchemist-company--show-documentation (selected)
+(defun alchemist-company--show-documentation ()
   (interactive)
   (company--electric-do
-    (let* ((candidate (format "%s%s" selected (alchemist-company--annotation selected))))
+    (let* ((selected (nth company-selection company-candidates))
+           (candidate (format "%s%s" selected (alchemist-company--annotation selected))))
       (alchemist-help--execute-without-complete candidate))))
 (put 'alchemist-company--show-documentation 'company-keep t)
 
-(defun alchemist-company--open-definition (selected)
+(defun alchemist-company--open-definition ()
   (interactive)
   (company--electric-do
-    (alchemist-goto--open-definition selected)))
+    (let* ((selected (nth company-selection company-candidates)))
+      (alchemist-goto--open-definition selected))))
 (put 'alchemist-company--open-definition 'company-keep t)
 
 (defun alchemist-company--annotation (candidate)
@@ -67,8 +69,8 @@
     (prefix (and (or (eq major-mode 'elixir-mode)
                      (string= mode-name "Alchemist-IEx"))
                  (alchemist-help--exp-at-point)))
-    (doc-buffer (alchemist-company--show-documentation arg))
-    (location (alchemist-company--open-definition arg))
+    (doc-buffer (alchemist-company--show-documentation))
+    (location (alchemist-company--open-definition))
     (candidates (cons :async
                       (lambda (cb)
                         (setq alchemist-server-company-callback cb)
