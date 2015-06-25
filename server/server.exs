@@ -9,8 +9,6 @@ defmodule Alchemist.Server do
   alias Alchemist.Case
 
   def start([env]) do
-    # Preload Enum so we load basic Elixir/Erlang code
-    IEx.Autocomplete.expand('.munE')
     :ets.new(:alchemist, [:named_table])
     loop(all_loaded(), env)
   end
