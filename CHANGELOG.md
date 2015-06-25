@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.1.1 (unreleased)
+## v1.1.1 (2015-06-26)
 
 ### Enhancements
 
