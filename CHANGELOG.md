@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.1.1 (unreleased)
+
+### Enhancements
+
+  * [Test] List tests inside current test file and prompt for jumping to it.
+  * [Completion] Use company-dabbrev-code as fallback backend
+  * [Server] Use a custom server environments variable (`alchemist-server--envs`)
+
+### Bugfixes
+
+  * [Server] Remove legacy IEx.Autocomplete call, it's not working anymore because
+    IEx.Server is now added through application environemnt.
+  * [Complete] Fix doc and definition lookup through company candidate selection
+  * [Goto] Fix issue that mark will be moved even without founded definition
+
 ## v.1.1.0 (2015-06-22)
 
 ### Enhancements
