@@ -6,7 +6,7 @@
 
 <br/>
 
-<p align="center">
+<p align="left">
   <img
   src="https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/alchemist_logo.png"
   alt="Alchemist Logo"/>
@@ -14,14 +14,14 @@
 
 > Elixir Tooling Integration Into Emacs</blockquote>
 
-Alchemist comes with a bunch of features, which are:
+Alchemist comes with a bunch of **features**, which are:
 
-* Powerful IEx integration
 * Mix integration
 * Compile & Execution of Elixir code
 * Inline code evaluation
 * Documentation lookup
 * Definition lookup
+* Powerful IEx integration
 * Smart code completion
 * Elixir project management
 * Integration with [company-mode](http://company-mode.github.io/)
