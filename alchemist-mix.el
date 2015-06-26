@@ -37,6 +37,11 @@
   :type 'string
   :group 'alchemist-mix)
 
+(defcustom alchemist-mix-test-task "test"
+  "Default task to run tests."
+  :type 'string
+  :group 'alchemist-mix)
+
 (defcustom alchemist-mix-test-default-options '("--exclude pending:true")
   "Default options for alchemist test command."
   :type '(repeat string)
@@ -74,7 +79,7 @@ not set explicitly."
   "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
-  (alchemist-mix-execute `("test" ,(expand-file-name filename) ,@alchemist-mix-test-default-options)
+  (alchemist-mix-execute `(,alchemist-mix-test-task ,(expand-file-name filename) ,@alchemist-mix-test-default-options)
                          alchemist-test-mode-buffer-name))
 
 (defun alchemist-mix--commands ()
@@ -100,7 +105,7 @@ not set explicitly."
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
   (interactive)
-  (alchemist-mix-execute `("test" ,@alchemist-mix-test-default-options)
+  (alchemist-mix-execute `(,alchemist-mix-test-task ,@alchemist-mix-test-default-options)
                          alchemist-test-mode-buffer-name))
 
 (defun alchemist-mix-test-this-buffer ()
@@ -118,7 +123,7 @@ not set explicitly."
   (interactive)
   (let* ((line (line-number-at-pos (point)))
          (file-and-line (format "%s:%s" buffer-file-name line)))
-    (alchemist-mix-execute (list "test" file-and-line)
+    (alchemist-mix-execute (list alchemist-mix-test-task file-and-line)
                            alchemist-test-mode-buffer-name)))
 
 (defun alchemist-mix-compile (command &optional prefix)
