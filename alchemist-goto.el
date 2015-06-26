@@ -332,13 +332,7 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto-definition-at-point ()
   "Jump to the elixir expression definition at point."
   (interactive)
-  (let (p1 p2)
-    (save-excursion
-      (skip-chars-backward "-_A-Za-z0-9.?!:")
-      (setq p1 (point))
-      (skip-chars-forward "-_A-Za-z0-9.?!:")
-      (setq p2 (point))
-      (alchemist-goto--open-definition (buffer-substring-no-properties p1 p2)))))
+  (alchemist-goto--open-definition (alchemist-help--exp-at-point)))
 
 (defalias 'alchemist-goto-jump-back 'pop-tag-mark)
 
