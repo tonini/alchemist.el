@@ -134,6 +134,34 @@ Point is left in a convenient location."
   (goto-char (point-min))
   (beginning-of-line 3))
 
+(defun alchemist-project--underscore-to-camelcase (string)
+  "Convert an underscore_string to a CamelCase string."
+  (mapconcat 'capitalize (split-string string "_") ""))
+
+(defun alchemist-project--path-to-module-name (path)
+  "Convert a `path' like my_lib/foo.ex to a module name like MyLib.Foo."
+  (let* ((path (split-string path "/"))
+         (path (mapcar (lambda (el) (replace-regexp-in-string "\.ex$" "" el)) path)))
+    (mapconcat 'alchemist-project--underscore-to-camelcase path ".")))
+
+(defun alchemist-project-create-file (relative-path)
+  "Create a file under lib/ in the current project.
+
+The newly created buffer is filled with a module definition based on the file name."
+  (interactive "sFile to create in lib/: ")
+  (let ((root (alchemist-project-root)))
+    (when root
+      (let* ((module-name (alchemist-project--path-to-module-name relative-path))
+             (abs-path (concat root "lib/" relative-path)))
+        (make-directory (file-name-directory abs-path) t)
+        (find-file abs-path)
+        (insert (concat "defmodule " module-name " do\n"
+                        "  \n"
+                        "end\n"))
+        (goto-char (point-min))
+        (beginning-of-line 2)
+        (back-to-indentation)))))
+
 (defun alchemist-project-find-test ()
   "Open project test directory and list all test files."
   (interactive)
