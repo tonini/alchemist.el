@@ -61,8 +61,8 @@ Alchemist comes with a bunch of **features**, which are:
 
 ### Requirements
 
-  * Emacs 24.4 or later
-  * Elixir 1.0 or later
+  * [Emacs](https://www.gnu.org/software/emacs/) 24.4 or later
+  * [Elixir](http://elixir-lang.org/) 1.0 or later
 
 ### Installation via package.el
 
