@@ -29,6 +29,7 @@ Alchemist comes with a bunch of **features**, which are:
 ***
 
 - [Installation](#installation)
+  - [Requirements](#requirements)
   - [ELPA](#installation-via-packageel)
   - [Via el-get](#via-el-get)
   - [Manual](#manual)
@@ -57,6 +58,11 @@ Alchemist comes with a bunch of **features**, which are:
 
 
 ## Installation
+
+### Requirements
+
+  * Emacs 24.4 or later
+  * Elixir 1.0 or later
 
 ### Installation via package.el
 
