@@ -133,7 +133,11 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 (setq alchemist-mix-test-default-options "--exclude pending:true") ;; default
 ```
 
-* Use a different environment variable in which mix will run.
+* Use a different environment variable in which mix tasks will run.
+
+Mix tasks could always be executed in a specific environment with the usage of `C-u` (universal-argument).
+But if you like to change the run of Mix task permanently to a specific environment set it
+through the variable.
 
 ```el
 (setq alchemist-mix-env "prod")
