@@ -33,6 +33,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [Via el-get](#via-el-get)
   - [Manual](#manual)
 - [Configuration](#configuration)
+  - [Mix setup](#mix-setup)
   - [Keybindings](#keybindings)
   - [Testing-Mode](#testing-mode)
   - [Hooks](#hooks)
@@ -111,6 +112,32 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 ## Configuration
 
 There are some ways Alchemist can be adjusted that certain workflows operating differently.
+
+### Mix setup
+
+* Use a different shell command for mix.
+
+```el
+(setq alchemist-mix-command "/usr/local/bin/mix")
+```
+
+* Use a different task for running tests.
+
+```el
+(setq alchemist-mix-test-task "espec")
+```
+
+* Use custom mix test task options.
+
+```el
+(setq alchemist-mix-test-default-options "--exclude pending:true") ;; default
+```
+
+* Use a different environment variable in which mix will run.
+
+```el
+(setq alchemist-mix-env "prod")
+```
 
 ### Keybindings
 
