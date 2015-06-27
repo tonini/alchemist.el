@@ -152,7 +152,10 @@ The newly created buffer is filled with a module definition based on the file na
   (let ((root (alchemist-project-root)))
     (when root
       (let* ((module-name (alchemist-project--path-to-module-name relative-path))
-             (abs-path (concat root "lib/" relative-path)))
+             (abs-path (concat root "lib/" relative-path))
+             (abs-path (if (string-match-p "\.ex$" abs-path)
+                           abs-path
+                         (concat abs-path ".ex"))))
         (make-directory (file-name-directory abs-path) t)
         (find-file abs-path)
         (insert (concat "defmodule " module-name " do\n"
