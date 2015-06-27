@@ -144,26 +144,35 @@ Point is left in a convenient location."
          (path (mapcar (lambda (el) (replace-regexp-in-string "\.ex$" "" el)) path)))
     (mapconcat 'alchemist-project--underscore-to-camelcase path ".")))
 
-(defun alchemist-project-create-file (relative-path)
+(defun alchemist-project--maybe-add-file-extension-to-path (path)
+  (if (string-match-p "\.ex$" path)
+      path
+    (concat abs-path ".ex")))
+
+(defun alchemist-project-create-file ()
   "Create a file under lib/ in the current project.
 
 The newly created buffer is filled with a module definition based on the file name."
-  (interactive "sFile to create in lib/: ")
+  (interactive)
   (let ((root (alchemist-project-root)))
-    (when root
-      (let* ((module-name (alchemist-project--path-to-module-name relative-path))
-             (abs-path (concat root "lib/" relative-path))
-             (abs-path (if (string-match-p "\.ex$" abs-path)
-                           abs-path
-                         (concat abs-path ".ex"))))
-        (make-directory (file-name-directory abs-path) t)
-        (find-file abs-path)
-        (insert (concat "defmodule " module-name " do\n"
-                        "  \n"
-                        "end\n"))
-        (goto-char (point-min))
-        (beginning-of-line 2)
-        (back-to-indentation)))))
+    (if (not root)
+        (message "You're not in a Mix project")
+      (let* ((lib-path (concat root "lib/"))
+             (abs-path (read-file-name "New file in lib/: " lib-path))
+             (abs-path (alchemist-project--maybe-add-file-extension-to-path abs-path))
+             (relative-path (file-relative-name abs-path lib-path)))
+        (if (file-readable-p abs-path)
+            (message "%s already exists" relative-path)
+          (make-directory (file-name-directory abs-path) t)
+          (find-file abs-path)
+          (insert (concat "defmodule "
+                          (alchemist-project--path-to-module-name relative-path)
+                          " do\n"
+                          "  \n"
+                          "end\n"))
+          (goto-char (point-min))
+          (beginning-of-line 2)
+          (back-to-indentation))))))
 
 (defun alchemist-project-find-test ()
   "Open project test directory and list all test files."
