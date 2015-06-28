@@ -107,6 +107,29 @@ It walks the directory tree until it finds a elixir project root indicator."
   (let* ((modules (mapconcat #'identity modules ",")))
     (format "[%s]" modules)))
 
+(defun alchemist-utils--snakecase-to-camelcase (str)
+  "Convert a snake_case string `STR' to a CamelCase string.
+
+This function is useful for converting file names like my_module to Elixir
+module names (MyModule)."
+  (mapconcat 'capitalize (split-string str "_") ""))
+
+(defun alchemist-utils--add-ext-to-path-if-not-present (path ext)
+  "Add `EXT' to `PATH' if `PATH' doesn't already ends with `EXT'."
+  (if (string-suffix-p ext path)
+      path
+    (concat path ext)))
+
+(defun alchemist-utils--path-to-module-name (path)
+  "Convert `PATH' to its Elixir module name equivalent.
+
+For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
+  (let* ((path (file-name-sans-extension path))
+         (path (split-string path "/"))
+         (path (remove-if (lambda (str) (equal str "")) path)))
+    (mapconcat #'alchemist-utils--snakecase-to-camelcase path ".")))
+
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
