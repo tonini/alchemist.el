@@ -116,6 +116,7 @@ Key bindings:
   (define-key map (kbd "p f") 'alchemist-project-find-test)
   (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
   (define-key map (kbd "p o") 'alchemist-project-toggle-file-and-tests-other-window)
+  (define-key map (kbd "p t") 'alchemist-project-run-tests-for-current-file)
   (define-key map (kbd "i i") 'alchemist-iex-run)
   (define-key map (kbd "i p") 'alchemist-iex-project-run)
   (define-key map (kbd "i l") 'alchemist-iex-send-current-line)
