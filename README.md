@@ -264,6 +264,7 @@ Default environments are `prod`, `dev` and `test`. [Mix environments](http://eli
 |<kbd>C-c a p f</kbd>|Open project test directory and list all test files. `alchemist-project-find-test`|
 |<kbd>C-c a p s</kbd>|Toggle between a file and its tests in the current window. `alchemist-project-toggle-file-and-tests`
 |<kbd>C-c a p o</kbd>|Toggle between a file and its tests in other window. `alchemist-project-toggle-file-and-tests-other-window`
+|<kbd>C-c a p t</kbd>|Run the tests related to the current file.. `alchemist-project-run-tests-for-current-file`
 
 ## Documentation lookup
 
