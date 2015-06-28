@@ -7,8 +7,8 @@ defmodule ServerTest do
 
   setup_all do
     on_exit fn ->
-      {_status, files} = File.ls "fixtures"
-      files |> Enum.each &File.rm "fixtures/#{&1}"
+      {_status, files} = File.ls Path.expand("fixtures", __DIR__)
+      files |> Enum.each &File.rm Path.expand("fixtures/#{&1}", __DIR__)
     end
   end
 
@@ -50,13 +50,15 @@ defmodule ServerTest do
   end
 
   test "Evaluate the content of a file" do
-    File.write("fixtures/eval_fixture.exs", "1+1")
-    assert send_signal("EVAL fixtures/eval_fixture.exs") =~ "2"
+    filename = Path.expand("fixtures/eval_fixture.exs", __DIR__)
+    File.write(filename, "1+1")
+    assert send_signal("EVAL #{filename}") =~ "2"
   end
 
   test "Evaluate and quote the content of a file" do
-    File.write("fixtures/eval_and_quote_fixture.exs", "[4,2,1,3] |> Enum.sort")
-    assert send_signal("QUOTE fixtures/eval_and_quote_fixture.exs") =~ """
+    filename = Path.expand("fixtures/eval_and_quote_fixture.exs", __DIR__)
+    File.write(filename, "[4,2,1,3] |> Enum.sort")
+    assert send_signal("QUOTE #{filename}") =~ """
     {{:., [line: 1], [{:__aliases__, [counter: 0, line: 1], [:Enum]}, :sort]},\n   [line: 1], []}]}
     """
   end
