@@ -149,6 +149,11 @@ Point is left in a convenient location."
       path
     (concat abs-path ".ex")))
 
+(defun alchemist-project-run-tests-for-current-file ()
+  "Run the tests related to the current file."
+  (interactive)
+  (alchemist--project-open-tests-for-current-file 'alchemist-mix-test-file))
+
 (defun alchemist-project-create-file ()
   "Create a file under lib/ in the current project.
 
