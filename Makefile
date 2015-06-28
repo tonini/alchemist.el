@@ -1,4 +1,5 @@
 EMACS = emacs
+ELIXIR = elixir
 EMACSFLAGS =
 CASK = cask
 EMACS_VERSION = `$(CASK) exec $(EMACS) --version | head -1`
@@ -11,7 +12,7 @@ NO_COLOR=\033[0m
 INFO_COLOR=\033[2;32m
 STAT_COLOR=\033[2;33m
 
-all: test
+all: test test_server
 
 info:
 	@ echo "\n$(INFO_COLOR)Installed Emacs info: $(NO_COLOR)\n"
@@ -24,6 +25,9 @@ unit:
 	@ echo "\n$(INFO_COLOR)Run tests: $(NO_COLOR)\n"
 	$(CASK) exec ert-runner
 
+test_server:
+	@ echo "\n$(INFO_COLOR)Run server tests: $(NO_COLOR)\n"
+	$(ELIXIR) test/server/server_test.exs
 cask:
 	@ echo "\n$(INFO_COLOR)Install package dependencies: $(NO_COLOR)\n"
 	@ echo "$(STAT_COLOR)[cask install]$(NO_COLOR)"
@@ -44,4 +48,4 @@ packageclean:
 	@ echo "\n$(INFO_COLOR)Clean Alchemist Package: $(NO_COLOR)\n"
 	rm dist/$(PACKAGE_NAME).tar
 
-.PHONY: info test cask clean clean-elc test-elc
+.PHONY: info test test_server cask clean clean-elc test-elc

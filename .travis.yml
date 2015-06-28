@@ -1,6 +1,7 @@
-language: erlang
+language: elixir
+elixir: 1.0.4
 otp_release:
-  - 17.0
+  - 17.1
 cache: apt
 env:
   - EVM_EMACS=emacs-24.4-bin

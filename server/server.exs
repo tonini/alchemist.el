@@ -86,5 +86,3 @@ defmodule Alchemist.Server do
     for a <- apps, do: Application.unload(a)
   end
 end
-
-Alchemist.Server.start([System.argv])

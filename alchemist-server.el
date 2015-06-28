@@ -36,7 +36,7 @@
   "The list of server environments to use.")
 
 (defvar alchemist-server
-  (concat (file-name-directory load-file-name) "server/server.exs")
+  (concat (file-name-directory load-file-name) "server/run.exs")
   "Script file with alchemist server.")
 
 (defvar alchemist-server--processes '())
