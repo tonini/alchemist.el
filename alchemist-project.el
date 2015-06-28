@@ -134,21 +134,6 @@ Point is left in a convenient location."
   (goto-char (point-min))
   (beginning-of-line 3))
 
-(defun alchemist-project--underscore-to-camelcase (string)
-  "Convert an underscore_string to a CamelCase string."
-  (mapconcat 'capitalize (split-string string "_") ""))
-
-(defun alchemist-project--path-to-module-name (path)
-  "Convert a `path' like my_lib/foo.ex to a module name like MyLib.Foo."
-  (let* ((path (split-string path "/"))
-         (path (mapcar (lambda (el) (replace-regexp-in-string "\.ex$" "" el)) path)))
-    (mapconcat 'alchemist-project--underscore-to-camelcase path ".")))
-
-(defun alchemist-project--maybe-add-file-extension-to-path (path)
-  (if (string-match-p "\.ex$" path)
-      path
-    (concat abs-path ".ex")))
-
 (defun alchemist-project-run-tests-for-current-file ()
   "Run the tests related to the current file."
   (interactive)
@@ -164,14 +149,14 @@ The newly created buffer is filled with a module definition based on the file na
         (message "You're not in a Mix project")
       (let* ((lib-path (concat root "lib/"))
              (abs-path (read-file-name "New file in lib/: " lib-path))
-             (abs-path (alchemist-project--maybe-add-file-extension-to-path abs-path))
+             (abs-path (alchemist-utils--add-ext-to-path-if-not-present abs-path ".ex"))
              (relative-path (file-relative-name abs-path lib-path)))
         (if (file-readable-p abs-path)
             (message "%s already exists" relative-path)
           (make-directory (file-name-directory abs-path) t)
           (find-file abs-path)
           (insert (concat "defmodule "
-                          (alchemist-project--path-to-module-name relative-path)
+                          (alchemist-utils--path-to-module-name relative-path)
                           " do\n"
                           "  \n"
                           "end\n"))

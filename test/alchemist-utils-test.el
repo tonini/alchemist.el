@@ -89,6 +89,19 @@ a text")))
                   (list "Ek" "Behaviour" "Plug.Conn"))))
   (should (equal "[]" (alchemist-utils--prepare-modules-for-elixir '("")))))
 
+(ert-deftest test-utils/snakecase-to-camelcase ()
+  (should (equal "MyCustomModule" (alchemist-utils--snakecase-to-camelcase "my_custom_module")))
+  (should (equal "Foo" (alchemist-utils--snakecase-to-camelcase "foo"))))
+
+(ert-deftest test-utils/add-ext-to-path-if-not-present ()
+  (should (equal "foo.ex" (alchemist-utils--add-ext-to-path-if-not-present "foo.ex" ".ex")))
+  (should (equal "foo.ex" (alchemist-utils--add-ext-to-path-if-not-present "foo" ".ex")))
+  (should (equal "foo.ex.exs" (alchemist-utils--add-ext-to-path-if-not-present "foo.ex" ".exs"))))
+
+(ert-deftest test-utils/path-to-module-name ()
+  (should (equal "MyApp.MyModule" (alchemist-utils--path-to-module-name "my_app/my_module.ex")))
+  (should (equal "Foo.Bar" (alchemist-utils--path-to-module-name "/foo/bar")))
+  (should (equal "Foo" (alchemist-utils--path-to-module-name "//foo//"))))
 
 (provide 'alchemist-utils-tests)
 
