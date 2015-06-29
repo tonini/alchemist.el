@@ -49,7 +49,7 @@ It walks the directory tree until it finds a elixir project root indicator."
                       command)))))
 
 (defun alchemist-utils--clear-search-text (search-text)
-  (let* ((search-text (replace-regexp-in-string  "\\.$" "" search-text))
+  (let* ((search-text (alchemist-utils--remove-dot-at-the-end search-text))
          (search-text (replace-regexp-in-string  "^\\.$" "" search-text))
          (search-text (replace-regexp-in-string  ",$" "" search-text))
          (search-text (replace-regexp-in-string  "^,$" "" search-text)))
@@ -83,6 +83,9 @@ It walks the directory tree until it finds a elixir project root indicator."
   "Check wether the visited file is a test file."
   (string-match "_test\.exs$" (or (buffer-file-name) "")))
 
+(defun alchemist-utils--remove-dot-at-the-end (string)
+  (replace-regexp-in-string "\\.$" "" string))
+
 (defun alchemist-utils--empty-string-p (string)
   (or (null string)
       (let* ((string (replace-regexp-in-string "^\s+" "" string ))
@@ -91,8 +94,8 @@ It walks the directory tree until it finds a elixir project root indicator."
 
 (defun alchemist-utils--prepare-aliases-for-elixir (aliases)
   (let* ((aliases (mapcar (lambda (a)
-                            (let ((module (replace-regexp-in-string "\\.$" "" (car a)))
-                                  (alias (replace-regexp-in-string "\\.$" "" (car (cdr a)))))
+                            (let ((module (alchemist-utils--remove-dot-at-the-end (car a)))
+                                  (alias (alchemist-utils--remove-dot-at-the-end (car (cdr a)))))
                             (if (not (or (alchemist-utils--empty-string-p alias)
                                          (string= alias module)))
                                 (format "{%s, %s}"

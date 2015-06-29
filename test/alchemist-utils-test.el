@@ -103,6 +103,10 @@ a text")))
   (should (equal "Foo.Bar" (alchemist-utils--path-to-module-name "/foo/bar")))
   (should (equal "Foo" (alchemist-utils--path-to-module-name "//foo//"))))
 
+(ert-deftest test-utils/remove-dot-at-the-end-of-string ()
+  (should (equal "Module" (alchemist-utils--remove-dot-at-the-end "Module.")))
+  (should (equal "Module.Foo" (alchemist-utils--remove-dot-at-the-end "Module.Foo."))))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here
