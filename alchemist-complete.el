@@ -64,7 +64,7 @@
     (cond
      ((and (string-match-p "\\.$" search-term)
            (not (string-match-p "\\.$" alchemist-server--last-completion-exp)))
-      (push (replace-regexp-in-string "\\.$" "" search-term) candidates))
+      (push (alchemist-utils--remove-dot-at-the-end search-term) candidates))
      (t candidates))))
 
 (defun alchemist-complete--build-help-candidates (a-list)
@@ -72,7 +72,7 @@
          (candidates (cond ((> (alchemist-utils--count-char-in-str "\\." search-term) 1)
                             (let ((search (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                                               (list (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "" search-term))
-                                            (list (replace-regexp-in-string "\\.$" "" search-term))))
+                                            (list (alchemist-utils--remove-dot-at-the-end search-term))))
                                   (candidates (mapcar (lambda (c)
                                                         (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                                                             (concat (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "." search-term) c)

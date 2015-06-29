@@ -119,7 +119,7 @@ declaration has been found."
     (when (string-match-p "^[a-z_\?!]+" function)
       (delete function parts))
     (unless (string-match-p "^[a-z_\?!]+" (car parts))
-      (replace-regexp-in-string "\\.$" "" (mapconcat 'concat parts ".")))))
+      (alchemist-utils--remove-dot-at-the-end (mapconcat 'concat parts ".")))))
 
 (defun alchemist-goto--extract-function (code)
   "Extract function from CODE."
@@ -338,7 +338,8 @@ It will jump to the position of the symbol definition after selection."
         (let* ((alias (match-string 1))
                (as (if (match-string 3) (match-string 3) nil))
                (as (if as as (car (last (split-string alias "\\."))))))
-          (setq aliases (append aliases (list (list alias as)))))))
+          (setq aliases (append aliases (list (list (alchemist-utils--remove-dot-at-the-end alias)
+                                                    (alchemist-utils--remove-dot-at-the-end as))))))))
     aliases))
 
 ;; Public functions

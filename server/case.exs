@@ -1,7 +1,6 @@
 defmodule Alchemist.Case do
 
   alias Alchemist.Completer
-  alias Alchemist.Utils
   alias Alchemist.Informant
 
   defmodule Complete do
@@ -23,7 +22,6 @@ defmodule Alchemist.Case do
 
     def process_with_context!(hint) do
       [hint, modules, aliases] = String.split(hint, ";", parts: 3)
-      modules = Utils.clear_context_list(modules)
       {modules, _} = Code.eval_string(modules)
       {aliases, _} = Code.eval_string(aliases)
 

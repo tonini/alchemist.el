@@ -1,4 +1,3 @@
-Code.require_file "utils.exs", __DIR__
 Code.require_file "completer.exs", __DIR__
 Code.require_file "informant.exs", __DIR__
 Code.require_file "source.exs", __DIR__
