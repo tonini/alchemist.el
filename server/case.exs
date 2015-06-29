@@ -29,12 +29,13 @@ defmodule Alchemist.Case do
 
       Application.put_env(:"alchemist.el", :aliases, aliases)
 
-      Completer.run(hint)
-      |> Enum.map &IO.puts('cmp:' ++ &1)
       Enum.each modules, fn(module) ->
         Informant.get_functions(module, hint)
         |> Enum.map &IO.puts('cmp:' ++ &1)
       end
+      Completer.run(hint)
+      |> Enum.map &IO.puts('cmp:' ++ &1)
+
       IO.puts "END-OF-COMPLETE-WITH-CONTEXT"
     end
   end
