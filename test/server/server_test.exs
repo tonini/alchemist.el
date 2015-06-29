@@ -8,7 +8,11 @@ defmodule ServerTest do
   setup_all do
     on_exit fn ->
       {_status, files} = File.ls Path.expand("fixtures", __DIR__)
-      files |> Enum.each &File.rm Path.expand("fixtures/#{&1}", __DIR__)
+      files |> Enum.each fn(file) ->
+        unless file == ".gitkeep" do
+          File.rm Path.expand("fixtures/#{file}", __DIR__)
+        end
+      end
     end
   end
 
@@ -64,12 +68,8 @@ defmodule ServerTest do
   end
 
   defp send_signal(signal) do
-    :ets.new(:alchemist, [:named_table])
-    output = capture_io(fn ->
+    capture_io(fn ->
       Alchemist.Server.read_input(signal)
     end)
-    :ets.delete_all_objects(:alchemist)
-    output
   end
-
 end

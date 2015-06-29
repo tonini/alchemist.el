@@ -9,7 +9,6 @@ defmodule Alchemist.Server do
   alias Alchemist.Case
 
   def start([env]) do
-    :ets.new(:alchemist, [:named_table])
     loop(all_loaded(), env)
   end
 
@@ -18,13 +17,13 @@ defmodule Alchemist.Server do
     paths = load_paths(env)
     apps  = load_apps(env)
 
+    store_loaded_modules(loaded)
+
     read_input(line)
 
     purge_modules(loaded)
     purge_paths(paths)
     purge_apps(apps)
-
-    :ets.delete_all_objects(:alchemist)
 
     loop(loaded, env)
   end
@@ -54,6 +53,10 @@ defmodule Alchemist.Server do
 
   defp all_loaded() do
     for {m,_} <- :code.all_loaded, do: m
+  end
+
+  defp store_loaded_modules(modules) do
+    Application.put_env(:"alchemist.el", :loaded_modules, modules)
   end
 
   defp load_paths(env) do

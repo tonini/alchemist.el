@@ -184,20 +184,12 @@ defmodule Alchemist.Completer do
   end
 
   defp env_aliases() do
-    :ets.lookup(:alchemist, "aliases")
-    |> format_ets_aliases
+    Application.get_env(:"alchemist.el", :aliases)
+    |> format_aliases
   end
 
-  defp format_ets_aliases([{"aliases", []}]) do
-    []
-  end
-
-  defp format_ets_aliases(list) do
-    list
-    |> List.first
-    |> Tuple.to_list
-    |> List.last
-  end
+  defp format_aliases(nil), do: []
+  defp format_aliases(list), do: list
 
   defp match_aliases(hint) do
     for {alias, _mod} <- env_aliases(),

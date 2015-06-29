@@ -6,14 +6,12 @@ defmodule Alchemist.Case do
 
   defmodule Complete do
     def process! do
-      :ets.insert(:alchemist, {"aliases", []})
       Completer.run('')
       |> Enum.map &IO.puts('cmp:' ++ &1)
       print_end_of_complete_signal
     end
 
     def process!(hint) do
-      :ets.insert(:alchemist, {"aliases", []})
       Completer.run(hint)
       |> Enum.map &IO.puts('cmp:' ++ &1)
       print_end_of_complete_signal
@@ -28,7 +26,8 @@ defmodule Alchemist.Case do
       modules = Utils.clear_context_list(modules)
       {modules, _} = Code.eval_string(modules)
       {aliases, _} = Code.eval_string(aliases)
-      :ets.insert(:alchemist, {"aliases", aliases})
+
+      Application.put_env(:"alchemist.el", :aliases, aliases)
 
       Completer.run(hint)
       |> Enum.map &IO.puts('cmp:' ++ &1)
