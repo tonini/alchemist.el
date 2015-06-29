@@ -61,7 +61,12 @@
                                                                                            (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta))
                                   (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
                              candidates)))
-    candidates))
+    (cond
+     ((and (string-match-p "\\.$" search-term)
+           (not (string-match-p "\\.$" alchemist-server--last-completion-exp))
+           )
+      (push (replace-regexp-in-string "\\.$" "" search-term) candidates))
+     (t candidates))))
 
 (defun alchemist-complete--build-help-candidates (a-list)
   (let* ((search-term (car a-list))
