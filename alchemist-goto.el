@@ -49,6 +49,18 @@
 (defvar alchemist-goto--symbol-list-bare '())
 (defvar alchemist-goto--symbol-name-and-pos-bare '())
 
+;; Faces
+
+(defface alchemist-goto--def-face
+  '((t (:inherit font-lock-constant-face)))
+  ""
+  :group 'alchemist-goto)
+
+(defface alchemist-goto--name-face
+  '((t (:bold t)))
+  ""
+  :group 'alchemist-goto)
+
 ;; Private functions
 
 (defun alchemist-goto--current-module-name ()
@@ -205,16 +217,6 @@ It will jump to the position of the symbol definition after selection."
 
 (defun alchemist-goto--fetch-symbol-definitions ()
   (alchemist-goto--search-for-symbols "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s.*"))
-
-(defface alchemist-goto--def-face
-  '((t (:inherit font-lock-constant-face)))
-  ""
-  :group 'alchemist-goto)
-
-(defface alchemist-goto--name-face
-  '((t (:bold t)))
-  ""
-  :group 'alchemist-goto)
 
 (defvar alchemist-goto--symbol-def-extract-regex
   "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
