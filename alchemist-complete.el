@@ -63,8 +63,7 @@
                              candidates)))
     (cond
      ((and (string-match-p "\\.$" search-term)
-           (not (string-match-p "\\.$" alchemist-server--last-completion-exp))
-           )
+           (not (string-match-p "\\.$" alchemist-server--last-completion-exp)))
       (push (replace-regexp-in-string "\\.$" "" search-term) candidates))
      (t candidates))))
 
