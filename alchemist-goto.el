@@ -1,4 +1,4 @@
-;;; alchemist-goto.el --- Functionality to jump modules and function definitions
+;;; alchemist-goto.el --- Functionality to jump modules and function definitions -*- lexical-binding: t -*-
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -85,8 +85,7 @@ declaration has been found."
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
-            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))
-            ))
+            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))))
       modules)))
 
 (defun alchemist-goto--import-modules-in-the-current-module-context ()
@@ -97,8 +96,7 @@ declaration has been found."
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
-            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))
-            ))
+            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))))
     modules)))
 
 (defun alchemist-goto--extract-module (code)
@@ -177,9 +175,22 @@ declaration has been found."
       t
     nil))
 
+(defun alchemist-goto--fetch-symbols-from-propertize-list (symbol)
+  (remove-if nil (mapcar (lambda (e)
+                           (if (string-match-p (format "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s+%s" symbol) e)
+                               e)
+                           ) alchemist-goto--symbol-list)))
+
 (defun alchemist-goto--goto-symbol (symbol)
-  (let ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos-bare))))
-    (goto-char (if (overlayp position) (overlay-start position) position))))
+  (let ((amount (length (remove-if nil (mapcar (lambda (e) (when (string= symbol e) e))
+                                               alchemist-goto--symbol-list-bare)))))
+    (if (> amount 1)
+        (let* ((selected-def (completing-read "Symbol definitions:"
+                                              (alchemist-goto--fetch-symbols-from-propertize-list symbol)))
+               (position (cdr (assoc selected-def alchemist-goto--symbol-name-and-pos))))
+          (goto-char (if (overlayp position) (overlay-start position) position)))
+      (let* ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos-bare))))
+        (goto-char (if (overlayp position) (overlay-start position) position))))))
 
 (defun alchemist-goto-list-symbol-definitions ()
   "List all symbol definitions in the current file like functions/macros/modules.
@@ -251,6 +262,8 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto--search-for-symbols (regex)
   (setq alchemist-goto--symbol-list '())
   (setq alchemist-goto--symbol-name-and-pos '())
+  (setq alchemist-goto--symbol-list-bare '())
+  (setq alchemist-goto--symbol-name-and-pos-bare '())
   (with-current-buffer (buffer-name)
     (save-excursion
       (goto-char (point-max))
@@ -280,8 +293,7 @@ It will jump to the position of the symbol definition after selection."
            (string-equal major-mode "elixir-mode")
            (alchemist-goto--symbol-definition-p function))
       (alchemist-goto--goto-symbol function))
-     (t (alchemist-server-goto module function expr)
-        ))))
+     (t (alchemist-server-goto module function expr)))))
 
 (defun alchemist-goto--open-file (file module function)
   (let* ((buf (find-file-noselect file)))
