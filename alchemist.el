@@ -92,6 +92,7 @@ Key bindings:
   :global nil
   :keymap `((,alchemist-key-command-prefix . alchemist-mode-keymap))
   (cond (alchemist-mode
+         (alchemist-server--start)
          (alchemist-buffer-initialize-modeline))
         (t
          (alchemist-buffer-reset-modeline))))

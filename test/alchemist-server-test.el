@@ -49,7 +49,6 @@
                            (alchemist-server--process-name)))))
 
 (ert-deftest check-if-process-is-running ()
-  (should (not (alchemist-server--process-p)))
   (should (progn
             (alchemist-server--start)
             (alchemist-server--process-p))))
