@@ -220,6 +220,8 @@ It will jump to the position of the symbol definition after selection."
 
 (defvar alchemist-goto--symbol-def-extract-regex
   "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
+(defvar alchemist-goto--symbol-def-regex
+  "^[[:space:]]*\\(defmodule\\|defmacrop?\\|defp?\\)")
 
 (defun alchemist-goto--extract-symbol (str)
   (save-match-data
@@ -234,6 +236,32 @@ It will jump to the position of the symbol definition after selection."
          (propertize name
                      'face 'alchemist-goto--name-face)
          (replace-regexp-in-string ",?\s+do:.*$" "" (replace-regexp-in-string "\s+do$" "" arguments)))))))
+
+(defun alchemist-goto--file-contains-defs-p ()
+  (save-excursion
+    (save-match-data
+      (beginning-of-buffer)
+      (re-search-forward alchemist-goto--symbol-def-extract-regex nil t))))
+
+(defun alchemist-goto-jump-to-next-def-symbol ()
+  (interactive)
+  (when (alchemist-goto--file-contains-defs-p)
+    (save-match-data
+      (end-of-line) ;; otherwise we could match on the current line and stay there forever
+      (unless (re-search-forward alchemist-goto--symbol-def-regex nil t)
+        (beginning-of-buffer)
+        (re-search-forward alchemist-goto--symbol-def-regex nil t))
+      (back-to-indentation))))
+
+(defun alchemist-goto-jump-to-previous-def-symbol ()
+  (interactive)
+  (when (alchemist-goto--file-contains-defs-p)
+    (save-match-data
+      (beginning-of-line) ;; otherwise we could match on the current line and stay there forever
+      (unless (re-search-backward alchemist-goto--symbol-def-regex nil t)
+        (end-of-buffer)
+        (re-search-backward alchemist-goto--symbol-def-regex nil t))
+      (back-to-indentation))))
 
 (defun alchemist-goto--extract-symbol-bare (str)
   (save-match-data
