@@ -3,6 +3,7 @@
 ;; Copyright © 2014-2015 Samuel Tonini
 
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com
+;; Package-Requires: ((company "0.8.0"))
 
 ;; This file is not part of GNU Emacs.
 

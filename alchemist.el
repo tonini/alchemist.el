@@ -6,7 +6,7 @@
 
 ;; URL: http://www.github.com/tonini/alchemist.el
 ;; Version: 1.2.1-cvs
-;; Package-Requires: ((emacs "24"))
+;; Package-Requires: ((emacs "24.4") (company "0.8.0"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
 ;; This file is not part of GNU Emacs.
@@ -60,10 +60,7 @@
 (require 'alchemist-eval)
 (require 'alchemist-goto)
 (require 'alchemist-test-mode)
-
-(eval-after-load 'company
-  '(progn
-     (require 'alchemist-company)))
+(require 'alchemist-company)
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
