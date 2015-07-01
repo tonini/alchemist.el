@@ -33,6 +33,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [ELPA](#installation-via-packageel)
   - [Via el-get](#via-el-get)
   - [Manual](#manual)
+  - [Enable Alchemist minor mode](#enable-alchemist-minor-mode)
 - [Configuration](#configuration)
   - [Mix setup](#mix-setup)
   - [Keybindings](#keybindings)
@@ -113,6 +114,14 @@ You can install Alchemist manually by placing Alchemist on your `load-path` and
 ```el
 (add-to-list 'load-path "~/.emacs.d/vendor/alchemist.el/")
 (require 'alchemist)
+```
+
+### Enable Alchemist minor mode
+
+You may enable Alchemist minor mode automatically for all Elixir files:
+
+```el
+(add-hook 'elixir-mode-hook 'alchemist-mode)
 ```
 
 ## Configuration
