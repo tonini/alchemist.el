@@ -35,6 +35,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [Manual](#manual)
 - [Configuration](#configuration)
   - [Mix setup](#mix-setup)
+  - [IEx setup](#iex-setup)
   - [Keybindings](#keybindings)
   - [Testing-Mode](#testing-mode)
   - [Hooks](#hooks)
@@ -147,6 +148,14 @@ through the variable.
 
 ```el
 (setq alchemist-mix-env "prod")
+```
+
+### IEx setup
+
+* Use a different shell command for iex.
+
+```el
+(setq alchemist-iex-program-name "/usr/local/bin/iex") ;; default: iex
 ```
 
 ### Keybindings
