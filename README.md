@@ -36,6 +36,9 @@ Alchemist comes with a bunch of **features**, which are:
 - [Configuration](#configuration)
   - [Mix setup](#mix-setup)
   - [IEx setup](#iex-setup)
+  - [Execute setup](#execute-setup)
+  - [Compile setup](#compile-setup)
+  - [Modeline setup](#modeline-setup)
   - [Keybindings](#keybindings)
   - [Testing-Mode](#testing-mode)
   - [Hooks](#hooks)
@@ -156,6 +159,30 @@ through the variable.
 
 ```el
 (setq alchemist-iex-program-name "/usr/local/bin/iex") ;; default: iex
+```
+
+### Execute setup
+
+* Use a different shell command for elixir.
+
+```el
+(setq alchemist-execute-command "/usr/local/bin/elixir") ;; default: elixir
+```
+
+### Compile setup
+
+* Use a different shell command for elixirc.
+
+```el
+(setq alchemist-compile-command "/usr/local/bin/elixirc") ;; default: elixirc
+```
+
+### Modeline setup
+
+* Disable the change of the modeline color with the last compilation status.
+
+```el
+(setq alchemist-buffer-status-modeline nil)
 ```
 
 ### Keybindings
