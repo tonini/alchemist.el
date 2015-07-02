@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (defgroup alchemist-complete nil
   "Complete functionality for Elixir source code."
   :prefix "alchemist-complete-"
@@ -108,7 +110,7 @@
                           (alchemist--utils-clear-ansi-sequences output))
                        '()))
          (candidates (if candidates
-                         (alchemist-complete--build-candidates (remove-duplicates candidates))
+                         (alchemist-complete--build-candidates (cl-remove-duplicates candidates))
                        '())))
     candidates))
 

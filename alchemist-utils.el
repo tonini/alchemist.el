@@ -44,10 +44,10 @@ It walks the directory tree until it finds a elixir project root indicator."
 
 (defun alchemist-utils--build-runner-cmdlist (command)
   "Build the commands list for the runner."
-  (remove "" (alchemist-utils--flatten
-              (list (if (stringp command)
-                        (split-string command)
-                      command)))))
+  (cl-remove "" (alchemist-utils--flatten
+                 (list (if (stringp command)
+                           (split-string command)
+                         command)))))
 
 (defun alchemist-utils--clear-search-text (search-text)
   (let* ((search-text (alchemist-utils--remove-dot-at-the-end search-text))
