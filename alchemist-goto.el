@@ -27,6 +27,8 @@
 
 (require 'cl-lib)
 (require 'etags)
+(require 'alchemist-utils)
+(require 'alchemist-help)
 
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."
@@ -241,7 +243,7 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto--file-contains-defs-p ()
   (save-excursion
     (save-match-data
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (re-search-forward alchemist-goto--symbol-def-extract-regex nil t))))
 
 (defun alchemist-goto-jump-to-next-def-symbol ()
@@ -250,7 +252,7 @@ It will jump to the position of the symbol definition after selection."
     (save-match-data
       (end-of-line) ;; otherwise we could match on the current line and stay there forever
       (unless (re-search-forward alchemist-goto--symbol-def-regex nil t)
-        (beginning-of-buffer)
+      (goto-char (point-min))
         (re-search-forward alchemist-goto--symbol-def-regex nil t))
       (back-to-indentation))))
 
@@ -260,16 +262,14 @@ It will jump to the position of the symbol definition after selection."
     (save-match-data
       (beginning-of-line) ;; otherwise we could match on the current line and stay there forever
       (unless (re-search-backward alchemist-goto--symbol-def-regex nil t)
-        (end-of-buffer)
+        (goto-char (point-max))
         (re-search-backward alchemist-goto--symbol-def-regex nil t))
       (back-to-indentation))))
 
 (defun alchemist-goto--extract-symbol-bare (str)
   (save-match-data
     (when (string-match alchemist-goto--symbol-def-extract-regex str)
-      (let ((type (substring str (match-beginning 1) (match-end 1)))
-            (name (substring str (match-beginning 2) (match-end 2)))
-            (arguments (substring str (match-beginning 3) (match-end 3))))
+      (let ((name (substring str (match-beginning 2) (match-end 2))))
         name))))
 
 (defun alchemist-goto--get-symbol-from-position (position)
@@ -327,9 +327,9 @@ It will jump to the position of the symbol definition after selection."
      (t (alchemist-server-goto module function expr)))))
 
 (defun alchemist-goto--open-file (file module function)
-  (let* ((buf (find-file-noselect file)))
+  (let ((buf (find-file-noselect file)))
     (switch-to-buffer buf)
-    (beginning-of-buffer)
+    (goto-char (point-min))
     (cond ((alchemist-goto--elixir-file-p file)
            (alchemist-goto--jump-to-elixir-source module function))
           ((alchemist-goto--erlang-file-p file)

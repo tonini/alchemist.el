@@ -25,6 +25,9 @@
 
 ;;; Code:
 
+(require 'alchemist-project)
+(require 'alchemist-server)
+
 (defgroup alchemist-eval nil
   "Elixir code inline evaluation functionality."
   :prefix "alchemist-eval-"
@@ -46,32 +49,6 @@
       (save-excursion
         (end-of-line)
         (insert (format "  # => %s" string))))))
-
-(defun alchemist-eval--evaluate-code (string)
-  (let ((tmp-file ".alchemist-eval.exs")
-        (old-directory default-directory))
-    (when (alchemist-project-p)
-      (alchemist-project--establish-root-directory))
-    (with-temp-file tmp-file
-      (insert string))
-    (let ((output (shell-command-to-string
-                   (alchemist-eval--build-code-evaluation-command tmp-file))))
-      (delete-file tmp-file)
-      (cd old-directory)
-      (alchemist-utils--remove-newline-at-end output))))
-
-(defun alchemist-eval--evaluate-code-as-quoted (string)
-  (let ((tmp-file ".alchemist-eval.exs")
-        (old-directory default-directory))
-    (when (alchemist-project-p)
-      (alchemist-project--establish-root-directory))
-    (with-temp-file tmp-file
-      (insert string))
-    (let ((output (shell-command-to-string
-                   (alchemist-eval--build-code-evaluation-as-quoted-command tmp-file))))
-      (delete-file tmp-file)
-      (cd old-directory)
-      (alchemist-utils--remove-newline-at-end output))))
 
 (defun alchemist-eval--expression (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
@@ -137,7 +114,7 @@
   "Evaluate the Elixir code in the current buffer and insert the result."
   (interactive)
   (let ((string (buffer-substring-no-properties (point-min) (point-max))))
-    (end-of-buffer)
+    (goto-char (point-max))
     (alchemist-eval--expression-and-print string)))
 
 (defun alchemist-eval-quoted-current-line ()
