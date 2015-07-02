@@ -25,6 +25,15 @@
 
 ;;; Code:
 
+(require 'alchemist-utils)
+(require 'alchemist-project)
+(require 'alchemist-goto)
+
+;; Tell the byte compiler to assume that functions are defined
+(declare-function alchemist-server-help-without-complete "alchemist-server.el")
+(declare-function alchemist-server-help-with-complete "alchemist-server.el")
+(declare-function alchemist-server-help "alchemist-server.el")
+
 (defgroup alchemist-help nil
   "Functionality for Elixir documentation lookup."
   :prefix "alchemist-help-"

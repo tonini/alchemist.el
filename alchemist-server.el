@@ -25,6 +25,17 @@
 
 ;;; Code:
 
+(require 'alchemist-utils)
+(require 'alchemist-project)
+(require 'alchemist-buffer)
+(require 'alchemist-compile)
+(require 'alchemist-execute)
+(require 'alchemist-help)
+(require 'alchemist-complete)
+(require 'alchemist-eval)
+(require 'alchemist-goto)
+(require 'alchemist-test-mode)
+
 (defgroup alchemist-server nil
   "Interface to the Alchemist Elixir server."
   :prefix "alchemist-server-"
@@ -41,6 +52,11 @@
 
 (defvar alchemist-server--processes '())
 (defvar alchemist-server--env "dev")
+(defvar alchemist-server--output nil)
+(defvar alchemist-server-eval-callback nil)
+(defvar alchemist-server-help-callback nil)
+(defvar alchemist-server-goto-callback nil)
+(defvar alchemist-server--last-completion-exp nil)
 
 (defvar alchemist-server-command
   (format "elixir %s %s" alchemist-server alchemist-server--env))
@@ -110,7 +126,7 @@ will be started instead."
   (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
   (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
 
-(defun alchemist-server-eval-filter (process output)
+(defun alchemist-server-eval-filter (_process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-EVAL$" output)
       (let* ((output (apply #'concat (reverse alchemist-server--output)))
@@ -118,7 +134,7 @@ will be started instead."
              (output (replace-regexp-in-string "\n$" "" output)))
         (funcall alchemist-server-eval-callback output))))
 
-(defun alchemist-server-eval-quoted-filter (process output)
+(defun alchemist-server-eval-quoted-filter (_process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-QUOTE$" output)
       (let* ((output (apply #'concat (reverse alchemist-server--output)))
@@ -126,27 +142,27 @@ will be started instead."
              (output (replace-regexp-in-string "\n$" "" output)))
         (funcall alchemist-server-eval-callback output))))
 
-(defun alchemist-server-doc-filter (process output)
+(defun alchemist-server-doc-filter (_process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-DOC$" output)
       (let* ((string (apply #'concat (reverse alchemist-server--output)))
              (string (replace-regexp-in-string "END-OF-DOC$" "" string)))
         (alchemist-help--initialize-buffer string))))
 
-(defun alchemist-server-complete-canidates-filter (process output)
+(defun alchemist-server-complete-canidates-filter (_process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (unless (alchemist-utils--empty-string-p output)
     (if (string-match "END-OF-COMPLETE$" output)
         (let ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-server--output)))
           (alchemist-complete--serve-candidates-to-company candidates)))))
 
-(defun alchemist-server-complete-canidates-filter-with-context (process output)
+(defun alchemist-server-complete-canidates-filter-with-context (_process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-COMPLETE-WITH-CONTEXT$" output)
       (let ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-server--output)))
         (alchemist-complete--serve-candidates-to-company candidates))))
 
-(defun alchemist-server-complete-filter (process output)
+(defun alchemist-server-complete-filter (_process output)
   (with-local-quit
     (setq alchemist-server--output (cons output alchemist-server--output))
     (if (string-match "END-OF-COMPLETE$" output)
@@ -156,7 +172,7 @@ will be started instead."
                             (alchemist--utils-clear-ansi-sequences string))))
           (funcall alchemist-server-help-callback candidates)))))
 
-(defun alchemist-server-help-complete-modules-filter (process output)
+(defun alchemist-server-help-complete-modules-filter (_process output)
   (with-local-quit
     (setq alchemist-server--output (cons output alchemist-server--output))
     (if (string-match "END-OF-MODULES$" output)
@@ -172,7 +188,7 @@ will be started instead."
                                        search
                                      (concat search ".")))))))
 
-(defun alchemist-server-goto-filter (process output)
+(defun alchemist-server-goto-filter (_process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
   (if (string-match "END-OF-SOURCE$" output)
       (let* ((output (apply #'concat (reverse alchemist-server--output)))

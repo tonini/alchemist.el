@@ -26,6 +26,9 @@
 
 ;;; Code:
 
+(require 'alchemist-utils)
+(require 'alchemist-mix)
+
 (defgroup alchemist-hooks nil
   "Hooks"
   :prefix "alchemist-hooks-"

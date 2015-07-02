@@ -23,6 +23,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'ansi-color)
 
 (defvar alchemist-utils--elixir-project-root-indicator
@@ -43,10 +44,10 @@ It walks the directory tree until it finds a elixir project root indicator."
 
 (defun alchemist-utils--build-runner-cmdlist (command)
   "Build the commands list for the runner."
-  (remove "" (alchemist-utils--flatten
-              (list (if (stringp command)
-                        (split-string command)
-                      command)))))
+  (cl-remove "" (alchemist-utils--flatten
+                 (list (if (stringp command)
+                           (split-string command)
+                         command)))))
 
 (defun alchemist-utils--clear-search-text (search-text)
   (let* ((search-text (alchemist-utils--remove-dot-at-the-end search-text))
@@ -73,11 +74,11 @@ It walks the directory tree until it finds a elixir project root indicator."
   (replace-regexp-in-string "\n$" "" string))
 
 (defun alchemist-utils--count-char-in-str (regexp str)
-  (loop with start = 0
-        for count from 0
-        while (string-match regexp str start)
-        do (setq start (match-end 0))
-        finally return count))
+  (cl-loop with start = 0
+           for count from 0
+           while (string-match regexp str start)
+           do (setq start (match-end 0))
+           finally return count))
 
 (defun alchemist-utils--is-test-file-p ()
   "Check wether the visited file is a test file."
@@ -129,9 +130,8 @@ module names (MyModule)."
 For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
   (let* ((path (file-name-sans-extension path))
          (path (split-string path "/"))
-         (path (remove-if (lambda (str) (equal str "")) path)))
+         (path (cl-remove-if (lambda (str) (equal str "")) path)))
     (mapconcat #'alchemist-utils--snakecase-to-camelcase path ".")))
-
 
 (provide 'alchemist-utils)
 

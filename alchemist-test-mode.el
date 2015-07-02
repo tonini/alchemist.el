@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'alchemist-mix)
+
 (defgroup alchemist-test-mode nil
   "Minor mode for Elixir ExUnit files."
   :prefix "alchemist-test-mode-"
@@ -61,13 +63,12 @@ be highlighted with more significant font faces."
     map)
   "Keymap for `alchemist-test-mode'.")
 
-(let ((whitespace-opt "[[:space:]]*")
-      (whitespace "[[:space:]]+"))
-  (setq alchemist-test-mode--test-regex
-        (concat
-         "\\(^" whitespace-opt "test" whitespace "\\(?10:.+\\)" whitespace "do" whitespace-opt "$"
-         "\\|"
-         whitespace " [0-9]+) test .+\\)")))
+(defvar alchemist-test-mode--test-regex
+  (let ((whitespace-opt "[[:space:]]*")
+        (whitespace "[[:space:]]+"))
+    (concat "\\(^" whitespace-opt "test" whitespace "\\(?10:.+\\)" whitespace "do" whitespace-opt "$"
+            "\\|"
+            whitespace " [0-9]+) test .+\\)")))
 
 ;; Private functions
 
@@ -75,7 +76,7 @@ be highlighted with more significant font faces."
   "Return nil if the current buffer contains no tests, non-nil if it does."
   (save-excursion
     (save-match-data
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (re-search-forward alchemist-test-mode--test-regex nil t))))
 
 (defun alchemist-test-mode--jump-to-test (search-fn reset-fn)
@@ -97,7 +98,7 @@ The keys in the list are the test names (e.g., the string passed to the test/2
 macro) while the values are the position at which the test matched."
   (save-match-data
     (save-excursion
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (let ((tests '()))
         (while (re-search-forward alchemist-test-mode--test-regex nil t)
           (let* ((position (car (match-data)))

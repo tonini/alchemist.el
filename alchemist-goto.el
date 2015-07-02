@@ -25,7 +25,13 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'etags)
+(require 'alchemist-utils)
+
+;; Tell the byte compiler to assume that functions are defined
+(declare-function alchemist-help--exp-at-point "alchemist-help.el")
+(declare-function alchemist-server-goto "alchemist-server.el")
 
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."
@@ -97,7 +103,7 @@ declaration has been found."
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
-            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))))
+            (cl-pushnew (substring-no-properties (match-string 1)) modules)))
       modules)))
 
 (defun alchemist-goto--import-modules-in-the-current-module-context ()
@@ -108,7 +114,7 @@ declaration has been found."
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
-            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))))
+            (cl-pushnew (substring-no-properties (match-string 1)) modules)))
     modules)))
 
 (defun alchemist-goto--extract-module (code)
@@ -168,18 +174,18 @@ declaration has been found."
 (defun alchemist-goto--string-at-point-p (&optional complete)
   "Return non-nil if cursor is at a string."
   (save-excursion
-  (or (and (nth 3 (save-excursion
-                    (let ((pos (point)))
-                      (when complete
-                        (end-of-buffer))
-                      (parse-partial-sexp 1 pos))))
-           (nth 8 (save-excursion
-                    (let ((pos (point)))
-                      (when complete
-                        (end-of-buffer))
-                      (parse-partial-sexp 1 pos)))))
-      (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
-           (match-beginning 0)))))
+    (or (and (nth 3 (save-excursion
+                      (let ((pos (point)))
+                        (when complete
+                          (end-of-buffer))
+                        (parse-partial-sexp 1 pos))))
+             (nth 8 (save-excursion
+                      (let ((pos (point)))
+                        (when complete
+                          (end-of-buffer))
+                        (parse-partial-sexp 1 pos)))))
+        (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
+             (match-beginning 0)))))
 
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)
@@ -188,13 +194,13 @@ declaration has been found."
     nil))
 
 (defun alchemist-goto--fetch-symbols-from-propertize-list (symbol)
-  (remove-if nil (mapcar (lambda (e)
+  (cl-remove-if nil (mapcar (lambda (e)
                            (if (string-match-p (format "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s+%s" symbol) e)
                                e)
                            ) alchemist-goto--symbol-list)))
 
 (defun alchemist-goto--goto-symbol (symbol)
-  (let ((amount (length (remove-if nil (mapcar (lambda (e) (when (string= symbol e) e))
+  (let ((amount (length (cl-remove-if nil (mapcar (lambda (e) (when (string= symbol e) e))
                                                alchemist-goto--symbol-list-bare)))))
     (if (> amount 1)
         (let* ((selected-def (completing-read "Symbol definitions:"
@@ -240,7 +246,7 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto--file-contains-defs-p ()
   (save-excursion
     (save-match-data
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (re-search-forward alchemist-goto--symbol-def-extract-regex nil t))))
 
 (defun alchemist-goto-jump-to-next-def-symbol ()
@@ -249,7 +255,7 @@ It will jump to the position of the symbol definition after selection."
     (save-match-data
       (end-of-line) ;; otherwise we could match on the current line and stay there forever
       (unless (re-search-forward alchemist-goto--symbol-def-regex nil t)
-        (beginning-of-buffer)
+      (goto-char (point-min))
         (re-search-forward alchemist-goto--symbol-def-regex nil t))
       (back-to-indentation))))
 
@@ -259,16 +265,14 @@ It will jump to the position of the symbol definition after selection."
     (save-match-data
       (beginning-of-line) ;; otherwise we could match on the current line and stay there forever
       (unless (re-search-backward alchemist-goto--symbol-def-regex nil t)
-        (end-of-buffer)
+        (goto-char (point-max))
         (re-search-backward alchemist-goto--symbol-def-regex nil t))
       (back-to-indentation))))
 
 (defun alchemist-goto--extract-symbol-bare (str)
   (save-match-data
     (when (string-match alchemist-goto--symbol-def-extract-regex str)
-      (let ((type (substring str (match-beginning 1) (match-end 1)))
-            (name (substring str (match-beginning 2) (match-end 2)))
-            (arguments (substring str (match-beginning 3) (match-end 3))))
+      (let ((name (substring str (match-beginning 2) (match-end 2))))
         name))))
 
 (defun alchemist-goto--get-symbol-from-position (position)
@@ -326,9 +330,9 @@ It will jump to the position of the symbol definition after selection."
      (t (alchemist-server-goto module function expr)))))
 
 (defun alchemist-goto--open-file (file module function)
-  (let* ((buf (find-file-noselect file)))
+  (let ((buf (find-file-noselect file)))
     (switch-to-buffer buf)
-    (beginning-of-buffer)
+    (goto-char (point-min))
     (cond ((alchemist-goto--elixir-file-p file)
            (alchemist-goto--jump-to-elixir-source module function))
           ((alchemist-goto--erlang-file-p file)

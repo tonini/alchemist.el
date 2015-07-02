@@ -25,10 +25,16 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+(require 'company-dabbrev-code)
+(require 'alchemist-utils)
+
 (defgroup alchemist-complete nil
   "Complete functionality for Elixir source code."
   :prefix "alchemist-complete-"
   :group 'alchemist)
+
+(defvar alchemist-server-company-callback nil)
 
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
@@ -108,7 +114,7 @@
                           (alchemist--utils-clear-ansi-sequences output))
                        '()))
          (candidates (if candidates
-                         (alchemist-complete--build-candidates (remove-duplicates candidates))
+                         (alchemist-complete--build-candidates (cl-remove-duplicates candidates))
                        '())))
     candidates))
 

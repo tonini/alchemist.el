@@ -25,7 +25,8 @@
 
 ;;; Code:
 
-(require 'cl)
+(require 'cl-lib)
+(require 'alchemist-utils)
 
 (defgroup alchemist-project nil
   "API to identify Elixir mix projects."
@@ -57,9 +58,9 @@
   (let* ((directory (file-name-as-directory (or directory (expand-file-name default-directory))))
          (present-files (directory-files directory)))
     (cond ((alchemist-project-root-directory-p directory) nil)
-          ((> (length (intersection present-files alchemist-project-deps-indicators :test 'string=)) 0)
+          ((> (length (cl-intersection present-files alchemist-project-deps-indicators :test 'string=)) 0)
            (alchemist-project-root (file-name-directory (directory-file-name directory))))
-          ((> (length (intersection present-files alchemist-project-root-indicators :test 'string=)) 0) directory)
+          ((> (length (cl-intersection present-files alchemist-project-root-indicators :test 'string=)) 0) directory)
           (t (alchemist-project-root (file-name-directory (directory-file-name directory)))))))
 
 (defun alchemist-project--establish-root-directory ()
@@ -118,21 +119,21 @@ first module defined in BUFFER."
 (defun alchemist-project--grok-module-name (buffer)
   "Determines the name of the first module defined in BUFFER."
   (save-excursion
-    (set-buffer buffer)
-    (goto-line 1)
-    (re-search-forward "defmodule\\s-\\(.+?\\)\\s-?,?\\s-do")
-    (match-string 1)))
+    (with-current-buffer buffer
+      (goto-char (point-min))
+      (re-search-forward "defmodule\\s-\\(.+?\\)\\s-?,?\\s-do")
+      (match-string 1))))
 
 (defun alchemist-project--insert-test-boilerplate (buffer module)
   "Inserts ExUnit boilerplate for MODULE in BUFFER.
 Point is left in a convenient location."
-  (set-buffer buffer)
-  (insert (concat "defmodule " module " do\n"
-                  "  use ExUnit.Case\n"
-                  "\n"
-                  "end\n"))
-  (goto-char (point-min))
-  (beginning-of-line 3))
+  (with-current-buffer buffer
+    (insert (concat "defmodule " module " do\n"
+                    "  use ExUnit.Case\n\n\n"
+                    "end\n"))
+    (goto-char (point-min))
+    (beginning-of-line 4)
+    (indent-according-to-mode)))
 
 (defun alchemist-project-run-tests-for-current-file ()
   "Run the tests related to the current file."

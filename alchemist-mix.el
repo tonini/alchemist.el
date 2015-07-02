@@ -25,12 +25,18 @@
 
 ;;; Code:
 
+(require 'alchemist-utils)
+(require 'alchemist-project)
+(require 'alchemist-buffer)
+
 (defgroup alchemist-mix nil
   "Emacs integration for Elixir's mix."
   :prefix "alchemist-mix-"
   :group 'alchemist)
 
 ;; Variables
+
+(defvar alchemist-test-mode-buffer-name "")
 
 (defcustom alchemist-mix-command "mix"
   "The shell command for mix."
