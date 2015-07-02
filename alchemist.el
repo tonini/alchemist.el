@@ -45,6 +45,8 @@
   :type 'string
   :group 'alchemist)
 
+(define-prefix-command 'alchemist-mode-keymap)
+
 (require 'alchemist-utils)
 (require 'alchemist-project)
 (require 'alchemist-server)
@@ -73,8 +75,6 @@
   "Display Alchemist's version."
   (interactive)
   (message "Alchemist %s" (replace-regexp-in-string "-cvs" "snapshot" alchemist--version)))
-
-(define-prefix-command 'alchemist-mode-keymap)
 
 ;;;###autoload
 (define-minor-mode alchemist-mode
