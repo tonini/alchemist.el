@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'etags)
 
 (defgroup alchemist-goto nil
@@ -188,13 +189,13 @@ declaration has been found."
     nil))
 
 (defun alchemist-goto--fetch-symbols-from-propertize-list (symbol)
-  (remove-if nil (mapcar (lambda (e)
+  (cl-remove-if nil (mapcar (lambda (e)
                            (if (string-match-p (format "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s+%s" symbol) e)
                                e)
                            ) alchemist-goto--symbol-list)))
 
 (defun alchemist-goto--goto-symbol (symbol)
-  (let ((amount (length (remove-if nil (mapcar (lambda (e) (when (string= symbol e) e))
+  (let ((amount (length (cl-remove-if nil (mapcar (lambda (e) (when (string= symbol e) e))
                                                alchemist-goto--symbol-list-bare)))))
     (if (> amount 1)
         (let* ((selected-def (completing-read "Symbol definitions:"

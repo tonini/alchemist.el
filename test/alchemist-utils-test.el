@@ -107,6 +107,12 @@ a text")))
   (should (equal "Module" (alchemist-utils--remove-dot-at-the-end "Module.")))
   (should (equal "Module.Foo" (alchemist-utils--remove-dot-at-the-end "Module.Foo."))))
 
+(ert-deftest test-utils/count-char-in-string ()
+  (should (equal 5 (alchemist-utils--count-char-in-str "\\." "This.Is.A.Long.One.")))
+  (should (equal 2 (alchemist-utils--count-char-in-str "\\." "My.Module.Namespace")))
+  (should (equal 1 (alchemist-utils--count-char-in-str "\\." "Foo.Bar")))
+  (should (equal 0 (alchemist-utils--count-char-in-str "\\." "List"))))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here
