@@ -30,8 +30,6 @@
 
 ;;; Code:
 
-(require 'easymenu)
-
 (defgroup alchemist nil
   "Elixir Tooling Integration Into Emacs."
   :prefix "alchemist-"
@@ -45,23 +43,15 @@
   :type 'string
   :group 'alchemist)
 
-(define-prefix-command 'alchemist-mode-keymap)
+(defvar alchemist-mode-keymap nil)
 
-(require 'alchemist-utils)
-(require 'alchemist-project)
-(require 'alchemist-server)
-(require 'alchemist-buffer)
-(require 'alchemist-compile)
-(require 'alchemist-execute)
+(require 'easymenu)
+(require 'company)
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
-(require 'alchemist-help)
-(require 'alchemist-complete)
 (require 'alchemist-message)
 (require 'alchemist-iex)
-(require 'alchemist-eval)
-(require 'alchemist-goto)
-(require 'alchemist-test-mode)
+(require 'alchemist-server)
 (require 'alchemist-company)
 
 (defun alchemist-mode-hook ()
@@ -75,6 +65,8 @@
   "Display Alchemist's version."
   (interactive)
   (message "Alchemist %s" (replace-regexp-in-string "-cvs" "snapshot" alchemist--version)))
+
+(define-prefix-command 'alchemist-mode-keymap)
 
 ;;;###autoload
 (define-minor-mode alchemist-mode

@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'comint)
+(require 'alchemist-project)
 
 (defgroup alchemist-iex nil
   "Interaction with an Elixir IEx process."
@@ -41,6 +42,8 @@
   "If non-nil, the prompt will be read-only."
   :type 'boolean
   :group 'alchemist-iex)
+
+(defvar alchemist-key-command-prefix nil)
 
 (defvar alchemist-iex-buffer nil
   "The buffer in which the Elixir IEx process is running.")

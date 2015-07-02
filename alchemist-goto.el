@@ -28,7 +28,10 @@
 (require 'cl-lib)
 (require 'etags)
 (require 'alchemist-utils)
-(require 'alchemist-help)
+
+;; Tell the byte compiler to assume that functions are defined
+(declare-function alchemist-help--exp-at-point "alchemist-help.el")
+(declare-function alchemist-server-goto "alchemist-server.el")
 
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."

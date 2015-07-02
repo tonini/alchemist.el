@@ -25,6 +25,9 @@
 
 ;;; Code:
 
+(require 'alchemist-buffer)
+(require 'alchemist-utils)
+
 (defgroup alchemist-compile nil
   "Elixir compilation functionality."
   :prefix "alchemist-compile-"

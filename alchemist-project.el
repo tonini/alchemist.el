@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'alchemist-utils)
 
 (defgroup alchemist-project nil
   "API to identify Elixir mix projects."

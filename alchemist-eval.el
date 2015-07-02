@@ -25,8 +25,11 @@
 
 ;;; Code:
 
-(require 'alchemist-project)
-(require 'alchemist-server)
+;; Tell the byte compiler to assume that functions are defined
+(declare-function alchemist-server-eval "alchemist-server.el")
+(declare-function alchemist-server-eval-and-insert "alchemist-server.el")
+(declare-function alchemist-server-eval-quote "alchemist-server.el")
+(declare-function alchemist-server-eval-quote-and-insert "alchemist-server.el")
 
 (defgroup alchemist-eval nil
   "Elixir code inline evaluation functionality."

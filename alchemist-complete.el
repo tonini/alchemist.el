@@ -26,11 +26,15 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'company-dabbrev-code)
+(require 'alchemist-utils)
 
 (defgroup alchemist-complete nil
   "Complete functionality for Elixir source code."
   :prefix "alchemist-complete-"
   :group 'alchemist)
+
+(defvar alchemist-server-company-callback nil)
 
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))

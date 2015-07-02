@@ -25,7 +25,16 @@
 
 ;;; Code:
 
+(require 'alchemist-utils)
+(require 'alchemist-project)
+(require 'alchemist-buffer)
+(require 'alchemist-compile)
+(require 'alchemist-execute)
 (require 'alchemist-help)
+(require 'alchemist-complete)
+(require 'alchemist-eval)
+(require 'alchemist-goto)
+(require 'alchemist-test-mode)
 
 (defgroup alchemist-server nil
   "Interface to the Alchemist Elixir server."
