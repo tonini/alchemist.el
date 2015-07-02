@@ -171,18 +171,18 @@ declaration has been found."
 (defun alchemist-goto--string-at-point-p (&optional complete)
   "Return non-nil if cursor is at a string."
   (save-excursion
-  (or (and (nth 3 (save-excursion
-                    (let ((pos (point)))
-                      (when complete
-                        (end-of-buffer))
-                      (parse-partial-sexp 1 pos))))
-           (nth 8 (save-excursion
-                    (let ((pos (point)))
-                      (when complete
-                        (end-of-buffer))
-                      (parse-partial-sexp 1 pos)))))
-      (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
-           (match-beginning 0)))))
+    (or (and (nth 3 (save-excursion
+                      (let ((pos (point)))
+                        (when complete
+                          (end-of-buffer))
+                        (parse-partial-sexp 1 pos))))
+             (nth 8 (save-excursion
+                      (let ((pos (point)))
+                        (when complete
+                          (end-of-buffer))
+                        (parse-partial-sexp 1 pos)))))
+        (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
+             (match-beginning 0)))))
 
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)

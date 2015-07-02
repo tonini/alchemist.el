@@ -118,21 +118,21 @@ first module defined in BUFFER."
 (defun alchemist-project--grok-module-name (buffer)
   "Determines the name of the first module defined in BUFFER."
   (save-excursion
-    (set-buffer buffer)
-    (goto-line 1)
-    (re-search-forward "defmodule\\s-\\(.+?\\)\\s-?,?\\s-do")
-    (match-string 1)))
+    (with-current-buffer buffer
+      (goto-char (point-min))
+      (re-search-forward "defmodule\\s-\\(.+?\\)\\s-?,?\\s-do")
+      (match-string 1))))
 
 (defun alchemist-project--insert-test-boilerplate (buffer module)
   "Inserts ExUnit boilerplate for MODULE in BUFFER.
 Point is left in a convenient location."
-  (set-buffer buffer)
-  (insert (concat "defmodule " module " do\n"
-                  "  use ExUnit.Case\n"
-                  "\n"
-                  "end\n"))
-  (goto-char (point-min))
-  (beginning-of-line 3))
+  (with-current-buffer buffer
+    (insert (concat "defmodule " module " do\n"
+                    "  use ExUnit.Case\n\n\n"
+                    "end\n"))
+    (goto-char (point-min))
+    (beginning-of-line 4)
+    (indent-according-to-mode)))
 
 (defun alchemist-project-run-tests-for-current-file ()
   "Run the tests related to the current file."
