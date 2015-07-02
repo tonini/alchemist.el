@@ -98,7 +98,7 @@ declaration has been found."
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
-            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))))
+            (cl-pushnew (substring-no-properties (match-string 1)) modules)))
       modules)))
 
 (defun alchemist-goto--import-modules-in-the-current-module-context ()
@@ -109,7 +109,7 @@ declaration has been found."
         (if (and (match-string 1)
                  (not (alchemist-goto--string-at-point-p))
                  (equal context (alchemist-goto--current-module-name)))
-            (setq modules (add-to-list 'modules (substring-no-properties (match-string 1))))))
+            (cl-pushnew (substring-no-properties (match-string 1)) modules)))
     modules)))
 
 (defun alchemist-goto--extract-module (code)

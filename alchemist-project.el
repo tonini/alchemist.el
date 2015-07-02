@@ -25,7 +25,7 @@
 
 ;;; Code:
 
-(require 'cl)
+(require 'cl-lib)
 
 (defgroup alchemist-project nil
   "API to identify Elixir mix projects."
@@ -57,9 +57,9 @@
   (let* ((directory (file-name-as-directory (or directory (expand-file-name default-directory))))
          (present-files (directory-files directory)))
     (cond ((alchemist-project-root-directory-p directory) nil)
-          ((> (length (intersection present-files alchemist-project-deps-indicators :test 'string=)) 0)
+          ((> (length (cl-intersection present-files alchemist-project-deps-indicators :test 'string=)) 0)
            (alchemist-project-root (file-name-directory (directory-file-name directory))))
-          ((> (length (intersection present-files alchemist-project-root-indicators :test 'string=)) 0) directory)
+          ((> (length (cl-intersection present-files alchemist-project-root-indicators :test 'string=)) 0) directory)
           (t (alchemist-project-root (file-name-directory (directory-file-name directory)))))))
 
 (defun alchemist-project--establish-root-directory ()
