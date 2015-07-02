@@ -23,6 +23,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'ansi-color)
 
 (defvar alchemist-utils--elixir-project-root-indicator
@@ -131,7 +132,6 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
          (path (split-string path "/"))
          (path (remove-if (lambda (str) (equal str "")) path)))
     (mapconcat #'alchemist-utils--snakecase-to-camelcase path ".")))
-
 
 (provide 'alchemist-utils)
 
