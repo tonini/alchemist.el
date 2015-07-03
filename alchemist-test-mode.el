@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'alchemist-mix)
-
 (defgroup alchemist-test-mode nil
   "Minor mode for Elixir ExUnit files."
   :prefix "alchemist-test-mode-"
