@@ -104,6 +104,13 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
 
   (remove-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color))
 
+(defvar alchemist-buffer--last-run-status "")
+(defun alchemist-buffer--store-process-status (buffer status)
+  (setq alchemist-buffer--last-run-status status))
+
+(defun alchemist-buffer--last-run-successful-p ()
+  (when (string-prefix-p "finished" alchemist-buffer--last-run-status) t))
+
 ;; Public functions
 
 (defun alchemist-buffer-initialize-modeline ()
@@ -144,6 +151,7 @@ Argument BUFFER-NAME for the compilation."
       (add-hook 'compilation-filter-hook 'alchemist-buffer--remove-dispensable-output nil t)
       (add-to-list 'compilation-finish-functions 'alchemist-buffer-init-test-report)
       (add-to-list 'compilation-finish-functions 'alchemist-buffer--remove-dispensable-output-after-finish)
+      (add-to-list 'compilation-finish-functions 'alchemist-buffer--store-process-status)
       (when alchemist-buffer-status-modeline
         (add-hook 'compilation-finish-functions 'alchemist-buffer--set-modeline-color nil t)))))
 

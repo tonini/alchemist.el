@@ -48,6 +48,29 @@
 `(let ((,name ,value))
    ,@body))
 
+(defmacro capture-message (&rest form)
+  (declare (debug (&rest form))
+           (indent 0))
+  `(let ((start (make-marker))
+         (message-buffer (get-buffer "*Messages*")))
+     (with-current-buffer message-buffer
+       (set-marker start (point-max)))
+     (progn ,@form)
+     (with-current-buffer message-buffer
+       (buffer-substring start (point-max)))))
+
+(defun wait(amount)
+  (let* ((amount (/ (float amount) 4)))
+    (sleep-for amount)
+    (sleep-for amount)
+    (sleep-for amount)
+    (sleep-for amount)))
+
+(defun delay (seconds callback)
+  "Wait SECONDS, then run function CALLBACK."
+  (declare (indent 1))
+  (run-at-time seconds nil callback))
+
 (add-to-list 'load-path alchemist-root-path)
 
 (require 'alchemist)
