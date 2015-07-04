@@ -25,15 +25,36 @@
 
 (require 'test-helper)
 
+(defun prepare-test-report-buffer ()
+  (when (process-live-p (get-buffer-process (get-buffer "*alchemist-test-report*")))
+    (set-process-query-on-exit-flag (get-buffer-process (get-buffer "*alchemist-test-report*")) nil)))
+
 (ert-deftest test-mix/run-mix-test ()
+  (prepare-test-report-buffer)
+  (cd "test/dummy_elixir/test/")
+  (shut-up
+    (alchemist-mix-test))
+  (delay 1.2 (lambda ()
+               (should (alchemist-buffer--last-run-successful-p)))))
+
+(ert-deftest test-mix/run-mix-test-at-point ()
+  (prepare-test-report-buffer)
   (cd "test/dummy_elixir/test/")
   (find-file "dummy_elixir_test.exs")
   (with-current-buffer "dummy_elixir_test.exs"
     (shut-up
-      (alchemist-mix-test)))
-  (delay 0.8
-         (lambda ()
-           (should (alchemist-buffer--last-run-successful-p)))))
+      (goto-line 5)
+      (alchemist-mix-test-at-point)))
+  (delay 1.2 (lambda ()
+               (should (alchemist-buffer--last-run-successful-p)))))
+
+(ert-deftest test-mix/run-mix-test-file ()
+  (prepare-test-report-buffer)
+  (cd "test/dummy_elixir/test/")
+  (shut-up
+    (alchemist-mix-test-file "dummy_elixir_test.exs"))
+  (delay 1.2 (lambda ()
+               (should (alchemist-buffer--last-run-successful-p)))))
 
 (provide 'alchemist-mix-test)
 
