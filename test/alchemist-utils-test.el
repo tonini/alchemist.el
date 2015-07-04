@@ -113,6 +113,10 @@ a text")))
   (should (equal 1 (alchemist-utils--count-char-in-str "\\." "Foo.Bar")))
   (should (equal 0 (alchemist-utils--count-char-in-str "\\." "List"))))
 
+(ert-deftest test-utils/add-trailing-slash-to-path ()
+  (should (equal "/path/to/some/thing/" (alchemist-utils--add-trailing-slash "/path/to/some/thing")))
+  (should (equal "/path/to/some/thing/" (alchemist-utils--add-trailing-slash "/path/to/some/thing/"))))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here

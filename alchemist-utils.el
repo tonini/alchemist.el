@@ -133,6 +133,11 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
          (path (cl-remove-if (lambda (str) (equal str "")) path)))
     (mapconcat #'alchemist-utils--snakecase-to-camelcase path ".")))
 
+(defun alchemist-utils--add-trailing-slash (path)
+  (if (not (string-match-p "/$" path))
+      (format "%s/" path)
+    path))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
