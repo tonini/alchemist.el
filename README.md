@@ -348,7 +348,7 @@ By default you're able to jump to definitions of your own mix project codebase a
 But if you would like to also jump to Elixir and Erlang source code you need to tell Alchemist where
 it can find the source code of Elixir and Erlang.
 
-For that purpose there're two variables you can set:
+For that purpose there're two variables you can set (trailing slashes are required):
 
 ```el
 (setq alchemist-goto-erlang-source-dir "/path/to/erlang/source/")
