@@ -66,6 +66,11 @@
     (sleep-for amount)
     (sleep-for amount)))
 
+(defun delay (seconds callback)
+  "Wait SECONDS, then run function CALLBACK."
+  (declare (indent 1))
+  (run-at-time seconds nil callback))
+
 (add-to-list 'load-path alchemist-root-path)
 
 (require 'alchemist)

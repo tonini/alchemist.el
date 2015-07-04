@@ -59,7 +59,7 @@
 (defvar alchemist-server--last-completion-exp nil)
 
 (defvar alchemist-server-command
-  (format "elixir %s %s" alchemist-server alchemist-server--env))
+  (format "%s %s %s" alchemist-execute-command alchemist-server alchemist-server--env))
 
 (defun alchemist-server-start (env)
   "Start alchemist server for the current mix project in specific ENV.

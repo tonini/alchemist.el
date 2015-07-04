@@ -1,4 +1,4 @@
-;;; alchemist-mix-test.el ---
+;;; alchemist-mix-test.el --- -*- lexical-binding: t; -*-
 
 ;; Copyright © 2015 Samuel Tonini
 ;;
@@ -25,7 +25,15 @@
 
 (require 'test-helper)
 
-(ert-deftest test-mix/run-mix-test ())
+(ert-deftest test-mix/run-mix-test ()
+  (cd "test/dummy_elixir/test/")
+  (find-file "dummy_elixir_test.exs")
+  (with-current-buffer "dummy_elixir_test.exs"
+    (shut-up
+      (alchemist-mix-test)))
+  (delay 0.8
+         (lambda ()
+           (should (alchemist-buffer--last-run-successful-p)))))
 
 (provide 'alchemist-mix-test)
 
