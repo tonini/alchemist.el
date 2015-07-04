@@ -43,8 +43,6 @@
   :type 'boolean
   :group 'alchemist-iex)
 
-(defvar alchemist-key-command-prefix nil)
-
 (defvar alchemist-iex-buffer nil
   "The buffer in which the Elixir IEx process is running.")
 
