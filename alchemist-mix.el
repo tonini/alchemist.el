@@ -86,8 +86,20 @@ not set explicitly."
   "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
+  (setq alchemist-last-run-test (expand-file-name filename))
   (alchemist-mix-execute `(,alchemist-mix-test-task ,(expand-file-name filename) ,@alchemist-mix-test-default-options)
                          alchemist-test-mode-buffer-name))
+
+(defun alchemist-mix-rerun-last-test ()
+  "Rerun the last test that was run by alchemist.
+
+When no tests had been run before calling this function, do nothing."
+  (interactive)
+  (if alchemist-last-run-test
+      (alchemist-mix-execute
+       `(,alchemist-mix-test-task ,alchemist-last-run-test ,@alchemist-mix-test-default-options)
+       alchemist-test-mode-buffer-name)
+    (message "No tests have been run yet")))
 
 (defun alchemist-mix--commands ()
   (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
@@ -112,6 +124,7 @@ not set explicitly."
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
   (interactive)
+  (setq alchemist-last-run-test "")
   (alchemist-mix-execute `(,alchemist-mix-test-task ,@alchemist-mix-test-default-options)
                          alchemist-test-mode-buffer-name))
 
@@ -130,6 +143,7 @@ not set explicitly."
   (interactive)
   (let* ((line (line-number-at-pos (point)))
          (file-and-line (format "%s:%s" buffer-file-name line)))
+    (setq alchemist-last-run-test file-and-line)
     (alchemist-mix-execute (list alchemist-mix-test-task file-and-line)
                            alchemist-test-mode-buffer-name)))
 
