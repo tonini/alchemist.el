@@ -147,13 +147,15 @@ Prompt for the mix env if the prefix arg is set."
   (alchemist-mix-execute (list "run" command)
                          alchemist-mix-buffer-name prefix))
 
-(defun alchemist-mix-deps-with-prompt (command &optional prefix)
+(defun alchemist-mix-deps (command &optional prefix)
   "Prompt for mix deps commands."
   (interactive
    (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)
          current-prefix-arg))
   (alchemist-mix-execute (list command)
                          alchemist-mix-buffer-name prefix))
+
+(define-obsolete-function-alias 'alchemist-mix-deps-with-prompt 'alchemist-mix-deps)
 
 (defun alchemist-mix (command &optional prefix)
   "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
@@ -164,7 +166,7 @@ Prompt for the mix env if the prefix arg is set."
     (alchemist-mix-execute (list command)
                            alchemist-mix-buffer-name prefix)))
 
-(defun alchemist-mix-local-with-prompt (command)
+(defun alchemist-mix-local (command)
   "Prompt for mix local commands."
   (interactive
    (list (alchemist-mix--completing-read "mix local: " alchemist-mix--local-commands)))
@@ -172,6 +174,8 @@ Prompt for the mix env if the prefix arg is set."
       (call-interactively 'alchemist-mix-local-install)
     (alchemist-mix-execute (list command)
                            alchemist-mix-buffer-name)))
+
+(define-obsolete-function-alias 'alchemist-mix-local-with-prompt 'alchemist-mix-local)
 
 (defun alchemist-mix-local-install (path-or-url)
   "Prompt for mix local.install PATH-OR-URL."
