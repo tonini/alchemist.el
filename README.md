@@ -239,11 +239,11 @@ through the variable.
         <td>Runs the given expression in the Elixir application context.</td>
     </tr>
     <tr>
-        <td><code>alchemist-mix-deps-with-prompt</code></td>
+        <td><code>alchemist-mix-deps</code></td>
         <td>Prompt for <code>mix deps</code> commands.</td>
     </tr>
     <tr>
-        <td><code>alchemist-mix-local-with-prompt</code></td>
+        <td><code>alchemist-mix-local</code></td>
         <td>Prompt for <code>mix local</code> commands.</td>
     </tr>
     <tr>
