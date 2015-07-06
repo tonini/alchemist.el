@@ -215,6 +215,7 @@ through the variable.
 |-------------------|-------------|
 |<kbd>C-c a x</kbd>|Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
 |<kbd>C-c a t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
+|<kbd>C-c a r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test`|
 |<kbd>C-c a t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
 |<kbd>C-c a t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
 |<kbd>C-c a t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
