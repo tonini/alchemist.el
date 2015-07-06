@@ -89,6 +89,7 @@ Key bindings:
 (let ((map alchemist-mode-keymap))
   (define-key map (kbd "x") 'alchemist-mix)
   (define-key map (kbd "t") 'alchemist-mix-test)
+  (define-key map (kbd "r") 'alchemist-mix-rerun-last-test)
   (define-key map (kbd "m c") 'alchemist-mix-compile)
   (define-key map (kbd "m t f") 'alchemist-mix-test-file)
   (define-key map (kbd "m t b") 'alchemist-mix-test-this-buffer)
