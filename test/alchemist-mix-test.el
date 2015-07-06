@@ -34,6 +34,7 @@
   (cd "test/dummy_elixir/test/")
   (shut-up
     (alchemist-mix-test))
+  (should (equal "" alchemist-last-run-test))
   (delay 1.2 (lambda ()
                (should (alchemist-buffer--last-run-successful-p)))))
 
@@ -45,6 +46,7 @@
     (shut-up
       (goto-line 5)
       (alchemist-mix-test-at-point)))
+  (should (equal (expand-file-name "dummy_elixir_test.exs:5") alchemist-last-run-test))
   (delay 1.2 (lambda ()
                (should (alchemist-buffer--last-run-successful-p)))))
 
@@ -53,6 +55,7 @@
   (cd "test/dummy_elixir/test/")
   (shut-up
     (alchemist-mix-test-file "dummy_elixir_test.exs"))
+  (should (equal (expand-file-name "dummy_elixir_test.exs") alchemist-last-run-test))
   (delay 1.2 (lambda ()
                (should (alchemist-buffer--last-run-successful-p)))))
 
