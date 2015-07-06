@@ -1,6 +1,27 @@
 # Changelog
 
-## v1.2.1 (unreleased)
+## v1.2.1 (2015-07-06)
+
+### Enhancements
+
+  * [Goto] Handle multiple symbol definitions in local file while using goto definition functionality.
+  * [Test] Rerun the last test run with `alchemist-mix-rerun-last-test`. (default binding: `C-c a r`)
+  * [Project] Run tests for current Elixir file.
+  * [Project] Create new Elixir file for the current mix project.
+  * [Goto] Handle trailing slash for elixir/erlang source directories.
+  * [Alchemist] Replace interactive functions in codebase with faster none-interactve functions.
+  * [Alchemist] Refine codebase that warnings/error which occures when package.el bytes-compile elisp code won't happen.
+  * [Alchemist] Refine configuration section of the README.
+  * [Refcard] Update refcard with new functionalities.
+  * [Completion] Better completion candidates part of module prefix
+  * [Server] Run the completion for context modules first to be sure modules are loaded.
+  * [Server] Alchemist Elixir server basic tests.
+
+### Changes
+
+  * [Server] Start an alchemist server when alchemist-mode is initialized.
+  * [Server] Use Application module instead of ets table for aliases storage
+  * [Mix] `*-with-prompt` functions are deprecated.
 
 ## v1.1.1 (2015-06-26)
 
