@@ -59,6 +59,13 @@
   (delay 1.2 (lambda ()
                (should (alchemist-buffer--last-run-successful-p)))))
 
+(ert-deftest test-mixt/mix-tasks ()
+  (should (-contains-p (alchemist-mix--tasks) "app.start"))
+  (should (-contains-p (alchemist-mix--tasks) "compile"))
+  (should (-contains-p (alchemist-mix--tasks) "clean"))
+  (should (-contains-p (alchemist-mix--tasks) "iex"))
+  (should (-contains-p (alchemist-mix--tasks) "deps.get")))
+
 (provide 'alchemist-mix-test)
 
 ;;; alchemist-goto-test.el ends here
