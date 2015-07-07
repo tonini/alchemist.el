@@ -99,15 +99,6 @@ run all tests)."
     (error "The given file doesn't exists"))
   (alchemist-mix--execute-test (expand-file-name filename)))
 
-(defun alchemist-mix-rerun-last-test ()
-  "Rerun the last test that was run by alchemist.
-
-When no tests had been run before calling this function, do nothing."
-  (interactive)
-  (if alchemist-last-run-test
-      (alchemist-mix--execute-test alchemist-last-run-test)
-    (message "No tests have been run yet")))
-
 (defun alchemist-mix--commands ()
   (let ((mix-cmd-list (shell-command-to-string (format "%s help" alchemist-mix-command))))
     (mapcar (lambda (s)
@@ -121,6 +112,15 @@ When no tests had been run before calling this function, do nothing."
   (interactive)
   (when (get-buffer alchemist-mix-buffer-name)
     (display-buffer alchemist-mix-buffer-name)))
+
+(defun alchemist-mix-rerun-last-test ()
+  "Rerun the last test that was run by alchemist.
+
+When no tests had been run before calling this function, do nothing."
+  (interactive)
+  (if alchemist-last-run-test
+      (alchemist-mix--execute-test alchemist-last-run-test)
+    (message "No tests have been run yet")))
 
 (defun alchemist-mix-new (name)
   "Create a new elixir project named by NAME."
