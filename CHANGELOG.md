@@ -1,6 +1,8 @@
 # Changelog
 
-## v1.2.1 (2015-07-06)
+## v1.3.0 (unreleased)
+
+## v1.2.0 (2015-07-06)
 
 ### Enhancements
 
