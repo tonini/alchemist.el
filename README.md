@@ -60,6 +60,7 @@ Alchemist comes with a bunch of **features**, which are:
 - [Keymap](#keymap)
 - [Support](#support)
 - [Contributing](#contributing)
+- [License](#license)
 
 
 ## Installation
