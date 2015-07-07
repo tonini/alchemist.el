@@ -72,10 +72,7 @@ be highlighted with more significant font faces."
 
 (defun alchemist-test-mode--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
-  (save-excursion
-    (save-match-data
-      (goto-char (point-min))
-      (re-search-forward alchemist-test-mode--test-regex nil t))))
+  (alchemist-utils--regex-in-buffer-p (current-buffer) alchemist-test-mode--test-regex))
 
 (defun alchemist-test-mode--jump-to-test (search-fn reset-fn)
   "Move the point to the next/previous test, based on `search-fn' (which is the
