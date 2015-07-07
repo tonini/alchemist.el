@@ -144,7 +144,7 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
   (with-current-buffer buffer
     (save-excursion
       (save-match-data
-        (beginning-of-buffer)
+        (goto-char (point-min))
         (re-search-forward regex nil t)))))
 
 (provide 'alchemist-utils)
