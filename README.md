@@ -58,6 +58,7 @@ Alchemist comes with a bunch of **features**, which are:
 - [Testing](#testing)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
+- [Support](#support)
 - [Contributing](#contributing)
 
 
@@ -469,6 +470,13 @@ via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] 
 Alchemist comes with a default keymap.
 
 You find and overview of all the key-bindings on the [Alchemist-Refcard](https://github.com/tonini/alchemist.el/blob/master/doc/alchemist-refcard.pdf?raw=true).
+
+## Support
+
+If you hit any problems, please first ensure that you are using the latest version of this code,
+and that you have updated your packages to the most recent available versions.
+If you still experience problems, you can find me on [IRC](http://de.wikipedia.org/wiki/Internet_Relay_Chat)
+channels **#elixir-lang** and **#emacs-elixir** under the nickname **tonini**.
 
 ## Contributing
 
