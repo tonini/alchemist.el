@@ -83,12 +83,14 @@ not set explicitly."
 (defun alchemist-mix--completing-read (prompt cmdlist)
   (completing-read prompt cmdlist nil t nil nil (car cmdlist)))
 
-(defun alchemist-mix--execute-test (what)
+(defun alchemist-mix--execute-test (&optional what)
   "Execute 'mix test' on the given `WHAT'.
 
 `WHAT' could be a filename, a filename:line string or the empty string (meaning
 run all tests)."
-  (setq alchemist-last-run-test what)
+  (if what
+      (setq alchemist-last-run-test what)
+    (setq alchemist-last-run-test ""))
   (alchemist-mix-execute
    `(,alchemist-mix-test-task ,what ,@alchemist-mix-test-default-options)
    alchemist-test-mode-buffer-name))
@@ -132,7 +134,7 @@ When no tests had been run before calling this function, do nothing."
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
   (interactive)
-  (alchemist-mix--execute-test ""))
+  (alchemist-mix--execute-test))
 
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
