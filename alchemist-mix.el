@@ -83,13 +83,21 @@ not set explicitly."
 (defun alchemist-mix--completing-read (prompt cmdlist)
   (completing-read prompt cmdlist nil t nil nil (car cmdlist)))
 
+(defun alchemist-mix--execute-test (what)
+  "Execute 'mix test' on the given `WHAT'.
+
+`WHAT' could be a filename, a filename:line string or the empty string (meaning
+run all tests)."
+  (setq alchemist-last-run-test what)
+  (alchemist-mix-execute
+   `(,alchemist-mix-test-task ,what ,@alchemist-mix-test-default-options)
+   alchemist-test-mode-buffer-name))
+
 (defun alchemist-mix--test-file (filename)
   "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
     (error "The given file doesn't exists"))
-  (setq alchemist-last-run-test (expand-file-name filename))
-  (alchemist-mix-execute `(,alchemist-mix-test-task ,(expand-file-name filename) ,@alchemist-mix-test-default-options)
-                         alchemist-test-mode-buffer-name))
+  (alchemist-mix--execute-test (expand-file-name filename)))
 
 (defun alchemist-mix-rerun-last-test ()
   "Rerun the last test that was run by alchemist.
@@ -97,9 +105,7 @@ not set explicitly."
 When no tests had been run before calling this function, do nothing."
   (interactive)
   (if alchemist-last-run-test
-      (alchemist-mix-execute
-       `(,alchemist-mix-test-task ,alchemist-last-run-test ,@alchemist-mix-test-default-options)
-       alchemist-test-mode-buffer-name)
+      (alchemist-mix--execute-test alchemist-last-run-test)
     (message "No tests have been run yet")))
 
 (defun alchemist-mix--commands ()
@@ -125,9 +131,7 @@ When no tests had been run before calling this function, do nothing."
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
   (interactive)
-  (setq alchemist-last-run-test "")
-  (alchemist-mix-execute `(,alchemist-mix-test-task ,@alchemist-mix-test-default-options)
-                         alchemist-test-mode-buffer-name))
+  (alchemist-mix--execute-test ""))
 
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
@@ -144,9 +148,7 @@ When no tests had been run before calling this function, do nothing."
   (interactive)
   (let* ((line (line-number-at-pos (point)))
          (file-and-line (format "%s:%s" buffer-file-name line)))
-    (setq alchemist-last-run-test file-and-line)
-    (alchemist-mix-execute (list alchemist-mix-test-task file-and-line)
-                           alchemist-test-mode-buffer-name)))
+    (alchemist-mix--execute-test file-and-line)))
 
 (defun alchemist-mix-compile (command &optional prefix)
   "Compile the whole elixir project. Prompt for the mix env if the prefix
