@@ -94,8 +94,11 @@ defmodule Alchemist.Case do
 
   defmodule MixTask do
     def process! do
+      # append things like hex or phoenix archives to the load_path
+      Mix.Local.append_archives
+
       tasks =
-        Mix.Task.load_all()
+        Mix.Task.load_tasks(:code.get_path)
         |> Enum.map(&Mix.Task.task_name/1)
 
       for info <- Enum.sort(tasks) do

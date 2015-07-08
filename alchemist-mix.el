@@ -177,14 +177,10 @@ Prompt for the mix env if the prefix arg is set."
 
 (define-obsolete-function-alias 'alchemist-mix-deps-with-prompt 'alchemist-mix-deps)
 
-(defun alchemist-mix (command &optional prefix)
+(defun alchemist-mix ()
   "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
-  (interactive
-   (list (alchemist-mix--completing-read "mix: " (alchemist-mix--tasks))
-         current-prefix-arg))
-  (let ((command (read-string "mix " (concat command " "))))
-    (alchemist-mix-execute (list command)
-                           alchemist-mix-buffer-name prefix)))
+  (interactive)
+  (alchemist-server--mix))
 
 (defun alchemist-mix-local (command)
   "Prompt for mix local commands."
