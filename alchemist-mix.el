@@ -101,13 +101,6 @@ run all tests)."
     (error "The given file doesn't exists"))
   (alchemist-mix--execute-test (expand-file-name filename)))
 
-(defun alchemist-mix--tasks ()
-  (let* ((root-directory (alchemist-project-root))
-         (default-directory (if root-directory root-directory
-                              default-directory))
-         (mix-cmd-list (shell-command-to-string (format "%s help --names" alchemist-mix-command))))
-    (split-string mix-cmd-list "\n")))
-
 ;; Public functions
 
 (defun alchemist-mix-display-mix-buffer ()
@@ -177,14 +170,10 @@ Prompt for the mix env if the prefix arg is set."
 
 (define-obsolete-function-alias 'alchemist-mix-deps-with-prompt 'alchemist-mix-deps)
 
-(defun alchemist-mix (command &optional prefix)
+(defun alchemist-mix ()
   "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
-  (interactive
-   (list (alchemist-mix--completing-read "mix: " (alchemist-mix--tasks))
-         current-prefix-arg))
-  (let ((command (read-string "mix " (concat command " "))))
-    (alchemist-mix-execute (list command)
-                           alchemist-mix-buffer-name prefix)))
+  (interactive)
+  (alchemist-server--mix))
 
 (defun alchemist-mix-local (command)
   "Prompt for mix local commands."

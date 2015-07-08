@@ -197,6 +197,19 @@ will be started instead."
              (file (replace-regexp-in-string "source-file-path:" "" output)))
         (funcall alchemist-server-goto-callback file))))
 
+(defun alchemist-server--mix-filter (_process output)
+  (with-local-quit
+    (setq alchemist-server--output (cons output alchemist-server--output))
+    (if (string-match-p "END-OF-MIXTASKS$" output)
+        (let* ((output (apply #'concat (reverse alchemist-server--output)))
+               (output (replace-regexp-in-string "END-OF-MIXTASKS" "" output))
+               (output (replace-regexp-in-string "\n$" "" output))
+               (tasks (split-string output "\n"))
+               (selected-task (alchemist-mix--completing-read "mix: " tasks))
+               (command (read-string "mix " (concat selected-task " "))))
+          (alchemist-mix-execute (list command)
+                                 alchemist-mix-buffer-name current-prefix-arg)))))
+
 (defun alchemist-server-goto (module function expr)
   (setq alchemist-server--output nil)
   (alchemist-server--start)
@@ -224,6 +237,12 @@ will be started instead."
                                                 (message "Don't know how to find: %s" expr)))))
   (set-process-filter (alchemist-server--process) #'alchemist-server-goto-filter)
   (process-send-string (alchemist-server--process) (format "SOURCE %s,%s\n" module function)))
+
+(defun alchemist-server--mix ()
+  (setq alchemist-server--output nil)
+  (alchemist-server--start)
+  (set-process-filter (alchemist-server--process) #'alchemist-server--mix-filter)
+  (process-send-string (alchemist-server--process) "MIXTASKS\n"))
 
 (defun alchemist-server-help ()
   (setq alchemist-server--output nil)

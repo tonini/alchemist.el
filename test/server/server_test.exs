@@ -67,6 +67,19 @@ defmodule ServerTest do
     """
   end
 
+  test "Get all mix tasks by name" do
+    assert send_signal("MIXTASKS") =~ """
+    app.start
+    archive
+    archive.build
+    archive.install
+    archive.uninstall
+    clean
+    cmd
+    compile
+    """
+  end
+
   defp send_signal(signal) do
     capture_io(fn ->
       Alchemist.Server.read_input(signal)
