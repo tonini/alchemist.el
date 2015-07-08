@@ -45,6 +45,8 @@ defmodule Alchemist.Server do
         Case.Quote.process!(file)
       ["SOURCE", exp] ->
         Case.Find.process!(exp)
+      ["MIXTASKS"] ->
+        Case.MixTask.process!
       _ ->
         nil
     end

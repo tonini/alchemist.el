@@ -91,4 +91,18 @@ defmodule Alchemist.Case do
       IO.puts "END-OF-SOURCE"
     end
   end
+
+  defmodule MixTask do
+    def process! do
+      tasks =
+        Mix.Task.load_all()
+        |> Enum.map(&Mix.Task.task_name/1)
+
+      for info <- Enum.sort(tasks) do
+        IO.puts info
+      end
+
+      IO.puts "END-OF-MIXTASKS"
+    end
+  end
 end
