@@ -115,8 +115,9 @@ formated with the `alchemist-buffer--failed-face' face, to symbolize failing tes
 
 (defun alchemist-buffer-initialize-modeline ()
   "Initialize the mode-line face."
-  (setq mode-name
-         '(:eval (propertize "Elixir" 'face alchemist-buffer--mode-name-face))))
+  (when alchemist-buffer-status-modeline
+    (setq mode-name
+          '(:eval (propertize "Elixir" 'face alchemist-buffer--mode-name-face)))))
 
 (defun alchemist-buffer-reset-modeline ()
   "Reset the current mode-line face to default."

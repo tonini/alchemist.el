@@ -52,7 +52,9 @@
 (require 'alchemist-message)
 (require 'alchemist-iex)
 (require 'alchemist-server)
+(require 'alchemist-refcard)
 (require 'alchemist-company)
+
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
