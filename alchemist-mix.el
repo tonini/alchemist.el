@@ -101,13 +101,6 @@ run all tests)."
     (error "The given file doesn't exists"))
   (alchemist-mix--execute-test (expand-file-name filename)))
 
-(defun alchemist-mix--tasks ()
-  (let* ((root-directory (alchemist-project-root))
-         (default-directory (if root-directory root-directory
-                              default-directory))
-         (mix-cmd-list (shell-command-to-string (format "%s help --names" alchemist-mix-command))))
-    (split-string mix-cmd-list "\n")))
-
 ;; Public functions
 
 (defun alchemist-mix-display-mix-buffer ()
