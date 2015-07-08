@@ -208,7 +208,7 @@ will be started instead."
                (selected-task (alchemist-mix--completing-read "mix: " tasks))
                (command (read-string "mix " (concat selected-task " "))))
           (alchemist-mix-execute (list command)
-                                 alchemist-mix-buffer-name prefix-arg)))))
+                                 alchemist-mix-buffer-name current-prefix-arg)))))
 
 (defun alchemist-server-goto (module function expr)
   (setq alchemist-server--output nil)
