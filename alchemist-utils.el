@@ -138,6 +138,15 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
       (format "%s/" path)
     path))
 
+(defun alchemist-utils--regex-in-buffer-p (buffer regex)
+  "Return non-nil if the given `BUFFER' contains at least one occurrence of
+  `REGEX', nil otherwise."
+  (with-current-buffer buffer
+    (save-excursion
+      (save-match-data
+        (goto-char (point-min))
+        (re-search-forward regex nil t)))))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here

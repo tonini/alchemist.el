@@ -117,6 +117,13 @@ a text")))
   (should (equal "/path/to/some/thing/" (alchemist-utils--add-trailing-slash "/path/to/some/thing")))
   (should (equal "/path/to/some/thing/" (alchemist-utils--add-trailing-slash "/path/to/some/thing/"))))
 
+(ert-deftest test-utils/regex-in-buffer-p ()
+  (with-temp-buffer
+    (insert "1 2 3 foo 4 5 6")
+    (end-of-buffer)
+    (should (alchemist-utils--regex-in-buffer-p (current-buffer) "f[oO]o"))
+    (should (not (alchemist-utils--regex-in-buffer-p (current-buffer) "bar")))))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here
