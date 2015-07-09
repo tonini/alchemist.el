@@ -58,6 +58,7 @@ Alchemist comes with a bunch of **features**, which are:
 - [Testing](#testing)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
+  - [Refcards](#refcards)
 - [Support](#support)
 - [Contributing](#contributing)
 - [License](#license)
@@ -470,7 +471,18 @@ via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] 
 
 Alchemist comes with a default keymap.
 
+The the default prefix keybinding is <kbd>C-c a</kbd>
+
+### Refcards
+
 You find and overview of all the key-bindings on the [Alchemist-Refcard](https://github.com/tonini/alchemist.el/blob/master/doc/alchemist-refcard.pdf?raw=true).
+
+There is also a refcard for usage inside Emacs, which gets dynamically generated with the current adjusted keybindings.
+If you use the keybinding <kbd>i</kbd> on a specific row, it will call `describe-function` on that function.
+
+Just `M-x alchemist-refcard RET`
+
+![Alchemist Inside Emacs Refcard](logo/refcard.png)
 
 ## Support
 
