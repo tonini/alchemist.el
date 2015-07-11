@@ -250,23 +250,11 @@ It will jump to the position of the symbol definition after selection."
 
 (defun alchemist-goto-jump-to-next-def-symbol ()
   (interactive)
-  (when (alchemist-goto--file-contains-defs-p)
-    (save-match-data
-      (end-of-line) ;; otherwise we could match on the current line and stay there forever
-      (unless (re-search-forward alchemist-goto--symbol-def-regex nil t)
-      (goto-char (point-min))
-        (re-search-forward alchemist-goto--symbol-def-regex nil t))
-      (back-to-indentation))))
+  (alchemist-utils--jump-to-next-matching-line alchemist-goto--symbol-def-regex 'back-to-indentation))
 
 (defun alchemist-goto-jump-to-previous-def-symbol ()
   (interactive)
-  (when (alchemist-goto--file-contains-defs-p)
-    (save-match-data
-      (beginning-of-line) ;; otherwise we could match on the current line and stay there forever
-      (unless (re-search-backward alchemist-goto--symbol-def-regex nil t)
-        (goto-char (point-max))
-        (re-search-backward alchemist-goto--symbol-def-regex nil t))
-      (back-to-indentation))))
+  (alchemist-utils--jump-to-previous-matching-line alchemist-goto--symbol-def-regex 'back-to-indentation))
 
 (defun alchemist-goto--extract-symbol-bare (str)
   (save-match-data

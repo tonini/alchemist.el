@@ -74,18 +74,6 @@ be highlighted with more significant font faces."
   "Return nil if the current buffer contains no tests, non-nil if it does."
   (alchemist-utils--regex-in-buffer-p (current-buffer) alchemist-test-mode--test-regex))
 
-(defun alchemist-test-mode--jump-to-test (search-fn reset-fn)
-  "Move the point to the next/previous test, based on `search-fn' (which is the
-function that searches for the next test, can be re-search-forward or
-re-search-backward) and `reset-fn' (which is used when wrapping at the
-beginning/end of the buffer if no results were found)."
-  (when (alchemist-test-mode--buffer-contains-tests-p)
-    (save-match-data
-      (unless (funcall search-fn alchemist-test-mode--test-regex nil t)
-        (funcall reset-fn)
-        (funcall search-fn alchemist-test-mode--test-regex nil t))
-      (back-to-indentation))))
-
 (defun alchemist-test-mode--tests-in-buffer ()
   "Return an alist of tests in this buffer.
 
@@ -109,14 +97,14 @@ macro) while the values are the position at which the test matched."
 position, jump to the first test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
-  (alchemist-test-mode--jump-to-test 're-search-forward 'beginning-of-buffer))
+  (alchemist-utils--jump-to-next-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
 
 (defun alchemist-test-mode-jump-to-previous-test ()
   "Jump to the previous ExUnit test. If there are no tests before the current
 position, jump to the last test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
-  (alchemist-test-mode--jump-to-test 're-search-backward 'end-of-buffer))
+  (alchemist-utils--jump-to-previous-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
 
 (defun alchemist-test-mode-list-tests ()
   "List ExUnit tests (calls to the test/2 macro) in the current buffer and jump
