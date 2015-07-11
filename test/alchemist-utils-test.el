@@ -124,6 +124,32 @@ a text")))
     (should (alchemist-utils--regex-in-buffer-p (current-buffer) "f[oO]o"))
     (should (not (alchemist-utils--regex-in-buffer-p (current-buffer) "bar")))))
 
+(ert-deftest test-utils/jump-to-next-matching-line ()
+  (with-temp-buffer
+    (insert "
+foo
+bar
+foo
+")
+    (alchemist-utils--jump-to-next-matching-line "foo" 'beginning-of-line)
+    (should (equal (point) 2))
+    (alchemist-utils--jump-to-next-matching-line "foo" 'beginning-of-line)
+    (should (equal (point) 10))
+    (alchemist-utils--jump-to-next-matching-line "foo" 'beginning-of-line)
+    (should (equal (point) 2))))
+
+(ert-deftest test-utils/jump-to-previous-regex ()
+  (with-temp-buffer
+    (insert "
+foo
+bar
+foo
+")
+    (alchemist-utils--jump-to-previous-matching-line "foo" 'beginning-of-line)
+    (should (equal (point) 10))
+    (alchemist-utils--jump-to-previous-matching-line "foo" 'beginning-of-line)
+    (should (equal (point) 2))))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here
