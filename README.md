@@ -322,6 +322,7 @@ installed on the system, the documentation you get by `alchemist` is the same
 |<kbd>C-c a h i</kbd>| Look through search history. `alchemist-help-history` |
 |<kbd>C-c a h e</kbd>| Run `alchemist-help` with the expression under the cursor. (example: `is_binary`  or `Code.eval_string`). `alchemist-help-search-at-point`              |
 |<kbd>C-c a h m</kbd>| Run `alchemist-help` with the current marked region. `alchemist-help-search-marked-region`|
+|<kbd>C-c a h r</kbd>| Open a buffer with a refcard of alchemist bindings. `alchemist-refcard`|
 
 ### Alchemist Help Minor Mode Keymap
 

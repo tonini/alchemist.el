@@ -106,6 +106,7 @@ Key bindings:
   (define-key map (kbd "h i") 'alchemist-help-history)
   (define-key map (kbd "h e") 'alchemist-help-search-at-point)
   (define-key map (kbd "h m") 'alchemist-help-search-marked-region)
+  (define-key map (kbd "h r") 'alchemist-refcard)
   (define-key map (kbd "p f") 'alchemist-project-find-test)
   (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
   (define-key map (kbd "p o") 'alchemist-project-toggle-file-and-tests-other-window)
