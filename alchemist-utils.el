@@ -147,6 +147,32 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
         (goto-char (point-min))
         (re-search-forward regex nil t)))))
 
+(defun alchemist-utils--jump-to-regex (regex before-fn after-fn search-fn reset-fn)
+  "Jump to `REGEX' using `SEARCH-FN' to search for it.
+
+A common use case would be to use 're-search-forward' as the `SEARCH-FN'. Call
+`RESET-FN' if the regex isn't found at the first try. `BEFORE-FN' is called
+before performing the search while `AFTER-FN' after."
+  (when (alchemist-utils--regex-in-buffer-p (current-buffer) regex)
+    (save-match-data
+      (funcall before-fn)
+      (unless (funcall search-fn regex nil t)
+        (funcall reset-fn)
+        (funcall search-fn regex nil t))
+      (funcall after-fn))))
+
+(defun alchemist-utils--jump-to-next-matching-line (regex after-fn)
+  "Jump to the next line matching `REGEX'.
+
+Call `AFTER-FN' after performing the search (for example, you could use back-to-indentation to go back to the indentation after the search."
+  (alchemist-utils--jump-to-regex regex 'end-of-line after-fn 're-search-forward 'beginning-of-buffer))
+
+(defun alchemist-utils--jump-to-previous-matching-line (regex after-fn)
+  "Jump to the previous line matching `REGEX'.
+
+Call `AFTER-FN' after performing the search (for example, you could use back-to-indentation to go back to the indentation after the search."
+  (alchemist-utils--jump-to-regex regex 'beginning-of-line after-fn 're-search-backward 'end-of-buffer))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
