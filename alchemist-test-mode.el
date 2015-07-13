@@ -53,6 +53,9 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 (defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
   "Name of the test report buffer.")
 
+(defvar alchemist-test--failing-files-regex "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
+(defvar alchemist-test--stacktrace-files-regex "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
+
 ;; Faces
 
 (defface alchemist-test--test-file-and-location-face
@@ -141,37 +144,29 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 
 (defun alchemist-test--render-files ()
   (alchemist-test--render-test-failing-files)
-  (alchemist-test--render-stacktrace-files)
-  )
+  (alchemist-test--render-stacktrace-files))
 
 (defun alchemist-test--render-test-failing-files ()
+  (alchemist-test--render-file alchemist-test--failing-files-regex
+                               'alchemist-test--test-file-and-location-face))
+
+(defun alchemist-test--render-stacktrace-files ()
+  (alchemist-test--render-file alchemist-test--stacktrace-files-regex
+                               'alchemist-test--stacktrace-file-and-location-face))
+
+(defun alchemist-test--render-file (regex face)
   (save-excursion
     (goto-char (point-min))
-    (while (re-search-forward "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$" nil t)
+    (while (re-search-forward regex nil t)
       (let ((file (buffer-substring-no-properties (match-beginning 2) (match-end 2))))
         (goto-char (match-beginning 2))
         (replace-match "" nil nil nil 2)
         (insert-text-button file
-                            'face 'alchemist-test--test-file-and-location-face
+                            'face face
                             'file file
                             'follow-link t
                             'action #'alchemist-test--open-file
                             'help-echo "visit the source location")))))
-
-(defun alchemist-test--render-stacktrace-files ()
-(save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$" nil t)
-      (let ((file (buffer-substring-no-properties (match-beginning 2) (match-end 2))))
-        (goto-char (match-beginning 2))
-        (replace-match "" nil nil nil 2)
-        (insert-text-button file
-                            'face 'alchemist-test--stacktrace-file-and-location-face
-                            'file file
-                            'follow-link t
-                            'action #'alchemist-test--open-file
-                            'help-echo "visit the source location"))))
-  )
 
 (defun alchemist-test--open-file (button)
   (save-match-data
