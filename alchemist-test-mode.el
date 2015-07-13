@@ -53,6 +53,18 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 (defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
   "Name of the test report buffer.")
 
+;; Faces
+
+(defface alchemist-test--test-file-and-location-face
+  '((t (:inherit font-lock-variable-name-face :weight bold)))
+  "Face for the file where the failed test are."
+  :group 'alchemist-test)
+
+(defface alchemist-test--stacktrace-file-and-location-face
+  '((t (:inherit font-lock-keyword-face :weight bold)))
+  "Face for the stacktrace files."
+  :group 'alchemist-test)
+
 (defface alchemist-test--success-face
   '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
   "Face for successful compilation run."
@@ -112,13 +124,65 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
           'alchemist-test--failed-face)))
 
 (defun alchemist-test--sentinel (process status)
+  "Sentinel for test report buffer."
   (if (memq (process-status process) '(exit signal))
       (let ((buffer (process-buffer process)))
         (if (null (buffer-name buffer))
             (set-process-buffer process nil)
-          (with-current-buffer buffer
+          (progn
+            (alchemist-test--render-report buffer)
             (alchemist-test--handle-exit status)
             (delete-process process))))))
+
+(defun alchemist-test--render-report (buffer)
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (alchemist-test--render-files))))
+
+(defun alchemist-test--render-files ()
+  (alchemist-test--render-test-failing-files)
+  (alchemist-test--render-stacktrace-files)
+  )
+
+(defun alchemist-test--render-test-failing-files ()
+  (save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$" nil t)
+      (let ((file (buffer-substring-no-properties (match-beginning 2) (match-end 2))))
+        (goto-char (match-beginning 2))
+        (replace-match "" nil nil nil 2)
+        (insert-text-button file
+                            'face 'alchemist-test--test-file-and-location-face
+                            'file file
+                            'follow-link t
+                            'action #'alchemist-test--open-file
+                            'help-echo "visit the source location")))))
+
+(defun alchemist-test--render-stacktrace-files ()
+(save-excursion
+    (goto-char (point-min))
+    (while (re-search-forward "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$" nil t)
+      (let ((file (buffer-substring-no-properties (match-beginning 2) (match-end 2))))
+        (goto-char (match-beginning 2))
+        (replace-match "" nil nil nil 2)
+        (insert-text-button file
+                            'face 'alchemist-test--stacktrace-file-and-location-face
+                            'file file
+                            'follow-link t
+                            'action #'alchemist-test--open-file
+                            'help-echo "visit the source location"))))
+  )
+
+(defun alchemist-test--open-file (button)
+  (save-match-data
+    (string-match "\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)" (button-get button 'file))
+    (let* ((file-with-line (button-get button 'file))
+           (file (substring-no-properties file-with-line (match-beginning 1) (match-end 1)))
+           (line (string-to-number (substring-no-properties file-with-line (match-beginning 2) (match-end 2))))
+           (file-path (expand-file-name (concat (alchemist-project-root) file))))
+      (with-current-buffer (find-file-other-window file-path)
+        (goto-char (point-min))
+        (forward-line (- line 1))))))
 
 (defun alchemist-test--handle-exit (status)
   (alchemist-test--store-process-status status)
