@@ -71,6 +71,11 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 (defvar alchemist-test-jump-to-next-test #'alchemist-test-mode-jump-to-next-test)
 (defvar alchemist-test-list-tests #'alchemist-test-mode-list-tests)
 
+(defvar alchemist-test-report-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "q" #'quit-window)
+    map))
+
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c , s") alchemist-test-at-point)
@@ -99,6 +104,15 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
           'alchemist-test--failed-face)))
 
 (defun alchemist-test--sential (process status)
+  (if (memq (process-status process) '(exit signal))
+      (let ((buffer (process-buffer process)))
+        (if (null (buffer-name buffer))
+            (set-process-buffer process nil)
+          (with-current-buffer buffer
+            (alchemist-test--handle-exit status)
+            (delete-process process))))))
+
+(defun alchemist-test--handle-exit (status)
   (when alchemist-test-status-modeline
     (alchemist-test--set-modeline-color status)))
 
@@ -147,7 +161,34 @@ macro) while the values are the position at which the test matched."
                                 ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\(" 1
                                  font-lock-type-face t)))))
 
+(defun alchemist-test--display-report-buffer (buffer)
+  (with-current-buffer buffer
+    (alchemist-test-report-mode))
+  (display-buffer buffer))
+
 ;; Public functions
+
+(define-derived-mode alchemist-test-report-mode fundamental-mode "Alchemist Test Report"
+  "Major mode for presenting Elixir test results.
+
+\\{alchemist-test-report-mode-map}"
+  (setq buffer-read-only t)
+  (setq-local truncate-lines t)
+  (setq-local electric-indent-chars nil))
+
+(defun  alchemist-test-execute (command-list)
+  (alchemist-test--cleanup-report)
+  (message "Testing...")
+  (let* ((buffer (get-buffer-create alchemist-test-report-buffer-name))
+         (project-root (alchemist-project-root))
+         (default-directory (if project-root
+                                project-root
+                              default-directory))
+         (command (mapconcat 'concat command-list " "))
+         (process (start-process-shell-command "alchemist-test-report" buffer command)))
+    (set-process-sentinel process 'alchemist-test--sential)
+    (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
+    (alchemist-test--display-report-buffer buffer)))
 
 (defun alchemist-test-initialize-modeline ()
   "Initialize the mode-line face."
@@ -204,38 +245,6 @@ The following commands are available:
 ;;;###autoload
 (dolist (hook '(alchemist-mode-hook))
   (add-hook hook 'alchemist-test-enable-mode))
-
-(defvar alchemist-test-report-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "q" #'quit-window)
-    map))
-
-(defun alchemist-test--display-report-buffer (buffer)
-  (with-current-buffer buffer
-    (alchemist-test-report-mode))
-  (display-buffer buffer))
-
-(define-derived-mode alchemist-test-report-mode fundamental-mode "Alchemist Test Report"
-  "Major mode for presenting Elixir test results.
-
-\\{alchemist-test-report-mode-map}"
-  (setq buffer-read-only t)
-  (setq-local truncate-lines t)
-  (setq-local electric-indent-chars nil))
-
-(defun  alchemist-test-execute (command-list)
-  (alchemist-test--cleanup-report)
-  (message "Testing...")
-  (let* ((buffer (get-buffer-create alchemist-test-report-buffer-name))
-         (project-root (alchemist-project-root))
-         (default-directory (if project-root
-                                project-root
-                              default-directory))
-         (command (mapconcat 'concat command-list " "))
-         (process (start-process-shell-command "alchemist-test-report" buffer command)))
-    (set-process-sentinel process 'alchemist-test--sential)
-    (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
-    (alchemist-test--display-report-buffer buffer)))
 
 (provide 'alchemist-test-mode)
 
