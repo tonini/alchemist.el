@@ -111,6 +111,16 @@ macro) while the values are the position at which the test matched."
             (add-to-list 'tests (cons matched-string position) t)))
         tests))))
 
+(defun alchemist-test-mode--highlight-syntax ()
+  (if alchemist-test-mode-highlight-tests
+      (font-lock-add-keywords nil
+                              '(("^\s+\\(test\\)\s+" 1
+                                 font-lock-variable-name-face t)
+                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\s+" 1
+                                 font-lock-type-face t)
+                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\(" 1
+                                 font-lock-type-face t)))))
+
 ;; Public functions
 
 (defun alchemist-test-mode-jump-to-next-test ()
@@ -137,16 +147,6 @@ to the selected one."
     (goto-char position)
     (back-to-indentation)))
 
-(defun alchemist-test-mode--highlight-syntax ()
-  (if alchemist-test-mode-highlight-tests
-      (font-lock-add-keywords nil
-                              '(("^\s+\\(test\\)\s+" 1
-                                 font-lock-variable-name-face t)
-                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\s+" 1
-                                 font-lock-type-face t)
-                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\(" 1
-                                 font-lock-type-face t)))))
-
 ;;;###autoload
 (define-minor-mode alchemist-test-mode
   "Minor mode for Elixir ExUnit files.
@@ -172,8 +172,12 @@ The following commands are available:
 (defvar alchemist-test-report-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" #'quit-window)
-    (define-key map "r" #'alchemist-mix-rerun-last-test)
     map))
+
+(defun alchemist-test--display-report-buffer (buffer)
+  (with-current-buffer buffer
+    (alchemist-test-report-mode))
+  (display-buffer buffer))
 
 (define-derived-mode alchemist-test-report-mode fundamental-mode "Alchemist Test Report"
   "Major mode for presenting Elixir test results.
@@ -185,6 +189,7 @@ The following commands are available:
 
 (defun  alchemist-test-execute (command-list)
   (alchemist-test--cleanup-report)
+  (message "Testing...")
   (let* ((buffer (get-buffer-create alchemist-test-report-buffer-name))
          (project-root (alchemist-project-root))
          (default-directory (if project-root
@@ -194,9 +199,7 @@ The following commands are available:
          (process (start-process-shell-command "alchemist-test-report" buffer command)))
     (set-process-sentinel process 'alchemist-test--sential)
     (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
-    (with-current-buffer buffer
-      (alchemist-test-report-mode))
-    (display-buffer buffer)))
+    (alchemist-test--display-report-buffer buffer)))
 
 (provide 'alchemist-test-mode)
 
