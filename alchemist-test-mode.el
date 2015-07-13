@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'ansi-color)
+
 (defgroup alchemist-test-mode nil
   "Minor mode for Elixir ExUnit files."
   :prefix "alchemist-test-mode-"
@@ -126,7 +128,6 @@ to the selected one."
                                 ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\(" 1
                                  font-lock-type-face t)))))
 
-
 ;;;###autoload
 (define-minor-mode alchemist-test-mode
   "Minor mode for Elixir ExUnit files.
@@ -134,7 +135,8 @@ to the selected one."
 The following commands are available:
 
 \\{alchemist-test-mode-map}"
-  :lighter "" :keymap alchemist-test-mode-map
+  :lighter ""
+  :keymap alchemist-test-mode-map
   :group 'alchemist
   (when alchemist-test-mode
     (alchemist-test-mode--highlight-syntax)))
@@ -147,6 +149,54 @@ The following commands are available:
 ;;;###autoload
 (dolist (hook '(alchemist-mode-hook))
   (add-hook hook 'alchemist-test-enable-mode))
+
+
+(defvar alchemist-test-report-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "q" #'quit-window)
+    map))
+
+(define-derived-mode alchemist-test-report-mode fundamental-mode "Test Report"
+  "Major mode for presenting Elixir test results.
+
+\\{alchemist-test-report-mode-map}"
+  (setq buffer-read-only t)
+  (setq-local truncate-lines t)
+  (setq-local electric-indent-chars nil))
+
+(defun alchemist-test--sential (process event)
+  (cond ((string-match-p "finished" event)
+         (with-current-buffer (process-buffer process)))))
+
+(defun alchemist-test--ansi-color-insertion-filter (proc string)
+  (with-current-buffer (process-buffer proc)
+    (let* ((buffer-read-only nil)
+          (moving (= (point) (process-mark proc))))
+      (save-excursion
+        (goto-char (process-mark proc))
+        (insert string)
+        (set-marker (process-mark proc) (point))
+        (ansi-color-apply-on-region (point-min) (point-max)))
+      (if moving (goto-char (process-mark proc))))))
+
+(defun alchemist-test--cleanup-report ()
+  (let ((buffer (get-buffer "*alchemist-test-report*")))
+    (kill-buffer buffer)))
+
+(defun  alchemist-test-execute (command-list)
+  (alchemist-test--cleanup-report)
+  (let* ((buffer (get-buffer-create "*alchemist-test-report*"))
+         (project-root (alchemist-project-root))
+         (default-directory (if project-root
+                                project-root
+                              default-directory))
+         (command (mapconcat 'concat command-list " "))
+         (process (start-process-shell-command "alchemist-test-report" buffer command)))
+    (set-process-sentinel process 'alchemist-test--sential)
+    (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
+    (with-current-buffer buffer
+      (alchemist-test-report-mode))
+    (display-buffer buffer)))
 
 (provide 'alchemist-test-mode)
 
