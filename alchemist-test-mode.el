@@ -103,7 +103,7 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
             'alchemist-test--success-face
           'alchemist-test--failed-face)))
 
-(defun alchemist-test--sential (process status)
+(defun alchemist-test--sentinel (process status)
   (if (memq (process-status process) '(exit signal))
       (let ((buffer (process-buffer process)))
         (if (null (buffer-name buffer))
@@ -186,7 +186,7 @@ macro) while the values are the position at which the test matched."
                               default-directory))
          (command (mapconcat 'concat command-list " "))
          (process (start-process-shell-command "alchemist-test-report" buffer command)))
-    (set-process-sentinel process 'alchemist-test--sential)
+    (set-process-sentinel process 'alchemist-test--sentinel)
     (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
     (alchemist-test--display-report-buffer buffer)))
 
