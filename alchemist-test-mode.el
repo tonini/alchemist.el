@@ -34,9 +34,6 @@
 
 ;; Variables
 
-(defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
-  "Name of the test report buffer.")
-
 (defcustom alchemist-test-mode-highlight-tests t
   "Non-nil means that specific functions for testing will
 be highlighted with more significant font faces."
@@ -44,12 +41,15 @@ be highlighted with more significant font faces."
   :group 'alchemist-test-mode)
 
 (defcustom alchemist-test-status-modeline t
-  "if t, the face of local `mode-name' variable will change with compilation status.
+  "if Non-nil, the face of local `mode-name' variable will change with test run status.
 
 For example, when `alchemist-mix-test' failes, the `mode-name' will be
 formated with the `alchemist-test--failed-face' face, to symbolize failing tests."
   :type 'boolean
   :group 'alchemist-buffer)
+
+(defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
+  "Name of the test report buffer.")
 
 (defface alchemist-test--success-face
   '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
@@ -100,9 +100,7 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 
 (defun alchemist-test--sential (process status)
   (when alchemist-test-status-modeline
-    (alchemist-test--set-modeline-color status)
-    )
-  )
+    (alchemist-test--set-modeline-color status)))
 
 (defun alchemist-test--ansi-color-insertion-filter (proc string)
   (with-current-buffer (process-buffer proc)
