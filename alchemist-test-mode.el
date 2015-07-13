@@ -48,6 +48,8 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
   :type 'boolean
   :group 'alchemist-buffer)
 
+(defvar alchemist-test--last-run-status "")
+
 (defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
   "Name of the test report buffer.")
 
@@ -97,6 +99,12 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 
 ;; Private functions
 
+(defun alchemist-test--store-process-status (status)
+  (setq alchemist-test--last-run-status status))
+
+(defun alchemist-test--last-run-successful-p ()
+  (when (string-prefix-p "finished" alchemist-test--last-run-status) t))
+
 (defun alchemist-test--set-modeline-color (status)
   (setq alchemist-test--mode-name-face
         (if (string-prefix-p "finished" status)
@@ -113,6 +121,7 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
             (delete-process process))))))
 
 (defun alchemist-test--handle-exit (status)
+  (alchemist-test--store-process-status status)
   (when alchemist-test-status-modeline
     (alchemist-test--set-modeline-color status)))
 

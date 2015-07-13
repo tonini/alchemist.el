@@ -36,7 +36,7 @@
     (alchemist-mix-test))
   (should (equal "" alchemist-last-run-test))
   (delay 1.2 (lambda ()
-               (should (alchemist-buffer--last-run-successful-p)))))
+               (should (alchemist-test--last-run-successful-p)))))
 
 (ert-deftest test-mix/run-mix-test-at-point ()
   (prepare-test-report-buffer)
@@ -48,7 +48,7 @@
       (alchemist-mix-test-at-point)))
   (should (equal (expand-file-name "dummy_elixir_test.exs:5") alchemist-last-run-test))
   (delay 1.2 (lambda ()
-               (should (alchemist-buffer--last-run-successful-p)))))
+               (should (alchemist-test--last-run-successful-p)))))
 
 (ert-deftest test-mix/run-mix-test-file ()
   (prepare-test-report-buffer)
@@ -57,7 +57,7 @@
     (alchemist-mix-test-file "dummy_elixir_test.exs"))
   (should (equal (expand-file-name "dummy_elixir_test.exs") alchemist-last-run-test))
   (delay 1.2 (lambda ()
-               (should (alchemist-buffer--last-run-successful-p)))))
+               (should (alchemist-test--last-run-successful-p)))))
 
 (provide 'alchemist-mix-test)
 
