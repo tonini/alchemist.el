@@ -37,7 +37,6 @@
 
 ;; Variables
 
-(defvar alchemist-test-mode-buffer-name "")
 (defvar alchemist-last-run-test nil)
 
 (defcustom alchemist-mix-command "mix"
