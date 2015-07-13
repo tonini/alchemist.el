@@ -34,7 +34,7 @@
 
 ;; Variables
 
-(defvar alchemist-test-mode-buffer-name "*alchemist-test-report*"
+(defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
   "Name of the test report buffer.")
 
 (defcustom alchemist-test-mode-highlight-tests t
@@ -71,6 +71,25 @@ be highlighted with more significant font faces."
             whitespace " [0-9]+) test .+\\)")))
 
 ;; Private functions
+
+(defun alchemist-test--sential (process event)
+  (cond ((string-match-p "finished" event)
+         (with-current-buffer (process-buffer process)))))
+
+(defun alchemist-test--ansi-color-insertion-filter (proc string)
+  (with-current-buffer (process-buffer proc)
+    (let* ((buffer-read-only nil)
+          (moving (= (point) (process-mark proc))))
+      (save-excursion
+        (goto-char (process-mark proc))
+        (insert string)
+        (set-marker (process-mark proc) (point))
+        (ansi-color-apply-on-region (point-min) (point-max)))
+      (if moving (goto-char (process-mark proc))))))
+
+(defun alchemist-test--cleanup-report ()
+  (let ((buffer (get-buffer alchemist-test-report-buffer-name)))
+    (kill-buffer buffer)))
 
 (defun alchemist-test-mode--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
@@ -150,13 +169,13 @@ The following commands are available:
 (dolist (hook '(alchemist-mode-hook))
   (add-hook hook 'alchemist-test-enable-mode))
 
-
 (defvar alchemist-test-report-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" #'quit-window)
+    (define-key map "r" #'alchemist-mix-rerun-last-test)
     map))
 
-(define-derived-mode alchemist-test-report-mode fundamental-mode "Test Report"
+(define-derived-mode alchemist-test-report-mode fundamental-mode "Alchemist Test Report"
   "Major mode for presenting Elixir test results.
 
 \\{alchemist-test-report-mode-map}"
@@ -164,28 +183,9 @@ The following commands are available:
   (setq-local truncate-lines t)
   (setq-local electric-indent-chars nil))
 
-(defun alchemist-test--sential (process event)
-  (cond ((string-match-p "finished" event)
-         (with-current-buffer (process-buffer process)))))
-
-(defun alchemist-test--ansi-color-insertion-filter (proc string)
-  (with-current-buffer (process-buffer proc)
-    (let* ((buffer-read-only nil)
-          (moving (= (point) (process-mark proc))))
-      (save-excursion
-        (goto-char (process-mark proc))
-        (insert string)
-        (set-marker (process-mark proc) (point))
-        (ansi-color-apply-on-region (point-min) (point-max)))
-      (if moving (goto-char (process-mark proc))))))
-
-(defun alchemist-test--cleanup-report ()
-  (let ((buffer (get-buffer "*alchemist-test-report*")))
-    (kill-buffer buffer)))
-
 (defun  alchemist-test-execute (command-list)
   (alchemist-test--cleanup-report)
-  (let* ((buffer (get-buffer-create "*alchemist-test-report*"))
+  (let* ((buffer (get-buffer-create alchemist-test-report-buffer-name))
          (project-root (alchemist-project-root))
          (default-directory (if project-root
                                 project-root
