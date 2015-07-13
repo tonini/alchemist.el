@@ -43,6 +43,26 @@ be highlighted with more significant font faces."
   :type 'boolean
   :group 'alchemist-test-mode)
 
+(defcustom alchemist-test-status-modeline t
+  "if t, the face of local `mode-name' variable will change with compilation status.
+
+For example, when `alchemist-mix-test' failes, the `mode-name' will be
+formated with the `alchemist-test--failed-face' face, to symbolize failing tests."
+  :type 'boolean
+  :group 'alchemist-buffer)
+
+(defface alchemist-test--success-face
+  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
+  "Face for successful compilation run."
+  :group 'alchemist-test)
+
+(defface alchemist-test--failed-face
+  '((t (:inherit font-lock-variable-name-face :bold t :background "red" :foreground "white")))
+  "Face for failed compilation run."
+  :group 'alchemist-test)
+
+(defvar alchemist-test--mode-name-face 'mode-line)
+
 (defvar alchemist-test-at-point #'alchemist-mix-test-at-point)
 (defvar alchemist-test-this-buffer #'alchemist-mix-test-this-buffer)
 (defvar alchemist-test #'alchemist-mix-test)
@@ -72,9 +92,17 @@ be highlighted with more significant font faces."
 
 ;; Private functions
 
-(defun alchemist-test--sential (process event)
-  (cond ((string-match-p "finished" event)
-         (with-current-buffer (process-buffer process)))))
+(defun alchemist-test--set-modeline-color (status)
+  (setq alchemist-test--mode-name-face
+        (if (string-prefix-p "finished" status)
+            'alchemist-test--success-face
+          'alchemist-test--failed-face)))
+
+(defun alchemist-test--sential (process status)
+  (when alchemist-test-status-modeline
+    (alchemist-test--set-modeline-color status)
+    )
+  )
 
 (defun alchemist-test--ansi-color-insertion-filter (proc string)
   (with-current-buffer (process-buffer proc)
@@ -122,6 +150,16 @@ macro) while the values are the position at which the test matched."
                                  font-lock-type-face t)))))
 
 ;; Public functions
+
+(defun alchemist-test-initialize-modeline ()
+  "Initialize the mode-line face."
+  (when alchemist-test-status-modeline
+    (setq mode-name
+          '(:eval (propertize "Elixir" 'face alchemist-test--mode-name-face)))))
+
+(defun alchemist-test-reset-modeline ()
+  "Reset the current mode-line face to default."
+  (setq mode-name "Elixir"))
 
 (defun alchemist-test-mode-jump-to-next-test ()
   "Jump to the next ExUnit test. If there are no tests after the current
