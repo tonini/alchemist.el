@@ -303,7 +303,9 @@ jump to the first error in the test report.
 Do nothing if there are no error in this test report."
   (interactive)
   (alchemist-utils--jump-to-previous-matching-line alchemist-test--failing-files-regex
-                                                   'back-to-indentation))
+                                                   #'(lambda ()
+                                                       (forward-line 1)
+                                                       (back-to-indentation))))
 
 (defun alchemist-test-mode-list-tests ()
   "List ExUnit tests (calls to the test/2 macro) in the current buffer and jump
