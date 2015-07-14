@@ -255,7 +255,7 @@ macro) while the values are the position at which the test matched."
          (default-directory (if project-root
                                 project-root
                               default-directory))
-         (command (mapconcat 'concat command-list " "))
+         (command (mapconcat 'concat (alchemist-utils--flatten command-list) " "))
          (process (start-process-shell-command "alchemist-test-report" buffer command)))
     (set-process-sentinel process 'alchemist-test--sentinel)
     (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)

@@ -90,7 +90,10 @@ run all tests)."
   (if what
       (setq alchemist-last-run-test what)
     (setq alchemist-last-run-test ""))
-  (alchemist-test-execute `(,"mix" ,alchemist-mix-test-task ,what ,@alchemist-mix-test-default-options)))
+  (alchemist-test-execute (list "mix"
+                                alchemist-mix-test-task
+                                what
+                                alchemist-mix-test-default-options)))
 
 (defun alchemist-mix--test-file (filename)
   "Run a specific FILENAME as argument for the mix command test."
