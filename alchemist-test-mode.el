@@ -189,7 +189,7 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 (defun alchemist-test--ansi-color-insertion-filter (proc string)
   (with-current-buffer (process-buffer proc)
     (let* ((buffer-read-only nil)
-          (moving (= (point) (process-mark proc))))
+           (moving (= (point) (process-mark proc))))
       (save-excursion
         (goto-char (process-mark proc))
         (insert string)
