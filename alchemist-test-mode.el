@@ -54,7 +54,7 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
   "Name of the test report buffer.")
 
 (defvar alchemist-test--failing-files-regex "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
-(defvar alchemist-test--stacktrace-files-regex "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
+(defvar alchemist-test--stacktrace-files-regex "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\).*")
 
 ;; Faces
 
@@ -197,7 +197,8 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 
 (defun alchemist-test--cleanup-report ()
   (let ((buffer (get-buffer alchemist-test-report-buffer-name)))
-    (kill-buffer buffer)))
+    (when buffer
+      (kill-buffer buffer))))
 
 (defun alchemist-test-mode--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
