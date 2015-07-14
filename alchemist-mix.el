@@ -60,6 +60,11 @@ not set explicitly."
   :type '(string boolean)
   :group 'alchemist-mix)
 
+(defvar alchemist-mix-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "q" #'quit-window)
+    map))
+
 (defvar alchemist-mix-buffer-name "*mix*"
   "Name of the mix output buffer.")
 
@@ -121,8 +126,7 @@ When no tests had been run before calling this function, do nothing."
 (defun alchemist-mix-new (name)
   "Create a new elixir project named by NAME."
   (interactive "Gmix new: ")
-  (alchemist-mix-execute (list "new" (expand-file-name name))
-                         alchemist-mix-buffer-name))
+  (alchemist-mix-execute (list "new" (expand-file-name name))))
 
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
@@ -150,23 +154,20 @@ When no tests had been run before calling this function, do nothing."
   "Compile the whole elixir project. Prompt for the mix env if the prefix
 arg is set."
   (interactive "Mmix compile: \nP")
-  (alchemist-mix-execute (list "compile" command)
-                         alchemist-mix-buffer-name prefix))
+  (alchemist-mix-execute (list "compile" command) prefix))
 
 (defun alchemist-mix-run (command &optional prefix)
   "Runs the given file or expression in the context of the application.
 Prompt for the mix env if the prefix arg is set."
   (interactive "Mmix run: \nP")
-  (alchemist-mix-execute (list "run" command)
-                         alchemist-mix-buffer-name prefix))
+  (alchemist-mix-execute (list "run" command) prefix))
 
 (defun alchemist-mix-deps (command &optional prefix)
   "Prompt for mix deps commands."
   (interactive
    (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)
          current-prefix-arg))
-  (alchemist-mix-execute (list command)
-                         alchemist-mix-buffer-name prefix))
+  (alchemist-mix-execute (list command) prefix))
 
 (define-obsolete-function-alias 'alchemist-mix-deps-with-prompt 'alchemist-mix-deps)
 
@@ -181,8 +182,7 @@ Prompt for the mix env if the prefix arg is set."
    (list (alchemist-mix--completing-read "mix local: " alchemist-mix--local-commands)))
   (if (string= command "local.install")
       (call-interactively 'alchemist-mix-local-install)
-    (alchemist-mix-execute (list command)
-                           alchemist-mix-buffer-name)))
+    (alchemist-mix-execute (list command))))
 
 (define-obsolete-function-alias 'alchemist-mix-local-with-prompt 'alchemist-mix-local)
 
@@ -199,43 +199,64 @@ Prompt for the mix env if the prefix arg is set."
 (defun alchemist-mix-local-install-with-path (path)
   "Runs local.install and prompt for a PATH as argument."
   (interactive "fmix local.install PATH: ")
-  (alchemist-mix-execute (list "local.install" path)
-                         alchemist-mix-buffer-name))
+  (alchemist-mix-execute (list "local.install" path) ))
 
 (defun alchemist-mix-local-install-with-url (url)
   "Runs local.install and prompt for a URL as argument."
   (interactive "Mmix local.install URL: ")
-  (alchemist-mix-execute (list "local.install" url)
-                         alchemist-mix-buffer-name))
+  (alchemist-mix-execute (list "local.install" url) ))
 
 (defun alchemist-mix-hex-search (command &optional prefix)
   "Display packages matching the given search query. Prompt for the mix env
 if the prefix arg is set."
   (interactive "Mmix hex.search: \nP")
-  (alchemist-mix-execute (list "hex.search" command)
-                         alchemist-mix-buffer-name prefix))
+  (alchemist-mix-execute (list "hex.search" command) prefix))
 
 (defun alchemist-mix-help (command &optional prefix)
   "Show help output for a specific mix command. Prompt for the mix env if
 the prefix arg is set."
   (interactive "Mmix help: \nP")
-  (alchemist-mix-execute (list "help" command)
-                         alchemist-mix-buffer-name prefix))
+  (alchemist-mix-execute (list "help" command) prefix))
 
-(defun alchemist-mix-execute (cmdlist buffer-name &optional prefix)
+(define-derived-mode alchemist-mix-mode fundamental-mode "Mix Mode"
+  "Major mode for presenting Mix tasks..
+
+\\{alchemist-mix-mode-map}"
+  (setq buffer-read-only t)
+  (setq-local truncate-lines t)
+  (setq-local electric-indent-chars nil))
+
+(defun alchemist-mix--cleanup-buffer ()
+  (let ((buffer (get-buffer alchemist-mix-buffer-name)))
+    (when buffer
+      (kill-buffer buffer))))
+
+(defun alchemist-mix--display-buffer (buffer)
+  (with-current-buffer buffer
+    (alchemist-mix-mode))
+  (display-buffer buffer))
+
+(defun alchemist-mix-execute (command-list &optional prefix)
   "Run a mix command. Prompt for the mix env if the prefix arg is set."
   (interactive "Mmix: \nP")
-  (let ((old-directory default-directory)
-        (mix-env (if prefix
-                     (completing-read "mix env: "
-                                      alchemist-mix--envs nil nil alchemist-mix-env)
-                   alchemist-mix-env)))
-    (alchemist-project--establish-root-directory)
-    (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist
-                           (list (if mix-env (concat "MIX_ENV=" mix-env) "")
-                                 alchemist-mix-command cmdlist))
-                          buffer-name)
-    (cd old-directory)))
+  (alchemist-mix--cleanup-buffer)
+  (let* ((buffer (get-buffer-create alchemist-mix-buffer-name))
+         (project-root (alchemist-project-root))
+         (default-directory (if project-root
+                                project-root
+                              default-directory))
+         (mix-env (if prefix
+                      (completing-read "mix env: "
+                                       alchemist-mix--envs nil nil alchemist-mix-env)
+                    alchemist-mix-env))
+         (command (alchemist-utils--build-command
+                   (list (if mix-env
+                             (concat "MIX_ENV=" mix-env)
+                           "")
+                         alchemist-mix-command command-list)))
+         (process (start-process-shell-command "alchemist-mix-process" buffer command)))
+    (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
+    (alchemist-mix--display-buffer buffer)))
 
 (provide 'alchemist-mix)
 
