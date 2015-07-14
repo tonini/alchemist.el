@@ -91,6 +91,8 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 (defvar alchemist-test-report-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" #'quit-window)
+    (define-key map (kbd "M-n") #'alchemist-test-next-result)
+    (define-key map (kbd "M-p") #'alchemist-test-previous-result)
     map))
 
 (defvar alchemist-test-mode-map
@@ -282,6 +284,26 @@ position, jump to the last test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
   (alchemist-utils--jump-to-previous-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
+
+(defun alchemist-test-next-result ()
+  "Jump to the next error in the test report.
+
+If there are no error after the current position,
+jump to the first error in the test report.
+Do nothing if there are no error in this test report."
+  (interactive)
+  (alchemist-utils--jump-to-next-matching-line alchemist-test--failing-files-regex
+                                               'back-to-indentation))
+
+(defun alchemist-test-previous-result ()
+  "Jump to the previous error in the test report.
+
+If there are no error before the current position,
+jump to the first error in the test report.
+Do nothing if there are no error in this test report."
+  (interactive)
+  (alchemist-utils--jump-to-previous-matching-line alchemist-test--failing-files-regex
+                                                   'back-to-indentation))
 
 (defun alchemist-test-mode-list-tests ()
   "List ExUnit tests (calls to the test/2 macro) in the current buffer and jump
