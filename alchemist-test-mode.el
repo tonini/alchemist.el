@@ -116,28 +116,11 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
 
 ;; Private functions
 
-(defun alchemist-test--store-process-status (status)
-  (setq alchemist-test--last-run-status status))
-
-(defun alchemist-test--last-run-successful-p ()
-  (when (string-prefix-p "finished" alchemist-test--last-run-status) t))
-
 (defun alchemist-test--set-modeline-color (status)
   (setq alchemist-test--mode-name-face
         (if (string-prefix-p "finished" status)
             'alchemist-test--success-face
           'alchemist-test--failed-face)))
-
-(defun alchemist-test--sentinel (process status)
-  "Sentinel for test report buffer."
-  (if (memq (process-status process) '(exit signal))
-      (let ((buffer (process-buffer process)))
-        (if (null (buffer-name buffer))
-            (set-process-buffer process nil)
-          (progn
-            (alchemist-test--render-report buffer)
-            (alchemist-test--handle-exit status)
-            (delete-process process))))))
 
 (defun alchemist-test--render-report (buffer)
   (with-current-buffer buffer
@@ -182,25 +165,8 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
         (forward-line (- line 1))))))
 
 (defun alchemist-test--handle-exit (status)
-  (alchemist-test--store-process-status status)
   (when alchemist-test-status-modeline
     (alchemist-test--set-modeline-color status)))
-
-(defun alchemist-test--ansi-color-insertion-filter (proc string)
-  (with-current-buffer (process-buffer proc)
-    (let* ((buffer-read-only nil)
-           (moving (= (point) (process-mark proc))))
-      (save-excursion
-        (goto-char (process-mark proc))
-        (insert string)
-        (set-marker (process-mark proc) (point))
-        (ansi-color-apply-on-region (point-min) (point-max)))
-      (if moving (goto-char (process-mark proc))))))
-
-(defun alchemist-test--cleanup-report ()
-  (let ((buffer (get-buffer alchemist-test-report-buffer-name)))
-    (when buffer
-      (kill-buffer buffer))))
 
 (defun alchemist-test-mode--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
@@ -232,11 +198,6 @@ macro) while the values are the position at which the test matched."
                                 ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\(" 1
                                  font-lock-type-face t)))))
 
-(defun alchemist-test--display-report-buffer (buffer)
-  (with-current-buffer buffer
-    (alchemist-test-report-mode))
-  (display-buffer buffer))
-
 ;; Public functions
 
 (define-derived-mode alchemist-test-report-mode fundamental-mode "Alchemist Test Report"
@@ -248,18 +209,17 @@ macro) while the values are the position at which the test matched."
   (setq-local electric-indent-chars nil))
 
 (defun  alchemist-test-execute (command-list)
-  (alchemist-test--cleanup-report)
   (message "Testing...")
-  (let* ((buffer (get-buffer-create alchemist-test-report-buffer-name))
-         (project-root (alchemist-project-root))
-         (default-directory (if project-root
-                                project-root
-                              default-directory))
-         (command (mapconcat 'concat (alchemist-utils--flatten command-list) " "))
-         (process (start-process-shell-command "alchemist-test-report" buffer command)))
-    (set-process-sentinel process 'alchemist-test--sentinel)
-    (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
-    (alchemist-test--display-report-buffer buffer)))
+  (let* ((command (mapconcat 'concat (alchemist-utils--flatten command-list) " ")))
+    (alchemist-report-run command
+                          "alchemist-test-report"
+                          alchemist-test-report-buffer-name
+                          'alchemist-test-report-mode
+                          #'alchemist-test--handle-exit
+                          #'(lambda (buffer)
+                              (with-current-buffer buffer
+                                (let ((inhibit-read-only t))
+                                  (alchemist-test--render-files)))))))
 
 (defun alchemist-test-initialize-modeline ()
   "Initialize the mode-line face."

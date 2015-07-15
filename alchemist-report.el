@@ -48,7 +48,7 @@
         (if (null (buffer-name buffer))
             (set-process-buffer process nil)
           (progn
-            (alchemist-report--render-report status)
+            (alchemist-report--render-report buffer)
             (alchemist-report--handle-exit status)
             (delete-process process))))))
 
