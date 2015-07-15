@@ -25,7 +25,6 @@
 
 ;;; Code:
 
-(require 'alchemist-buffer)
 (require 'alchemist-utils)
 
 (defgroup alchemist-compile nil

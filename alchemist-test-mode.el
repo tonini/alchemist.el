@@ -46,7 +46,7 @@ be highlighted with more significant font faces."
 For example, when `alchemist-mix-test' failes, the `mode-name' will be
 formated with the `alchemist-test--failed-face' face, to symbolize failing tests."
   :type 'boolean
-  :group 'alchemist-buffer)
+  :group 'alchemist-test)
 
 (defvar alchemist-test--last-run-status "")
 

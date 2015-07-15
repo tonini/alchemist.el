@@ -185,7 +185,7 @@ through the variable.
 * Disable the change of the modeline color with the last compilation status.
 
 ```el
-(setq alchemist-buffer-status-modeline nil)
+(setq alchemist-test-status-modeline nil)
 ```
 
 ### Keybindings
@@ -463,8 +463,8 @@ Alchemist comes with an minor mode for testing which will be enabled by default 
 By default the status of `alchemist-mix-test`, `alchemist-compile` etc will be
 represented via the colorized `mode-name`. In our case that will be the `elixir-mode`.
 
-If you don't like that just set the `alchemist-buffer-status-modeline` variable
-via `(setq alchemist-buffer-status-modeline nil)` or `M-x customize-group [RET] alchemist-buffer`
+If you don't like that just set the `alchemist-test-status-modeline` variable
+via `(setq alchemist-test-status-modeline nil)` or `M-x customize-group [RET] alchemist-test`
 
 ![Alchemist Build Status](logo/build_status.png)
 

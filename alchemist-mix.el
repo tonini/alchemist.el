@@ -27,7 +27,6 @@
 
 (require 'alchemist-utils)
 (require 'alchemist-project)
-(require 'alchemist-buffer)
 (require 'alchemist-test-mode)
 
 (defgroup alchemist-mix nil

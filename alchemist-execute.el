@@ -26,7 +26,6 @@
 ;;; Code:
 
 (require 'alchemist-utils)
-(require 'alchemist-buffer)
 
 (defgroup alchemist-execute nil
   "Elixir's script execution integration."
