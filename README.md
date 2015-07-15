@@ -217,7 +217,7 @@ through the variable.
 
 Alchemist works as a server & client model, where the Alchemist server is written in Elixir and Emacs takes the part of the client.
 
-For each Elixir mix project Alchemist starts an independent server in the background. If an Elixir file gets openend in a buffer,
+For each Elixir mix project Alchemist starts an independent server in the background. If an Elixir file gets opened in a buffer,
 Alchemist checks if a server is running for the current project or not and starts a new one if needed. If there is no Elixir mix project found, Alchemist
 starts a general unique server.
 
