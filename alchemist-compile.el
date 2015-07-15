@@ -43,6 +43,11 @@
 (defvar alchemist-compile-buffer-name "*elixirc*"
   "Name of the elixir output buffer.")
 
+(defvar alchemist-compile-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "q" #'quit-window)
+    map))
+
 ;; Private functions
 
 (defun alchemist-compile--file (filename)
@@ -65,11 +70,19 @@
   (interactive "Felixirc: ")
   (alchemist-compile--file (expand-file-name filename)))
 
+(define-derived-mode alchemist-compile-mode fundamental-mode "Elixir Compile Mode"
+  "Major mode for compiling Elixir files.
+
+\\{alchemist-compile-mode-map}"
+  (setq buffer-read-only t)
+  (setq-local truncate-lines t)
+  (setq-local electric-indent-chars nil))
+
 (defun alchemist-compile (cmdlist)
   "Compile CMDLIST with elixirc."
   (interactive (list (alchemist-compile--read-command alchemist-compile-command)))
-  (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist cmdlist)
-                        alchemist-compile-buffer-name))
+  (let ((command (alchemist-utils--build-command cmdlist)))
+    (alchemist-report-run command "alchemist-compile-report" alchemist-compile-buffer-name 'alchemist-compile-mode)))
 
 (provide 'alchemist-compile)
 

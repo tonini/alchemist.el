@@ -43,6 +43,11 @@
 (defvar alchemist-execute-buffer-name "*elixir*"
   "Name of the elixir output buffer.")
 
+(defvar alchemist-execute-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "q" #'quit-window)
+    map))
+
 ;; Private functions
 
 (defun alchemist-execute--file (filename)
@@ -65,11 +70,19 @@
   (interactive "Felixir: ")
   (alchemist-execute--file (expand-file-name filename)))
 
+(define-derived-mode alchemist-execute-mode fundamental-mode "Elixir Execute Mode"
+  "Major mode for execute Elixir files.
+
+\\{alchemist-execute-mode-map}"
+  (setq buffer-read-only t)
+  (setq-local truncate-lines t)
+  (setq-local electric-indent-chars nil))
+
 (defun alchemist-execute (cmdlist)
   "Run a elixir with CMDLIST."
   (interactive (list (alchemist-execute--read-command alchemist-execute-command)))
-  (alchemist-buffer-run (alchemist-utils--build-runner-cmdlist cmdlist)
-                        alchemist-execute-buffer-name))
+  (let ((command (alchemist-utils--build-command cmdlist)))
+      (alchemist-report-run command "alchemist-execute-report" alchemist-execute-buffer-name 'alchemist-execute-mode)))
 
 (provide 'alchemist-execute)
 
