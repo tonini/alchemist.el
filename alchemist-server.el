@@ -27,7 +27,6 @@
 
 (require 'alchemist-utils)
 (require 'alchemist-project)
-(require 'alchemist-buffer)
 (require 'alchemist-compile)
 (require 'alchemist-execute)
 (require 'alchemist-help)
@@ -207,8 +206,7 @@ will be started instead."
                (tasks (split-string output "\n"))
                (selected-task (alchemist-mix--completing-read "mix: " tasks))
                (command (read-string "mix " (concat selected-task " "))))
-          (alchemist-mix-execute (list command)
-                                 alchemist-mix-buffer-name current-prefix-arg)))))
+          (alchemist-mix-execute (list command) current-prefix-arg)))))
 
 (defun alchemist-server-goto (module function expr)
   (setq alchemist-server--output nil)

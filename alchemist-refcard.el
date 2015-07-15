@@ -157,7 +157,7 @@
   (kill-all-local-variables)
   (setq truncate-lines t)
   (setq mode-name "Alchemist-Refcard")
-  (setq-local alchemist-buffer-status-modeline nil)
+  (setq-local alchemist-test-status-modeline nil)
   (use-local-map alchemist-refcard-mode-map)
   (setq tabulated-list-format alchemist-refcard-list-format)
   (setq tabulated-list-entries 'alchemist-refcard--tabulated-list-entries)

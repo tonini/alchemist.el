@@ -47,6 +47,7 @@
 
 (require 'easymenu)
 (require 'company)
+(require 'alchemist-report)
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
 (require 'alchemist-message)
@@ -54,7 +55,6 @@
 (require 'alchemist-server)
 (require 'alchemist-refcard)
 (require 'alchemist-company)
-
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
@@ -84,9 +84,9 @@ Key bindings:
   :keymap `((,alchemist-key-command-prefix . alchemist-mode-keymap))
   (cond (alchemist-mode
          (alchemist-server--start)
-         (alchemist-buffer-initialize-modeline))
+         (alchemist-test-initialize-modeline))
         (t
-         (alchemist-buffer-reset-modeline))))
+         (alchemist-test-reset-modeline))))
 
 (let ((map alchemist-mode-keymap))
   (define-key map (kbd "x") 'alchemist-mix)
