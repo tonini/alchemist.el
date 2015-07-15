@@ -226,37 +226,17 @@ the prefix arg is set."
   (setq-local truncate-lines t)
   (setq-local electric-indent-chars nil))
 
-(defun alchemist-mix--cleanup-buffer ()
-  (let ((buffer (get-buffer alchemist-mix-buffer-name)))
-    (when buffer
-      (kill-buffer buffer))))
-
-(defun alchemist-mix--display-buffer (buffer)
-  (with-current-buffer buffer
-    (alchemist-mix-mode))
-  (display-buffer buffer))
-
 (defun alchemist-mix-execute (command-list &optional prefix)
   "Run a mix command. Prompt for the mix env if the prefix arg is set."
-  (interactive "Mmix: \nP")
-  (alchemist-mix--cleanup-buffer)
-  (let* ((buffer (get-buffer-create alchemist-mix-buffer-name))
-         (project-root (alchemist-project-root))
-         (default-directory (if project-root
-                                project-root
-                              default-directory))
-         (mix-env (if prefix
-                      (completing-read "mix env: "
-                                       alchemist-mix--envs nil nil alchemist-mix-env)
+  (let* ((mix-env (if prefix
+                      (completing-read "mix env: " alchemist-mix--envs nil nil alchemist-mix-env)
                     alchemist-mix-env))
          (command (alchemist-utils--build-command
                    (list (if mix-env
                              (concat "MIX_ENV=" mix-env)
                            "")
-                         alchemist-mix-command command-list)))
-         (process (start-process-shell-command "alchemist-mix-process" buffer command)))
-    (set-process-filter process 'alchemist-test--ansi-color-insertion-filter)
-    (alchemist-mix--display-buffer buffer)))
+                         alchemist-mix-command command-list))))
+    (alchemist-report-run command "alchemist-mix-report" alchemist-mix-buffer-name 'alchemist-mix-mode)))
 
 (provide 'alchemist-mix)
 

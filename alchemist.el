@@ -47,6 +47,7 @@
 
 (require 'easymenu)
 (require 'company)
+(require 'alchemist-report)
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
 (require 'alchemist-message)
@@ -54,7 +55,6 @@
 (require 'alchemist-server)
 (require 'alchemist-refcard)
 (require 'alchemist-company)
-
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
