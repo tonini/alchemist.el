@@ -25,7 +25,7 @@
 
 ;;; Code:
 
-(require 'ansi-color)
+(require 'alchemist-project)
 
 (defgroup alchemist-test-mode nil
   "Minor mode for Elixir ExUnit files."

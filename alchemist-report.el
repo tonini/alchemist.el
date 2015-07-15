@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'ansi-color)
-(require 'alchemist-root)
+(require 'alchemist-project)
 
 (defvar alchemist-report-on-exit nil)
 (defvar alchemist-report-on-exit-function nil)
