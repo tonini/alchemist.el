@@ -182,7 +182,7 @@ through the variable.
 
 ### Modeline setup
 
-* Disable the change of the modeline color with the last compilation status.
+* Disable the change of the modeline color with the last test run status.
 
 ```el
 (setq alchemist-test-status-modeline nil)
