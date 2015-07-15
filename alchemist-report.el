@@ -30,6 +30,7 @@
 (defvar alchemist-report-on-render nil)
 (defvar alchemist-report-on-render-function nil)
 (defvar alchemist-report--last-run-status nil)
+(defvar alchemist-report-mode-name nil)
 
 (defun alchemist-report--cleanup-buffer (buffer)
   (let ((buffer (get-buffer buffer)))
@@ -50,6 +51,7 @@
           (progn
             (alchemist-report--render-report buffer)
             (alchemist-report--handle-exit status)
+            (alchemist-report-update-mode-line process)
             (delete-process process))))))
 
 (defun alchemist-report--render-report (buffer)
@@ -78,6 +80,12 @@
         (ansi-color-apply-on-region (point-min) (point-max)))
       (if moving (goto-char (process-mark proc))))))
 
+(defun alchemist-report-update-mode-line (process)
+  (with-current-buffer (process-buffer process)
+    (setq mode-name (format "%s:%s"
+                            (replace-regexp-in-string ":.+$" "" mode-name)
+                            (process-status process)))))
+
 (defun alchemist-report-run (command process-name buffer-name mode &optional on-exit on-render)
   (alchemist-report--cleanup-buffer buffer-name)
   (let* ((buffer (get-buffer-create buffer-name))
@@ -92,7 +100,8 @@
       (setq alchemist-report-on-render-function on-render))
     (set-process-sentinel process 'alchemist-report--sentinel)
     (set-process-filter process 'alchemist-report--ansi-color-insertion-filter)
-    (alchemist-report--display-buffer buffer mode)))
+    (alchemist-report--display-buffer buffer mode)
+    (alchemist-report-update-mode-line process)))
 
 (provide 'alchemist-report)
 
