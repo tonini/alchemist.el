@@ -10,6 +10,15 @@ defmodule Alchemist.Source do
     end
   end
 
+  def find(module, nil) do
+    cond do
+      Code.ensure_loaded?(module) ->
+        IO.puts source(module)
+      true ->
+        IO.puts ""
+    end
+  end
+
   def find(module, function) do
     cond do
       Code.ensure_loaded?(module) ->

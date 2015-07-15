@@ -85,9 +85,9 @@ defmodule Alchemist.Case do
   defmodule Find do
     def process!(exp) do
       [module, function] = String.split(exp, ",", parts: 2)
-      module = String.to_char_list module
+      {module, _} = Code.eval_string module
       function = String.to_atom function
-      Code.eval_string("Alchemist.Source.find(#{module}, :#{function})", [], __ENV__)
+      Alchemist.Source.find(module, function)
       IO.puts "END-OF-SOURCE"
     end
   end

@@ -188,13 +188,14 @@ will be started instead."
                                      (concat search ".")))))))
 
 (defun alchemist-server-goto-filter (_process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-SOURCE$" output)
-      (let* ((output (apply #'concat (reverse alchemist-server--output)))
-             (output (replace-regexp-in-string "END-OF-SOURCE" "" output))
-             (output (replace-regexp-in-string "\n" "" output))
-             (file (replace-regexp-in-string "source-file-path:" "" output)))
-        (funcall alchemist-server-goto-callback file))))
+  (with-local-quit
+    (setq alchemist-server--output (cons output alchemist-server--output))
+    (if (string-match "END-OF-SOURCE$" output)
+        (let* ((output (apply #'concat (reverse alchemist-server--output)))
+               (output (replace-regexp-in-string "END-OF-SOURCE" "" output))
+               (output (replace-regexp-in-string "\n" "" output))
+               (file (replace-regexp-in-string "source-file-path:" "" output)))
+          (funcall alchemist-server-goto-callback file)))))
 
 (defun alchemist-server--mix-filter (_process output)
   (with-local-quit
