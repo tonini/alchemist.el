@@ -495,8 +495,6 @@ If you use the keybinding <kbd>i</kbd> on a specific row, it will call `describe
 
 Just `M-x alchemist-refcard RET`
 
-![Alchemist Inside Emacs Refcard](logo/refcard.png)
-
 ## Support
 
 If you hit any problems, please first ensure that you are using the latest version of this code,
