@@ -25,6 +25,9 @@
 
 ;;; Code:
 
+(require 'ansi-color)
+(require 'alchemist-root)
+
 (defvar alchemist-report-on-exit nil)
 (defvar alchemist-report-on-exit-function nil)
 (defvar alchemist-report-on-render nil)
