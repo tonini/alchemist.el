@@ -1,4 +1,4 @@
-;;; alchemist-report.el ---
+;;; alchemist-report.el --- Run command in a process and handles buffer of it
 
 ;; Copyright © 2015 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;;
+;; Run command in a process and handles buffer output and display
 
 ;;; Code:
 
