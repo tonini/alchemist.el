@@ -93,6 +93,8 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
     (define-key map "q" #'quit-window)
     (define-key map (kbd "M-n") #'alchemist-test-next-result)
     (define-key map (kbd "M-p") #'alchemist-test-previous-result)
+    (define-key map (kbd "M-N") #'alchemist-test-next-stacktrace-file)
+    (define-key map (kbd "M-P") #'alchemist-test-previous-stacktrace-file)
     (define-key map (kbd "C-c C-k") #'alchemist-report-interrupt-current-process)
     map))
 
@@ -267,6 +269,26 @@ Do nothing if there are no error in this test report."
                                                    #'(lambda ()
                                                        (forward-line 1)
                                                        (back-to-indentation))))
+
+(defun alchemist-test-next-stacktrace-file ()
+  "Jump to the next stacktrace file in the test report.
+
+If there are no stacktrace file after the current position,
+jump to the first stacktrace file in the test report.
+Do nothing if there are no stacktrace file in this test report."
+  (interactive)
+  (alchemist-utils--jump-to-next-matching-line alchemist-test--stacktrace-files-regex
+                                               'back-to-indentation))
+
+(defun alchemist-test-previous-stacktrace-file ()
+  "Jump to the previous stacktrace file in the test report.
+
+If there are no stacktrace file before the current position,
+jump to the first stacktrace file in the test report.
+Do nothing if there are no stacktrace file in this test report."
+  (interactive)
+  (alchemist-utils--jump-to-previous-matching-line alchemist-test--stacktrace-files-regex
+                                                   'back-to-indentation))
 
 (defun alchemist-test-mode-list-tests ()
   "List ExUnit tests (calls to the test/2 macro) in the current buffer and jump
