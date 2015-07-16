@@ -8,7 +8,7 @@
 
 <p align="left">
   <img
-  src="https://raw.githubusercontent.com/tonini/alchemist.el/master/logo/alchemist_logo.png"
+  src="https://raw.githubusercontent.com/tonini/alchemist.el/master/images/alchemist_logo.png"
   alt="Alchemist Logo"/>
 </p>
 
@@ -344,7 +344,7 @@ open a keymap summary in the `minibuffer` with the following functionality:
 
 You're always be able to continue to search inside the `*elixir help*` buffer.
 
-![Alchemist Help Minor Mode Key Summary](logo/help_summary.png)
+![Alchemist Help Minor Mode Key Summary](images/help_summary.png)
 
 | Keybinding | Description                                     |
 |------------|-------------------------------------------------|
@@ -401,7 +401,7 @@ of Elixir source code.
 Alchemist enables a [company-mode](http://company-mode.github.io/) elixir backend by default if company-mode is
 installed.
 
-![Alchemist Company](logo/alchemist-company.gif)
+![Alchemist Company](images/alchemist-company.gif)
 
 There are the same keybindings for documentation lookup and definition opening for the selected
 candidate available like [company-mode](http://company-mode.github.io/) [provides](https://github.com/company-mode/company-mode/blob/27c913afb9446971d1e0f1f3b272e5650a6206c5/company.el#L609).
@@ -409,7 +409,7 @@ candidate available like [company-mode](http://company-mode.github.io/) [provide
 <kbd>C-h</kbd> and <kbd>\<f1\></kbd> for documentation lookup for the current selected candidate.
 <kbd>C-w</kbd> to jump to the definition of the current selected candidate.
 
-![Alchemist Completion Candidate Functionalities](logo/alchemist-company-doc-goto.gif)
+![Alchemist Completion Candidate Functionalities](images/alchemist-company-doc-goto.gif)
 
 ## IEx
 
@@ -492,7 +492,7 @@ represented via the colorized `mode-name`. In our case that will be the `elixir-
 If you don't like that just set the `alchemist-test-status-modeline` variable
 via `(setq alchemist-test-status-modeline nil)` or `M-x customize-group [RET] alchemist-test`
 
-![Alchemist Build Status](logo/build_status.png)
+![Alchemist Build Status](images/build_status.png)
 
 ## Keymap
 
