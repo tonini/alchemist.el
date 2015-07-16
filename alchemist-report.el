@@ -42,7 +42,8 @@
 
 (defun alchemist-report--display-buffer (buffer mode)
   (with-current-buffer buffer
-    (funcall mode))
+    (funcall mode)
+    (setq-local window-point-insertion-type t))
   (display-buffer buffer))
 
 (defun alchemist-report--sentinel (process status)
