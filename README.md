@@ -350,7 +350,7 @@ You're always be able to continue to search inside the `*elixir help*` buffer.
 |------------|-------------------------------------------------|
 |<kbd>q</kbd>| Quit `*elixir help*` buffer window              |
 |<kbd>e</kbd>| `alchemist-help-search-at-point`                |
-|<kbd>m</kbd>| alchemist-help-search-marked-region             |
+|<kbd>m</kbd>| `alchemist-help-search-marked-region`           |
 |<kbd>s</kbd>| `alchemist-help`                                |
 |<kbd>h</kbd>| `alchemist-help-history`                        |
 |<kbd>?</kbd>| `alchemist-help-minor-mode-key-binding-summary` |
