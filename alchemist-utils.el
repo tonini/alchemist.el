@@ -42,13 +42,6 @@ It walks the directory tree until it finds a elixir project root indicator."
         (t (append (alchemist-utils--flatten (car alist))
                    (alchemist-utils--flatten (cdr alist))))))
 
-(defun alchemist-utils--build-runner-cmdlist (command)
-  "Build the commands list for the runner."
-  (cl-remove "" (alchemist-utils--flatten
-                 (list (if (stringp command)
-                           (split-string command)
-                         command)))))
-
 (defun alchemist-utils--build-command (command-list)
   "Build the commands list for the runner."
   (let ((command (cl-remove "" (alchemist-utils--flatten
