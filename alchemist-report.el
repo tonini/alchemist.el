@@ -89,6 +89,15 @@
                             (replace-regexp-in-string ":.+$" "" mode-name)
                             (process-status process)))))
 
+(defun alchemist-report-interrupt-current-process ()
+  "Interrupt the current running report process."
+  (interactive)
+  (let ((buffer (current-buffer))
+        (name (replace-regexp-in-string ":.+" "" mode-name)))
+    (if (get-buffer-process buffer)
+        (interrupt-process (get-buffer-process buffer))
+      (error "The [%s] process is not running" (downcase name)))))
+
 (defun alchemist-report-run (command process-name buffer-name mode &optional on-exit on-render)
   (alchemist-report--cleanup-buffer buffer-name)
   (let* ((buffer (get-buffer-create buffer-name))

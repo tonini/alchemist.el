@@ -93,6 +93,7 @@ formated with the `alchemist-test--failed-face' face, to symbolize failing tests
     (define-key map "q" #'quit-window)
     (define-key map (kbd "M-n") #'alchemist-test-next-result)
     (define-key map (kbd "M-p") #'alchemist-test-previous-result)
+    (define-key map (kbd "C-c C-k") #'alchemist-report-interrupt-current-process)
     map))
 
 (defvar alchemist-test-mode-map
