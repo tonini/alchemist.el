@@ -470,6 +470,17 @@ Alchemist comes with an minor mode for testing which will be enabled by default 
 |<kbd>C-c , n</kbd>| Jump to the next test inside the current file. `alchemist-test-mode-jump-to-next-test` |
 |<kbd>C-c , p</kbd>| Jump to the previous test inside the current file `alchemist-test-mode-jump-to-previous-test` |
 
+The tests are reported in the `alchemist-test-report-mode`, which have the following keybindings:
+
+| Keybinding | Description |
+|--------------------|------------------------------------------|
+|<kbd>M-n</kbd>| Jump to the next error in the test report. `alchemist-test-next-result` |
+|<kbd>M-p</kbd>| Jump to the previous error in the test report. `alchemist-test-previous-result` |
+|<kbd>M-N</kbd>| Jump to the next stacktrace file in the test report. `alchemist-test-next-stacktrace-file` |
+|<kbd>M-P</kbd>| Jump to the previous stacktrace file in the test report. `alchemist-test-previous-stacktrace-file` |
+|<kbd>C-c C-k</kbd>| Interrupt the current running report process. `alchemist-report-interrupt-current-process` |
+|<kbd>q</kbd>| Close the test report window |
+
 ## Modeline
 
 By default the status of `alchemist-mix-test`, `alchemist-compile` etc will be
