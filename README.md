@@ -57,6 +57,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
 - [Testing](#testing)
+  - [Testing-Report](#testing-report)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
   - [Refcards](#refcards)
@@ -469,6 +470,8 @@ Alchemist comes with an minor mode for testing which will be enabled by default 
 |<kbd>C-c , f</kbd>| Run all tests of a specific file `alchemist-mix-test-file` |
 |<kbd>C-c , n</kbd>| Jump to the next test inside the current file. `alchemist-test-mode-jump-to-next-test` |
 |<kbd>C-c , p</kbd>| Jump to the previous test inside the current file `alchemist-test-mode-jump-to-previous-test` |
+
+### Testing Report
 
 The tests are reported in the `alchemist-test-report-mode`, which have the following keybindings:
 
