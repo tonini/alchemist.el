@@ -214,7 +214,10 @@ Key bindings:
      ["Documentation search marked region..." alchemist-help-search-marked-region])
     ))
 
-(add-hook 'elixir-mode-hook 'alchemist-mode-hook)
+(add-hook 'elixir-mode-hook
+          (lambda ()
+            (add-to-list (make-local-variable 'company-backends)
+                         'alchemist-company)))
 
 (provide 'alchemist)
 
