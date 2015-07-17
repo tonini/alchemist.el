@@ -28,6 +28,11 @@
 (require 'ansi-color)
 (require 'alchemist-project)
 
+(defgroup alchemist-report nil
+  "Run command in a process and handles buffer output and display"
+  :prefix "alchemist-report-"
+  :group 'alchemist)
+
 (defvar alchemist-report-on-exit nil)
 (defvar alchemist-report-on-exit-function nil)
 (defvar alchemist-report-on-render nil)
