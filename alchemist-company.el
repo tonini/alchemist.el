@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'company)
 
 (defgroup alchemist-company nil
@@ -62,7 +63,7 @@
   (interactive (list 'interactive))
   (when alchemist-company-show-annotation
     (set 'company-tooltip-align-annotations t))
-  (case command
+  (cl-case command
     (interactive (company-begin-backend 'alchemist-company))
     (init (when (or (eq major-mode 'elixir-mode)
                     (string= mode-name "Alchemist-IEx"))))
