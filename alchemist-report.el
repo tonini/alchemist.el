@@ -41,11 +41,14 @@
 (defvar alchemist-report-mode-name nil)
 
 (defun alchemist-report--cleanup-buffer (buffer)
+  "Kill the BUFFER."
   (let ((buffer (get-buffer buffer)))
     (when buffer
       (kill-buffer buffer))))
 
 (defun alchemist-report--display-buffer (buffer mode)
+  "Display the BUFFER.
+After displaying the buffer, it's enable the MODE."
   (with-current-buffer buffer
     (funcall mode)
     (setq-local window-point-insertion-type t))
@@ -60,36 +63,44 @@
           (progn
             (alchemist-report--render-report buffer)
             (alchemist-report--handle-exit status)
-            (alchemist-report-update-mode-line process)
+            (alchemist-report-update-mode-name process)
             (delete-process process))))))
 
 (defun alchemist-report--render-report (buffer)
+  "Call the defined render functions for the BUFFER."
   (when alchemist-report-on-render-function
     (funcall alchemist-report-on-render-function buffer)))
 
 (defun alchemist-report--handle-exit (status)
+  "Call the defined exit function specified in `alchemist-report-on-exit-function'.
+Argument for the exit function is the STATUS of the finished process."
   (alchemist-report--store-process-status status)
   (when alchemist-report-on-exit-function
     (funcall alchemist-report-on-exit-function status)))
 
 (defun alchemist-report--store-process-status (status)
+  "Store STATUS of the last finished process."
   (setq alchemist-report--last-run-status status))
 
 (defun alchemist-report--last-run-successful-p ()
+  "Return non-nil if the last process successfully finished."
   (when (string-prefix-p "finished" alchemist-report--last-run-status) t))
 
-(defun alchemist-report--ansi-color-insertion-filter (proc string)
-  (with-current-buffer (process-buffer proc)
+(defun alchemist-report--ansi-color-insertion-filter (process output)
+  "Process filter for report buffers.
+Just apply ansi escape sequences to OUTPUT of PROCESS."
+  (with-current-buffer (process-buffer process)
     (let* ((buffer-read-only nil)
-           (moving (= (point) (process-mark proc))))
+           (moving (= (point) (process-mark process))))
       (save-excursion
-        (goto-char (process-mark proc))
-        (insert string)
-        (set-marker (process-mark proc) (point))
+        (goto-char (process-mark process))
+        (insert output)
+        (set-marker (process-mark process) (point))
         (ansi-color-apply-on-region (point-min) (point-max)))
-      (if moving (goto-char (process-mark proc))))))
+      (if moving (goto-char (process-mark process))))))
 
-(defun alchemist-report-update-mode-line (process)
+(defun alchemist-report-update-mode-name (process)
+  "Update the `mode-name' with the status of PROCESS."
   (with-current-buffer (process-buffer process)
     (setq mode-name (format "%s:%s"
                             (replace-regexp-in-string ":.+$" "" mode-name)
@@ -105,6 +116,12 @@
       (error "The [%s] process is not running" (downcase name)))))
 
 (defun alchemist-report-run (command process-name buffer-name mode &optional on-exit on-render)
+  "Run COMMAND in a new process called PROCESS-NAME.
+The output of PROCESS-NAME will be displayed in BUFFER-NAME.
+After displaying BUFFER-NAME, the MODE function will be called within.
+
+Optional ON-EXIT and ON-RENDER functions could be defined.
+These functions will be called when PROCESS-NAME is finished."
   (alchemist-report--cleanup-buffer buffer-name)
   (let* ((buffer (get-buffer-create buffer-name))
          (project-root (alchemist-project-root))
@@ -119,7 +136,7 @@
     (set-process-sentinel process 'alchemist-report--sentinel)
     (set-process-filter process 'alchemist-report--ansi-color-insertion-filter)
     (alchemist-report--display-buffer buffer mode)
-    (alchemist-report-update-mode-line process)))
+    (alchemist-report-update-mode-name process)))
 
 (provide 'alchemist-report)
 
