@@ -107,25 +107,16 @@ run all tests)."
 
 ;; Public functions
 
+(defun alchemist-mix ()
+  "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
+  (interactive)
+  (alchemist-server--mix))
+
 (defun alchemist-mix-display-mix-buffer ()
   "Display the mix buffer when exists."
   (interactive)
   (when (get-buffer alchemist-mix-buffer-name)
     (display-buffer alchemist-mix-buffer-name)))
-
-(defun alchemist-mix-rerun-last-test ()
-  "Rerun the last test that was run by alchemist.
-
-When no tests had been run before calling this function, do nothing."
-  (interactive)
-  (if alchemist-last-run-test
-      (alchemist-mix--execute-test alchemist-last-run-test)
-    (message "No tests have been run yet")))
-
-(defun alchemist-mix-new (name)
-  "Create a new elixir project named by NAME."
-  (interactive "Gmix new: ")
-  (alchemist-mix-execute (list "new" (expand-file-name name))))
 
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
@@ -149,6 +140,15 @@ When no tests had been run before calling this function, do nothing."
          (file-and-line (format "%s:%s" buffer-file-name line)))
     (alchemist-mix--execute-test file-and-line)))
 
+(defun alchemist-mix-rerun-last-test ()
+  "Rerun the last test that was run by alchemist.
+
+When no tests had been run before calling this function, do nothing."
+  (interactive)
+  (if alchemist-last-run-test
+      (alchemist-mix--execute-test alchemist-last-run-test)
+    (message "No tests have been run yet")))
+
 (defun alchemist-mix-compile (command &optional prefix)
   "Compile the whole elixir project. Prompt for the mix env if the prefix
 arg is set."
@@ -161,61 +161,16 @@ Prompt for the mix env if the prefix arg is set."
   (interactive "Mmix run: \nP")
   (alchemist-mix-execute (list "run" command) prefix))
 
-(defun alchemist-mix-deps (command &optional prefix)
-  "Prompt for mix deps commands."
-  (interactive
-   (list (alchemist-mix--completing-read "mix deps: " alchemist-mix--deps-commands)
-         current-prefix-arg))
-  (alchemist-mix-execute (list command) prefix))
-
+(define-obsolete-function-alias 'alchemist-mix-help 'alchemist-mix)
+(define-obsolete-function-alias 'alchemist-mix-new 'alchemist-mix)
+(define-obsolete-function-alias 'alchemist-mix-deps 'alchemist-mix)
 (define-obsolete-function-alias 'alchemist-mix-deps-with-prompt 'alchemist-mix-deps)
-
-(defun alchemist-mix ()
-  "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
-  (interactive)
-  (alchemist-server--mix))
-
-(defun alchemist-mix-local (command)
-  "Prompt for mix local commands."
-  (interactive
-   (list (alchemist-mix--completing-read "mix local: " alchemist-mix--local-commands)))
-  (if (string= command "local.install")
-      (call-interactively 'alchemist-mix-local-install)
-    (alchemist-mix-execute (list command))))
-
-(define-obsolete-function-alias 'alchemist-mix-local-with-prompt 'alchemist-mix-local)
-
-(defun alchemist-mix-local-install (path-or-url)
-  "Prompt for mix local.install PATH-OR-URL."
-  (interactive
-   (list (completing-read "mix local.install FORMAT: "
-                          alchemist-mix--local-install-option-types
-                          nil t nil nil (car alchemist-mix--local-install-option-types))))
-  (if (string= path-or-url (car alchemist-mix--local-install-option-types))
-      (call-interactively 'alchemist-mix-local-install-with-path)
-    (call-interactively 'alchemist-mix-local-install-with-url)))
-
-(defun alchemist-mix-local-install-with-path (path)
-  "Runs local.install and prompt for a PATH as argument."
-  (interactive "fmix local.install PATH: ")
-  (alchemist-mix-execute (list "local.install" path) ))
-
-(defun alchemist-mix-local-install-with-url (url)
-  "Runs local.install and prompt for a URL as argument."
-  (interactive "Mmix local.install URL: ")
-  (alchemist-mix-execute (list "local.install" url) ))
-
-(defun alchemist-mix-hex-search (command &optional prefix)
-  "Display packages matching the given search query. Prompt for the mix env
-if the prefix arg is set."
-  (interactive "Mmix hex.search: \nP")
-  (alchemist-mix-execute (list "hex.search" command) prefix))
-
-(defun alchemist-mix-help (command &optional prefix)
-  "Show help output for a specific mix command. Prompt for the mix env if
-the prefix arg is set."
-  (interactive "Mmix help: \nP")
-  (alchemist-mix-execute (list "help" command) prefix))
+(define-obsolete-function-alias 'alchemist-mix-local-with-prompt 'alchemist-mix)
+(define-obsolete-function-alias 'alchemist-mix-local 'alchemist-mix)
+(define-obsolete-function-alias 'alchemist-mix-local-install 'alchemist-mix)
+(define-obsolete-function-alias 'alchemist-mix-local-install-with-url 'alchemist-mix)
+(define-obsolete-function-alias 'alchemist-mix-local-install-with-path 'alchemist-mix)
+(define-obsolete-function-alias 'alchemist-mix-hex-search 'alchemist-mix)
 
 (define-derived-mode alchemist-mix-mode fundamental-mode "Mix Mode"
   "Major mode for presenting Mix tasks..
