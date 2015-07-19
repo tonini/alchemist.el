@@ -97,7 +97,11 @@ run all tests)."
 ;; Public functions
 
 (defun alchemist-mix ()
-  "Prompt for mix commands. Prompt for the mix env if the prefix arg is set."
+  "Prompt for a specific mix task to run.
+
+If the command `universal-argument' is called before `alchemist-mix',
+a prompt for a specific mix environment in which the task will be
+executed, gets called."
   (interactive)
   (alchemist-server--mix))
 
