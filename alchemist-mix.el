@@ -193,9 +193,7 @@ If PREFIX is non-nil, prompt for a mix environment variable."
                       (completing-read "mix env: " alchemist-mix--envs nil nil alchemist-mix-env)
                     alchemist-mix-env))
          (command (alchemist-utils--build-command
-                   (list (if mix-env
-                             (concat "MIX_ENV=" mix-env)
-                           "")
+                   (list (when mix-env (concat "MIX_ENV=" mix-env))
                          alchemist-mix-command command-list))))
     (alchemist-report-run command "alchemist-mix-report" alchemist-mix-buffer-name 'alchemist-mix-mode)))
 
