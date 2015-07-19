@@ -1,4 +1,4 @@
-;;; alchemist-mix.el --- Emacs integration for Elixir's mix
+;;; alchemist-mix.el --- Interface to run Elixir mix tasks inside Emacs
 
 ;; Copyright © 2014-2015 Samuel Tonini
 
@@ -21,7 +21,7 @@
 
 ;;; Commentary:
 
-;; Emacs integration for Elixir's mix
+;; Interface to run Elixir mix tasks inside Emacs.
 
 ;;; Code:
 
