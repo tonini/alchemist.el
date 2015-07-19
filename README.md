@@ -232,9 +232,9 @@ A prompt for the environment in which the server should run (default: `dev`) get
 |<kbd>C-c a x</kbd>|Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
 |<kbd>C-c a t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
 |<kbd>C-c a r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test`|
-|<kbd>C-c a t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
-|<kbd>C-c a t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
-|<kbd>C-c a t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
+|<kbd>C-c a m t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
+|<kbd>C-c a m t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
+|<kbd>C-c a m t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
 |<kbd>C-c a m c</kbd>|Compile the whole elixir project. `alchemist-mix-compile`|
 |<kbd>C-c a m r</kbd>|Runs the given file or expression in the context of the application. `alchemist-mix-run`|
 
