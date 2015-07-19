@@ -235,59 +235,8 @@ A prompt for the environment in which the server should run (default: `dev`) get
 |<kbd>C-c a t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
 |<kbd>C-c a t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
 |<kbd>C-c a t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
-|<kbd>C-c a m c</kbd>|Compile the whole elixir project. Prompt for the mix env if the prefix arg is set. `alchemist-mix-compile`|
-
-
-<table>
-    <tr>
-        <th>Command (For the <code>M-x</code> prompt.)</th>
-        <th>Description</th>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix</code></td>
-        <td>Prompt for a mix command including a list of all available mix commands.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-new</code></td>
-        <td>Create a new Elixir application.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-run</code></td>
-        <td>Runs the given expression in the Elixir application context.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-deps</code></td>
-        <td>Prompt for <code>mix deps</code> commands.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-local</code></td>
-        <td>Prompt for <code>mix local</code> commands.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-local-install</code></td>
-        <td>Prompt for <code>mix local.install</code> PATH or URL.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-local-install-with-path</code></td>
-        <td>Runs <code>mix local.install</code> and prompt for a PATH as argument.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-local-install-with-url</code></td>
-        <td>Runs <code>mix local.install</code> and prompt for a URL as argument.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-help</code></td>
-        <td>Show help output for a specific mix command.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-execute</code></td>
-        <td>Prompt for a mix command.</td>
-    </tr>
-    <tr>
-        <td><code>alchemist-mix-hex-search</code></td>
-        <td>Display packages matching the given search query.</td>
-    </tr>
-</table>
+|<kbd>C-c a m c</kbd>|Compile the whole elixir project. `alchemist-mix-compile`|
+|<kbd>C-c a m r</kbd>|Runs the given file or expression in the context of the application. `alchemist-mix-run`|
 
 Mix tasks could also be executed in a specific environment with the usage of `C-u` (universal-argument).
 Default environments are `prod`, `dev` and `test`. [Mix environments](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html#environments)

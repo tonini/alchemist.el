@@ -149,8 +149,7 @@ arg is set."
   (alchemist-mix-execute (list "compile" command) prefix))
 
 (defun alchemist-mix-run (command &optional prefix)
-  "Runs the given file or expression in the context of the application.
-Prompt for the mix env if the prefix arg is set."
+  "Runs the given file or expression in the context of the application."
   (interactive "Mmix run: \nP")
   (alchemist-mix-execute (list "run" command) prefix))
 
