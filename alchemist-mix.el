@@ -70,17 +70,6 @@ not set explicitly."
 (defvar alchemist-mix--envs '("dev" "prod" "test")
   "The list of mix envs to use as defaults.")
 
-(defvar alchemist-mix--deps-commands
-  '("deps" "deps.clean" "deps.compile" "deps.get" "deps.unlock" "deps.unlock")
-  "List of all deps.* available commands.")
-
-(defvar alchemist-mix--local-commands
-  '("local" "local.install" "local.rebar" "local.uninstall")
-  "List of all local.* available commands.")
-
-(defvar alchemist-mix--local-install-option-types '("path" "url")
-  "List of local.install option types.")
-
 ;; Private functions
 
 (defun alchemist-mix--completing-read (prompt cmdlist)
@@ -161,19 +150,31 @@ Prompt for the mix env if the prefix arg is set."
   (interactive "Mmix run: \nP")
   (alchemist-mix-execute (list "run" command) prefix))
 
-(define-obsolete-function-alias 'alchemist-mix-help 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-new 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-deps 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-deps-with-prompt 'alchemist-mix-deps)
-(define-obsolete-function-alias 'alchemist-mix-local-with-prompt 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-local 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-local-install 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-local-install-with-url 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-local-install-with-path 'alchemist-mix)
-(define-obsolete-function-alias 'alchemist-mix-hex-search 'alchemist-mix)
+;; Deprecated functions; messages will be removed with v1.5.0
+
+(defun alchemist-mix-help () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-help" "alchemist-mix"))
+(defun alchemist-mix-new () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-new" "alchemist-mix"))
+(defun alchemist-mix-deps () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-deps" "alchemist-mix"))
+(defun alchemist-mix-deps-with-prompt () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-deps-with-prompt" "alchemist-mix"))
+(defun alchemist-mix-local-with-prompt () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-local-with-prompt" "alchemist-mix"))
+(defun alchemist-mix-local () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-local" "alchemist-mix"))
+(defun alchemist-mix-local-install () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-local-install" "alchemist-mix"))
+(defun alchemist-mix-local-with-url () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-local-with-url" "alchemist-mix"))
+(defun alchemist-mix-local-with-path () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-local-with-path" "alchemist-mix"))
+(defun alchemist-mix-hex-search () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-mix-local-hex-search" "alchemist-mix"))
 
 (define-derived-mode alchemist-mix-mode fundamental-mode "Mix Mode"
-  "Major mode for presenting Mix tasks..
+  "Major mode for presenting Mix tasks.
 
 \\{alchemist-mix-mode-map}"
   (setq buffer-read-only t)
@@ -181,7 +182,9 @@ Prompt for the mix env if the prefix arg is set."
   (setq-local electric-indent-chars nil))
 
 (defun alchemist-mix-execute (command-list &optional prefix)
-  "Run a mix command. Prompt for the mix env if the prefix arg is set."
+  "Run a mix task specified by COMMAND-LIST.
+
+If PREFIX is non-nil, prompt for a mix environment variable."
   (let* ((mix-env (if prefix
                       (completing-read "mix env: " alchemist-mix--envs nil nil alchemist-mix-env)
                     alchemist-mix-env))
