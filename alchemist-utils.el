@@ -26,9 +26,25 @@
 (require 'cl-lib)
 (require 'ansi-color)
 
+;; Variables
+
 (defvar alchemist-utils--elixir-project-root-indicator
   "mix.exs"
   "The file which indicate an elixir project root.")
+
+;; Face
+
+(defface alchemist-utils--deprecated-face
+  '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
+  "Face for 'deprecated' word inside deprecated message."
+  :group 'alchemist)
+
+(defun alchemist-utils-deprecated-message (function new-function)
+  (message "'%s is %s in favor of '%s"
+           function (propertize "deprecated"
+                                'face 'alchemist-utils--deprecated-face)
+           new-function))
+
 
 (defun alchemist-utils--elixir-project-root ()
   "Finds the root directory of the project.
