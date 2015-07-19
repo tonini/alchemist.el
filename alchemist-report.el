@@ -40,19 +40,23 @@
 (defvar alchemist-report--last-run-status nil)
 (defvar alchemist-report-mode-name nil)
 
-(defun alchemist-report--cleanup-buffer (buffer)
-  "Kill the BUFFER."
-  (let ((buffer (get-buffer buffer)))
-    (when buffer
-      (kill-buffer buffer))))
-
-(defun alchemist-report--display-buffer (buffer mode)
-  "Display the BUFFER.
-After displaying the buffer, it's enable the MODE."
-  (with-current-buffer buffer
-    (funcall mode)
-    (setq-local window-point-insertion-type t))
-  (display-buffer buffer))
+(defun alchemist-report--kill-process (process)
+  "Interrupt and kill the running report PROCESS."
+  (when process
+    (let ((mode-name (replace-regexp-in-string ":.+$" "" mode-name)))
+      (if (or (not (eq (process-status process) 'run))
+              (eq (process-query-on-exit-flag process) nil)
+              (yes-or-no-p
+               (format "A %s process already running; kill it? "
+                       mode-name)))
+          (condition-case ()
+              (progn
+                (interrupt-process process)
+                (sit-for 1)
+                (delete-process process))
+            (error nil))
+        (error "Cannot have two processes in `%s' at once"
+               (buffer-name))))))
 
 (defun alchemist-report--sentinel (process status)
   "Sentinel for test report buffer."
@@ -115,6 +119,26 @@ Just apply ansi escape sequences to OUTPUT of PROCESS."
         (interrupt-process (get-buffer-process buffer))
       (error "The [%s] process is not running" (downcase name)))))
 
+(defun alchemist-report-cleanup-process-buffer (buffer)
+  "Clean the content BUFFER of process.
+If there is already a running process, ask for interrupting it."
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t)
+          (process (get-buffer-process buffer)))
+      (alchemist-report--kill-process process)
+      (erase-buffer)
+      )))
+
+(defun alchemist-report-display-buffer (buffer)
+  "Display the BUFFER."
+  (display-buffer buffer))
+
+(defun alchemist-report-activate-mode (mode buffer)
+  "Enable MODE inside BUFFER."
+  (with-current-buffer buffer
+    (funcall mode)
+    (setq-local window-point-insertion-type t)))
+
 (defun alchemist-report-run (command process-name buffer-name mode &optional on-exit on-render)
   "Run COMMAND in a new process called PROCESS-NAME.
 The output of PROCESS-NAME will be displayed in BUFFER-NAME.
@@ -122,20 +146,22 @@ After displaying BUFFER-NAME, the MODE function will be called within.
 
 Optional ON-EXIT and ON-RENDER functions could be defined.
 These functions will be called when PROCESS-NAME is finished."
-  (alchemist-report--cleanup-buffer buffer-name)
   (let* ((buffer (get-buffer-create buffer-name))
          (project-root (alchemist-project-root))
          (default-directory (if project-root
                                 project-root
                               default-directory))
-         (process (start-process-shell-command process-name buffer command)))
+         (process (progn
+                    (alchemist-report-cleanup-process-buffer buffer-name)
+                    (start-process-shell-command process-name buffer command))))
     (when on-exit
       (setq alchemist-report-on-exit-function on-exit))
     (when on-render
       (setq alchemist-report-on-render-function on-render))
     (set-process-sentinel process 'alchemist-report--sentinel)
     (set-process-filter process 'alchemist-report--ansi-color-insertion-filter)
-    (alchemist-report--display-buffer buffer mode)
+    (alchemist-report-activate-mode mode buffer)
+    (alchemist-report-display-buffer buffer)
     (alchemist-report-update-mode-name process)))
 
 (provide 'alchemist-report)
