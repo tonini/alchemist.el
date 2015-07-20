@@ -62,6 +62,7 @@ not set explicitly."
 (defvar alchemist-mix-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" #'quit-window)
+    (define-key map "i" #'alchemist-mix-send-input-to-mix-process)
     map))
 
 (defvar alchemist-mix-buffer-name "*mix*"
