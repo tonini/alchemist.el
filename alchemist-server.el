@@ -206,7 +206,7 @@ will be started instead."
                (output (replace-regexp-in-string "\n$" "" output))
                (tasks (split-string output "\n"))
                (selected-task (alchemist-mix--completing-read "mix: " tasks))
-               (command (read-string "mix " (concat selected-task " "))))
+               (command (read-shell-command "mix " (concat selected-task " "))))
           (alchemist-mix-execute (list command) current-prefix-arg)))))
 
 (defun alchemist-server-goto (module function expr)
