@@ -1,6 +1,21 @@
 # Changelog
 
-## v1.3.0 (unreleased)
+## v1.3.0 (2015-07-20)
+
+### Enhancements
+
+  * [Refcard] Introduce a dynamic generated REFCARD which can be called from inside Emacs. `alchemist-refcard`
+  * [Mix] The Alchemist Elixir server now handles available Mix tasks. `alchemist-mix` is now instantly fast and serves all available tasks.
+  * [Mix] The establishing of the project root path before running Mix tasks, is now working properly.
+  * [Test] The test report mode brings now several useful functions, toggle throw failed test results or stacktraces files.
+  * [Goto] Jump to to a function definition in a source file which is defined multiple times is now much more accessable.
+    A prompt with all the possible available functions gets now opened after jumping to source file.
+
+### Changes
+
+  * [Buffer] Replace the whole buffer package which used the compile.el library to handle command runs with
+     an own more lightweight solution. `alchemist-report`
+  * [Mix] Declare most of the alchemist-mix interactive functions as obsolete. (because of `alchemist-mix` server feature)
 
 ## v1.2.0 (2015-07-06)
 
