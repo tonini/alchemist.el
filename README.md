@@ -44,6 +44,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [Hooks](#hooks)
 - [Server](#server)
 - [Mix](#mix)
+  - [Mix Task Mode](#mix-task-mode)
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
@@ -240,6 +241,15 @@ A prompt for the environment in which the server should run (default: `dev`) get
 
 Mix tasks could also be executed in a specific environment with the usage of `C-u` (universal-argument).
 Default environments are `prod`, `dev` and `test`. [Mix environments](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html#environments)
+
+### Mix Task Mode
+
+The Mix tasks running in a separate `alchemist-mix-mode`, in which the following keybindings are available:
+
+| Keybinding   | Description                                          |
+|--------------|------------------------------------------------------|
+|<kbd>q</kbd>  |Quit `*mix*` buffer window                            |
+|<kbd>i</kbd>  |Send an input to the current running mix task process.|
 
 ## Compile And Execute
 
