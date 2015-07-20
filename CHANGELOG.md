@@ -7,8 +7,8 @@
   * [Refcard] Introduce a dynamic generated REFCARD which can be called from inside Emacs. `alchemist-refcard`
   * [Mix] The Alchemist Elixir server now handles available Mix tasks. `alchemist-mix` is now instantly fast and serves all available tasks.
   * [Mix] The establishing of the project root path before running Mix tasks, is now working properly.
-  * [Test] The test report mode brings now several useful functions, toggle throw failed test results or stacktraces files.
-  * [Goto] Jump to to a function definition in a source file which is defined multiple times is now much more accessable.
+  * [Test] The test report mode brings now several useful functions, toggle through failed test results or stacktrace files.
+  * [Goto] Jump to to a function definition in a source file which is defined multiple times is now much more accessible.
     A prompt with all the possible available functions gets now opened after jumping to source file.
 
 ### Changes
