@@ -153,6 +153,20 @@ arg is set."
   (interactive "Mmix run: \nP")
   (alchemist-mix-execute (list "run" command) prefix))
 
+(defun alchemist-mix-send-input-to-mix-process (input)
+  "Send INPUT to the current running mix task process."
+  (interactive "MSend input to running mix task: ")
+  (let* ((buffer (get-buffer alchemist-mix-buffer-name))
+         (process (get-buffer-process buffer)))
+    (if (and process (eq (process-status process) 'run))
+        (with-current-buffer buffer
+          (let ((inhibit-read-only t))
+            (end-of-buffer)
+            (insert input)
+            (set-marker (process-mark process) (point)))
+          (comint-send-string process (concat input "\n")))
+      (error "No %s process is running" alchemist-mix-buffer-name))))
+
 ;; Deprecated functions; messages will be removed with v1.5.0
 
 (defun alchemist-mix-help () (interactive)
