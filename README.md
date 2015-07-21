@@ -226,6 +226,12 @@ starts a general unique server.
 An Alchemist server can be started/restarted by hand with the call of the function `alchemist-server-start`.
 A prompt for the environment in which the server should run (default: `dev`) gets opened and the server will start/restart in the selected environment.
 
+To get the server status for the current project, just call the function `alchemist-server-status` and a report will be displayed in the minibuffer:
+
+```
+Alchemist-Server-Status: [Project: /Users/tonini/Projects/ek/ Status: Connected]
+```
+
 ## Mix
 
 | Keybinding | Description |

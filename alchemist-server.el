@@ -309,6 +309,15 @@ will be started instead."
   (set-process-filter (alchemist-server--process) #'alchemist-server-doc-filter)
   (process-send-string (alchemist-server--process) (format "DOC %s\n" search)))
 
+(defun alchemist-server-status ()
+  "Report the server status for the current Elixir project."
+  (interactive)
+  (message "Alchemist-Server-Status: [Project: %s Status: %s]"
+           (alchemist-server--process-name)
+           (if (alchemist-server--process-p)
+               "Connected"
+             "Not Connected")))
+
 (provide 'alchemist-server)
 
 ;;; alchemist-server.el ends here
