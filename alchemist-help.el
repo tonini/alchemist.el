@@ -120,8 +120,6 @@
            "]-quit ["
            (propertize "e" 'face 'alchemist-help--key-face)
            "]-search-at-point ["
-           (propertize "m" 'face 'alchemist-help--key-face)
-           "]-search-marked-region ["
            (propertize "s" 'face 'alchemist-help--key-face)
            "]-search ["
            (propertize "h" 'face 'alchemist-help--key-face)
@@ -130,8 +128,15 @@
            "]-keys")))
 
 (defun alchemist-help-search-at-point ()
-  "Search through `alchemist-help' with the expression under the cursor."
+  "Search through `alchemist-help' with the expression under the cursor,
+or the actively marked region."
   (interactive)
+  (if mark-active
+      (alchemist-help--search-marked-region (region-beginning) (region-end))
+      (alchemist-help--search-at-point)))
+
+(defun alchemist-help--search-at-point ()
+  "Search through `alchemist-help' with the expression under the cursor"
   (let* ((expr (alchemist-help--exp-at-point))
          (module (alchemist-goto--extract-module expr))
          (module (alchemist-goto--get-full-path-of-alias module))
@@ -148,7 +153,7 @@
                  expr))))
     (alchemist-help--execute expr)))
 
-(defun alchemist-help-search-marked-region (begin end)
+(defun alchemist-help--search-marked-region (begin end)
   "Run `alchemist-help' with the marked region.
 Argument BEGIN where the mark starts.
 Argument END where the mark ends."
@@ -183,7 +188,6 @@ Argument END where the mark ends."
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") #'quit-window)
     (define-key map (kbd "e") #'alchemist-help-search-at-point)
-    (define-key map (kbd "m") #'alchemist-help-search-marked-region)
     (define-key map (kbd "s") #'alchemist-help)
     (define-key map (kbd "h") #'alchemist-help-history)
     (define-key map (kbd "M-.") #'alchemist-goto-definition-at-point)
@@ -207,6 +211,10 @@ Argument END where the mark ends."
    (list
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
   (alchemist-help--execute-without-complete search))
+
+;; Deprecated functions; these will get removed in v1.5.0
+(defun alchemist-help-search-marked-region () (interactive)
+       (alchemist-utils-deprecated-message "alchemist-help-search-marked-region" "alchemist-help-search-at-point"))
 
 (provide 'alchemist-help)
 
