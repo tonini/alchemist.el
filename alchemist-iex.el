@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'comint)
+(require 'company)
 (require 'alchemist-project)
 
 (defgroup alchemist-iex nil
