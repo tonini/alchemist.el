@@ -212,8 +212,7 @@ Key bindings:
      ["Documentation search history..." alchemist-help-history]
      "---"
      ["Documentation search at point..." alchemist-help-search-at-point]
-     ["Documentation search marked region..." alchemist-help-search-marked-region])
-    ))
+     ["Documentation search marked region..." alchemist-help-search-marked-region])))
 
 (add-hook 'elixir-mode-hook 'alchemist-mode-hook)
 
