@@ -88,7 +88,6 @@
                     (alchemist-refcard--build-tabulated-row "alchemist-help")
                     (alchemist-refcard--build-tabulated-row "alchemist-help-history")
                     (alchemist-refcard--build-tabulated-row "alchemist-help-search-at-point")
-                    (alchemist-refcard--build-tabulated-row "alchemist-help-search-marked-region")
                     (alchemist-refcard--build-tabulated-row "alchemist-refcard")
                     (alchemist-refcard--build-empty-tabulated-row)
                     (alchemist-refcard--build-tabulated-title-row "Definition Lookup")
