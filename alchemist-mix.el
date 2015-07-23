@@ -168,8 +168,6 @@ arg is set."
           (comint-send-string process (concat input "\n")))
       (error "No %s process is running" alchemist-mix-buffer-name))))
 
-;; Deprecated functions; messages will be removed with v1.5.0
-
 (defun alchemist-mix-help () (interactive)
        (alchemist-utils-deprecated-message "alchemist-mix-help" "alchemist-mix"))
 (defun alchemist-mix-new () (interactive)
