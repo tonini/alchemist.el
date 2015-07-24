@@ -271,9 +271,9 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a e e</kbd>|Run the current buffer through `elixir` command. `alchemist-execute-this-buffer`|
+|<kbd>C-c a e b</kbd>|Run the current buffer through `elixir` command. `alchemist-execute-this-buffer`|
 |<kbd>C-c a e f</kbd>|Run `elixir` command with the given `FILENAME`. `alchemist-execute-file` |
-|<kbd>C-c a e b</kbd>|Run a custom execute command with `elixir`. `alchemist-execute` |
+|<kbd>C-c a e c</kbd>|Run a custom execute command with `elixir`. `alchemist-execute` |
 
 ## Project
 
