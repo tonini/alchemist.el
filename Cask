@@ -7,6 +7,7 @@
 
 (development
  (depends-on "f")
+ (depends-on "elixir-mode")
  (depends-on "ert-runner")
  (depends-on "company")
  (depends-on "shut-up"))
