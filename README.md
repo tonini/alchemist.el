@@ -308,7 +308,11 @@ open a keymap summary in the `minibuffer` with the following functionality:
 
 You're always be able to continue to search inside the `*elixir help*` buffer.
 
-![Alchemist Help Minor Mode Key Summary](images/help_summary.png)
+Hit <kbd>?</kbd> to get the keybinding summary for the `alchemist-help-minor-mode`.
+
+```
+[q]-quit [e]-search-at-point [s]-search [h]-history [?]-keys
+```
 
 | Keybinding | Description                                     |
 |------------|-------------------------------------------------|
