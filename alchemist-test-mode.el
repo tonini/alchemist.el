@@ -43,8 +43,8 @@ be highlighted with more significant font faces."
 (defcustom alchemist-test-status-modeline t
   "if Non-nil, the face of local `mode-name' variable will change with test run status.
 
-For example, when `alchemist-mix-test' failes, the `mode-name' will be
-formated with the `alchemist-test--failed-face' face, to symbolize failing tests."
+For example, when `alchemist-mix-test' fails, the `mode-name' will be
+formatted with the `alchemist-test--failed-face' face, to symbolize failing tests."
   :type 'boolean
   :group 'alchemist-test)
 
