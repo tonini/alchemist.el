@@ -160,7 +160,7 @@ the actively marked region will be used for passing to `alchemist-help'."
 Argument BEGIN where the mark starts.
 Argument END where the mark ends."
   (interactive "r")
-  (let* ((expr (filter-buffer-substring begin end))
+  (let* ((expr (buffer-substring-no-properties begin end))
         (module (alchemist-goto--extract-module expr))
         (module (alchemist-goto--get-full-path-of-alias module))
         (module (if module module ""))
