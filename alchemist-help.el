@@ -59,6 +59,8 @@
   "Fontface for the letter keys in the summary."
   :group 'alchemist-help)
 
+;; Private functions
+
 (defun alchemist-help--exp-at-point ()
   "Return the expression under the cursor."
   (let (p1 p2)
@@ -113,6 +115,46 @@
         (read-only-mode 1)
         (alchemist-help-minor-mode 1))))))
 
+(defun alchemist-help--search-at-point ()
+  "Search through `alchemist-help' with the expression under the cursor"
+  (let* ((expr (alchemist-help--exp-at-point)))
+    (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
+
+(defun alchemist-help--search-marked-region (begin end)
+  "Run `alchemist-help' with the marked region.
+Argument BEGIN where the mark starts.
+Argument END where the mark ends."
+  (interactive "r")
+  (let ((expr (buffer-substring-no-properties begin end)))
+    (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
+
+(defun alchemist-help--prepare-search-expr (expr)
+  (let* ((module (alchemist-goto--extract-module expr))
+         (module (alchemist-goto--get-full-path-of-alias module))
+         (module (if module module ""))
+         (function (alchemist-goto--extract-function expr))
+         (function (if function function ""))
+         (expr (cond
+                ((and (not (alchemist-utils--empty-string-p module))
+                      (not (alchemist-utils--empty-string-p function)))
+                 (format "%s.%s" module function))
+                ((not (alchemist-utils--empty-string-p module))
+                 module)
+                (t
+                 expr))))
+    expr))
+
+(defun alchemist-help--elixir-modules-to-list (str)
+  (let* ((modules (split-string str))
+         (modules (mapcar (lambda (m)
+                            (when (string-match-p "Elixir\\." m)
+                              (replace-regexp-in-string "Elixir\\." "" m))) modules))
+         (modules (delete nil modules))
+         (modules (cl-sort modules 'string-lessp :key 'downcase))
+         (modules (delete-dups modules)))
+    modules))
+
+
 (defun alchemist-help-minor-mode-key-binding-summary ()
   (interactive)
   (message
@@ -127,6 +169,8 @@
            (propertize "?" 'face 'alchemist-help--key-face)
            "]-keys")))
 
+;; Public functions
+
 (defun alchemist-help-search-at-point ()
   "Search through `alchemist-help' with the expression under the cursor.
 
@@ -136,55 +180,6 @@ the actively marked region will be used for passing to `alchemist-help'."
   (if mark-active
       (alchemist-help--search-marked-region (region-beginning) (region-end))
       (alchemist-help--search-at-point)))
-
-(defun alchemist-help--search-at-point ()
-  "Search through `alchemist-help' with the expression under the cursor"
-  (let* ((expr (alchemist-help--exp-at-point))
-         (module (alchemist-goto--extract-module expr))
-         (module (alchemist-goto--get-full-path-of-alias module))
-         (module (if module module ""))
-         (function (alchemist-goto--extract-function expr))
-         (function (if function function ""))
-         (expr (cond
-                ((and (not (alchemist-utils--empty-string-p module))
-                      (not (alchemist-utils--empty-string-p function)))
-                 (format "%s.%s" module function))
-                ((not (alchemist-utils--empty-string-p module))
-                 module)
-                (t
-                 expr))))
-    (alchemist-help--execute expr)))
-
-(defun alchemist-help--search-marked-region (begin end)
-  "Run `alchemist-help' with the marked region.
-Argument BEGIN where the mark starts.
-Argument END where the mark ends."
-  (interactive "r")
-  (let* ((expr (buffer-substring-no-properties begin end))
-        (module (alchemist-goto--extract-module expr))
-        (module (alchemist-goto--get-full-path-of-alias module))
-        (module (if module module ""))
-        (function (alchemist-goto--extract-function expr))
-        (function (if function function ""))
-        (expr (cond
-               ((and (not (alchemist-utils--empty-string-p module))
-                     (not (alchemist-utils--empty-string-p function)))
-                (format "%s.%s" module function))
-               ((not (alchemist-utils--empty-string-p module))
-                module)
-               (t
-                expr))))
-    (alchemist-help--execute expr)))
-
-(defun alchemist-help--elixir-modules-to-list (str)
-  (let* ((modules (split-string str))
-         (modules (mapcar (lambda (m)
-                            (when (string-match-p "Elixir\\." m)
-                              (replace-regexp-in-string "Elixir\\." "" m))) modules))
-         (modules (delete nil modules))
-         (modules (cl-sort modules 'string-lessp :key 'downcase))
-         (modules (delete-dups modules)))
-    modules))
 
 (defvar alchemist-help-minor-mode-map
   (let ((map (make-sparse-keymap)))
