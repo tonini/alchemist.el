@@ -128,8 +128,10 @@
            "]-keys")))
 
 (defun alchemist-help-search-at-point ()
-  "Search through `alchemist-help' with the expression under the cursor,
-or the actively marked region."
+  "Search through `alchemist-help' with the expression under the cursor.
+
+If the buffer local variable `mark-active' is non-nil,
+the actively marked region will be used for passing to `alchemist-help'."
   (interactive)
   (if mark-active
       (alchemist-help--search-marked-region (region-beginning) (region-end))
