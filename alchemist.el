@@ -142,7 +142,7 @@ Key bindings:
   "Alchemist mode menu."
   '("Alchemist"
     ("Goto"
-     ["Jump to definiton at point" alchemist-goto-definition-at-point]
+     ["Jump to definition at point" alchemist-goto-definition-at-point]
      ["Jump back" alchemist-goto-jump-back])
     ("Evaluate"
      ["Evaluate current line" alchemist-eval-current-line]
