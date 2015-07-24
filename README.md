@@ -318,7 +318,6 @@ Hit <kbd>?</kbd> to get the keybinding summary for the `alchemist-help-minor-mod
 |------------|-------------------------------------------------|
 |<kbd>q</kbd>| Quit `*elixir help*` buffer window              |
 |<kbd>e</kbd>| `alchemist-help-search-at-point`                |
-|<kbd>m</kbd>| `alchemist-help-search-marked-region`           |
 |<kbd>s</kbd>| `alchemist-help`                                |
 |<kbd>h</kbd>| `alchemist-help-history`                        |
 |<kbd>?</kbd>| `alchemist-help-minor-mode-key-binding-summary` |
