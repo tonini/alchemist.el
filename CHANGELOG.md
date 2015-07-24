@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.4.0 (unreleased)
+
+### Enhancements
+
+  * [Help] The function `alchemist-help-search-marked-region` is deprecated. The functionality is also handlet by the `alchemist-help-search-at-point`.
+  * [Server] Display status of the current Alchemist server. `alchemist-server-status`
+
+### Changes
+
+  * [Mix] Removed all the not keybinding interactive functionality in favore of `alchemist-mix` (instantly call).
+
 ## v1.3.0 (2015-07-20)
 
 ### Enhancements
