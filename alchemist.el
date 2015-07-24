@@ -5,7 +5,7 @@
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
 ;; URL: http://www.github.com/tonini/alchemist.el
-;; Version: 1.3.0
+;; Version: 1.4.0-cvs
 ;; Package-Requires: ((elixir-mode "2.2.5") (emacs "24.4") (company "0.8.0"))
 ;; Keywords: languages, mix, elixir, elixirc, hex
 
@@ -61,7 +61,7 @@
   "Hook which enables `alchemist-mode'"
   (alchemist-mode 1))
 
-(defvar alchemist--version "1.3.0")
+(defvar alchemist--version "1.4.0-cvs")
 
 ;;;###autoload
 (defun alchemist-version (&optional show-version)
