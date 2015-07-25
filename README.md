@@ -38,7 +38,6 @@ Alchemist comes with a bunch of **features**, which are:
   - [IEx setup](#iex-setup)
   - [Execute setup](#execute-setup)
   - [Compile setup](#compile-setup)
-  - [Modeline setup](#modeline-setup)
   - [Keybindings](#keybindings)
   - [Testing-Mode](#testing-mode)
   - [Hooks](#hooks)
@@ -463,16 +462,6 @@ The tests are reported in the `alchemist-test-report-mode`, which have the follo
 |<kbd>M-P</kbd>| Jump to the previous stacktrace file in the test report. `alchemist-test-previous-stacktrace-file` |
 |<kbd>C-c C-k</kbd>| Interrupt the current running report process. `alchemist-report-interrupt-current-process` |
 |<kbd>q</kbd>| Close the test report window |
-
-## Modeline
-
-By default the status of `alchemist-mix-test`, `alchemist-compile` etc will be
-represented via the colorized `mode-name`. In our case that will be the `elixir-mode`.
-
-If you don't like that just set the `alchemist-test-status-modeline` variable
-via `(setq alchemist-test-status-modeline nil)` or `M-x customize-group [RET] alchemist-test`
-
-![Alchemist Build Status](images/build_status.png)
 
 ## Keymap
 
