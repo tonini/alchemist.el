@@ -91,7 +91,7 @@ sum = fn (a, b) ->
 end
 sum.(21, 33)")
     (alchemist-eval-buffer)
-    (wait 1))
+    (wait 3))
   (should (equal "54" (capture-eval-popup-content))))
 
 (ert-deftest evaluate-code-in-current-buffer-and-print-inline ()
