@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Eval] Introduce an evaluation result popup buffer which.
   * [Help] The function `alchemist-help-search-marked-region` is deprecated. The functionality is also handlet by the `alchemist-help-search-at-point`.
   * [Server] Display status of the current Alchemist server. `alchemist-server-status`
 
