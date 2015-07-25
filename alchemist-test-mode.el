@@ -48,6 +48,12 @@ formatted with the `alchemist-test--failed-face' face, to symbolize failing test
   :type 'boolean
   :group 'alchemist-test)
 
+(defcustom alchemist-test-ask-about-save t
+  "Non-nil means 'alchemist-test-excute` asks which buffers to save before running.
+Otherwise, it saves all modified buffers without asking."
+  :type 'boolean
+  :group 'alchemist-test)
+
 (defvar alchemist-test--last-run-status "")
 
 (defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
@@ -211,9 +217,14 @@ macro) while the values are the position at which the test matched."
   (setq-local truncate-lines t)
   (setq-local electric-indent-chars nil))
 
+(defun alchemist-test-save-buffers ()
+  "Save some modified file-visiting buffers."
+  (save-some-buffers (not alchemist-test-ask-about-save) nil))
+
 (defun  alchemist-test-execute (command-list)
   (message "Testing...")
   (let* ((command (mapconcat 'concat (alchemist-utils--flatten command-list) " ")))
+    (alchemist-test-save-buffers)
     (alchemist-report-run command
                           "alchemist-test-report"
                           alchemist-test-report-buffer-name

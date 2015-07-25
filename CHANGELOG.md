@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Test] Before running tests ask for saving changed file buffers. (control variable: `alchemist-test-ask-about-save`)
   * [Eval] Introduce an evaluation result popup buffer which holds the evaluation results.
   * [Help] The function `alchemist-help-search-marked-region` is deprecated. The functionality is also handlet by the `alchemist-help-search-at-point`.
   * [Server] Display status of the current Alchemist server. `alchemist-server-status`

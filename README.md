@@ -207,6 +207,18 @@ through the variable.
 (setq alchemist-test-mode-highlight-tests nil) ;; default t
 ```
 
+* Don't ask to save changed file buffers before running tests.
+
+```el
+(setq alchemist-test-ask-about-save nil)
+```
+
+* Don't change the color of the `mode-name` when test run failed or passed.
+
+```el
+(setq alchemist-test-status-modeline nil)
+```
+
 ### Hooks
 
 * Run the whole test suite with `alchemist-mix-test` after saving a buffer.
