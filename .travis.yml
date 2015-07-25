@@ -13,5 +13,4 @@ before_install:
 install:
   - cask install
 script:
-  - make info
-  - make test
+  - make
