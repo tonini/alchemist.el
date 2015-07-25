@@ -253,7 +253,7 @@ will be started instead."
   (setq alchemist-server--output nil)
   (alchemist-server--start)
   (setq alchemist-server-eval-callback (lambda (string)
-                                         (message "%s" string)))
+                                         (alchemist-eval-popup-buffer string)))
   (set-process-filter (alchemist-server--process) #'alchemist-server-eval-filter)
   (process-send-string (alchemist-server--process) (format "EVAL %s\n" exp)))
 
@@ -269,7 +269,7 @@ will be started instead."
   (setq alchemist-server--output nil)
   (alchemist-server--start)
   (setq alchemist-server-eval-callback (lambda (string)
-                                         (message "%s" string)))
+                                         (alchemist-eval-popup-buffer string)))
   (set-process-filter (alchemist-server--process) #'alchemist-server-eval-quoted-filter)
   (process-send-string (alchemist-server--process) (format "QUOTE %s\n" exp)))
 

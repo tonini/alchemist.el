@@ -124,7 +124,6 @@
   "Run `alchemist-help' with the marked region.
 Argument BEGIN where the mark starts.
 Argument END where the mark ends."
-  (interactive "r")
   (let ((expr (buffer-substring-no-properties begin end)))
     (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
 

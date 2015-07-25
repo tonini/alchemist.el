@@ -424,6 +424,7 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 |<kbd>C-c a v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
 |<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
 |<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
+|<kbd>C-c a v !</kbd>| Quit the Elixir evaluation buffer popup. `alchemist-eval-close-popup`.|
 
 ## Testing
 

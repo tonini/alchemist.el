@@ -131,7 +131,8 @@ Key bindings:
   (define-key map (kbd "v q") 'alchemist-eval-buffer)
   (define-key map (kbd "v w") 'alchemist-eval-print-buffer)
   (define-key map (kbd "v e") 'alchemist-eval-quoted-buffer)
-  (define-key map (kbd "v r") 'alchemist-eval-print-quoted-buffer))
+  (define-key map (kbd "v r") 'alchemist-eval-print-quoted-buffer)
+  (define-key map (kbd "v !") 'alchemist-eval-close-popup))
 
 (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
 (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)

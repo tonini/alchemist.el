@@ -27,14 +27,19 @@
 
 (require 'test-helper)
 
+(defun capture-eval-popup-content ()
+  (with-current-buffer (get-buffer alchemist-eval-buffer-name)
+    (buffer-substring-no-properties (point-min) (point-max))))
+
 (ert-deftest evaluate-code-of-current-line ()
   "Evalute code on current line and output result."
-  (should (equal "2\n" (capture-message (with-temp-buffer
-                                          (alchemist-mode)
-                                          (insert "1 + 1")
-                                          (goto-char (point-min))
-                                          (alchemist-eval-current-line)
-                                          (wait 1))))))
+  (with-temp-buffer
+    (alchemist-mode)
+    (insert "1 + 1")
+    (goto-char (point-min))
+    (alchemist-eval-current-line)
+    (wait 1))
+  (should (equal "2" (capture-eval-popup-content))))
 
 (ert-deftest evaluate-code-of-current-line-and-print-inline ()
   "Evalute code on current line and print result inline."
@@ -49,13 +54,14 @@
 
 (ert-deftest evaluate-code-of-marked-region ()
   "Evalute code on region and output result."
-  (should (equal "12\n" (capture-message (with-temp-buffer
-                                           (alchemist-mode)
-                                           (insert "a = 10
-                                                    b = 2
-                                                    a + b")
-                                           (alchemist-eval-region (point-min) (point-max))
-                                           (wait 1))))))
+  (with-temp-buffer
+    (alchemist-mode)
+    (insert "a = 10
+b = 2
+a + b")
+    (alchemist-eval-region (point-min) (point-max))
+    (wait 1))
+  (should (equal "12" (capture-eval-popup-content))))
 
 (ert-deftest evaluate-code-of-marked-region-and-print-inline ()
   "Evalute code on region and print result inline."
@@ -77,15 +83,16 @@ a + b")
 
 (ert-deftest evaluate-code-in-current-buffer ()
   "Evalute code in current buffer."
-  (should (equal "54\n" (capture-message (with-temp-buffer
-                                         (alchemist-mode)
-                                         (insert "
+  (with-temp-buffer
+    (alchemist-mode)
+    (insert "
 sum = fn (a, b) ->
   a + b
 end
 sum.(21, 33)")
-                                         (alchemist-eval-buffer)
-                                         (wait 3))))))
+    (alchemist-eval-buffer)
+    (wait 1))
+  (should (equal "54" (capture-eval-popup-content))))
 
 (ert-deftest evaluate-code-in-current-buffer-and-print-inline ()
   "Evalute code in current buffer and print result inline."

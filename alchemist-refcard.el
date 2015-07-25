@@ -124,7 +124,8 @@
                     (alchemist-refcard--build-tabulated-row "alchemist-eval-buffer")
                     (alchemist-refcard--build-tabulated-row "alchemist-eval-print-buffer")
                     (alchemist-refcard--build-tabulated-row "alchemist-eval-quoted-buffer")
-                    (alchemist-refcard--build-tabulated-row "alchemist-eval-print-quoted-buffer"))))
+                    (alchemist-refcard--build-tabulated-row "alchemist-eval-print-quoted-buffer")
+                    (alchemist-refcard--build-tabulated-row "alchemist-eval-close-popup"))))
     (alchemist-mode -1) ;; disable it after getting the current keybindings
     rows))
 

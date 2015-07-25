@@ -37,6 +37,15 @@
   :prefix "alchemist-eval-"
   :group 'alchemist)
 
+(defvar alchemist-eval-buffer-name "*alchemist-eval-mode*"
+  "Name of the Elixir evaluation buffer.")
+
+(defvar alchemist-eval-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "q") #'quit-window)
+    map)
+  "Keymap for `alchemist-eval-minor-mode'.")
+
 ;; Private functions
 
 (defun alchemist-eval--insert (string)
@@ -160,6 +169,29 @@
   (interactive)
   (let ((string (buffer-substring-no-properties (point-min) (point-max))))
     (alchemist-eval--quote-expression-and-print string)))
+
+(defun alchemist-eval-close-popup ()
+  "Quit the evaluation buffer window."
+  (interactive)
+  (quit-windows-on alchemist-eval-buffer-name))
+
+(defun alchemist-eval-popup-buffer (eval)
+  (let ((buffer (get-buffer-create alchemist-eval-buffer-name)))
+    (with-current-buffer buffer
+      (with-current-buffer-window
+       buffer (cons 'display-buffer-below-selected
+                    '((window-height . fit-window-to-buffer)))
+       (lambda (window _value))
+      (let ((inhibit-read-only t))
+        (insert eval)
+        (goto-char (point-min))
+        (elixir-mode)
+        (alchemist-eval-minor-mode))))))
+
+(define-minor-mode alchemist-eval-minor-mode
+  "Minor mode for displaying Elixir evaluation results."
+  :group 'alchemist-eval
+  :keymap alchemist-eval-minor-mode-map)
 
 (provide 'alchemist-eval)
 
