@@ -483,7 +483,7 @@ Just `M-x alchemist-refcard RET`
 If you hit any problems, please first ensure that you are using the latest version of this code,
 and that you have updated your packages to the most recent available versions.
 
-* To report bugs or file feature requests: please use the [issue tracker on Github](https://github.com/tonini/alchemist.el/issues).
+* To report bugs or feature requests: please use the [issue tracker on Github](https://github.com/tonini/alchemist.el/issues).
 * To talk about the project with people in real time: please join the #elixir-emacs channel on [IRC](http://de.wikipedia.org/wiki/Internet_Relay_Chat).
 
 ## Contributing
