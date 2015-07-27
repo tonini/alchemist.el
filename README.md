@@ -61,7 +61,7 @@ Alchemist comes with a bunch of **features**, which are:
 - [Modeline](#modeline)
 - [Keymap](#keymap)
   - [Refcards](#refcards)
-- [Getting help](#getting help)
+- [Getting help](#getting-help)
 - [Contributing](#contributing)
 - [License](#license)
 
