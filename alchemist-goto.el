@@ -227,9 +227,9 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto--fetch-symbol-definitions ()
   (alchemist-goto--search-for-symbols "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s.*"))
 
-(defvar alchemist-goto--symbol-def-extract-regex
+(defconst alchemist-goto--symbol-def-extract-regex
   "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
-(defvar alchemist-goto--symbol-def-regex
+(defconst alchemist-goto--symbol-def-regex
   "^[[:space:]]*\\(defmodule\\|defmacrop?\\|defp?\\)")
 
 (defun alchemist-goto--extract-symbol (str)

@@ -59,8 +59,10 @@ Otherwise, it saves all modified buffers without asking."
 (defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
   "Name of the test report buffer.")
 
-(defvar alchemist-test--failing-files-regex "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
-(defvar alchemist-test--stacktrace-files-regex "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\).*")
+(defconst alchemist-test--failing-files-regex
+  "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
+(defconst alchemist-test--stacktrace-files-regex
+  "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\).*")
 
 ;; Faces
 
@@ -116,7 +118,7 @@ Otherwise, it saves all modified buffers without asking."
     map)
   "Keymap for `alchemist-test-mode'.")
 
-(defvar alchemist-test-mode--test-regex
+(defconst alchemist-test-mode--test-regex
   (let ((whitespace-opt "[[:space:]]*")
         (whitespace "[[:space:]]+"))
     (concat "\\(^" whitespace-opt "test" whitespace "\\(?10:.+\\)" whitespace "do" whitespace-opt "$"
