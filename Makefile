@@ -30,8 +30,8 @@ test_server:
 	$(ELIXIR) test/server/server_test.exs
 
 test_doc:
-	@ echo "\n$(INFO_COLOR)Run doc tests: $(NO_COLOR)\n"
-	$(ELIXIR) test/server/doc_test.exs
+	@ echo "\n$(INFO_COLOR)Run documentation tests: $(NO_COLOR)\n"
+	$(ELIXIR) test/server/documentation_test.exs
 
 cask:
 	@ echo "\n$(INFO_COLOR)Install package dependencies: $(NO_COLOR)\n"

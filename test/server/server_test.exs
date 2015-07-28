@@ -49,6 +49,39 @@ defmodule ServerTest do
     """
   end
 
+  test "Expression completion with context" do
+    assert send_signal("COMPLETE-WITH-CONTEXT ;[List];[]") =~ """
+    cmp:foldl/3
+    cmp:foldr/3
+    cmp:insert_at/3
+    cmp:keydelete/3
+    cmp:keyfind/4
+    cmp:keymember?/3
+    cmp:keyreplace/4
+    cmp:keysort/2
+    cmp:keystore/4
+    cmp:last/1
+    cmp:module_info/1
+    cmp:replace_at/3
+    cmp:to_atom/1
+    cmp:to_existing_atom/1
+    cmp:to_float/1
+    cmp:to_integer/1
+    cmp:to_list/1
+    cmp:to_string/1
+    cmp:to_tuple/1
+    cmp:update_at/3
+    cmp:wrap/1
+    cmp:zip/1
+    cmp:
+    cmp:clear/0
+    cmp:flush/0
+    cmp:pwd/0
+    cmp:respawn/0
+    cmp:cd/1
+    """
+  end
+
   test "Getting the definition source file information of code" do
     assert send_signal("SOURCE List,delete") =~ "/lib/elixir/lib/list.ex"
   end
