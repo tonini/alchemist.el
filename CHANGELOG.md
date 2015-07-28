@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.4.0 (unreleased)
+
+### Bug fixes
+
+  * [Help] Continue with help search although no candidates was found.
+
 ## v1.3.1 (2015-07-26)
 
 ### Enhancements
