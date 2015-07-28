@@ -12,7 +12,7 @@ NO_COLOR=\033[0m
 INFO_COLOR=\033[2;32m
 STAT_COLOR=\033[2;33m
 
-all: test test_server
+all: test test_server test_doc
 
 info:
 	@ echo "\n$(INFO_COLOR)Installed Emacs info: $(NO_COLOR)\n"
@@ -28,6 +28,11 @@ unit:
 test_server:
 	@ echo "\n$(INFO_COLOR)Run server tests: $(NO_COLOR)\n"
 	$(ELIXIR) test/server/server_test.exs
+
+test_doc:
+	@ echo "\n$(INFO_COLOR)Run documentation tests: $(NO_COLOR)\n"
+	$(ELIXIR) test/server/documentation_test.exs
+
 cask:
 	@ echo "\n$(INFO_COLOR)Install package dependencies: $(NO_COLOR)\n"
 	@ echo "$(STAT_COLOR)[cask install]$(NO_COLOR)"
@@ -48,4 +53,4 @@ packageclean:
 	@ echo "\n$(INFO_COLOR)Clean Alchemist Package: $(NO_COLOR)\n"
 	rm dist/$(PACKAGE_NAME).tar
 
-.PHONY: info test test_server cask clean clean-elc test-elc
+.PHONY: info test test_server test_doc cask clean clean-elc test-elc

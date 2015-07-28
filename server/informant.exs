@@ -28,6 +28,7 @@ defmodule Alchemist.Informant do
 
   def get_modules do
     Application.get_env(:"alchemist.el", :loaded_modules) ++ all_applications_modules
+    |> Enum.uniq
     |> Enum.filter(fn(module) -> moduledoc?(module) || false end)
   end
 
@@ -59,7 +60,8 @@ defmodule Alchemist.Informant do
 
   defp moduledoc?(module) when is_atom(module) do
     case Code.get_docs(module, :moduledoc) do
-      {_line, _moduledoc} -> true
+      {_line, moduledoc} ->
+        is_binary moduledoc
       _ -> false
     end
   end

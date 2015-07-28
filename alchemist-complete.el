@@ -116,7 +116,9 @@
          (candidates (if candidates
                          (alchemist-complete--build-candidates (cl-remove-duplicates candidates))
                        '())))
-    candidates))
+    (cl-remove-duplicates candidates
+                   :test (lambda (x y) (or (null y) (string= x y)))
+                   :from-end t)))
 
 (defun alchemist-complete--completing-prompt (initial completing-collection)
   (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))

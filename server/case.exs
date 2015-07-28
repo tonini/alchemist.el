@@ -1,7 +1,10 @@
+Code.require_file "documentation.exs", __DIR__
+
 defmodule Alchemist.Case do
 
   alias Alchemist.Completer
   alias Alchemist.Informant
+  alias Alchemist.Documentation
 
   defmodule Complete do
     def process! do
@@ -27,11 +30,16 @@ defmodule Alchemist.Case do
 
       Application.put_env(:"alchemist.el", :aliases, aliases)
 
-      Enum.each modules, fn(module) ->
+      funcs = for module <- modules do
         Informant.get_functions(module, hint)
-        |> Enum.map &IO.puts('cmp:' ++ &1)
       end
-      Completer.run(hint)
+      |> List.flatten
+      |> Enum.map &Kernel.to_string/1
+
+      completes = Completer.run(hint) |> Enum.map &Kernel.to_string/1
+
+      funcs ++ completes
+      |> Enum.uniq
       |> Enum.map &IO.puts('cmp:' ++ &1)
 
       IO.puts "END-OF-COMPLETE-WITH-CONTEXT"
@@ -47,8 +55,16 @@ defmodule Alchemist.Case do
 
   defmodule Doc do
     def process!(exp) do
-      Code.eval_string("import IEx.Helpers \nApplication.put_env(:iex, :colors, [enabled: true])\nh(#{exp})", [], __ENV__)
+      Documentation.search(exp)
       IO.puts "END-OF-DOC"
+    end
+
+    def process_with_context!(exp) do
+      [search, modules] = String.split(exp, ";", parts: 2)
+      {modules, _} = Code.eval_string(modules)
+
+      Documentation.search(search, modules)
+      IO.puts "END-OF-DOC-WITH-CONTEXT"
     end
   end
 
