@@ -297,7 +297,7 @@ will be started instead."
                                          (if candidates
                                              (let* ((search (alchemist-complete--completing-prompt search candidates)))
                                                (alchemist-server-help-without-complete search))
-                                           (message "No documentation found for '%s'" search))))
+                                           (alchemist-server-help-without-complete search))))
   (set-process-filter (alchemist-server--process) #'alchemist-server-complete-filter)
   (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" search)))
 
