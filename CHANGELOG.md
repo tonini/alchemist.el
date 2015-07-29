@@ -2,6 +2,10 @@
 
 ## v1.4.0 (unreleased)
 
+### Enhancements
+
+  * [Test] Control the output of compilation information inside the test report. (variable `alchemist-test-display-compilation-output`)
+
 ### Bug fixes
 
   * [Help] Continue with help search although no candidates was found.
