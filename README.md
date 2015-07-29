@@ -218,6 +218,12 @@ through the variable.
 (setq alchemist-test-status-modeline nil)
 ```
 
+* Show compilation output in test report.
+
+```el
+(setq alchemist-test-display-compilation-output t)
+```
+
 ### Hooks
 
 * Run the whole test suite with `alchemist-mix-test` after saving a buffer.

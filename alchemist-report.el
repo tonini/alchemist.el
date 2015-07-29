@@ -90,11 +90,13 @@ Argument for the exit function is the STATUS of the finished process."
   "Return non-nil if the last process successfully finished."
   (when (string-prefix-p "finished" alchemist-report--last-run-status) t))
 
-(defun alchemist-report--ansi-color-insertion-filter (process output)
-  "Process filter for report buffers.
-Just apply ansi escape sequences to OUTPUT of PROCESS."
+(defun alchemist-report-filter (process output)
+  "Process filter for report buffers."
   (with-current-buffer (process-buffer process)
     (let* ((buffer-read-only nil)
+           (output (if (string= (process-name process) alchemist-test-report-process-name)
+                       (alchemist-test-clean-compilation-output output)
+                     output))
            (moving (= (point) (process-mark process))))
       (save-excursion
         (goto-char (process-mark process))
@@ -159,7 +161,7 @@ These functions will be called when PROCESS-NAME is finished."
     (when on-render
       (setq alchemist-report-on-render-function on-render))
     (set-process-sentinel process 'alchemist-report--sentinel)
-    (set-process-filter process 'alchemist-report--ansi-color-insertion-filter)
+    (set-process-filter process 'alchemist-report-filter)
     (alchemist-report-activate-mode mode buffer)
     (alchemist-report-display-buffer buffer)
     (alchemist-report-update-mode-name process)))

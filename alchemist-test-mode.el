@@ -40,6 +40,12 @@ be highlighted with more significant font faces."
   :type 'boolean
   :group 'alchemist-test-mode)
 
+(defcustom alchemist-test-display-compilation-output nil
+  "if Non-nil, compilation informations will be displayed
+in the test report buffer."
+  :type 'boolean
+  :group 'alchemist-test-mode)
+
 (defcustom alchemist-test-status-modeline t
   "if Non-nil, the face of local `mode-name' variable will change with test run status.
 
@@ -56,8 +62,11 @@ Otherwise, it saves all modified buffers without asking."
 
 (defvar alchemist-test--last-run-status "")
 
-(defvar alchemist-test-report-buffer-name "*alchemist-test-report*"
+(defconst alchemist-test-report-buffer-name "*alchemist-test-report*"
   "Name of the test report buffer.")
+
+(defconst alchemist-test-report-process-name "alchemist-test-process"
+  "Name of the test report process.")
 
 (defconst alchemist-test--failing-files-regex
   "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
@@ -223,12 +232,21 @@ macro) while the values are the position at which the test matched."
   "Save some modified file-visiting buffers."
   (save-some-buffers (not alchemist-test-ask-about-save) nil))
 
-(defun  alchemist-test-execute (command-list)
+(defun alchemist-test-clean-compilation-output (output)
+  (if (not alchemist-test-display-compilation-output)
+      (with-temp-buffer
+        (insert output)
+        (delete-matching-lines "^Compiled .+" (point-min) (point-max))
+        (delete-matching-lines "^Generated .+" (point-min) (point-max))
+        (buffer-substring-no-properties (point-min) (point-max)))
+  output))
+
+(defun alchemist-test-execute (command-list)
   (message "Testing...")
   (let* ((command (mapconcat 'concat (alchemist-utils--flatten command-list) " ")))
     (alchemist-test-save-buffers)
     (alchemist-report-run command
-                          "alchemist-test-report"
+                          alchemist-test-report-process-name
                           alchemist-test-report-buffer-name
                           'alchemist-test-report-mode
                           #'alchemist-test--handle-exit
