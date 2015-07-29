@@ -72,7 +72,9 @@
       (buffer-substring-no-properties p1 p2))))
 
 (defun alchemist-help--execute (search)
-  (alchemist-server-help-with-complete search))
+  (if (not (alchemist-utils--empty-string-p search))
+      (alchemist-server-help-with-complete search)
+    (message "No documentation for [%s] found." search)))
 
 (defun alchemist-help--execute-without-complete (search)
   (alchemist-server-help-without-complete search))
