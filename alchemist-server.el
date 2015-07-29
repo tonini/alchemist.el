@@ -106,24 +106,7 @@ will be started instead."
                          "alchemist-server")))
     process-name))
 
-(defun alchemist-server--complete-with-context (exp)
-  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
-                   (alchemist-goto--get-context-modules)))
-         (aliases (alchemist-utils--prepare-aliases-for-elixir
-                   (alchemist-goto--alises-of-current-buffer))))
-    (cond
-     ((not (string= modules "[]"))
-      (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter-with-context)
-      (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s;%s;%s\n"
-                                                               exp
-                                                               modules
-                                                               aliases)))
-     (t
-      (alchemist-server--complete exp)))))
-
-(defun alchemist-server--complete (exp)
-  (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
-  (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
+;; Filters
 
 (defun alchemist-server-eval-filter (_process output)
   (setq alchemist-server--output (cons output alchemist-server--output))
@@ -236,6 +219,29 @@ will be started instead."
                (command (read-shell-command "mix " (concat selected-task " "))))
           (alchemist-mix-execute (list command) current-prefix-arg)))))
 
+;; Server calls
+
+(defun alchemist-server--complete-with-context (exp)
+  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+                   (alchemist-goto--get-context-modules)))
+         (aliases (alchemist-utils--prepare-aliases-for-elixir
+                   (alchemist-goto--alises-of-current-buffer))))
+    (cond
+     ((not (string= modules "[]"))
+      (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter-with-context)
+      (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s;%s;%s\n"
+                                                               exp
+                                                               modules
+                                                               aliases)))
+     (t
+      (alchemist-server--complete exp)))))
+
+(defun alchemist-server--complete (exp)
+  (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
+  (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
+
+
+
 (defun alchemist-server-goto (module function expr)
   (setq alchemist-server--output nil)
   (alchemist-server--start)
@@ -346,7 +352,6 @@ will be started instead."
 
 (defun alchemist-server-help-without-complete (search)
   (setq alchemist-help-current-search-text search)
-  (setq alchemist-server--output nil)
   (alchemist-server--start)
   (setq alchemist-server--output nil)
   (let ((modules (alchemist-utils--prepare-modules-for-elixir
