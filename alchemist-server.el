@@ -202,10 +202,17 @@ will be started instead."
                         modules
                         nil
                         nil
-                        nil)))
-          (alchemist-help--execute (if (string-match-p "\\.$" search)
-                                       search
-                                     (concat search ".")))))))
+                        nil))
+               (module (alchemist-goto--extract-module search))
+               (function (alchemist-goto--extract-function search))
+               (search (cond
+                        ((and module function)
+                         search)
+                        (module
+                         (concat module "."))
+                        (t
+                         search))))
+          (alchemist-help--execute search)))))
 
 (defun alchemist-server-goto-filter (_process output)
   (with-local-quit
