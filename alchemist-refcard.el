@@ -28,6 +28,11 @@
 (require 'cl-lib)
 (require 'tabulated-list)
 
+;; Tell the byte compiler to assume that functions are defined
+(eval-when-compile
+  (defvar alchemist--version nil)
+  (declare-function alchemist-mode "alchemist.el"))
+
 (defgroup alchemist-refcard nil
   "Generate a refcard of alchemist functionality."
   :prefix "alchemist-"

@@ -180,12 +180,16 @@ declaration has been found."
     (or (and (nth 3 (save-excursion
                       (let ((pos (point)))
                         (when complete
-                          (end-of-buffer))
+                          (goto-char (point-max))
+                          (window-end nil t)
+                          (recenter -3))
                         (parse-partial-sexp 1 pos))))
              (nth 8 (save-excursion
                       (let ((pos (point)))
                         (when complete
-                          (end-of-buffer))
+                          (goto-char (point-max))
+                          (window-end nil t)
+                          (recenter -3))
                         (parse-partial-sexp 1 pos)))))
         (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
              (match-beginning 0)))))

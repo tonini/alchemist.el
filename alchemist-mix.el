@@ -29,6 +29,10 @@
 (require 'alchemist-project)
 (require 'alchemist-test-mode)
 
+;; Tell the byte compiler to assume that functions are defined
+(eval-when-compile
+  (declare-function alchemist-server--mix "alchemist-server.el"))
+
 (defgroup alchemist-mix nil
   "Emacs integration for Elixir's mix."
   :prefix "alchemist-mix-"
@@ -162,7 +166,7 @@ arg is set."
     (if (and process (eq (process-status process) 'run))
         (with-current-buffer buffer
           (let ((inhibit-read-only t))
-            (end-of-buffer)
+            (goto-char (point-max))
             (insert (concat input "\n\n"))
             (set-marker (process-mark process) (point)))
           (comint-send-string process (concat input "\n")))

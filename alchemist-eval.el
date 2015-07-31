@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'elixir-mode)
+
 ;; Tell the byte compiler to assume that functions are defined
 (eval-when-compile
   (declare-function alchemist-server-eval "alchemist-server.el")

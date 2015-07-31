@@ -12,14 +12,18 @@ NO_COLOR=\033[0m
 INFO_COLOR=\033[2;32m
 STAT_COLOR=\033[2;33m
 
-all: test test_server test_doc
+all: test
 
 info:
 	@ echo "\n$(INFO_COLOR)Installed Emacs info: $(NO_COLOR)\n"
 	@ echo "  $(STAT_COLOR)[PATH]$(NO_COLOR)    = `which $(EMACS)`"
 	@ echo "  $(STAT_COLOR)[VERSION]$(NO_COLOR) = $(EMACS_VERSION)"
 
-test:	unit
+test:	clean-elc
+	${MAKE} unit
+	${MAKE} compile
+	${MAKE} unit
+	${MAKE} clean-elc
 
 unit:
 	@ echo "\n$(INFO_COLOR)Run tests: $(NO_COLOR)\n"
@@ -40,10 +44,17 @@ cask:
 	@ echo "$(STAT_COLOR)[cask update]$(NO_COLOR)"
 	@ echo `$(CASK) update`
 
+compile:
+	${CASK} build
+
 clean:
 	@ echo "\n$(INFO_COLOR)Clean environment: $(NO_COLOR)\n"
 	rm -f $(OBJECTS)
 	rm -rf .cask
+
+clean-elc:
+	@ echo "\n$(INFO_COLOR)Clean *.elc files: $(NO_COLOR)\n"
+	rm -f *.elc
 
 package:
 	@ echo "\n$(INFO_COLOR)Package Alchemist: $(NO_COLOR)\n"

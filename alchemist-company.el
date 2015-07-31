@@ -26,7 +26,15 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'alchemist-complete)
 (require 'company)
+
+;; Tell the byte compiler to assume that functions are defined
+(eval-when-compile
+  (declare-function alchemist-help--execute-without-complete "alchemist-help.el")
+  (declare-function alchemist-help--exp-at-point "alchemist-help.el")
+  (declare-function alchemist-goto--open-definition "alchemist-goto.el")
+  (declare-function alchemist-server-complete-candidates "alchemist-server.el"))
 
 (defgroup alchemist-company nil
   "Elixir company-mode backend."
@@ -65,8 +73,8 @@
     (set 'company-tooltip-align-annotations t))
   (cl-case command
     (interactive (company-begin-backend 'alchemist-company))
-    (init (when (or (eq major-mode 'elixir-mode)
-                    (string= mode-name "Alchemist-IEx"))))
+    (init (or (eq major-mode 'elixir-mode)
+              (string= mode-name "Alchemist-IEx")))
     (prefix (and (or (eq major-mode 'elixir-mode)
                      (string= mode-name "Alchemist-IEx"))
                  (alchemist-help--exp-at-point)))

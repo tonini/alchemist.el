@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'alchemist-utils)
+(require 'alchemist-report)
 
 (defgroup alchemist-compile nil
   "Elixir compilation functionality."

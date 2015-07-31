@@ -35,6 +35,7 @@
   :group 'alchemist)
 
 (defvar alchemist-server-company-callback nil)
+(defvar alchemist-server--last-completion-exp nil)
 
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))

@@ -27,6 +27,7 @@
 
 (require 'alchemist-utils)
 (require 'alchemist-test-mode)
+(require 'alchemist-report)
 
 (defgroup alchemist-execute nil
   "Elixir's script execution integration."
