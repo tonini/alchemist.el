@@ -28,6 +28,7 @@
 (require 'cl-lib)
 (require 'etags)
 (require 'alchemist-utils)
+(require 'alchemist-scope)
 
 (eval-when-compile
   ;; Tell the byte compiler to assume that functions are defined
@@ -177,19 +178,15 @@ declaration has been found."
 (defun alchemist-goto--string-at-point-p (&optional complete)
   "Return non-nil if cursor is at a string."
   (save-excursion
+    (window-end nil t)
+    ;; (recenter -3)
     (or (and (nth 3 (save-excursion
                       (let ((pos (point)))
-                        (when complete
-                          (goto-char (point-max))
-                          (window-end nil t)
-                          (recenter -3))
+                        (when complete)
                         (parse-partial-sexp 1 pos))))
              (nth 8 (save-excursion
                       (let ((pos (point)))
-                        (when complete
-                          (goto-char (point-max))
-                          (window-end nil t)
-                          (recenter -3))
+                        (when complete)
                         (parse-partial-sexp 1 pos)))))
         (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
              (match-beginning 0)))))
