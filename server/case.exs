@@ -10,21 +10,15 @@ defmodule Alchemist.Case do
     def process! do
       Completer.run('')
       |> Enum.map &IO.puts('cmp:' ++ &1)
-      print_end_of_complete_signal
-    end
-
-    def process!(hint) do
-      Completer.run(hint)
-      |> Enum.map &IO.puts('cmp:' ++ &1)
-      print_end_of_complete_signal
-    end
-
-    defp print_end_of_complete_signal do
       IO.puts "END-OF-COMPLETE"
     end
 
-    def process_with_context!(hint) do
+    def process!(hint) do
       [hint, modules, aliases] = String.split(hint, ";", parts: 3)
+      process!(hint, modules, aliases)
+    end
+
+    def process!(hint, modules, aliases) do
       {modules, _} = Code.eval_string(modules)
       {aliases, _} = Code.eval_string(aliases)
 
@@ -42,7 +36,7 @@ defmodule Alchemist.Case do
       |> Enum.uniq
       |> Enum.map &IO.puts('cmp:' ++ &1)
 
-      IO.puts "END-OF-COMPLETE-WITH-CONTEXT"
+      IO.puts "END-OF-COMPLETE"
     end
   end
 
@@ -55,16 +49,19 @@ defmodule Alchemist.Case do
 
   defmodule Doc do
     def process!(exp) do
+      [exp, modules] = String.split(exp, ";", parts: 2)
+      {modules, _} = Code.eval_string(modules)
+      process!(exp, modules)
+    end
+
+    def process!(exp, []) do
       Documentation.search(exp)
       IO.puts "END-OF-DOC"
     end
 
-    def process_with_context!(exp) do
-      [search, modules] = String.split(exp, ";", parts: 2)
-      {modules, _} = Code.eval_string(modules)
-
-      Documentation.search(search, modules)
-      IO.puts "END-OF-DOC-WITH-CONTEXT"
+    def process!(exp, modules) do
+      Documentation.search(exp, modules)
+      IO.puts "END-OF-DOC"
     end
   end
 

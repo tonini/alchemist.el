@@ -27,12 +27,13 @@
 
 (require 'cl-lib)
 (require 'alchemist-complete)
+(require 'alchemist-scope)
 (require 'company)
 
 ;; Tell the byte compiler to assume that functions are defined
 (eval-when-compile
-  (declare-function alchemist-help--execute-without-complete "alchemist-help.el")
   (declare-function alchemist-help--exp-at-point "alchemist-help.el")
+  (declare-function alchemist-help--execute "alchemist-help.el")
   (declare-function alchemist-goto--open-definition "alchemist-goto.el")
   (declare-function alchemist-server-complete-candidates "alchemist-server.el"))
 
@@ -48,12 +49,16 @@
   :type 'boolean
   :group 'alchemist-company)
 
+(defvar alchemist-company-callback nil)
+(defvar alchemist-company-filter-output nil)
+(defvar alchemist-company-last-completion nil)
+
 (defun alchemist-company--show-documentation ()
   (interactive)
   (company--electric-do
     (let* ((selected (nth company-selection company-candidates))
            (candidate (format "%s%s" selected (alchemist-company--annotation selected))))
-      (alchemist-help--execute-without-complete candidate))))
+      (alchemist-help--execute candidate))))
 (put 'alchemist-company--show-documentation 'company-keep t)
 
 (defun alchemist-company--open-definition ()
@@ -65,6 +70,28 @@
 
 (defun alchemist-company--annotation (candidate)
   (get-text-property 0 'meta candidate))
+
+(defun alchemist-company-build-scope-arg (arg)
+  "Build informations about the current context."
+  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+                   (alchemist-scope-all-modules)))
+         (aliases (alchemist-utils--prepare-aliases-for-elixir
+                   (alchemist-scope-aliases))))
+    (format "%s;%s;%s" arg modules aliases)))
+
+(defun alchemist-company-build-server-arg (arg)
+  (if (not (equal major-mode 'alchemist-iex-mode))
+      (alchemist-company-build-scope-arg arg)
+    (format "%s;[];[]" arg)))
+
+(defun alchemist-company-filter (_process output)
+  (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))
+  (if (string-match "END-OF-COMPLETE$" output)
+      (let* ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-company-filter-output))
+             (candidates (if candidates
+                             candidates
+                           (alchemsit-complete--dabbrev-code-candidates))))
+        (funcall alchemist-company-callback candidates))))
 
 (defun alchemist-company (command &optional arg &rest ignored)
   "`company-mode' completion back-end for Elixir."
@@ -82,8 +109,11 @@
     (location (alchemist-company--open-definition))
     (candidates (cons :async
                       (lambda (cb)
-                        (setq alchemist-server-company-callback cb)
-                        (alchemist-server-complete-candidates arg))))
+                        (setq alchemist-company-last-completion arg)
+                        (setq alchemist-company-filter-output nil)
+                        (setq alchemist-company-callback cb)
+                        (alchemist-server-complete-candidates (alchemist-company-build-server-arg arg)
+                                                              #'alchemist-company-filter))))
     (annotation (when alchemist-company-show-annotation
                   (alchemist-company--annotation arg)))))
 

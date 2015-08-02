@@ -35,7 +35,7 @@
   :group 'alchemist)
 
 (defvar alchemist-server-company-callback nil)
-(defvar alchemist-server--last-completion-exp nil)
+(defvar alchemist-company-last-completion nil)
 
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
@@ -70,7 +70,7 @@
                              candidates)))
     (cond
      ((and (string-match-p "\\.$" search-term)
-           (not (string-match-p "\\.$" alchemist-server--last-completion-exp)))
+           (not (string-match-p "\\.$" alchemist-company-last-completion)))
       (push (alchemist-utils--remove-dot-at-the-end search-term) candidates))
      (t candidates))))
 
@@ -141,7 +141,7 @@ Please have a look at the company-dabbrev-code function for more
 detailed information."
   (let ((case-fold-search company-dabbrev-code-ignore-case)
         (candidates (company-dabbrev--search
-                     (company-dabbrev-code--make-regexp alchemist-server--last-completion-exp)
+                     (company-dabbrev-code--make-regexp alchemist-company-last-completion)
                      company-dabbrev-code-time-limit
                      (pcase company-dabbrev-code-other-buffers
                        (`t (list major-mode))
@@ -150,11 +150,6 @@ detailed information."
                      t)))
     (delete-dups candidates)))
 
-(defun alchemist-complete--serve-candidates-to-company (candidates)
-  (let ((candidates (if candidates
-                        candidates
-                      (alchemsit-complete--dabbrev-code-candidates))))
-    (funcall alchemist-server-company-callback candidates)))
 
 (provide 'alchemist-complete)
 

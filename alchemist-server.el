@@ -32,6 +32,7 @@
 (require 'alchemist-help)
 (require 'alchemist-complete)
 (require 'alchemist-eval)
+(require 'alchemist-scope)
 (require 'alchemist-goto)
 (require 'alchemist-test-mode)
 
@@ -124,78 +125,6 @@ will be started instead."
              (output (replace-regexp-in-string "\n$" "" output)))
         (funcall alchemist-server-eval-callback output))))
 
-(defun alchemist-server-doc-filter (_process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-DOC$" output)
-      (let* ((string (apply #'concat (reverse alchemist-server--output)))
-             (string (replace-regexp-in-string "END-OF-DOC$" "" string)))
-        (alchemist-help--initialize-buffer string))))
-
-(defun alchemist-server-doc-with-context-filter (_process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-DOC-WITH-CONTEXT$" output)
-      (let* ((string (apply #'concat (reverse alchemist-server--output)))
-             (string (replace-regexp-in-string "END-OF-DOC-WITH-CONTEXT$" "" string))
-             (string (replace-regexp-in-string "\n+$" "" string)))
-        (if (alchemist-utils--empty-string-p string)
-            (message "No documentation for [%s] found." alchemist-help-current-search-text)
-          (alchemist-help--initialize-buffer string)))))
-
-(defun alchemist-server-complete-canidates-filter (_process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (unless (alchemist-utils--empty-string-p output)
-    (if (string-match "END-OF-COMPLETE$" output)
-        (let ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-server--output)))
-          (alchemist-complete--serve-candidates-to-company candidates)))))
-
-(defun alchemist-server-complete-canidates-filter-with-context (_process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-COMPLETE-WITH-CONTEXT$" output)
-      (let ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-server--output)))
-        (alchemist-complete--serve-candidates-to-company candidates))))
-
-(defun alchemist-server-complete-with-context-filter (_process output)
-  (with-local-quit
-    (setq alchemist-server--output (cons output alchemist-server--output))
-    (if (string-match "END-OF-COMPLETE-WITH-CONTEXT$" output)
-        (let* ((string (apply #'concat (reverse alchemist-server--output)))
-               (string (replace-regexp-in-string "END-OF-COMPLETE-WITH-CONTEXT$" "" string))
-               (candidates (alchemist-complete--output-to-list
-                            (alchemist--utils-clear-ansi-sequences string))))
-          (funcall alchemist-server-help-callback candidates)))))
-
-(defun alchemist-server-complete-filter (_process output)
-  (with-local-quit
-    (setq alchemist-server--output (cons output alchemist-server--output))
-    (if (string-match "END-OF-COMPLETE$" output)
-        (let* ((string (apply #'concat (reverse alchemist-server--output)))
-               (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
-               (candidates (alchemist-complete--output-to-list
-                            (alchemist--utils-clear-ansi-sequences string))))
-          (funcall alchemist-server-help-callback candidates)))))
-
-(defun alchemist-server-help-complete-modules-filter (_process output)
-  (with-local-quit
-    (setq alchemist-server--output (cons output alchemist-server--output))
-    (if (string-match "END-OF-MODULES$" output)
-        (let* ((output (apply #'concat (reverse alchemist-server--output)))
-               (modules (alchemist-help--elixir-modules-to-list output))
-               (search (completing-read
-                        "Elixir help: "
-                        modules
-                        nil
-                        nil
-                        nil))
-               (module (alchemist-goto--extract-module search))
-               (function (alchemist-goto--extract-function search))
-               (search (cond
-                        ((and module function)
-                         search)
-                        (module
-                         (concat module "."))
-                        (t
-                         search))))
-          (alchemist-help--execute search)))))
 
 (defun alchemist-server-goto-filter (_process output)
   (with-local-quit
@@ -220,27 +149,6 @@ will be started instead."
           (alchemist-mix-execute (list command) current-prefix-arg)))))
 
 ;; Server calls
-
-(defun alchemist-server--complete-with-context (exp)
-  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
-                   (alchemist-goto--get-context-modules)))
-         (aliases (alchemist-utils--prepare-aliases-for-elixir
-                   (alchemist-goto--alises-of-current-buffer))))
-    (cond
-     ((not (string= modules "[]"))
-      (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter-with-context)
-      (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s;%s;%s\n"
-                                                               exp
-                                                               modules
-                                                               aliases)))
-     (t
-      (alchemist-server--complete exp)))))
-
-(defun alchemist-server--complete (exp)
-  (set-process-filter (alchemist-server--process) #'alchemist-server-complete-canidates-filter)
-  (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" exp)))
-
-
 
 (defun alchemist-server-goto (module function expr)
   (setq alchemist-server--output nil)
@@ -276,11 +184,16 @@ will be started instead."
   (set-process-filter (alchemist-server--process) #'alchemist-server--mix-filter)
   (process-send-string (alchemist-server--process) "MIXTASKS\n"))
 
-(defun alchemist-server-help ()
+(defun alchemist-server-help-with-modules (filter)
   (setq alchemist-server--output nil)
   (alchemist-server--start)
-  (set-process-filter (alchemist-server--process) #'alchemist-server-help-complete-modules-filter)
+  (set-process-filter (alchemist-server--process) filter)
   (process-send-string (alchemist-server--process) "MODULES\n"))
+
+(defun alchemist-server-help (args filter)
+  (alchemist-server--start)
+  (set-process-filter (alchemist-server--process) filter)
+  (process-send-string (alchemist-server--process) (format "DOC %s\n" args)))
 
 (defun alchemist-server-eval (exp)
   (setq alchemist-server--output nil)
@@ -314,58 +227,11 @@ will be started instead."
   (set-process-filter (alchemist-server--process) #'alchemist-server-eval-quoted-filter)
   (process-send-string (alchemist-server--process) (format "QUOTE %s\n" exp)))
 
-(defun alchemist-server-complete-candidates (exp)
-  (setq alchemist-server--output nil)
-  (setq alchemist-server--last-completion-exp exp)
+(defun alchemist-server-complete-candidates (args filter)
+  "Return completion candidates for EXP from Elixir server."
   (alchemist-server--start)
-  (if (or (equal major-mode 'alchemist-iex-mode)
-          (not (alchemist-goto--context-exists-p)))
-      (alchemist-server--complete exp)
-    (alchemist-server--complete-with-context exp)))
-
-(defun alchemist-server-help-with-complete (search)
-  (setq alchemist-server--output nil)
-  (alchemist-server--start)
-  (setq alchemist-server-help-callback (lambda (candidates)
-                                         (let* ((candidates (if (= (length candidates) 2)
-                                                                nil
-                                                              candidates)))
-                                           (if candidates
-                                               (let* ((search (alchemist-complete--completing-prompt search candidates)))
-                                                 (alchemist-server-help-without-complete search))
-                                             (alchemist-server-help-without-complete search)))))
-
-  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
-                   (alchemist-goto--get-context-modules)))
-         (aliases (alchemist-utils--prepare-aliases-for-elixir
-                   (alchemist-goto--alises-of-current-buffer))))
-    (cond
-     ((not (string= modules "[]"))
-      (set-process-filter (alchemist-server--process) #'alchemist-server-complete-with-context-filter)
-      (process-send-string (alchemist-server--process) (format "COMPLETE-WITH-CONTEXT %s;%s;%s\n"
-                                                               search
-                                                               modules
-                                                               aliases)))
-     (t
-      (set-process-filter (alchemist-server--process) #'alchemist-server-complete-filter)
-      (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" search))))))
-
-(defun alchemist-server-help-without-complete (search)
-  (setq alchemist-help-current-search-text search)
-  (alchemist-server--start)
-  (setq alchemist-server--output nil)
-  (let ((modules (alchemist-utils--prepare-modules-for-elixir
-                  (alchemist-goto--get-context-modules))))
-
-    (cond
-     ((not (string= modules "[]"))
-      (set-process-filter (alchemist-server--process) #'alchemist-server-doc-with-context-filter)
-      (process-send-string (alchemist-server--process) (format "DOC-WITH-CONTEXT %s;%s\n"
-                                                               search
-                                                               modules)))
-     (t
-      (set-process-filter (alchemist-server--process) #'alchemist-server-doc-filter)
-      (process-send-string (alchemist-server--process) (format "DOC %s\n" search))))))
+  (set-process-filter (alchemist-server--process) filter)
+  (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" args)))
 
 (defun alchemist-server-status ()
   "Report the server status for the current Elixir project."
