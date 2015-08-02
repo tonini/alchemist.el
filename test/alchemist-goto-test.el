@@ -23,6 +23,8 @@
 
 ;;; Code:
 
+(require 'test-helper)
+
 (ert-deftest extract-function ()
   (should (equal (alchemist-goto--extract-function ":gen_tcp.accept")
                  "accept"))
@@ -135,7 +137,7 @@ defmodule Phoenix.Router do
   use Behaviour
 
 end")
-                   (goto-line 6)
+                   (goto-line-non-inter 6)
                    (alchemist-goto--use-modules-in-the-current-module-context)))))
 
 (ert-deftest get-use-modules-in-the-current-module-context/nested-modules ()
@@ -155,7 +157,7 @@ defmodule Phoenix.Router do
   end
 
 end")
-                   (goto-line 12)
+                   (goto-line-non-inter 12)
                    (alchemist-goto--use-modules-in-the-current-module-context)))))
 
 
@@ -171,7 +173,7 @@ defmodule Phoenix.Router do
   import Mix.Generator
 
 end")
-                   (goto-line 6)
+                   (goto-line-non-inter 6)
                    (alchemist-goto--import-modules-in-the-current-module-context)))))
 
 (ert-deftest get-import-modules-in-the-current-module-context/nested-modules ()
@@ -191,7 +193,7 @@ defmodule Phoenix.Router do
   end
 
 end")
-                   (goto-line 10)
+                   (goto-line-non-inter 10)
                    (alchemist-goto--import-modules-in-the-current-module-context)))))
 
 (ert-deftest get-aliases-of-an-elixir-module ()
@@ -313,7 +315,7 @@ defmodule Phoenix.Router do
   end
 
 end")
-                   (goto-line 6)
+                   (goto-line-non-inter 6)
                    (alchemist-goto--current-module-name)))))
 
 (ert-deftest get-current-module-name/skip-heredoc ()
@@ -346,7 +348,7 @@ defmodule Module.Name do
   \"\"\"
 
 end")
-                   (goto-line 12)
+                   (goto-line-non-inter 12)
                    (alchemist-goto--current-module-name)))))
 
 (ert-deftest get-current-module-name/nested-modules ()
@@ -359,7 +361,7 @@ defmodule Outside do
 
   end
 end")
-                   (goto-line 4)
+                   (goto-line-non-inter 4)
                    (alchemist-goto--current-module-name)))))
 
 (ert-deftest check-if-currently-inside-heredoc ()
@@ -375,7 +377,7 @@ defmodule Module.Name do
   \"\"\"
 
 end")
-            (goto-line 7)
+            (goto-line-non-inter 7)
             (alchemist-goto--string-at-point-p)))
   (should (not (with-temp-buffer
                  (alchemist-mode)
@@ -389,7 +391,7 @@ defmodule Module.Name do
   \"\"\"
 
 end")
-                 (goto-line 3)
+                 (goto-line-non-inter 3)
                  (alchemist-goto--string-at-point-p)))))
 
 (provide 'alchemist-goto-test)

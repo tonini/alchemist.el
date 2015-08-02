@@ -29,11 +29,9 @@
 (require 'alchemist-project)
 (require 'alchemist-compile)
 (require 'alchemist-execute)
-(require 'alchemist-help)
 (require 'alchemist-complete)
-(require 'alchemist-eval)
-(require 'alchemist-scope)
 (require 'alchemist-goto)
+(require 'alchemist-scope)
 (require 'alchemist-test-mode)
 
 (defgroup alchemist-server nil
@@ -41,24 +39,25 @@
   :prefix "alchemist-server-"
   :group 'alchemist)
 
-;; Variables
-
 (defvar alchemist-server--envs '("dev" "prod" "test" "shared")
   "The list of server environments to use.")
 
-(defvar alchemist-server
+(defconst alchemist-server
   (concat (file-name-directory load-file-name) "server/run.exs")
   "Script file with alchemist server.")
 
 (defvar alchemist-server--processes '())
 (defvar alchemist-server--env "dev")
-(defvar alchemist-server--output nil)
-(defvar alchemist-server-eval-callback nil)
-(defvar alchemist-server-help-callback nil)
-(defvar alchemist-server-goto-callback nil)
-(defvar alchemist-server--last-completion-exp nil)
 
-(defvar alchemist-server-command
+(defconst alchemist-server-codes '((evaluate "EVAL")
+                                   (eval-quote "QUOTE")
+                                   (source "SOURCE")
+                                   (mixtasks "MIXTASKS")
+                                   (modules "MODULES")
+                                   (doc "DOC")
+                                   (complete "COMPLETE")))
+
+(defconst alchemist-server-command
   (format "%s %s %s" alchemist-execute-command alchemist-server alchemist-server--env))
 
 (defun alchemist-server-start (env)
@@ -107,131 +106,44 @@ will be started instead."
                          "alchemist-server")))
     process-name))
 
-;; Filters
+(defun alchemist-server--build-request-id (code &optional args)
+  (let* ((code (car (cdr (assoc code alchemist-server-codes)))))
+    (if args
+        (format "%s %s\n" code args)
+      (format "%s\n" code))))
 
-(defun alchemist-server-eval-filter (_process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-EVAL$" output)
-      (let* ((output (apply #'concat (reverse alchemist-server--output)))
-             (output (replace-regexp-in-string "END-OF-EVAL" "" output))
-             (output (replace-regexp-in-string "\n$" "" output)))
-        (funcall alchemist-server-eval-callback output))))
-
-(defun alchemist-server-eval-quoted-filter (_process output)
-  (setq alchemist-server--output (cons output alchemist-server--output))
-  (if (string-match "END-OF-QUOTE$" output)
-      (let* ((output (apply #'concat (reverse alchemist-server--output)))
-             (output (replace-regexp-in-string "END-OF-QUOTE" "" output))
-             (output (replace-regexp-in-string "\n$" "" output)))
-        (funcall alchemist-server-eval-callback output))))
-
-
-(defun alchemist-server-goto-filter (_process output)
-  (with-local-quit
-    (setq alchemist-server--output (cons output alchemist-server--output))
-    (if (string-match "END-OF-SOURCE$" output)
-        (let* ((output (apply #'concat (reverse alchemist-server--output)))
-               (output (replace-regexp-in-string "END-OF-SOURCE" "" output))
-               (output (replace-regexp-in-string "\n" "" output))
-               (file (replace-regexp-in-string "source-file-path:" "" output)))
-          (funcall alchemist-server-goto-callback file)))))
-
-(defun alchemist-server--mix-filter (_process output)
-  (with-local-quit
-    (setq alchemist-server--output (cons output alchemist-server--output))
-    (if (string-match-p "END-OF-MIXTASKS$" output)
-        (let* ((output (apply #'concat (reverse alchemist-server--output)))
-               (output (replace-regexp-in-string "END-OF-MIXTASKS" "" output))
-               (output (replace-regexp-in-string "\n$" "" output))
-               (tasks (split-string output "\n"))
-               (selected-task (alchemist-mix--completing-read "mix: " tasks))
-               (command (read-shell-command "mix " (concat selected-task " "))))
-          (alchemist-mix-execute (list command) current-prefix-arg)))))
-
-;; Server calls
-
-(defun alchemist-server-goto (module function expr)
-  (setq alchemist-server--output nil)
-  (alchemist-server--start)
-  (setq alchemist-server-goto-callback (lambda (file)
-                                         (cond ((alchemist-utils--empty-string-p file)
-                                                (message "Don't know how to find: %s" expr))
-                                               ((file-exists-p file)
-                                                (alchemist-goto--open-file file module function))
-                                               ((alchemist-goto--elixir-file-p file)
-                                                (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
-                                                  (if (file-exists-p elixir-source-file)
-                                                      (alchemist-goto--open-file elixir-source-file module function)
-                                                    (message "Don't know how to find: %s" expr))))
-                                               ((alchemist-goto--erlang-file-p file)
-                                                (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
-                                                       (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
-                                                  (cond ((file-exists-p elixir-source-file)
-                                                         (alchemist-goto--open-file elixir-source-file module function))
-                                                        ((file-exists-p erlang-source-file)
-                                                         (alchemist-goto--open-file erlang-source-file module function))
-                                                        (t
-                                                         (message "Don't know how to find: %s" expr)))))
-                                               (t
-                                                (pop-tag-mark)
-                                                (message "Don't know how to find: %s" expr)))))
-  (set-process-filter (alchemist-server--process) #'alchemist-server-goto-filter)
-  (process-send-string (alchemist-server--process) (format "SOURCE %s,%s\n" module function)))
-
-(defun alchemist-server--mix ()
-  (setq alchemist-server--output nil)
-  (alchemist-server--start)
-  (set-process-filter (alchemist-server--process) #'alchemist-server--mix-filter)
-  (process-send-string (alchemist-server--process) "MIXTASKS\n"))
-
-(defun alchemist-server-help-with-modules (filter)
-  (setq alchemist-server--output nil)
+(defun alchemist-server-send-request (id filter)
   (alchemist-server--start)
   (set-process-filter (alchemist-server--process) filter)
-  (process-send-string (alchemist-server--process) "MODULES\n"))
+  (process-send-string (alchemist-server--process) id))
+
+(defun alchemist-server-goto (args filter)
+  (alchemist-server--start)
+  (alchemist-server-send-request (alchemist-server--build-request-id 'source args) filter))
+
+(defun alchemist-server--mix (filter)
+  (alchemist-server--start)
+  (alchemist-server-send-request (alchemist-server--build-request-id 'mixtasks) filter))
+
+(defun alchemist-server-help-with-modules (filter)
+  (alchemist-server--start)
+  (alchemist-server-send-request (alchemist-server--build-request-id 'modules) filter))
 
 (defun alchemist-server-help (args filter)
   (alchemist-server--start)
-  (set-process-filter (alchemist-server--process) filter)
-  (process-send-string (alchemist-server--process) (format "DOC %s\n" args)))
+  (alchemist-server-send-request (alchemist-server--build-request-id 'doc args) filter))
 
-(defun alchemist-server-eval (exp)
-  (setq alchemist-server--output nil)
+(defun alchemist-server-eval (file filter)
   (alchemist-server--start)
-  (setq alchemist-server-eval-callback (lambda (string)
-                                         (alchemist-eval-popup-buffer string)))
-  (set-process-filter (alchemist-server--process) #'alchemist-server-eval-filter)
-  (process-send-string (alchemist-server--process) (format "EVAL %s\n" exp)))
+  (alchemist-server-send-request (alchemist-server--build-request-id 'evaluate file) filter))
 
-(defun alchemist-server-eval-and-insert (exp)
-  (setq alchemist-server--output nil)
+(defun alchemist-server-eval-quote (file filter)
   (alchemist-server--start)
-  (setq alchemist-server-eval-callback (lambda (string)
-                                         (alchemist-eval--insert string)))
-  (set-process-filter (alchemist-server--process) #'alchemist-server-eval-filter)
-  (process-send-string (alchemist-server--process) (format "EVAL %s\n" exp)))
-
-(defun alchemist-server-eval-quote (exp)
-  (setq alchemist-server--output nil)
-  (alchemist-server--start)
-  (setq alchemist-server-eval-callback (lambda (string)
-                                         (alchemist-eval-popup-buffer string)))
-  (set-process-filter (alchemist-server--process) #'alchemist-server-eval-quoted-filter)
-  (process-send-string (alchemist-server--process) (format "QUOTE %s\n" exp)))
-
-(defun alchemist-server-eval-quote-and-insert (exp)
-  (setq alchemist-server--output nil)
-  (alchemist-server--start)
-  (setq alchemist-server-eval-callback (lambda (string)
-                                         (alchemist-eval--insert string)))
-  (set-process-filter (alchemist-server--process) #'alchemist-server-eval-quoted-filter)
-  (process-send-string (alchemist-server--process) (format "QUOTE %s\n" exp)))
+  (alchemist-server-send-request (alchemist-server--build-request-id 'eval-quote file) filter))
 
 (defun alchemist-server-complete-candidates (args filter)
-  "Return completion candidates for EXP from Elixir server."
   (alchemist-server--start)
-  (set-process-filter (alchemist-server--process) filter)
-  (process-send-string (alchemist-server--process) (format "COMPLETE %s\n" args)))
+  (alchemist-server-send-request (alchemist-server--build-request-id 'complete args) filter))
 
 (defun alchemist-server-status ()
   "Report the server status for the current Elixir project."

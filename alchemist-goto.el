@@ -28,6 +28,7 @@
 (require 'cl-lib)
 (require 'etags)
 (require 'alchemist-utils)
+(require 'alchemist-help)
 (require 'alchemist-scope)
 
 (eval-when-compile
@@ -56,6 +57,8 @@
 (defvar alchemist-goto--symbol-name-and-pos '())
 (defvar alchemist-goto--symbol-list-bare '())
 (defvar alchemist-goto--symbol-name-and-pos-bare '())
+(defvar alchemist-goto-filter-output nil)
+(defvar alchemist-goto-callback nil)
 
 ;; Faces
 
@@ -178,15 +181,15 @@ declaration has been found."
 (defun alchemist-goto--string-at-point-p (&optional complete)
   "Return non-nil if cursor is at a string."
   (save-excursion
-    (window-end nil t)
-    ;; (recenter -3)
     (or (and (nth 3 (save-excursion
                       (let ((pos (point)))
-                        (when complete)
+                        (when complete
+                          (end-of-buffer))
                         (parse-partial-sexp 1 pos))))
              (nth 8 (save-excursion
                       (let ((pos (point)))
-                        (when complete)
+                        (when complete
+                          (end-of-buffer))
                         (parse-partial-sexp 1 pos)))))
         (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
              (match-beginning 0)))))
@@ -294,7 +297,7 @@ It will jump to the position of the symbol definition after selection."
       (let ()
         (save-match-data
           (while (re-search-forward regex nil t)
-            (when (not (alchemist-goto--string-at-point-p t))
+            (when (not (alchemist-scope-inside-string-p))
               (when (alchemist-goto--get-symbol-from-position (car (match-data)))
                 (let* ((position (car (match-data)))
                        (symbol (alchemist-goto--get-symbol-from-position position))
@@ -313,7 +316,31 @@ It will jump to the position of the symbol definition after selection."
      ((and (null module)
            (alchemist-goto--symbol-definition-p function))
       (alchemist-goto--goto-symbol function))
-     (t (alchemist-server-goto module function expr)))))
+     (t
+      (setq alchemist-goto-callback (lambda (file)
+                                             (cond ((alchemist-utils--empty-string-p file)
+                                                    (message "Don't know how to find: %s" expr))
+                                                   ((file-exists-p file)
+                                                    (alchemist-goto--open-file file module function))
+                                                   ((alchemist-goto--elixir-file-p file)
+                                                    (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+                                                      (if (file-exists-p elixir-source-file)
+                                                          (alchemist-goto--open-file elixir-source-file module function)
+                                                        (message "Don't know how to find: %s" expr))))
+                                                   ((alchemist-goto--erlang-file-p file)
+                                                    (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
+                                                           (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
+                                                      (cond ((file-exists-p elixir-source-file)
+                                                             (alchemist-goto--open-file elixir-source-file module function))
+                                                            ((file-exists-p erlang-source-file)
+                                                             (alchemist-goto--open-file erlang-source-file module function))
+                                                            (t
+                                                             (message "Don't know how to find: %s" expr)))))
+                                                   (t
+                                                    (pop-tag-mark)
+                                                    (message "Don't know how to find: %s" expr)))))
+      (alchemist-server-goto (format "%s,%s" module function)
+                             #'alchemist-goto-filter)))))
 
 (defun alchemist-goto--open-file (file module function)
   (let ((buf (find-file-noselect file)))
@@ -361,6 +388,17 @@ It will jump to the position of the symbol definition after selection."
           (setq aliases (append aliases (list (list (alchemist-utils--remove-dot-at-the-end alias)
                                                     (alchemist-utils--remove-dot-at-the-end as))))))))
     aliases))
+
+(defun alchemist-goto-filter (_process output)
+  (with-local-quit
+    (setq alchemist-goto-filter-output (cons output alchemist-goto-filter-output))
+    (if (string-match "END-OF-SOURCE$" output)
+        (let* ((output (apply #'concat (reverse alchemist-goto-filter-output)))
+               (output (replace-regexp-in-string "END-OF-SOURCE" "" output))
+               (output (replace-regexp-in-string "\n" "" output))
+               (file (replace-regexp-in-string "source-file-path:" "" output)))
+          (setq alchemist-goto-filter-output nil)
+          (funcall alchemist-goto-callback file)))))
 
 ;; Public functions
 

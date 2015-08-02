@@ -27,7 +27,6 @@
 
 (require 'alchemist-utils)
 (require 'alchemist-project)
-(require 'alchemist-goto)
 (require 'alchemist-scope)
 
 ;; Tell the byte compiler to assume that functions are defined
@@ -36,7 +35,11 @@
   (declare-function alchemist-server-complete-candidates "alchemist-server.el")
   (declare-function alchemist-company-build-scope-arg "alchemist-company.el")
   (declare-function alchemist-company-build-server-arg "alchemist-company.el")
-  (declare-function alchemist-server-help "alchemist-server.el"))
+  (declare-function alchemist-server-help "alchemist-server.el")
+  (declare-function alchemist-goto--extract-module "alchemist-goto.el")
+  (declare-function alchemist-goto--extract-function "alchemist-goto.el")
+  (declare-function alchemist-goto--get-full-path-of-alias "alchemist-goto.el")
+  (declare-function alchemist-goto-definition-at-point "alchemist-goto.el"))
 
 (defgroup alchemist-help nil
   "Functionality for Elixir documentation lookup."

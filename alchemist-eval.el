@@ -48,6 +48,8 @@
     map)
   "Keymap for `alchemist-eval-minor-mode'.")
 
+(defvar alchemist-eval-filter-output nil)
+
 ;; Private functions
 
 (defun alchemist-eval--insert (string)
@@ -69,25 +71,61 @@
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval file)))
+    (alchemist-server-eval file #'alchemist-eval-filter)))
 
 (defun alchemist-eval--expression-and-print (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-and-insert file)))
+    (alchemist-server-eval file #'alchemist-eval-insert-filter)))
 
 (defun alchemist-eval--quote-expression (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-quote file)))
+    (alchemist-server-eval-quote file #'alchemist-eval-quoted-filter)))
 
 (defun alchemist-eval--quote-expression-and-print (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-quote-and-insert file)))
+    (alchemist-server-eval-quote file #'alchemist-eval-quoted-insert-filter)))
+
+(defun alchemist-eval-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (if (string-match "END-OF-EVAL$" output)
+      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
+             (output (replace-regexp-in-string "END-OF-EVAL" "" output))
+             (output (replace-regexp-in-string "\n$" "" output)))
+        (setq alchemist-eval-filter-output nil)
+        (alchemist-eval-popup-buffer output))))
+
+(defun alchemist-eval-insert-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (if (string-match "END-OF-EVAL$" output)
+      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
+             (output (replace-regexp-in-string "END-OF-EVAL" "" output))
+             (output (replace-regexp-in-string "\n$" "" output)))
+        (setq alchemist-eval-filter-output nil)
+        (alchemist-eval--insert output))))
+
+(defun alchemist-eval-quoted-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (if (string-match "END-OF-QUOTE$" output)
+      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
+             (output (replace-regexp-in-string "END-OF-QUOTE" "" output))
+             (output (replace-regexp-in-string "\n$" "" output)))
+        (setq alchemist-eval-filter-output nil)
+        (alchemist-eval-popup-buffer output))))
+
+(defun alchemist-eval-quoted-insert-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (if (string-match "END-OF-QUOTE$" output)
+      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
+             (output (replace-regexp-in-string "END-OF-QUOTE" "" output))
+             (output (replace-regexp-in-string "\n$" "" output)))
+        (setq alchemist-eval-filter-output nil)
+        (alchemist-eval--insert output))))
 
 ;; Public functions
 

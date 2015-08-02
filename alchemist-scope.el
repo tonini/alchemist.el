@@ -45,15 +45,23 @@
   "^\s+import\s+\\([A-Za-z0-9\.]+\\)"
   "The regex for matching Elixir import definitions.")
 
+(defun alchemist-scope--expand-buffer-view ()
+  (goto-char  (point-max))
+  (cond ((and (eq (current-buffer) (window-buffer))
+              (> (point) (window-end nil t)))
+         (overlay-recenter (point))
+         (recenter -3))))
+
 (defun alchemist-scope-inside-string-p ()
   "Return non-nil if `point' is inside a string or heredoc."
   (save-excursion
-    (window-end nil t)
     (or (and (nth 3 (save-excursion
                       (let ((pos (point)))
+                        (alchemist-scope--expand-buffer-view)
                         (parse-partial-sexp 1 pos))))
              (nth 8 (save-excursion
                       (let ((pos (point)))
+                        (alchemist-scope--expand-buffer-view)
                         (parse-partial-sexp 1 pos)))))
         (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
              (match-beginning 0)))))

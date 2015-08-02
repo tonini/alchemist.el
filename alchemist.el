@@ -48,6 +48,7 @@
 (require 'easymenu)
 (require 'company)
 (require 'elixir-mode)
+(require 'alchemist-eval)
 (require 'alchemist-report)
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
