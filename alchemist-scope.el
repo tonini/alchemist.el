@@ -52,16 +52,18 @@
          (overlay-recenter (point))
          (recenter -3))))
 
-(defun alchemist-scope-inside-string-p ()
+(defun alchemist-scope-inside-string-p (&optional expand-buffer)
   "Return non-nil if `point' is inside a string or heredoc."
   (save-excursion
     (or (and (nth 3 (save-excursion
                       (let ((pos (point)))
-                        (alchemist-scope--expand-buffer-view)
+                        (when expand-buffer
+                          (alchemist-scope--expand-buffer-view))
                         (parse-partial-sexp 1 pos))))
              (nth 8 (save-excursion
                       (let ((pos (point)))
-                        (alchemist-scope--expand-buffer-view)
+                        (when expand-buffer
+                          (alchemist-scope--expand-buffer-view))
                         (parse-partial-sexp 1 pos)))))
         (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
              (match-beginning 0)))))
@@ -142,6 +144,37 @@
     (push use modules)
     (push import modules)
     (alchemist-utils--flatten modules)))
+
+(defun alchemist-scope-extract-module (expr)
+  "Extract module from EXPR."
+  (let* ((parts (split-string expr "\\."))
+         (function (car (last parts)))
+         (case-fold-search nil))
+    (when (string-match-p "^[a-z_\?!]+" function)
+      (delete function parts))
+    (unless (string-match-p "^[a-z_\?!]+" (car parts))
+      (alchemist-utils--remove-dot-at-the-end (mapconcat 'concat parts ".")))))
+
+(defun alchemist-scope-extract-function (expr)
+  "Extract function from EXPR."
+  (let* ((parts (split-string expr "\\."))
+         (function (car (last parts)))
+         (case-fold-search nil))
+    (when (and function
+               (string-match-p "^[a-z_\?!]+" function))
+      function)))
+
+(defun alchemist-scope-alias-full-path (module)
+  "Solve the full path for the MODULE alias."
+  (if (not (alchemist-utils--empty-string-p module))
+      (let* ((aliases (mapcar (lambda (m)
+                                (when (string-match-p (format "^%s" (car (cdr m))) module)
+                                  (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module t)))
+                              (alchemist-scope-aliases)))
+             (aliases (delete nil aliases)))
+        (if aliases
+            (car aliases)
+          module))))
 
 (provide 'alchemist-scope)
 

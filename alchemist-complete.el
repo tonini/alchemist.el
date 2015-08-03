@@ -51,9 +51,7 @@
 
 (defun alchemist-complete--build-candidates (a-list)
   (let* ((search-term (car a-list))
-         (candidates (if (string-match-p "^.+\/" search-term)
-                         a-list
-                       (cdr a-list)))
+         (candidates a-list)
          (candidates (mapcar (lambda (f)
                                (let* ((candidate f)
                                       (meta (if (string-match-p "^.+/" f)
@@ -61,13 +59,17 @@
                                               "")))
                                  (cond
                                   ((and (string-match-p "^:" search-term)
-                                        (not (string-match-p "\\.$" search-term)))
-                                   (propertize (concat ":" candidate)))
+                                        (not (string-match-p "\\." search-term)))
+                                   (unless (string= search-term candidate)
+                                     (propertize (concat ":" candidate))
+                                     ))
                                   ((string-match-p "\\." search-term)
-                                   (propertize (alchemist-complete--add-prefix-to-function search-term
-                                                                                           (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta))
+                                   (unless (string= search-term candidate)
+                                     (propertize (alchemist-complete--add-prefix-to-function (concat (alchemist-scope-extract-module search-term) ".")
+                                                                                             (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta)))
                                   (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
-                             candidates)))
+                             candidates))
+         (candidates (remove nil candidates)))
     (cond
      ((and (string-match-p "\\.$" search-term)
            (not (string-match-p "\\.$" alchemist-company-last-completion)))
@@ -98,8 +100,7 @@
   (let* ((output (replace-regexp-in-string "^cmp:" "" output))
          (output (split-string output))
          (output (delete nil output)))
-    output)
-  )
+    output))
 
 (defun alchemist-complete--clear-buffer (buffer)
   "Clears the BUFFER from not used lines."
@@ -108,19 +109,16 @@
 
 (defun alchmist-complete--build-candidates-from-process-output (output)
   (let* ((output (apply #'concat (reverse output)))
-         (output (replace-regexp-in-string "END-OF-COMPLETE-WITH-CONTEXT$" "" output))
          (output (replace-regexp-in-string "END-OF-COMPLETE$" "" output))
          (candidates (if (not (alchemist-utils--empty-string-p output))
                          (alchemist-complete--output-to-list
                           (alchemist--utils-clear-ansi-sequences output))
                        '()))
          (candidates (if candidates
-                         (alchemist-complete--build-candidates (cl-remove-duplicates candidates))
+                         (alchemist-complete--build-candidates candidates)
                        '())))
-    (cl-remove-duplicates candidates
-                   :test (lambda (x y) (or (null y) (string= x y)))
-                   :from-end t)))
-
+    candidates
+    ))
 (defun alchemist-complete--completing-prompt (initial completing-collection)
   (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
     (cond ((equal (length completing-collection) 1)

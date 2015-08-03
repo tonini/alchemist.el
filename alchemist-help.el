@@ -36,9 +36,6 @@
   (declare-function alchemist-company-build-scope-arg "alchemist-company.el")
   (declare-function alchemist-company-build-server-arg "alchemist-company.el")
   (declare-function alchemist-server-help "alchemist-server.el")
-  (declare-function alchemist-goto--extract-module "alchemist-goto.el")
-  (declare-function alchemist-goto--extract-function "alchemist-goto.el")
-  (declare-function alchemist-goto--get-full-path-of-alias "alchemist-goto.el")
   (declare-function alchemist-goto-definition-at-point "alchemist-goto.el"))
 
 (defgroup alchemist-help nil
@@ -107,25 +104,25 @@
                              default-directory)))
     (cond
      ((alchemist-help--bad-search-output-p content)
-             (message (propertize
-                       (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
-                       'face 'alchemist-help--key-face)))
+      (message (propertize
+                (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
+                'face 'alchemist-help--key-face)))
      (t
       (if (get-buffer alchemist-help-buffer-name)
           (kill-buffer alchemist-help-buffer-name))
       (pop-to-buffer alchemist-help-buffer-name)
-      (setq buffer-undo-list nil)
-      (let ((inhibit-read-only t)
-            (buffer-undo-list t))
-        (erase-buffer)
-        (insert content)
-        (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
-          (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))
-        (delete-matching-lines "do not show this result in output" (point-min) (point-max))
-        (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
-        (ansi-color-apply-on-region (point-min) (point-max))
-        (read-only-mode 1)
-        (alchemist-help-minor-mode 1))))))
+      (with-current-buffer alchemist-help-buffer-name
+        (let ((inhibit-read-only t)
+              (buffer-undo-list t))
+          (erase-buffer)
+          (insert content)
+          (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
+            (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))
+          (delete-matching-lines "do not show this result in output" (point-min) (point-max))
+          (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
+          (ansi-color-apply-on-region (point-min) (point-max))
+          (read-only-mode 1)
+          (alchemist-help-minor-mode 1)))))))
 
 (defun alchemist-help--search-at-point ()
   "Search through `alchemist-help' with the expression under the cursor"
@@ -140,10 +137,10 @@ Argument END where the mark ends."
     (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
 
 (defun alchemist-help--prepare-search-expr (expr)
-  (let* ((module (alchemist-goto--extract-module expr))
-         (module (alchemist-goto--get-full-path-of-alias module))
+  (let* ((module (alchemist-scope-extract-module expr))
+         (module (alchemist-scope-alias-full-path module))
          (module (if module module ""))
-         (function (alchemist-goto--extract-function expr))
+         (function (alchemist-scope-extract-function expr))
          (function (if function function ""))
          (expr (cond
                 ((and (not (alchemist-utils--empty-string-p module))
@@ -231,8 +228,8 @@ Argument END where the mark ends."
                         nil
                         nil
                         nil))
-               (module (alchemist-goto--extract-module search))
-               (function (alchemist-goto--extract-function search))
+               (module (alchemist-scope-extract-module search))
+               (function (alchemist-scope-extract-function search))
                (search (cond
                         ((and module function)
                          search)

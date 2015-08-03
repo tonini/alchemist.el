@@ -27,6 +27,7 @@
 
 (require 'cl-lib)
 (require 'alchemist-complete)
+(require 'alchemist-help)
 (require 'alchemist-scope)
 (require 'company)
 
@@ -52,21 +53,26 @@
 (defvar alchemist-company-callback nil)
 (defvar alchemist-company-filter-output nil)
 (defvar alchemist-company-last-completion nil)
+(defvar alchemist-company-doc-lookup-done nil)
 
-(defun alchemist-company--show-documentation ()
-  (interactive)
-  (company--electric-do
-    (let* ((selected (nth company-selection company-candidates))
-           (candidate (format "%s%s" selected (alchemist-company--annotation selected))))
-      (alchemist-help--execute candidate))))
-(put 'alchemist-company--show-documentation 'company-keep t)
+(defun alchemist-company--wait-for-doc-buffer ()
+  (while (not alchemist-company-doc-lookup-done)
+    (sit-for 0.01)))
 
-(defun alchemist-company--open-definition ()
+(defun alchemist-company-show-documentation (candidate)
   (interactive)
-  (company--electric-do
-    (let* ((selected (nth company-selection company-candidates)))
-      (alchemist-goto--open-definition selected))))
-(put 'alchemist-company--open-definition 'company-keep t)
+  (let* ((annotation (alchemist-company--annotation candidate))
+         (candidate (if annotation
+                        (format "%s%s" candidate annotation)
+                      candidate)))
+    (setq alchemist-company-doc-lookup-done nil)
+    (alchemist-server-help (alchemist-help-build-server-arg candidate) #'alchemist-company-doc-buffer-filter)
+    (alchemist-company--wait-for-doc-buffer)
+    (get-buffer alchemist-help-buffer-name)))
+
+(defun alchemist-company-open-definition (candidate)
+  (interactive)
+  (alchemist-goto--open-definition candidate))
 
 (defun alchemist-company--annotation (candidate)
   (get-text-property 0 'meta candidate))
@@ -91,7 +97,29 @@
              (candidates (if candidates
                              candidates
                            (alchemsit-complete--dabbrev-code-candidates))))
-        (funcall alchemist-company-callback candidates))))
+        (setq alchemist-company-filter-output nil)
+        (alchemist-company-serve-candidates-to-callback candidates))))
+
+(defun alchemist-company-doc-buffer-filter (_process output)
+  (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))
+  (if (string-match "END-OF-DOC$" output)
+      (let* ((string (apply #'concat (reverse alchemist-company-filter-output)))
+             (string (replace-regexp-in-string "END-OF-DOC$" "" string))
+             (string (replace-regexp-in-string "\n+$" "" string)))
+        (setq alchemist-company-filter-output nil)
+        (if (get-buffer alchemist-help-buffer-name)
+            (kill-buffer alchemist-help-buffer-name))
+        (with-current-buffer (get-buffer-create alchemist-help-buffer-name)
+          (insert string)
+          (ansi-color-apply-on-region (point-min) (point-max))
+          (alchemist-help-minor-mode 1))
+        (setq alchemist-company-doc-lookup-done t))))
+
+(defun alchemist-company-serve-candidates-to-callback (candidates)
+  (let ((candidates (if candidates
+                        candidates
+                      (alchemsit-complete--dabbrev-code-candidates))))
+    (funcall alchemist-company-callback candidates)))
 
 (defun alchemist-company (command &optional arg &rest ignored)
   "`company-mode' completion back-end for Elixir."
@@ -105,12 +133,11 @@
     (prefix (and (or (eq major-mode 'elixir-mode)
                      (string= mode-name "Alchemist-IEx"))
                  (alchemist-help--exp-at-point)))
-    (doc-buffer (alchemist-company--show-documentation))
-    (location (alchemist-company--open-definition))
+    (doc-buffer (alchemist-company-show-documentation arg))
+    (location (alchemist-company-open-definition arg))
     (candidates (cons :async
                       (lambda (cb)
                         (setq alchemist-company-last-completion arg)
-                        (setq alchemist-company-filter-output nil)
                         (setq alchemist-company-callback cb)
                         (alchemist-server-complete-candidates (alchemist-company-build-server-arg arg)
                                                               #'alchemist-company-filter))))

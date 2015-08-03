@@ -239,6 +239,100 @@ end")
                    (goto-line-non-inter 10)
                    (alchemist-scope-import-modules)))))
 
+(ert-deftest test-scope-extract-module ()
+  (should (equal (alchemist-scope-extract-function ":gen_tcp.accept")
+                 "accept"))
+  (should (equal (alchemist-scope-extract-function ":erlang")
+                 nil))
+  (should (equal (alchemist-scope-extract-function "List.duplicate")
+                 "duplicate"))
+  (should (equal (alchemist-scope-extract-function "_duplicate")
+                 "_duplicate"))
+  (should (equal (alchemist-scope-extract-function "_duplicated?")
+                 "_duplicated?"))
+  (should (equal (alchemist-scope-extract-function "parse!")
+                 "parse!"))
+  (should (equal (alchemist-scope-extract-function "Enum.take!")
+                 "take!"))
+  (should (equal (alchemist-scope-extract-function "String.Chars.impl_for")
+                 "impl_for"))
+  (should (equal (alchemist-scope-extract-function "String.Chars.Atom")
+                 nil)))
+
+(ert-deftest test-scope-extract-module ()
+  (should (equal (alchemist-scope-extract-module ":gen_tcp.accept")
+                 ":gen_tcp"))
+  (should (equal (alchemist-scope-extract-module ":erlang")
+                 ":erlang"))
+  (should (equal (alchemist-scope-extract-module "List.duplicate")
+                 "List"))
+  (should (equal (alchemist-scope-extract-module "Whatever._duplicate")
+                 "Whatever"))
+  (should (equal (alchemist-scope-extract-module "Module.read!")
+                 "Module"))
+  (should (equal (alchemist-scope-extract-module "String.Chars.impl_for")
+                 "String.Chars"))
+  (should (equal (alchemist-scope-extract-module "String.Chars.Atom")
+                 "String.Chars.Atom"))
+  (should (equal (alchemist-scope-extract-module "String.Chars.")
+                 "String.Chars"))
+  (should (equal (alchemist-scope-extract-module "String.concat")
+                 "String"))
+  (should (equal (alchemist-scope-extract-module "to_string")
+                 nil)))
+
+(ert-deftest test-scope-alias-full-path ()
+  (should (equal "Phoenix.Router.Scope"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  alias Phoenix.Router, as: Special
+
+end")
+                   (alchemist-scope-alias-full-path "Special.Scope"))))
+  (should (equal "Phoenix.Endpoint.Watcher.Everywhere"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias Phoenix.Endpoint.Watcher
+
+end")
+                   (alchemist-scope-alias-full-path "Watcher.Everywhere"))))
+  (should (equal "List"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias List, as: LT
+
+end")
+                   (alchemist-scope-alias-full-path "LT"))))
+  (should (equal "def"
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias Phoenix.Endpoint.Watcher
+
+end")
+                   (alchemist-scope-alias-full-path "def"))))
+  (should (equal nil
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Foo do
+
+  alias Phoenix.Endpoint.Watcher
+
+end")
+                   (alchemist-scope-alias-full-path "")))))
+
 (provide 'alchemist-scope-test)
 
 ;;; alchemist-scope-test.el ends here
