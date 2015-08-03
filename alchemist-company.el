@@ -88,7 +88,7 @@
 
 (defun alchemist-company-filter (_process output)
   (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))
-  (if (string-match "END-OF-COMPLETE$" output)
+  (if (alchemist-server-contains-end-marker-p output)
       (let* ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-company-filter-output))
              (candidates (if candidates
                              candidates
@@ -98,10 +98,8 @@
 
 (defun alchemist-company-doc-buffer-filter (_process output)
   (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))
-  (if (string-match "END-OF-DOC$" output)
-      (let* ((string (apply #'concat (reverse alchemist-company-filter-output)))
-             (string (replace-regexp-in-string "END-OF-DOC$" "" string))
-             (string (replace-regexp-in-string "\n+$" "" string)))
+  (if (alchemist-server-contains-end-marker-p output)
+      (let ((string (alchemist-server-prepare-filter-output alchemist-company-filter-output)))
         (setq alchemist-company-filter-output nil)
         (if (get-buffer alchemist-help-buffer-name)
             (kill-buffer alchemist-help-buffer-name))

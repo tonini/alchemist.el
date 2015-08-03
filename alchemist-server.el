@@ -99,11 +99,33 @@ will be started instead."
                          "alchemist-server")))
     process-name))
 
+(defun alchemist-server--server-code (symbol)
+  (car (cdr (assoc symbol alchemist-server-codes))))
+
+(defconst alchemist-server-code-end-marker-regex
+  (format "END-OF-\\(%s\\|%s\\|%s\\|%s\\|%s\\|%s\\|%s\\)$"
+          (alchemist-server--server-code 'evaluate)
+          (alchemist-server--server-code 'eval-quote)
+          (alchemist-server--server-code 'source)
+          (alchemist-server--server-code 'mixtasks)
+          (alchemist-server--server-code 'modules)
+          (alchemist-server--server-code 'doc)
+          (alchemist-server--server-code 'complete)))
+
+(defun alchemist-server-contains-end-marker-p (string)
+  (string-match-p alchemist-server-code-end-marker-regex string))
+
 (defun alchemist-server--build-request-id (code &optional args)
   (let* ((code (car (cdr (assoc code alchemist-server-codes)))))
     (if args
         (format "%s %s\n" code args)
       (format "%s\n" code))))
+
+(defun alchemist-server-prepare-filter-output (output)
+  (let* ((output (apply #'concat (reverse output)))
+         (output (replace-regexp-in-string alchemist-server-code-end-marker-regex "" output))
+         (output (replace-regexp-in-string "\n+$" "" output)))
+    output))
 
 (defun alchemist-server-send-request (id filter)
   (alchemist-server--start)

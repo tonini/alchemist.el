@@ -181,9 +181,8 @@ Argument END where the mark ends."
 (defun alchemist-help-complete-filter-output (_process output)
   (with-local-quit
     (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
-    (if (string-match "END-OF-COMPLETE$" output)
-        (let* ((string (apply #'concat (reverse alchemist-help-filter-output)))
-               (string (replace-regexp-in-string "END-OF-COMPLETE$" "" string))
+    (if (alchemist-server-contains-end-marker-p output)
+        (let* ((string (alchemist-server-prepare-filter-output alchemist-help-filter-output))
                (candidates (alchemist-complete--output-to-list
                             (alchemist--utils-clear-ansi-sequences string)))
                (candidates (if (= (length candidates) 2)
@@ -198,18 +197,17 @@ Argument END where the mark ends."
 
 (defun alchemist-help-filter-output (_process output)
   (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
-  (if (string-match "END-OF-DOC$" output)
-      (let* ((string (apply #'concat (reverse alchemist-help-filter-output)))
-             (string (replace-regexp-in-string "END-OF-DOC$" "" string))
-             (string (replace-regexp-in-string "\n+$" "" string)))
+  (if (alchemist-server-contains-end-marker-p output)
+      (let ((string (alchemist-server-prepare-filter-output alchemist-help-filter-output)))
         (if (alchemist-utils--empty-string-p string)
             (message "No documentation for [%s] found." alchemist-help-current-search-text)
-          (alchemist-help--initialize-buffer string)))))
+          (alchemist-help--initialize-buffer string))
+        (setq alchemist-help-filter-output nil))))
 
 (defun alchemist-help-modules-filter (_process output)
   (with-local-quit
     (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
-    (if (string-match "END-OF-MODULES$" output)
+    (if (alchemist-server-contains-end-marker-p output)
         (let* ((output (apply #'concat (reverse alchemist-help-filter-output)))
                (modules (alchemist-help--elixir-modules-to-list output))
                (search (completing-read

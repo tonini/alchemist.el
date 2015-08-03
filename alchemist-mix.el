@@ -197,15 +197,13 @@ arg is set."
 (defun alchemist-mix-filter (_process output)
   (with-local-quit
     (setq alchemist-mix-filter-output (cons output alchemist-mix-filter-output))
-    (if (string-match-p "END-OF-MIXTASKS$" output)
-        (let* ((output (apply #'concat (reverse alchemist-mix-filter-output)))
-               (output (replace-regexp-in-string "END-OF-MIXTASKS" "" output))
-               (output (replace-regexp-in-string "\n$" "" output))
-               (tasks (split-string output "\n"))
-               (selected-task (alchemist-mix--completing-read "mix: " tasks))
-               (command (read-shell-command "mix " (concat selected-task " "))))
-          (setq alchemist-mix-filter-output nil)
-          (alchemist-mix-execute (list command) current-prefix-arg)))))
+    (when (alchemist-server-contains-end-marker-p output)
+      (let* ((output (alchemist-server-prepare-filter-output alchemist-mix-filter-output))
+             (tasks (split-string output "\n"))
+             (selected-task (alchemist-mix--completing-read "mix: " tasks))
+             (command (read-shell-command "mix " (concat selected-task " "))))
+        (setq alchemist-mix-filter-output nil)
+        (alchemist-mix-execute (list command) current-prefix-arg)))))
 
 (define-derived-mode alchemist-mix-mode fundamental-mode "Mix Mode"
   "Major mode for presenting Mix tasks.

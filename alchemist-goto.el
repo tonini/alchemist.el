@@ -270,10 +270,8 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto-filter (_process output)
   (with-local-quit
     (setq alchemist-goto-filter-output (cons output alchemist-goto-filter-output))
-    (if (string-match "END-OF-SOURCE$" output)
-        (let* ((output (apply #'concat (reverse alchemist-goto-filter-output)))
-               (output (replace-regexp-in-string "END-OF-SOURCE" "" output))
-               (output (replace-regexp-in-string "\n" "" output))
+    (if (alchemist-server-contains-end-marker-p output)
+        (let* ((output (alchemist-server-prepare-filter-output alchemist-goto-filter-output))
                (file (replace-regexp-in-string "source-file-path:" "" output)))
           (setq alchemist-goto-filter-output nil)
           (funcall alchemist-goto-callback file)))))

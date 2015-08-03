@@ -87,39 +87,31 @@
 
 (defun alchemist-eval-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
-  (if (string-match "END-OF-EVAL$" output)
-      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
-             (output (replace-regexp-in-string "END-OF-EVAL" "" output))
-             (output (replace-regexp-in-string "\n$" "" output)))
-        (setq alchemist-eval-filter-output nil)
-        (alchemist-eval-popup-buffer output))))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval-popup-buffer
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
 
 (defun alchemist-eval-insert-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
-  (if (string-match "END-OF-EVAL$" output)
-      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
-             (output (replace-regexp-in-string "END-OF-EVAL" "" output))
-             (output (replace-regexp-in-string "\n$" "" output)))
-        (setq alchemist-eval-filter-output nil)
-        (alchemist-eval--insert output))))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval--insert
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
 
 (defun alchemist-eval-quoted-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
-  (if (string-match "END-OF-QUOTE$" output)
-      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
-             (output (replace-regexp-in-string "END-OF-QUOTE" "" output))
-             (output (replace-regexp-in-string "\n$" "" output)))
-        (setq alchemist-eval-filter-output nil)
-        (alchemist-eval-popup-buffer output))))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval-popup-buffer
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
 
 (defun alchemist-eval-quoted-insert-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
-  (if (string-match "END-OF-QUOTE$" output)
-      (let* ((output (apply #'concat (reverse alchemist-eval-filter-output)))
-             (output (replace-regexp-in-string "END-OF-QUOTE" "" output))
-             (output (replace-regexp-in-string "\n$" "" output)))
-        (setq alchemist-eval-filter-output nil)
-        (alchemist-eval--insert output))))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval--insert
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
 
 ;; Public functions
 

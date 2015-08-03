@@ -108,8 +108,7 @@
     (delete-non-matching-lines "^cmp:" (point-min) (point-max))))
 
 (defun alchmist-complete--build-candidates-from-process-output (output)
-  (let* ((output (apply #'concat (reverse output)))
-         (output (replace-regexp-in-string "END-OF-COMPLETE$" "" output))
+  (let* ((output (alchemist-server-prepare-filter-output output))
          (candidates (if (not (alchemist-utils--empty-string-p output))
                          (alchemist-complete--output-to-list
                           (alchemist--utils-clear-ansi-sequences output))
@@ -117,8 +116,8 @@
          (candidates (if candidates
                          (alchemist-complete--build-candidates candidates)
                        '())))
-    candidates
-    ))
+    candidates))
+
 (defun alchemist-complete--completing-prompt (initial completing-collection)
   (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
     (cond ((equal (length completing-collection) 1)
