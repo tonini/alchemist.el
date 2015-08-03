@@ -71,6 +71,10 @@
   (declare (indent 1))
   (run-at-time seconds nil callback))
 
+(defun goto-line-non-inter (line)
+  (goto-char (point-min))
+  (forward-line (1- line)))
+
 (add-to-list 'load-path alchemist-root-path)
 
 (require 'alchemist)

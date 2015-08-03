@@ -17,7 +17,7 @@ defmodule ServerTest do
   end
 
   test "Documentation lookup" do
-    assert send_signal("DOC List") =~ """
+    assert send_signal("DOC List;[]") =~ """
     Implements functions that only make sense for lists and cannot be part of the
     Enum protocol. In general, favor using the Enum API instead of List.
     """
@@ -35,7 +35,7 @@ defmodule ServerTest do
   end
 
   test "Expression completion" do
-    assert send_signal("COMPLETE def") =~ """
+    assert send_signal("COMPLETE def;[];[]") =~ """
     cmp:def
     cmp:defexception/1
     cmp:defoverridable/1

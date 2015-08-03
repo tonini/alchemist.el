@@ -28,11 +28,8 @@
 (require 'cl-lib)
 (require 'etags)
 (require 'alchemist-utils)
-
-(eval-when-compile
-  ;; Tell the byte compiler to assume that functions are defined
-  (declare-function alchemist-help--exp-at-point "alchemist-help.el")
-  (declare-function alchemist-server-goto "alchemist-server.el"))
+(require 'alchemist-server)
+(require 'alchemist-scope)
 
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."
@@ -55,6 +52,14 @@
 (defvar alchemist-goto--symbol-name-and-pos '())
 (defvar alchemist-goto--symbol-list-bare '())
 (defvar alchemist-goto--symbol-name-and-pos-bare '())
+(defvar alchemist-goto-filter-output nil)
+(defvar alchemist-goto-callback nil)
+
+(defconst alchemist-goto--symbol-def-extract-regex
+  "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
+
+(defconst alchemist-goto--symbol-def-regex
+  "^[[:space:]]*\\(defmodule\\|defmacrop?\\|defp?\\)")
 
 ;; Faces
 
@@ -69,73 +74,6 @@
   :group 'alchemist-goto)
 
 ;; Private functions
-
-(defun alchemist-goto--current-module-name ()
-  "Searches backward in the current buffer until a module
-declaration has been found."
-  (save-excursion
-    (let ((found-flag-p nil)
-          (module-name ""))
-      (save-match-data
-        (while (and (not found-flag-p)
-                    (re-search-backward "defmodule \\([A-Za-z\._]+\\)\s+" nil t))
-          (when (not (alchemist-goto--string-at-point-p))
-            (setq module-name (match-string 1))
-            (setq found-flag-p t))
-          (when (equal 1 (line-number-at-pos (point)))
-            (setq found-flag-p t)))
-        module-name))))
-
-(defun alchemist-goto--get-context-modules ()
-  (let ((current-module (alchemist-goto--current-module-name))
-        (use-modules (alchemist-goto--use-modules-in-the-current-module-context))
-        (import-modules (alchemist-goto--import-modules-in-the-current-module-context))
-        (modules '()))
-    (push current-module modules)
-    (push use-modules modules)
-    (push import-modules modules)
-    (alchemist-utils--flatten modules)))
-
-(defun alchemist-goto--use-modules-in-the-current-module-context ()
-  (let ((modules '())
-        (context (alchemist-goto--current-module-name)))
-    (save-excursion
-      (while (re-search-backward "^\s+use\s+\\([A-Za-z0-9\.]+\\)" nil t)
-        (if (and (match-string 1)
-                 (not (alchemist-goto--string-at-point-p))
-                 (equal context (alchemist-goto--current-module-name)))
-            (cl-pushnew (substring-no-properties (match-string 1)) modules)))
-      modules)))
-
-(defun alchemist-goto--import-modules-in-the-current-module-context ()
-  (let ((modules '())
-        (context (alchemist-goto--current-module-name)))
-    (save-excursion
-      (while (re-search-backward "^\s+import\s+\\([A-Za-z0-9\.]+\\)" nil t)
-        (if (and (match-string 1)
-                 (not (alchemist-goto--string-at-point-p))
-                 (equal context (alchemist-goto--current-module-name)))
-            (cl-pushnew (substring-no-properties (match-string 1)) modules)))
-    modules)))
-
-(defun alchemist-goto--extract-module (code)
-  "Extract module from CODE."
-  (let* ((parts (split-string code "\\."))
-         (function (car (last parts)))
-         (case-fold-search nil))
-    (when (string-match-p "^[a-z_\?!]+" function)
-      (delete function parts))
-    (unless (string-match-p "^[a-z_\?!]+" (car parts))
-      (alchemist-utils--remove-dot-at-the-end (mapconcat 'concat parts ".")))))
-
-(defun alchemist-goto--extract-function (code)
-  "Extract function from CODE."
-  (let* ((parts (split-string code "\\."))
-         (function (car (last parts)))
-         (case-fold-search nil))
-    (when (and function
-               (string-match-p "^[a-z_\?!]+" function))
-      function)))
 
 (defun alchemist-goto--build-elixir-ex-core-file (file)
   (when (string-match "\\/\\(lib\\/.+\\/lib\\)\\/.+\.ex$" file)
@@ -162,37 +100,6 @@ declaration has been found."
 
 (defun alchemist-goto--erlang-file-p (file)
   (string-match-p  "\\.erl$" file))
-
-(defun alchemist-goto--get-full-path-of-alias (module)
-  (if (not (alchemist-utils--empty-string-p module))
-      (let* ((aliases (mapcar (lambda (m)
-                                (when (string-match-p (format "^%s" (car (cdr m))) module)
-                                  (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module t)))
-                              (alchemist-goto--alises-of-current-buffer)))
-             (aliases (delete nil aliases)))
-        (if aliases
-            (car aliases)
-          module))))
-
-(defun alchemist-goto--string-at-point-p (&optional complete)
-  "Return non-nil if cursor is at a string."
-  (save-excursion
-    (or (and (nth 3 (save-excursion
-                      (let ((pos (point)))
-                        (when complete
-                          (goto-char (point-max))
-                          (window-end nil t)
-                          (recenter -3))
-                        (parse-partial-sexp 1 pos))))
-             (nth 8 (save-excursion
-                      (let ((pos (point)))
-                        (when complete
-                          (goto-char (point-max))
-                          (window-end nil t)
-                          (recenter -3))
-                        (parse-partial-sexp 1 pos)))))
-        (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
-             (match-beginning 0)))))
 
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)
@@ -231,11 +138,6 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto--fetch-symbol-definitions ()
   (alchemist-goto--search-for-symbols "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s.*"))
 
-(defconst alchemist-goto--symbol-def-extract-regex
-  "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
-(defconst alchemist-goto--symbol-def-regex
-  "^[[:space:]]*\\(defmodule\\|defmacrop?\\|defp?\\)")
-
 (defun alchemist-goto--extract-symbol (str)
   (save-match-data
     (when (string-match alchemist-goto--symbol-def-extract-regex str)
@@ -268,13 +170,11 @@ It will jump to the position of the symbol definition after selection."
         name))))
 
 (defun alchemist-goto--get-symbol-from-position (position)
-  (with-current-buffer (buffer-name)
-    (save-excursion
-      (goto-char position)
-      (end-of-line)
-      (let* ((end-position (point))
-             (line (buffer-substring-no-properties position end-position)))
-        (alchemist-goto--extract-symbol line)))))
+  (goto-char position)
+  (end-of-line)
+  (let* ((end-position (point))
+         (line (buffer-substring-no-properties position end-position)))
+    (alchemist-goto--extract-symbol line)))
 
 (defun alchemist-goto--get-symbol-from-position-bare (position)
   (with-current-buffer (buffer-name)
@@ -292,31 +192,53 @@ It will jump to the position of the symbol definition after selection."
   (setq alchemist-goto--symbol-name-and-pos-bare '())
   (with-current-buffer (buffer-name)
     (save-excursion
-      (goto-char (point-max))
       (goto-char (point-min))
-      (let ()
-        (save-match-data
-          (while (re-search-forward regex nil t)
-            (when (not (alchemist-goto--string-at-point-p t))
-              (when (alchemist-goto--get-symbol-from-position (car (match-data)))
-                (let* ((position (car (match-data)))
-                       (symbol (alchemist-goto--get-symbol-from-position position))
-                       (symbol-bare (alchemist-goto--get-symbol-from-position-bare position)))
-                  (setq alchemist-goto--symbol-list (append alchemist-goto--symbol-list (list symbol)))
-                  (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position))))
-                  (setq alchemist-goto--symbol-list-bare (append alchemist-goto--symbol-list-bare (list symbol-bare)))
-                  (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position)))))))))))))
+      (save-match-data
+        (while (re-search-forward regex nil t)
+          (when (not (alchemist-scope-inside-string-p t))
+            (when (alchemist-goto--get-symbol-from-position (car (match-data)))
+              (let* ((position (car (match-data)))
+                     (symbol (alchemist-goto--get-symbol-from-position position))
+                     (symbol-bare (alchemist-goto--get-symbol-from-position-bare position)))
+                (setq alchemist-goto--symbol-list (append alchemist-goto--symbol-list (list symbol)))
+                (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position))))
+                (setq alchemist-goto--symbol-list-bare (append alchemist-goto--symbol-list-bare (list symbol-bare)))
+                (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position))))))))))))
 
 (defun alchemist-goto--open-definition (expr)
-  (let* ((module (alchemist-goto--extract-module expr))
-         (module (alchemist-goto--get-full-path-of-alias module))
-         (function (alchemist-goto--extract-function expr)))
+  (let* ((module (alchemist-scope-extract-module expr))
+         (module (alchemist-scope-alias-full-path module))
+         (function (alchemist-scope-extract-function expr)))
     (ring-insert find-tag-marker-ring (point-marker))
     (cond
      ((and (null module)
            (alchemist-goto--symbol-definition-p function))
       (alchemist-goto--goto-symbol function))
-     (t (alchemist-server-goto module function expr)))))
+     (t
+      (setq alchemist-goto-callback (lambda (file)
+                                             (cond ((alchemist-utils--empty-string-p file)
+                                                    (message "Don't know how to find: %s" expr))
+                                                   ((file-exists-p file)
+                                                    (alchemist-goto--open-file file module function))
+                                                   ((alchemist-goto--elixir-file-p file)
+                                                    (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+                                                      (if (file-exists-p elixir-source-file)
+                                                          (alchemist-goto--open-file elixir-source-file module function)
+                                                        (message "Don't know how to find: %s" expr))))
+                                                   ((alchemist-goto--erlang-file-p file)
+                                                    (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
+                                                           (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
+                                                      (cond ((file-exists-p elixir-source-file)
+                                                             (alchemist-goto--open-file elixir-source-file module function))
+                                                            ((file-exists-p erlang-source-file)
+                                                             (alchemist-goto--open-file erlang-source-file module function))
+                                                            (t
+                                                             (message "Don't know how to find: %s" expr)))))
+                                                   (t
+                                                    (pop-tag-mark)
+                                                    (message "Don't know how to find: %s" expr)))))
+      (alchemist-server-goto (format "%s,%s" module function)
+                             #'alchemist-goto-filter)))))
 
 (defun alchemist-goto--open-file (file module function)
   (let ((buf (find-file-noselect file)))
@@ -345,32 +267,21 @@ It will jump to the position of the symbol definition after selection."
   (when (re-search-forward (format "\\(^-module\(%s\)\\)" (substring module 1)) nil t)
     (goto-char (match-beginning 0))))
 
-(defun alchemist-goto--context-exists-p ()
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (if (re-search-forward "defmodule \\([A-Za-z\._]+\\)\s+" nil t)
-        t
-      nil)))
-
-(defun alchemist-goto--alises-of-current-buffer ()
-  (let* ((aliases '()))
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "^\s+alias\s+\\([-:_A-Za-z0-9,\.\?!\]+\\)\\(\s*,\s*as:\s*\\)?\\([-_A-Za-z0-9,\.\?!\]+\\)?\n" nil t)
-        (let* ((alias (match-string 1))
-               (as (if (match-string 3) (match-string 3) nil))
-               (as (if as as (car (last (split-string alias "\\."))))))
-          (setq aliases (append aliases (list (list (alchemist-utils--remove-dot-at-the-end alias)
-                                                    (alchemist-utils--remove-dot-at-the-end as))))))))
-    aliases))
+(defun alchemist-goto-filter (_process output)
+  (with-local-quit
+    (setq alchemist-goto-filter-output (cons output alchemist-goto-filter-output))
+    (if (alchemist-server-contains-end-marker-p output)
+        (let* ((output (alchemist-server-prepare-filter-output alchemist-goto-filter-output))
+               (file (replace-regexp-in-string "source-file-path:" "" output)))
+          (setq alchemist-goto-filter-output nil)
+          (funcall alchemist-goto-callback file)))))
 
 ;; Public functions
 
 (defun alchemist-goto-definition-at-point ()
   "Jump to the elixir expression definition at point."
   (interactive)
-  (alchemist-goto--open-definition (alchemist-help--exp-at-point)))
+  (alchemist-goto--open-definition (alchemist-scope-expression)))
 
 (defalias 'alchemist-goto-jump-back 'pop-tag-mark)
 

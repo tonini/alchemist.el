@@ -27,12 +27,9 @@
 
 (require 'alchemist-utils)
 (require 'alchemist-project)
+(require 'alchemist-server)
+(require 'alchemist-scope)
 (require 'alchemist-goto)
-
-;; Tell the byte compiler to assume that functions are defined
-(declare-function alchemist-server-help-without-complete "alchemist-server.el")
-(declare-function alchemist-server-help-with-complete "alchemist-server.el")
-(declare-function alchemist-server-help "alchemist-server.el")
 
 (defgroup alchemist-help nil
   "Functionality for Elixir documentation lookup."
@@ -52,6 +49,8 @@
 (defvar alchemist-help-current-search-text '()
   "Stores the current search.")
 
+(defvar alchemist-help-filter-output nil)
+
 ;; Faces
 
 (defface alchemist-help--key-face
@@ -61,23 +60,15 @@
 
 ;; Private functions
 
-(defun alchemist-help--exp-at-point ()
-  "Return the expression under the cursor."
-  (let (p1 p2)
-    (save-excursion
-      (skip-chars-backward "-_A-Za-z0-9.?!:@")
-      (setq p1 (point))
-      (skip-chars-forward "-_A-Za-z0-9.?!:@")
-      (setq p2 (point))
-      (buffer-substring-no-properties p1 p2))))
 
 (defun alchemist-help--execute (search)
+  (setq alchemist-help-current-search-text search)
+  (setq alchemist-help-filter-output nil)
   (if (not (alchemist-utils--empty-string-p search))
-      (alchemist-server-help-with-complete search)
+      (alchemist-server-complete-candidates
+       (alchemist-help--completion-server-arguments search)
+       #'alchemist-help-complete-filter-output)
     (message "No documentation for [%s] found." search)))
-
-(defun alchemist-help--execute-without-complete (search)
-  (alchemist-server-help-without-complete search))
 
 (defun alchemist-help--bad-search-output-p (string)
   (let ((match (or (string-match-p "No documentation for " string)
@@ -97,29 +88,29 @@
                              default-directory)))
     (cond
      ((alchemist-help--bad-search-output-p content)
-             (message (propertize
-                       (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
-                       'face 'alchemist-help--key-face)))
+      (message (propertize
+                (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
+                'face 'alchemist-help--key-face)))
      (t
       (if (get-buffer alchemist-help-buffer-name)
           (kill-buffer alchemist-help-buffer-name))
       (pop-to-buffer alchemist-help-buffer-name)
-      (setq buffer-undo-list nil)
-      (let ((inhibit-read-only t)
-            (buffer-undo-list t))
-        (erase-buffer)
-        (insert content)
-        (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
-          (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))
-        (delete-matching-lines "do not show this result in output" (point-min) (point-max))
-        (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
-        (ansi-color-apply-on-region (point-min) (point-max))
-        (read-only-mode 1)
-        (alchemist-help-minor-mode 1))))))
+      (with-current-buffer alchemist-help-buffer-name
+        (let ((inhibit-read-only t)
+              (buffer-undo-list t))
+          (erase-buffer)
+          (insert content)
+          (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
+            (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))
+          (delete-matching-lines "do not show this result in output" (point-min) (point-max))
+          (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
+          (ansi-color-apply-on-region (point-min) (point-max))
+          (read-only-mode 1)
+          (alchemist-help-minor-mode 1)))))))
 
 (defun alchemist-help--search-at-point ()
   "Search through `alchemist-help' with the expression under the cursor"
-  (let* ((expr (alchemist-help--exp-at-point)))
+  (let* ((expr (alchemist-scope-expression)))
     (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
 
 (defun alchemist-help--search-marked-region (begin end)
@@ -130,10 +121,10 @@ Argument END where the mark ends."
     (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
 
 (defun alchemist-help--prepare-search-expr (expr)
-  (let* ((module (alchemist-goto--extract-module expr))
-         (module (alchemist-goto--get-full-path-of-alias module))
+  (let* ((module (alchemist-scope-extract-module expr))
+         (module (alchemist-scope-alias-full-path module))
          (module (if module module ""))
-         (function (alchemist-goto--extract-function expr))
+         (function (alchemist-scope-extract-function expr))
          (function (if function function ""))
          (expr (cond
                 ((and (not (alchemist-utils--empty-string-p module))
@@ -170,6 +161,72 @@ Argument END where the mark ends."
            (propertize "?" 'face 'alchemist-help--key-face)
            "]-keys")))
 
+(defun alchemist-help--server-arguments (args)
+  (if (not (equal major-mode 'alchemist-iex-mode))
+      (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+                       (alchemist-scope-all-modules))))
+        (format "%s;%s" args modules))
+    (format "%s;[];" args)))
+
+(defun alchemist-help--completion-server-arguments (args)
+  "Build informations about the current context."
+  (if (not (equal major-mode 'alchemist-iex-mode))
+      (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+                       (alchemist-scope-all-modules)))
+             (aliases (alchemist-utils--prepare-aliases-for-elixir
+                       (alchemist-scope-aliases))))
+        (format "%s;%s;%s" args modules aliases))
+    (format "%s;[];[]" args)))
+
+(defun alchemist-help-complete-filter-output (_process output)
+  (with-local-quit
+    (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
+    (if (alchemist-server-contains-end-marker-p output)
+        (let* ((string (alchemist-server-prepare-filter-output alchemist-help-filter-output))
+               (candidates (alchemist-complete--output-to-list
+                            (alchemist--utils-clear-ansi-sequences string)))
+               (candidates (if (= (length candidates) 2)
+                               nil
+                             candidates)))
+          (setq alchemist-help-filter-output nil)
+          (if candidates
+              (let* ((search (alchemist-complete--completing-prompt alchemist-help-current-search-text candidates)))
+                (setq alchemist-help-current-search-text search)
+                (alchemist-server-help (alchemist-help--server-arguments search) #'alchemist-help-filter-output))
+            (alchemist-server-help (alchemist-help--server-arguments alchemist-help-current-search-text) #'alchemist-help-filter-output))))))
+
+(defun alchemist-help-filter-output (_process output)
+  (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
+  (if (alchemist-server-contains-end-marker-p output)
+      (let ((string (alchemist-server-prepare-filter-output alchemist-help-filter-output)))
+        (if (alchemist-utils--empty-string-p string)
+            (message "No documentation for [%s] found." alchemist-help-current-search-text)
+          (alchemist-help--initialize-buffer string))
+        (setq alchemist-help-filter-output nil))))
+
+(defun alchemist-help-modules-filter (_process output)
+  (with-local-quit
+    (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
+    (if (alchemist-server-contains-end-marker-p output)
+        (let* ((output (apply #'concat (reverse alchemist-help-filter-output)))
+               (modules (alchemist-help--elixir-modules-to-list output))
+               (search (completing-read
+                        "Elixir help: "
+                        modules
+                        nil
+                        nil
+                        nil))
+               (module (alchemist-scope-extract-module search))
+               (function (alchemist-scope-extract-function search))
+               (search (cond
+                        ((and module function)
+                         search)
+                        (module
+                         (concat module "."))
+                        (t
+                         search))))
+          (alchemist-help--execute search)))))
+
 ;; Public functions
 
 (defun alchemist-help-search-at-point ()
@@ -201,14 +258,15 @@ the actively marked region will be used for passing to `alchemist-help'."
 (defun alchemist-help ()
   "Load Elixir documentation for SEARCH."
   (interactive)
-  (alchemist-server-help))
+  (setq alchemist-help-filter-output nil)
+  (alchemist-server-help-with-modules #'alchemist-help-modules-filter))
 
 (defun alchemist-help-history (search)
   "Load Elixir from the documentation history for SEARCH."
   (interactive
    (list
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
-  (alchemist-help--execute-without-complete search))
+  (alchemist-help--execute search))
 
 ;; Deprecated functions; these will get removed in v1.5.0
 (defun alchemist-help-search-marked-region () (interactive)

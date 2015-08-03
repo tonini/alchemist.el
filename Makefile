@@ -24,6 +24,8 @@ test:	clean-elc
 	${MAKE} compile
 	${MAKE} unit
 	${MAKE} clean-elc
+	${MAKE} test_server
+	${MAKE} test_doc
 
 unit:
 	@ echo "\n$(INFO_COLOR)Run tests: $(NO_COLOR)\n"

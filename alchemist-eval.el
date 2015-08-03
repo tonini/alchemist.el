@@ -26,13 +26,7 @@
 ;;; Code:
 
 (require 'elixir-mode)
-
-;; Tell the byte compiler to assume that functions are defined
-(eval-when-compile
-  (declare-function alchemist-server-eval "alchemist-server.el")
-  (declare-function alchemist-server-eval-and-insert "alchemist-server.el")
-  (declare-function alchemist-server-eval-quote "alchemist-server.el")
-  (declare-function alchemist-server-eval-quote-and-insert "alchemist-server.el"))
+(require 'alchemist-server)
 
 (defgroup alchemist-eval nil
   "Elixir code inline evaluation functionality."
@@ -47,6 +41,8 @@
     (define-key map (kbd "q") #'quit-window)
     map)
   "Keymap for `alchemist-eval-minor-mode'.")
+
+(defvar alchemist-eval-filter-output nil)
 
 ;; Private functions
 
@@ -69,25 +65,53 @@
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval file)))
+    (alchemist-server-eval file #'alchemist-eval-filter)))
 
 (defun alchemist-eval--expression-and-print (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-and-insert file)))
+    (alchemist-server-eval file #'alchemist-eval-insert-filter)))
 
 (defun alchemist-eval--quote-expression (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-quote file)))
+    (alchemist-server-eval-quote file #'alchemist-eval-quoted-filter)))
 
 (defun alchemist-eval--quote-expression-and-print (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-quote-and-insert file)))
+    (alchemist-server-eval-quote file #'alchemist-eval-quoted-insert-filter)))
+
+(defun alchemist-eval-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval-popup-buffer
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
+
+(defun alchemist-eval-insert-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval--insert
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
+
+(defun alchemist-eval-quoted-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval-popup-buffer
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
+
+(defun alchemist-eval-quoted-insert-filter (_process output)
+  (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
+  (when (alchemist-server-contains-end-marker-p output)
+    (alchemist-eval--insert
+     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (setq alchemist-eval-filter-output nil)))
 
 ;; Public functions
 
