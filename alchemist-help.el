@@ -27,16 +27,9 @@
 
 (require 'alchemist-utils)
 (require 'alchemist-project)
+(require 'alchemist-server)
 (require 'alchemist-scope)
-
-;; Tell the byte compiler to assume that functions are defined
-(eval-when-compile
-  (declare-function alchemist-server-help-with-modules "alchemist-server.el")
-  (declare-function alchemist-server-complete-candidates "alchemist-server.el")
-  (declare-function alchemist-company-build-scope-arg "alchemist-company.el")
-  (declare-function alchemist-company-build-server-arg "alchemist-company.el")
-  (declare-function alchemist-server-help "alchemist-server.el")
-  (declare-function alchemist-goto-definition-at-point "alchemist-goto.el"))
+(require 'alchemist-goto)
 
 (defgroup alchemist-help nil
   "Functionality for Elixir documentation lookup."
@@ -67,22 +60,13 @@
 
 ;; Private functions
 
-(defun alchemist-help--exp-at-point ()
-  "Return the expression under the cursor."
-  (let (p1 p2)
-    (save-excursion
-      (skip-chars-backward "-_A-Za-z0-9.?!:@")
-      (setq p1 (point))
-      (skip-chars-forward "-_A-Za-z0-9.?!:@")
-      (setq p2 (point))
-      (buffer-substring-no-properties p1 p2))))
 
 (defun alchemist-help--execute (search)
   (setq alchemist-help-current-search-text search)
   (setq alchemist-help-filter-output nil)
   (if (not (alchemist-utils--empty-string-p search))
       (alchemist-server-complete-candidates
-       (alchemist-company-build-server-arg search)
+       (alchemist-help--completion-server-arguments search)
        #'alchemist-help-complete-filter-output)
     (message "No documentation for [%s] found." search)))
 
@@ -126,7 +110,7 @@
 
 (defun alchemist-help--search-at-point ()
   "Search through `alchemist-help' with the expression under the cursor"
-  (let* ((expr (alchemist-help--exp-at-point)))
+  (let* ((expr (alchemist-scope-expression)))
     (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
 
 (defun alchemist-help--search-marked-region (begin end)
@@ -177,16 +161,22 @@ Argument END where the mark ends."
            (propertize "?" 'face 'alchemist-help--key-face)
            "]-keys")))
 
-(defun alchemist-help-build-scope-arg (arg)
-  "Build informations about the current context."
-  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
-                   (alchemist-scope-all-modules))))
-    (format "%s;%s" arg modules)))
-
-(defun alchemist-help-build-server-arg (arg)
+(defun alchemist-help--server-arguments (args)
   (if (not (equal major-mode 'alchemist-iex-mode))
-      (alchemist-help-build-scope-arg arg)
-    (format "%s;[];" arg)))
+      (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+                       (alchemist-scope-all-modules))))
+        (format "%s;%s" args modules))
+    (format "%s;[];" args)))
+
+(defun alchemist-help--completion-server-arguments (args)
+  "Build informations about the current context."
+  (if (not (equal major-mode 'alchemist-iex-mode))
+      (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+                       (alchemist-scope-all-modules)))
+             (aliases (alchemist-utils--prepare-aliases-for-elixir
+                       (alchemist-scope-aliases))))
+        (format "%s;%s;%s" args modules aliases))
+    (format "%s;[];[]" args)))
 
 (defun alchemist-help-complete-filter-output (_process output)
   (with-local-quit
@@ -203,8 +193,8 @@ Argument END where the mark ends."
           (if candidates
               (let* ((search (alchemist-complete--completing-prompt alchemist-help-current-search-text candidates)))
                 (setq alchemist-help-current-search-text search)
-                (alchemist-server-help (alchemist-help-build-server-arg search) #'alchemist-help-filter-output))
-            (alchemist-server-help (alchemist-help-build-server-arg alchemist-help-current-search-text) #'alchemist-help-filter-output))))))
+                (alchemist-server-help (alchemist-help--server-arguments search) #'alchemist-help-filter-output))
+            (alchemist-server-help (alchemist-help--server-arguments alchemist-help-current-search-text) #'alchemist-help-filter-output))))))
 
 (defun alchemist-help-filter-output (_process output)
   (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))

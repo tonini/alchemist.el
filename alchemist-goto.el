@@ -28,13 +28,8 @@
 (require 'cl-lib)
 (require 'etags)
 (require 'alchemist-utils)
-(require 'alchemist-help)
+(require 'alchemist-server)
 (require 'alchemist-scope)
-
-(eval-when-compile
-  ;; Tell the byte compiler to assume that functions are defined
-  (declare-function alchemist-help--exp-at-point "alchemist-help.el")
-  (declare-function alchemist-server-goto "alchemist-server.el"))
 
 (defgroup alchemist-goto nil
   "Functionality to jump modules and function definitions."
@@ -106,22 +101,6 @@
 (defun alchemist-goto--erlang-file-p (file)
   (string-match-p  "\\.erl$" file))
 
-(defun alchemist-goto--string-at-point-p (&optional complete)
-  "Return non-nil if cursor is at a string."
-  (save-excursion
-    (or (and (nth 3 (save-excursion
-                      (let ((pos (point)))
-                        (when complete
-                          (end-of-buffer))
-                        (parse-partial-sexp 1 pos))))
-             (nth 8 (save-excursion
-                      (let ((pos (point)))
-                        (when complete
-                          (end-of-buffer))
-                        (parse-partial-sexp 1 pos)))))
-        (and (looking-at "\"\"\"\\|'''\\|\"\\|\'")
-             (match-beginning 0)))))
-
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)
   (if (member symbol alchemist-goto--symbol-list-bare)
@@ -191,13 +170,11 @@ It will jump to the position of the symbol definition after selection."
         name))))
 
 (defun alchemist-goto--get-symbol-from-position (position)
-  (with-current-buffer (buffer-name)
-    (save-excursion
-      (goto-char position)
-      (end-of-line)
-      (let* ((end-position (point))
-             (line (buffer-substring-no-properties position end-position)))
-        (alchemist-goto--extract-symbol line)))))
+  (goto-char position)
+  (end-of-line)
+  (let* ((end-position (point))
+         (line (buffer-substring-no-properties position end-position)))
+    (alchemist-goto--extract-symbol line)))
 
 (defun alchemist-goto--get-symbol-from-position-bare (position)
   (with-current-buffer (buffer-name)
@@ -215,20 +192,18 @@ It will jump to the position of the symbol definition after selection."
   (setq alchemist-goto--symbol-name-and-pos-bare '())
   (with-current-buffer (buffer-name)
     (save-excursion
-      (goto-char (point-max))
       (goto-char (point-min))
-      (let ()
-        (save-match-data
-          (while (re-search-forward regex nil t)
-            (when (not (alchemist-scope-inside-string-p t))
-              (when (alchemist-goto--get-symbol-from-position (car (match-data)))
-                (let* ((position (car (match-data)))
-                       (symbol (alchemist-goto--get-symbol-from-position position))
-                       (symbol-bare (alchemist-goto--get-symbol-from-position-bare position)))
-                  (setq alchemist-goto--symbol-list (append alchemist-goto--symbol-list (list symbol)))
-                  (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position))))
-                  (setq alchemist-goto--symbol-list-bare (append alchemist-goto--symbol-list-bare (list symbol-bare)))
-                  (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position)))))))))))))
+      (save-match-data
+        (while (re-search-forward regex nil t)
+          (when (not (alchemist-scope-inside-string-p t))
+            (when (alchemist-goto--get-symbol-from-position (car (match-data)))
+              (let* ((position (car (match-data)))
+                     (symbol (alchemist-goto--get-symbol-from-position position))
+                     (symbol-bare (alchemist-goto--get-symbol-from-position-bare position)))
+                (setq alchemist-goto--symbol-list (append alchemist-goto--symbol-list (list symbol)))
+                (setq alchemist-goto--symbol-name-and-pos (append alchemist-goto--symbol-name-and-pos (list (cons symbol position))))
+                (setq alchemist-goto--symbol-list-bare (append alchemist-goto--symbol-list-bare (list symbol-bare)))
+                (setq alchemist-goto--symbol-name-and-pos-bare (append alchemist-goto--symbol-name-and-pos-bare (list (cons symbol-bare position))))))))))))
 
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-scope-extract-module expr))
@@ -308,7 +283,7 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto-definition-at-point ()
   "Jump to the elixir expression definition at point."
   (interactive)
-  (alchemist-goto--open-definition (alchemist-help--exp-at-point)))
+  (alchemist-goto--open-definition (alchemist-scope-expression)))
 
 (defalias 'alchemist-goto-jump-back 'pop-tag-mark)
 

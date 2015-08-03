@@ -26,17 +26,12 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'alchemist-complete)
-(require 'alchemist-help)
-(require 'alchemist-scope)
 (require 'company)
-
-;; Tell the byte compiler to assume that functions are defined
-(eval-when-compile
-  (declare-function alchemist-help--exp-at-point "alchemist-help.el")
-  (declare-function alchemist-help--execute "alchemist-help.el")
-  (declare-function alchemist-goto--open-definition "alchemist-goto.el")
-  (declare-function alchemist-server-complete-candidates "alchemist-server.el"))
+(require 'alchemist-help)
+(require 'alchemist-goto)
+(require 'alchemist-scope)
+(require 'alchemist-server)
+(require 'alchemist-complete)
 
 (defgroup alchemist-company nil
   "Elixir company-mode backend."
@@ -64,9 +59,10 @@
   (let* ((annotation (alchemist-company--annotation candidate))
          (candidate (if annotation
                         (format "%s%s" candidate annotation)
-                      candidate)))
+                      candidate))
+         (candidate (alchemist-help--prepare-search-expr candidate)))
     (setq alchemist-company-doc-lookup-done nil)
-    (alchemist-server-help (alchemist-help-build-server-arg candidate) #'alchemist-company-doc-buffer-filter)
+    (alchemist-server-help (alchemist-help--server-arguments candidate) #'alchemist-company-doc-buffer-filter)
     (alchemist-company--wait-for-doc-buffer)
     (get-buffer alchemist-help-buffer-name)))
 
@@ -132,7 +128,7 @@
               (string= mode-name "Alchemist-IEx")))
     (prefix (and (or (eq major-mode 'elixir-mode)
                      (string= mode-name "Alchemist-IEx"))
-                 (alchemist-help--exp-at-point)))
+                 (alchemist-scope-expression)))
     (doc-buffer (alchemist-company-show-documentation arg))
     (location (alchemist-company-open-definition arg))
     (candidates (cons :async

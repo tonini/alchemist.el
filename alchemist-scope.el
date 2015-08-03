@@ -176,6 +176,16 @@
             (car aliases)
           module))))
 
+(defun alchemist-scope-expression ()
+  "Return the expression under the cursor."
+  (let (p1 p2)
+    (save-excursion
+      (skip-chars-backward "-_A-Za-z0-9.?!:@")
+      (setq p1 (point))
+      (skip-chars-forward "-_A-Za-z0-9.?!:@")
+      (setq p2 (point))
+      (buffer-substring-no-properties p1 p2))))
+
 (provide 'alchemist-scope)
 
 ;;; alchemist-scope.el ends here
