@@ -5,6 +5,7 @@
 ### Enhancements
 
   * [Test] Control the output of compilation information inside the test report. (variable `alchemist-test-display-compilation-output`)
+  * [Help] Better documentation lookup for currently selected completion candidates.
 
 ### Bug fixes
 
