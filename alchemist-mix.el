@@ -28,10 +28,7 @@
 (require 'alchemist-utils)
 (require 'alchemist-project)
 (require 'alchemist-test-mode)
-
-;; Tell the byte compiler to assume that functions are defined
-(eval-when-compile
-  (declare-function alchemist-server--mix "alchemist-server.el"))
+(require 'alchemist-server)
 
 (defgroup alchemist-mix nil
   "Emacs integration for Elixir's mix."
