@@ -1,4 +1,4 @@
-;;; alchemist-utils.el ---
+;;; alchemist-utils.el --- Common utility functions that don't belong anywhere else -*- lexical-binding: t -*-
 
 ;; Copyright © 2014-2015 Samuel Tonini
 
@@ -20,6 +20,8 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
+
+;; Common utility functions that don't belong anywhere else
 
 ;;; Code:
 
@@ -47,7 +49,7 @@
 
 
 (defun alchemist-utils--elixir-project-root ()
-  "Finds the root directory of the project.
+  "Find the root directory of the project.
 It walks the directory tree until it finds a elixir project root indicator."
   (let* ((file (file-name-as-directory (expand-file-name default-directory))))
     (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
