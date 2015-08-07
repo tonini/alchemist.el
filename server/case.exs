@@ -42,7 +42,11 @@ defmodule Alchemist.Case do
 
   defmodule Modules do
     def process! do
-      Informant.get_modules |> Enum.map &IO.puts/1
+      modules = Completer.run(':')
+      |> Enum.map &Module.split/1
+      functions = Completer.run('')
+      |> Enum.map &Kernel.to_string/1
+      modules ++ functions |> Enum.map &IO.puts/1
       IO.puts "END-OF-MODULES"
     end
   end
