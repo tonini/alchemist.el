@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'dash)
 (require 'company-dabbrev-code)
 (require 'alchemist-utils)
 
@@ -39,7 +40,7 @@
 
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
   (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
-         (candidates (mapcar (lambda (c) (concat prefix "." c)) (cdr functions))))
+         (candidates (-map (lambda (c) (concat prefix "." c)) (cdr functions))))
     (if add-prefix
         (push prefix candidates)
       candidates)))
@@ -52,7 +53,7 @@
 (defun alchemist-complete--build-candidates (a-list)
   (let* ((search-term (car a-list))
          (candidates a-list)
-         (candidates (mapcar (lambda (f)
+         (candidates (-map (lambda (f)
                                (let* ((candidate f)
                                       (meta (if (string-match-p "^.+/" f)
                                                 (replace-regexp-in-string "^.+/" "/" f)
@@ -69,7 +70,7 @@
                                                                                              (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta)))
                                   (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
                              candidates))
-         (candidates (remove nil candidates)))
+         (candidates (-remove 'null candidates)))
     (cond
      ((and (string-match-p "\\.$" search-term)
            (not (string-match-p "\\.$" alchemist-company-last-completion)))
@@ -82,7 +83,7 @@
                             (let ((search (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                                               (list (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "" search-term))
                                             (list (alchemist-utils--remove-dot-at-the-end search-term))))
-                                  (candidates (mapcar (lambda (c)
+                                  (candidates (-map (lambda (c)
                                                         (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                                                             (concat (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "." search-term) c)
                                                           (concat search-term c)))
@@ -94,7 +95,7 @@
                             (alchemist-complete--concat-prefix-with-functions search-term a-list))
                            (t
                             a-list))))
-    (delete-dups candidates)))
+    (-distinct candidates)))
 
 (defun alchemist-complete--output-to-list (output)
   (let* ((output (replace-regexp-in-string "^cmp:" "" output))
@@ -145,7 +146,7 @@ detailed information."
                        (`code company-dabbrev-code-modes)
                        (`all `all))
                      t)))
-    (delete-dups candidates)))
+    (-distinct candidates)))
 
 
 (provide 'alchemist-complete)

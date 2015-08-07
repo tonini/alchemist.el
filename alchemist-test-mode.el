@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'dash)
 (require 'alchemist-project)
 
 (defgroup alchemist-test-mode nil
@@ -245,7 +246,7 @@ macro) while the values are the position at which the test matched."
 
 (defun alchemist-test-execute (command-list)
   (message "Testing...")
-  (let* ((command (mapconcat 'concat (alchemist-utils--flatten command-list) " ")))
+  (let* ((command (mapconcat 'concat (-flatten command-list) " ")))
     (alchemist-test-save-buffers)
     (alchemist-report-run command
                           alchemist-test-report-process-name

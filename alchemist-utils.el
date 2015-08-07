@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'dash)
 (require 'ansi-color)
 
 ;; Variables
@@ -47,25 +48,18 @@
                                 'face 'alchemist-utils--deprecated-face)
            new-function))
 
-
 (defun alchemist-utils--elixir-project-root ()
   "Find the root directory of the project.
 It walks the directory tree until it finds a elixir project root indicator."
   (let* ((file (file-name-as-directory (expand-file-name default-directory))))
     (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
 
-(defun alchemist-utils--flatten (alist)
-  (cond ((null alist) nil)
-        ((atom alist) (list alist))
-        (t (append (alchemist-utils--flatten (car alist))
-                   (alchemist-utils--flatten (cdr alist))))))
-
 (defun alchemist-utils--build-command (command-list)
   "Build the commands list for the runner."
-  (let ((command (cl-remove "" (alchemist-utils--flatten
-                                (list (if (stringp command-list)
-                                          (split-string command-list)
-                                        command-list))))))
+  (let* ((command-list (-flatten (if (stringp command-list)
+                                     (split-string command-list)
+                                   command-list)))
+         (command (-remove (lambda (e) (equal e "")) command-list)))
     (mapconcat 'concat command " ")))
 
 (defun alchemist-utils--clear-search-text (search-text)
@@ -113,7 +107,7 @@ It walks the directory tree until it finds a elixir project root indicator."
         (string= string ""))))
 
 (defun alchemist-utils--prepare-aliases-for-elixir (aliases)
-  (let* ((aliases (mapcar (lambda (a)
+  (let* ((aliases (-map (lambda (a)
                             (let ((module (alchemist-utils--remove-dot-at-the-end (car a)))
                                   (alias (alchemist-utils--remove-dot-at-the-end (car (cdr a)))))
                             (if (not (or (alchemist-utils--empty-string-p alias)
@@ -149,7 +143,7 @@ module names (MyModule)."
 For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
   (let* ((path (file-name-sans-extension path))
          (path (split-string path "/"))
-         (path (cl-remove-if (lambda (str) (equal str "")) path)))
+         (path (-remove (lambda (str) (equal str "")) path)))
     (mapconcat #'alchemist-utils--snakecase-to-camelcase path ".")))
 
 (defun alchemist-utils--add-trailing-slash (path)

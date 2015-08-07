@@ -25,6 +25,8 @@
 
 ;;; Code:
 
+(require 'dash)
+
 (defgroup alchemist-scope nil
   "Provides information about the Elixir source code context."
   :prefix "alchemist-scope-"
@@ -143,7 +145,7 @@
     (push current modules)
     (push use modules)
     (push import modules)
-    (alchemist-utils--flatten modules)))
+    (-flatten modules)))
 
 (defun alchemist-scope-extract-module (expr)
   "Extract module from EXPR."
@@ -167,10 +169,10 @@
 (defun alchemist-scope-alias-full-path (module)
   "Solve the full path for the MODULE alias."
   (if (not (alchemist-utils--empty-string-p module))
-      (let* ((aliases (mapcar (lambda (m)
-                                (when (string-match-p (format "^%s" (car (cdr m))) module)
-                                  (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module t)))
-                              (alchemist-scope-aliases)))
+      (let* ((aliases (-map (lambda (m)
+                              (when (string-match-p (format "^%s" (car (cdr m))) module)
+                                (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module t)))
+                            (alchemist-scope-aliases)))
              (aliases (delete nil aliases)))
         (if aliases
             (car aliases)

@@ -96,7 +96,7 @@ defmodule MyTest do
   end
 end
 ")
-                   (mapcar 'car (alchemist-test-mode--tests-in-buffer))))))
+                   (-map 'car (alchemist-test-mode--tests-in-buffer))))))
 
 (provide 'alchemist-test-mode-test)
 

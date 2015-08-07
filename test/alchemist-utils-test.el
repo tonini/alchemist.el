@@ -25,12 +25,6 @@
 
 (require 'test-helper)
 
-(ert-deftest test-flatten-of-list ()
-  (should (equal (alchemist-utils--flatten '(1 2 (3 4) 5))
-                 '(1 2 3 4 5)))
-  (should (equal (alchemist-utils--flatten '(1 2 ("dude" "hero" (3)) 4 5))
-                 '(1 2 "dude" "hero" 3 4 5))))
-
 (ert-deftest test-cmdlist-runner-builder ()
   (should (equal (alchemist-utils--build-command "mix help")
                  "mix help"))

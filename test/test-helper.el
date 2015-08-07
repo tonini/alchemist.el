@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'f)
+(require 'dash)
 
 (defvar alchemist-test-path
   (f-parent (f-this-file)))

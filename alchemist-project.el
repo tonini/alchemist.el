@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'dash)
 (require 'alchemist-utils)
 
 (defgroup alchemist-project nil
@@ -175,13 +176,13 @@ The newly created buffer is filled with a module definition based on the file na
   (let ((directory (concat (replace-regexp-in-string "\/?$" "" (concat (alchemist-project-root) directory) "/"))))
     (message directory)
     (concat directory "/" (completing-read (concat directory ": ")
-                                           (mapcar (lambda (path)
-                                                     (replace-regexp-in-string (concat "^" (regexp-quote directory) "/") "" path))
-                                                   (split-string
-                                                    (shell-command-to-string
-                                                     (concat
-                                                      "find \"" directory
-                                                      "\" -type f | grep \"_test\.exs\" | grep -v \"/.git/\""))))))))
+                                           (-map (lambda (path)
+                                                   (replace-regexp-in-string (concat "^" (regexp-quote directory) "/") "" path))
+                                                 (split-string
+                                                  (shell-command-to-string
+                                                   (concat
+                                                    "find \"" directory
+                                                    "\" -type f | grep \"_test\.exs\" | grep -v \"/.git/\""))))))))
 
 (defun alchemist-project-name ()
   "Return the name of the current Elixir project."

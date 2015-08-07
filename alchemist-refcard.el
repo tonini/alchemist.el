@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'dash)
 (require 'tabulated-list)
 
 ;; Tell the byte compiler to assume that functions are defined
@@ -54,12 +55,12 @@
 
 (defun alchemist-refcard--get-keybinding (function-name)
   (let* ((keys (where-is-internal (intern function-name)))
-         (keys (mapcar (lambda (k)
-                         (let ((key (format "%s" k)))
-                           (if (string-match-p "menu-bar" key)
-                               nil
-                             k))) keys))
-         (keys (cl-remove-if nil keys)))
+         (keys (-map (lambda (k)
+                       (let ((key (format "%s" k)))
+                         (if (string-match-p "menu-bar" key)
+                             nil
+                           k))) keys))
+         (keys (-remove 'null keys)))
     (if keys
         (key-description (car keys))
       "")))

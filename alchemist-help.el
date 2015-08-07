@@ -25,6 +25,7 @@
 
 ;;; Code:
 
+(require 'dash)
 (require 'alchemist-utils)
 (require 'alchemist-project)
 (require 'alchemist-server)
@@ -141,7 +142,7 @@ Argument END where the mark ends."
          (modules (split-string str))
          (modules (delete nil modules))
          (modules (cl-sort modules 'string-lessp :key 'downcase))
-         (modules (delete-dups modules)))
+         (modules (-distinct modules)))
     modules))
 
 (defun alchemist-help-minor-mode-key-binding-summary ()
