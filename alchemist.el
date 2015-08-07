@@ -3,7 +3,7 @@
 ;; Copyright © 2014-2015 Samuel Tonini
 ;;
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
-
+;; Maintainer: Samuel Tonini <tonini.samuel@gmail.com>
 ;; URL: http://www.github.com/tonini/alchemist.el
 ;; Version: 1.4.0-cvs
 ;; Package-Requires: ((elixir-mode "2.2.5") (emacs "24.4") (company "0.8.0"))
