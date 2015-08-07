@@ -184,7 +184,6 @@ Key bindings:
      ["Execute this buffer" alchemist-execute-this-buffer]
      ["Execute file" alchemist-execute-file])
     ("Mix"
-     ["Mix deps..." alchemist-mix-deps-with-prompt]
      ["Mix compile..." alchemist-mix-compile]
      ["Mix run..." alchemist-mix-run]
      "---"
@@ -193,13 +192,6 @@ Key bindings:
      ["Mix test at point" alchemist-mix-test-at-point]
      "---"
      ["Mix..." alchemist-mix]
-     ["Mix new..." alchemist-mix-new]
-     ["Mix hex search..." alchemist-mix-hex-search]
-     "---"
-     ["Mix local..." alchemist-mix-local-with-prompt]
-     ["Mix local install..." alchemist-mix-local-install]
-     ["Mix local install (Path)..." alchemist-mix-local-install-with-path]
-     ["Mix local install (URL)..." alchemist-mix-local-install-with-url]
      "---"
      ["Display mix buffer" alchemist-mix-display-mix-buffer]
      "---"
@@ -227,8 +219,7 @@ Key bindings:
      ["Documentation search..." alchemist-help]
      ["Documentation search history..." alchemist-help-history]
      "---"
-     ["Documentation search at point..." alchemist-help-search-at-point]
-     ["Documentation search marked region..." alchemist-help-search-marked-region])))
+     ["Documentation search at point..." alchemist-help-search-at-point])))
 
 (add-hook 'elixir-mode-hook 'alchemist-mode-hook)
 
