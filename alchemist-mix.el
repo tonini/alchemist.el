@@ -50,7 +50,7 @@
   :type 'string
   :group 'alchemist-mix)
 
-(defcustom alchemist-mix-test-default-options '("--exclude pending:true")
+(defcustom alchemist-mix-test-default-options '()
   "Default options for alchemist test command."
   :type '(repeat string)
   :group 'alchemist-mix)
