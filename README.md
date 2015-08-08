@@ -145,7 +145,7 @@ There are some ways Alchemist can be adjusted that certain workflows operating d
 * Use custom mix test task options.
 
 ```el
-(setq alchemist-mix-test-default-options '("--exclude pending:true")) ;; default
+(setq alchemist-mix-test-default-options '()) ;; default
 ```
 
 * Use a different environment variable in which mix tasks will run.
