@@ -26,8 +26,8 @@
 (require 'test-helper)
 
 (defun prepare-test-report-buffer ()
-  (when (process-live-p (get-buffer-process (get-buffer "*alchemist-test-report*")))
-    (set-process-query-on-exit-flag (get-buffer-process (get-buffer "*alchemist-test-report*")) nil)))
+  (when (process-live-p (get-buffer-process (get-buffer alchemist-test-report-buffer-name)))
+    (set-process-query-on-exit-flag (get-buffer-process (get-buffer alchemist-test-report-buffer-name)) nil)))
 
 (ert-deftest test-mix/run-mix-test ()
   (prepare-test-report-buffer)

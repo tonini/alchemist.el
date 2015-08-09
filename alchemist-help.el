@@ -39,7 +39,7 @@
 
 ;; Variables
 
-(defcustom alchemist-help-buffer-name "*elixir help*"
+(defcustom alchemist-help-buffer-name "*alchemist help*"
   "Name of the Elixir help buffer."
   :type 'string
   :group 'alchemist-help)

@@ -63,7 +63,7 @@ Otherwise, it saves all modified buffers without asking."
 
 (defvar alchemist-test--last-run-status "")
 
-(defconst alchemist-test-report-buffer-name "*alchemist-test-report*"
+(defconst alchemist-test-report-buffer-name "*alchemist test report*"
   "Name of the test report buffer.")
 
 (defconst alchemist-test-report-process-name "alchemist-test-process"
