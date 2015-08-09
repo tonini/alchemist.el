@@ -35,7 +35,6 @@
   :prefix "alchemist-complete-"
   :group 'alchemist)
 
-(defvar alchemist-server-company-callback nil)
 (defvar alchemist-company-last-completion nil)
 
 (defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
@@ -99,9 +98,8 @@
 
 (defun alchemist-complete--output-to-list (output)
   (let* ((output (replace-regexp-in-string "^cmp:" "" output))
-         (output (split-string output))
-         (output (delete nil output)))
-    output))
+         (output (split-string output)))
+    (-remove 'null output)))
 
 (defun alchemist-complete--clear-buffer (buffer)
   "Clears the BUFFER from not used lines."
