@@ -98,7 +98,7 @@ Key bindings:
   :global nil
   :keymap `((,alchemist-key-command-prefix . alchemist-mode-keymap))
   (cond (alchemist-mode
-         (alchemist-server--start)
+         (alchemist-server-start-if-not-running)
          (alchemist-test-initialize-modeline))
         (t
          (alchemist-test-reset-modeline))))

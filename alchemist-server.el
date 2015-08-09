@@ -32,15 +32,25 @@
   :prefix "alchemist-server-"
   :group 'alchemist)
 
-(defvar alchemist-server--envs '("dev" "prod" "test" "shared")
-  "The list of server environments to use.")
+(defvar alchemist-server-processes '()
+  "Store running Alchemist server processes.")
+
+(defvar alchemist-server-env "dev"
+  "Default environment in for the Alchemist server.")
+
+(defvar alchemist-server-envs '("dev" "prod" "test" "shared")
+  "List of available Alchemist server environments.")
 
 (defconst alchemist-server
   (concat (file-name-directory load-file-name) "server/run.exs")
-  "Script file with alchemist server.")
+  "Path to the Alchemist server script file.")
 
-(defvar alchemist-server--processes '())
-(defvar alchemist-server--env "dev")
+(defconst alchemist-server-command
+  (format "%s %s %s"
+          alchemist-execute-command
+          alchemist-server
+          alchemist-server-env)
+  "Alchemist server command.")
 
 (defconst alchemist-server-codes '((evaluate "EVAL")
                                    (eval-quote "QUOTE")
@@ -48,10 +58,8 @@
                                    (mixtasks "MIXTASKS")
                                    (modules "MODULES")
                                    (doc "DOC")
-                                   (complete "COMPLETE")))
-
-(defconst alchemist-server-command
-  (format "%s %s %s" alchemist-execute-command alchemist-server alchemist-server--env))
+                                   (complete "COMPLETE"))
+  "Alchemist server API codes.")
 
 (defun alchemist-server-start (env)
   "Start alchemist server for the current mix project in specific ENV.
@@ -59,18 +67,22 @@
 If a server already running, the current one will be killed and new one
 will be started instead."
   (interactive (list
-                (completing-read (format "(Alchemist-Server) run in environment: (default: %s) " alchemist-server--env)
-                                 alchemist-server--envs nil nil nil)))
-  (when (alchemist-server--process-p)
-    (kill-process (alchemist-server--process)))
-  (alchemist-server--start-with-env env))
+                (completing-read (format "(Alchemist-Server) run in environment: (default: %s) " alchemist-server-env)
+                                 alchemist-server-envs nil nil nil)))
+  (when (alchemist-server-process-p)
+    (kill-process (alchemist-server-process)))
+  (alchemist-server-start-in-env env))
 
-(defun alchemist-server--start ()
-  (unless (alchemist-server--process-p)
-    (alchemist-server--start-with-env alchemist-server--env)))
+(defun alchemist-server-start-if-not-running ()
+  "Start a new Alchemist server if not already running.
 
-(defun alchemist-server--start-with-env (env)
-  (let* ((process-name (alchemist-server--process-name))
+An Alchemist server will be started for the current Elixir mix project."
+  (unless (alchemist-server-process-p)
+    (alchemist-server-start-in-env alchemist-server-env)))
+
+(defun alchemist-server-start-in-env (env)
+  "Start an Alchemist server with the ENV."
+  (let* ((process-name (alchemist-server-process-name))
          (default-directory (if (string= process-name "alchemist-server")
                                 default-directory
                               process-name))
@@ -80,92 +92,126 @@ will be started instead."
     (alchemist-server--store-process process)))
 
 (defun alchemist-server--store-process (process)
-  (let ((process-name (alchemist-server--process-name)))
-    (if (cdr (assoc process-name alchemist-server--processes))
-        (setq alchemist-server--processes
-              (delq (assoc process-name alchemist-server--processes) alchemist-server--processes)))
-    (add-to-list 'alchemist-server--processes (cons process-name process))))
+  "Store PROCESS in `alchemist-server-processes'."
+  (let ((process-name (alchemist-server-process-name)))
+    (if (cdr (assoc process-name alchemist-server-processes))
+        (setq alchemist-server-processes
+              (delq (assoc process-name alchemist-server-processes) alchemist-server-processes)))
+    (add-to-list 'alchemist-server-processes (cons process-name process))))
 
-(defun alchemist-server--process-p ()
-  (process-live-p (alchemist-server--process)))
+(defun alchemist-server-process-p ()
+  "Return non-nil if a process for the current
+Elixir mix project is live."
+  (process-live-p (alchemist-server-process)))
 
-(defun alchemist-server--process ()
-  (cdr (assoc (alchemist-server--process-name) alchemist-server--processes)))
+(defun alchemist-server-process ()
+  "Return process for the current Elixir mix project."
+  (cdr (assoc (alchemist-server-process-name) alchemist-server-processes)))
 
-(defun alchemist-server--process-name ()
+(defun alchemist-server-process-name ()
+  "Return process name for the current Elixir mix project."
   (let* ((process-name (alchemist-project-root))
          (process-name (if process-name
                            process-name
                          "alchemist-server")))
     process-name))
 
-(defun alchemist-server--server-code (symbol)
+(defun alchemist-server-api-code (symbol)
+  "Return Alchemist server API code for SYMBOL."
   (car (cdr (assoc symbol alchemist-server-codes))))
 
 (defconst alchemist-server-code-end-marker-regex
   (format "END-OF-\\(%s\\|%s\\|%s\\|%s\\|%s\\|%s\\|%s\\)$"
-          (alchemist-server--server-code 'evaluate)
-          (alchemist-server--server-code 'eval-quote)
-          (alchemist-server--server-code 'source)
-          (alchemist-server--server-code 'mixtasks)
-          (alchemist-server--server-code 'modules)
-          (alchemist-server--server-code 'doc)
-          (alchemist-server--server-code 'complete)))
+          (alchemist-server-api-code 'evaluate)
+          (alchemist-server-api-code 'eval-quote)
+          (alchemist-server-api-code 'source)
+          (alchemist-server-api-code 'mixtasks)
+          (alchemist-server-api-code 'modules)
+          (alchemist-server-api-code 'doc)
+          (alchemist-server-api-code 'complete))
+  "Regular expression to identify Alchemist server API end markers.")
 
 (defun alchemist-server-contains-end-marker-p (string)
+  "Return non-nil if STRING contain an Alchemist server API end marker."
   (string-match-p alchemist-server-code-end-marker-regex string))
 
-(defun alchemist-server--build-request-id (code &optional args)
+(defun alchemist-server-build-request-string (code &optional args)
+  "Build Alchemist server request string for CODE.
+
+If ARGS available add them to the request string."
   (let* ((code (car (cdr (assoc code alchemist-server-codes)))))
     (if args
         (format "%s %s\n" code args)
       (format "%s\n" code))))
 
 (defun alchemist-server-prepare-filter-output (output)
+  "Clean OUTPUT by remove Alchemist server API end markes."
   (let* ((output (apply #'concat (reverse output)))
          (output (replace-regexp-in-string alchemist-server-code-end-marker-regex "" output))
          (output (replace-regexp-in-string "\n+$" "" output)))
     output))
 
-(defun alchemist-server-send-request (id filter)
-  (alchemist-server--start)
-  (set-process-filter (alchemist-server--process) filter)
-  (process-send-string (alchemist-server--process) id))
+(defun alchemist-server-send-request (string filter)
+  "Send STRING to Alchemist server API and set FILTER to process."
+  (alchemist-server-start-if-not-running)
+  (set-process-filter (alchemist-server-process) filter)
+  (process-send-string (alchemist-server-process) string))
 
 (defun alchemist-server-goto (args filter)
-  (alchemist-server--start)
-  (alchemist-server-send-request (alchemist-server--build-request-id 'source args) filter))
+  "Make an Alchemist server source request with ARGS.
+
+Process server respond with FILTER."
+  (alchemist-server-start-if-not-running)
+  (alchemist-server-send-request (alchemist-server-build-request-string 'source args) filter))
 
 (defun alchemist-server--mix (filter)
-  (alchemist-server--start)
-  (alchemist-server-send-request (alchemist-server--build-request-id 'mixtasks) filter))
+  "Make an Alchemist server mix request.
+
+Process server respond with FILTER."
+  (alchemist-server-start-if-not-running)
+  (alchemist-server-send-request (alchemist-server-build-request-string 'mixtasks) filter))
 
 (defun alchemist-server-help-with-modules (filter)
-  (alchemist-server--start)
-  (alchemist-server-send-request (alchemist-server--build-request-id 'modules) filter))
+  "Make an Alchemist server modules request.
+
+Process server respond with FILTER."
+  (alchemist-server-start-if-not-running)
+  (alchemist-server-send-request (alchemist-server-build-request-string 'modules) filter))
 
 (defun alchemist-server-help (args filter)
-  (alchemist-server--start)
-  (alchemist-server-send-request (alchemist-server--build-request-id 'doc args) filter))
+  "Make an Alchemist server doc request with ARGS.
+
+Process server respond with FILTER."
+  (alchemist-server-start-if-not-running)
+  (alchemist-server-send-request (alchemist-server-build-request-string 'doc args) filter))
 
 (defun alchemist-server-eval (file filter)
-  (alchemist-server--start)
-  (alchemist-server-send-request (alchemist-server--build-request-id 'evaluate file) filter))
+  "Make an Alchemist server evaluate request with FILE.
+
+Process server respond with FILTER."
+  (alchemist-server-start-if-not-running)
+  (alchemist-server-send-request (alchemist-server-build-request-string 'evaluate file) filter))
 
 (defun alchemist-server-eval-quote (file filter)
-  (alchemist-server--start)
-  (alchemist-server-send-request (alchemist-server--build-request-id 'eval-quote file) filter))
+  "Make an Alchemist server quote request with FILE.
+
+Process server respond with FILTER."
+  (alchemist-server-start-if-not-running)
+  (alchemist-server-send-request (alchemist-server-build-request-string 'eval-quote file) filter))
 
 (defun alchemist-server-complete-candidates (args filter)
-  (alchemist-server--start)
-  (alchemist-server-send-request (alchemist-server--build-request-id 'complete args) filter))
+  "Make an Alchemist server complete request with ARGS.
+
+Process server respond with FILTER."
+  (alchemist-server-start-if-not-running)
+  (alchemist-server-send-request (alchemist-server-build-request-string 'complete args) filter))
 
 (defun alchemist-server-status ()
   "Report the server status for the current Elixir project."
   (interactive)
   (message "Alchemist-Server-Status: [Project: %s Status: %s]"
-           (alchemist-server--process-name)
-           (if (alchemist-server--process-p)
+           (alchemist-server-process-name)
+           (if (alchemist-server-process-p)
                "Connected"
              "Not Connected")))
 

@@ -26,32 +26,32 @@
 (require 'test-helper)
 
 (ert-deftest not-inside-project/start-default-server ()
-  (alchemist-server--start)
+  (alchemist-server-start-if-not-running)
   (should (string= "alchemist-server"
-                   (process-name (alchemist-server--process))))
+                   (process-name (alchemist-server-process))))
   (should (string= "run"
-                   (process-status (process-name (alchemist-server--process))))))
+                   (process-status (process-name (alchemist-server-process))))))
 
 (ert-deftest inside-project/start-project-server ()
   (with-sandbox
    (f-touch "mix.exs")
-   (alchemist-server--start)
+   (alchemist-server-start-if-not-running)
    (should (string-match-p "alchemist\\.el\\/test\\/sandbox\\/$"
-                           (process-name (alchemist-server--process))))
+                           (process-name (alchemist-server-process))))
    (should (string= "run"
-                    (process-status (process-name (alchemist-server--process)))))))
+                    (process-status (process-name (alchemist-server-process)))))))
 
 (ert-deftest inside-project/get-process-name ()
   (with-sandbox
    (f-touch "mix.exs")
-   (alchemist-server--start)
+   (alchemist-server-start-if-not-running)
    (should (string-match-p "alchemist\\.el\\/test\\/sandbox\\/$"
-                           (alchemist-server--process-name)))))
+                           (alchemist-server-process-name)))))
 
 (ert-deftest check-if-process-is-running ()
   (should (progn
-            (alchemist-server--start)
-            (alchemist-server--process-p))))
+            (alchemist-server-start-if-not-running)
+            (alchemist-server-process-p))))
 
 (provide 'alchemist-server-test)
 
