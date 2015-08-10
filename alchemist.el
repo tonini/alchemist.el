@@ -6,7 +6,7 @@
 ;; Maintainer: Samuel Tonini <tonini.samuel@gmail.com>
 ;; URL: http://www.github.com/tonini/alchemist.el
 ;; Version: 1.4.0-cvs
-;; Package-Requires: ((elixir-mode "2.2.5") (dash "2.11.0") (emacs "24.4") (company "0.8.0"))
+;; Package-Requires: ((elixir-mode "2.2.5") (dash "2.11.0") (emacs "24.4") (company "0.8.0") (pkg-info "0.4"))
 ;; Keywords: languages, elixir, elixirc, mix, hex, alchemist
 
 ;; This file is not part of GNU Emacs.
@@ -75,13 +75,23 @@
   "Hook which enables `alchemist-mode'"
   (alchemist-mode 1))
 
-(defvar alchemist--version "1.4.0-cvs")
-
-;;;###autoload
 (defun alchemist-version (&optional show-version)
-  "Display Alchemist's version."
-  (interactive)
-  (message "Alchemist %s" (replace-regexp-in-string "-cvs" "snapshot" alchemist--version)))
+  "Get the Alchemist version as string.
+
+If called interactively or if SHOW-VERSION is non-nil, show the
+version in the echo area and the messages buffer.
+
+The returned string includes both, the version from package.el
+and the library version, if both a present and different.
+
+If the version number could not be determined, signal an error,
+if called interactively, or if SHOW-VERSION is non-nil, otherwise
+just return nil."
+  (interactive (list t))
+  (let ((version (pkg-info-version-info 'alchemist)))
+    (when show-version
+      (message "Alchemist version: %s" version))
+    version))
 
 (define-prefix-command 'alchemist-mode-keymap)
 
@@ -219,7 +229,9 @@ Key bindings:
      ["Documentation search..." alchemist-help]
      ["Documentation search history..." alchemist-help-history]
      "---"
-     ["Documentation search at point..." alchemist-help-search-at-point])))
+     ["Documentation search at point..." alchemist-help-search-at-point])
+    ("About"
+     ["Show Alchemist version" alchemist-version t])))
 
 (add-hook 'elixir-mode-hook 'alchemist-mode-hook)
 
