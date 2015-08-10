@@ -84,9 +84,7 @@
       nil)))
 
 (defun alchemist-help--initialize-buffer (content)
-  (let ((default-directory (if (alchemist-project-root)
-                               (alchemist-project-root)
-                             default-directory)))
+  (let ((default-directory (alchemist-project-root-or-default-dir)))
     (cond
      ((alchemist-help--bad-search-output-p content)
       (message (propertize

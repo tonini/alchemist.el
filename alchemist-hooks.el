@@ -26,8 +26,10 @@
 
 ;;; Code:
 
-(require 'alchemist-utils)
+(require 'alchemist-project)
 (require 'alchemist-mix)
+(require 'alchemist-report)
+(require 'alchemist-test-mode)
 
 (defgroup alchemist-hooks nil
   "Hooks"
@@ -39,14 +41,23 @@
   :type 'boolean
   :group 'alchemist-hooks)
 
-(defun alchemist-hooks--test-on-save ()
+(defun alchemist-hooks-test-on-save ()
   (when (and alchemist-hooks-test-on-save
-             (alchemist-utils--elixir-project-root))
-    (alchemist-mix-test)))
+             (alchemist-project-p))
+    (alchemist-report-run "mix test"
+                          alchemist-test-report-process-name
+                          alchemist-test-report-buffer-name
+                          #'alchemist-test-report-mode
+                          #'alchemist-test--handle-exit
+                          #'(lambda (buffer)
+                              (with-current-buffer buffer
+                                (let ((inhibit-read-only t))
+                                  (alchemist-test--render-files))))
+                          t)))
 
 (eval-after-load 'elixir-mode
   '(progn
-     (add-hook 'after-save-hook 'alchemist-hooks--test-on-save nil nil)))
+     (add-hook 'after-save-hook 'alchemist-hooks-test-on-save nil nil)))
 
 (provide 'alchemist-hooks)
 

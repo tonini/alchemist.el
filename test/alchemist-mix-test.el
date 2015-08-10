@@ -38,18 +38,6 @@
   (delay 1.2 (lambda ()
                (should (alchemist-test--last-run-successful-p)))))
 
-(ert-deftest test-mix/run-mix-test-at-point ()
-  (prepare-test-report-buffer)
-  (cd "test/dummy_elixir/test/")
-  (find-file "dummy_elixir_test.exs")
-  (with-current-buffer "dummy_elixir_test.exs"
-    (shut-up
-      (goto-line 5)
-      (alchemist-mix-test-at-point)))
-  (should (equal (expand-file-name "dummy_elixir_test.exs:5") alchemist-last-run-test))
-  (delay 1.2 (lambda ()
-               (should (alchemist-test--last-run-successful-p)))))
-
 (ert-deftest test-mix/run-mix-test-file ()
   (prepare-test-report-buffer)
   (cd "test/dummy_elixir/test/")

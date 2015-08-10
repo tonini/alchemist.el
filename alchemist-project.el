@@ -64,6 +64,14 @@
           ((> (length (cl-intersection present-files alchemist-project-root-indicators :test 'string=)) 0) directory)
           (t (alchemist-project-root (file-name-directory (directory-file-name directory)))))))
 
+(defun alchemist-project-root-or-default-dir ()
+  "Return the current Elixir mix project root or `default-directory'."
+  (let* ((project-root (alchemist-project-root))
+         (dir (if project-root
+                  project-root
+                default-directory)))
+    dir))
+
 (defun alchemist-project--establish-root-directory ()
   "Set the default-directory to the Elixir project root."
   (let ((project-root (alchemist-project-root)))
