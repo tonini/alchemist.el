@@ -187,9 +187,12 @@ Otherwise, it saves all modified buffers without asking."
         (goto-char (point-min))
         (forward-line (- line 1))))))
 
-(defun alchemist-test--handle-exit (status)
+(defun alchemist-test--handle-exit (status buffer)
   (when alchemist-test-status-modeline
-    (alchemist-test--set-modeline-color status)))
+    (alchemist-test--set-modeline-color status))
+  (with-current-buffer buffer
+    (let ((inhibit-read-only t))
+      (alchemist-test--render-files))))
 
 (defun alchemist-test-mode--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
@@ -252,11 +255,7 @@ macro) while the values are the position at which the test matched."
                           alchemist-test-report-process-name
                           alchemist-test-report-buffer-name
                           'alchemist-test-report-mode
-                          #'alchemist-test--handle-exit
-                          #'(lambda (buffer)
-                              (with-current-buffer buffer
-                                (let ((inhibit-read-only t))
-                                  (alchemist-test--render-files)))))))
+                          #'alchemist-test--handle-exit)))
 
 (defun alchemist-test-initialize-modeline ()
   "Initialize the mode-line face."

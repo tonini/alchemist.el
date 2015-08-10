@@ -49,10 +49,6 @@
                           alchemist-test-report-buffer-name
                           #'alchemist-test-report-mode
                           #'alchemist-test--handle-exit
-                          #'(lambda (buffer)
-                              (with-current-buffer buffer
-                                (let ((inhibit-read-only t))
-                                  (alchemist-test--render-files))))
                           t)))
 
 (eval-after-load 'elixir-mode

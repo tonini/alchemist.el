@@ -66,7 +66,7 @@
             (set-process-buffer process nil)
           (progn
             (alchemist-report--render-report buffer)
-            (alchemist-report--handle-exit status)
+            (alchemist-report--handle-exit status buffer)
             (alchemist-report-update-mode-name process)
             (delete-process process))))))
 
@@ -75,12 +75,12 @@
   (when alchemist-report-on-render-function
     (funcall alchemist-report-on-render-function buffer)))
 
-(defun alchemist-report--handle-exit (status)
+(defun alchemist-report--handle-exit (status buffer)
   "Call the defined exit function specified in `alchemist-report-on-exit-function'.
-Argument for the exit function is the STATUS of the finished process."
+Argument for the exit function is the STATUS and BUFFER of the finished process."
   (alchemist-report--store-process-status status)
   (when alchemist-report-on-exit-function
-    (funcall alchemist-report-on-exit-function status)))
+    (funcall alchemist-report-on-exit-function status buffer)))
 
 (defun alchemist-report--store-process-status (status)
   "Store STATUS of the last finished process."
@@ -139,13 +139,14 @@ If there is already a running process, ask for interrupting it."
     (funcall mode)
     (setq-local window-point-insertion-type t)))
 
-(defun alchemist-report-run (command process-name buffer-name mode &optional on-exit on-exit-render hidden)
+(defun alchemist-report-run (command process-name buffer-name mode &optional on-exit hidden)
   "Run COMMAND in a new process called PROCESS-NAME.
 The output of PROCESS-NAME will be displayed in BUFFER-NAME.
 After displaying BUFFER-NAME, the MODE function will be called within.
 
-Optional ON-EXIT, ON-EXIT-RENDER and HIDDEN functions could be defined.
-These functions will be called when PROCESS-NAME is finished."
+Optional ON-EXIT and HIDDEN functions could be defined.
+The function ON-EXIT will be called when PROCESS-NAME is finished.
+The HIDDEN variable defines if PROCESS-NAME should run in the background."
   (let* ((buffer (get-buffer-create buffer-name))
          (default-directory (alchemist-project-root-or-default-dir)))
     (alchemist-report-cleanup-process-buffer buffer)
@@ -153,8 +154,6 @@ These functions will be called when PROCESS-NAME is finished."
     (start-process-shell-command process-name buffer command)
     (when on-exit
       (setq alchemist-report-on-exit-function on-exit))
-    (when on-exit-render
-      (setq alchemist-report-on-render-function on-exit-render))
     (set-process-sentinel (get-buffer-process buffer) 'alchemist-report--sentinel)
     (set-process-filter (get-buffer-process buffer) 'alchemist-report-filter)
     (alchemist-report-activate-mode mode buffer)
