@@ -117,6 +117,7 @@ Key bindings:
   (define-key map (kbd "x") 'alchemist-mix)
   (define-key map (kbd "t") 'alchemist-mix-test)
   (define-key map (kbd "r") 'alchemist-mix-rerun-last-test)
+
   (define-key map (kbd "m c") 'alchemist-mix-compile)
   (define-key map (kbd "m r") 'alchemist-mix-run)
   (define-key map (kbd "m t f") 'alchemist-mix-test-file)
@@ -163,6 +164,7 @@ Key bindings:
 (define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-list-symbol-definitions)
 (define-key alchemist-mode-map (kbd "M-P") 'alchemist-goto-jump-to-previous-def-symbol)
 (define-key alchemist-mode-map (kbd "M-N") 'alchemist-goto-jump-to-next-def-symbol)
+(define-key alchemist-mode-map (kbd "C-c M-r") 'alchemist-test-toggle-test-report-display)
 
 (easy-menu-define alchemist-mode-menu alchemist-mode-map
   "Alchemist mode menu."

@@ -333,6 +333,17 @@ to the selected one."
     (goto-char position)
     (back-to-indentation)))
 
+(defun alchemist-test-toggle-test-report-display ()
+  "Toggle between display or hidding `alchemist-test-report-buffer-name' buffer."
+  (interactive)
+  (let* ((buffer (get-buffer alchemist-test-report-buffer-name))
+         (window (get-buffer-window buffer)))
+    (if buffer
+        (if window
+            (quit-window nil window)
+          (display-buffer buffer))
+      (message "No Alchemist test report buffer exists."))))
+
 ;;;###autoload
 (define-minor-mode alchemist-test-mode
   "Minor mode for Elixir ExUnit files.
