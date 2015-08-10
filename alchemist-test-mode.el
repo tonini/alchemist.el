@@ -87,7 +87,7 @@ Otherwise, it saves all modified buffers without asking."
   :group 'alchemist-test)
 
 (defface alchemist-test--success-face
-  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "#e0ff00")))
+  '((t (:inherit font-lock-variable-name-face :bold t :background "darkgreen" :foreground "white")))
   "Face for successful compilation run."
   :group 'alchemist-test)
 
