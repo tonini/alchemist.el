@@ -42,10 +42,14 @@
 
 ;;; Code:
 
+;; Tell the byte compiler about autoloaded functions from packages
+(declare-function pkg-info-version-info "pkg-info" (package))
+
 (defgroup alchemist nil
   "Elixir Tooling Integration Into Emacs."
   :prefix "alchemist-"
   :group 'applications
+  :link '(url-link :tag "Website" "http://www.alchemist-elixir.org")
   :link '(url-link :tag "Github" "https://github.com/tonini/alchemist.el")
   :link '(emacs-commentary-link :tag "Commentary" "alchemist"))
 
