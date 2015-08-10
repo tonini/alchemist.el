@@ -6,10 +6,14 @@
 
   * [Test] Control the output of compilation information inside the test report. (variable `alchemist-test-display-compilation-output`)
   * [Help] Better documentation lookup for currently selected completion candidates.
+  * [Codebase] Fixed all byte-compile warnings.
+  * [Codebase] Add missing docstrings for all Alchemist-Server library functions/variables.
 
 ### Bug fixes
 
   * [Help] Continue with help search although no candidates was found.
+  * [Test] Correct rendering of stacktrace and failing tests files.
+    Just expand file with project root if the path file doesnt't resolve.
 
 ## v1.3.1 (2015-07-26)
 
