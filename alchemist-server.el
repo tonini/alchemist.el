@@ -43,7 +43,7 @@
 
 (defconst alchemist-server
   (concat (file-name-directory load-file-name) "server/run.exs")
-  "Path to the Alchemist server script file.")
+  "Path to the Alchemist server file.")
 
 (defconst alchemist-server-command
   (format "%s %s %s"
