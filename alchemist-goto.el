@@ -195,7 +195,7 @@ It will jump to the position of the symbol definition after selection."
       (goto-char (point-min))
       (save-match-data
         (while (re-search-forward regex nil t)
-          (when (not (alchemist-scope-inside-string-p t))
+          (when (not (alchemist-scope-inside-string-p))
             (when (alchemist-goto--get-symbol-from-position (car (match-data)))
               (let* ((position (car (match-data)))
                      (symbol (alchemist-goto--get-symbol-from-position position))
