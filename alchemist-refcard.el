@@ -49,7 +49,7 @@
 
 (defvar alchemist-refcard-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "i") 'alchmist-refcard--describe-funtion-at-point)
+    (define-key map (kbd "i") 'alchemist-refcard--describe-funtion-at-point)
     map)
   "Keymap for `alchemist-refcard-mode'.")
 
@@ -152,7 +152,7 @@
 (defun alchemist-refcard--build-tabulated-title-row (title)
   (list "" `[,(propertize title 'face font-lock-constant-face) ""]))
 
-(defun alchmist-refcard--describe-funtion-at-point ()
+(defun alchemist-refcard--describe-funtion-at-point ()
   (interactive)
   (let ((function-name (get-text-property (point) 'tabulated-list-id)))
     (when (not (alchemist-utils--empty-string-p function-name))
