@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.5.0 (unreleased)
+
 ## v1.4.0 (2015-08-11)
 
 ### Enhancements
