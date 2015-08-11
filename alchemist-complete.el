@@ -106,7 +106,7 @@
   (with-current-buffer buffer
     (delete-non-matching-lines "^cmp:" (point-min) (point-max))))
 
-(defun alchmist-complete--build-candidates-from-process-output (output)
+(defun alchemist-complete--build-candidates-from-process-output (output)
   (let* ((output (alchemist-server-prepare-filter-output output))
          (candidates (if (not (alchemist-utils--empty-string-p output))
                          (alchemist-complete--output-to-list

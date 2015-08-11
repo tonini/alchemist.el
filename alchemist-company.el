@@ -89,7 +89,7 @@
 (defun alchemist-company-filter (_process output)
   (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))
   (if (alchemist-server-contains-end-marker-p output)
-      (let* ((candidates (alchmist-complete--build-candidates-from-process-output alchemist-company-filter-output))
+      (let* ((candidates (alchemist-complete--build-candidates-from-process-output alchemist-company-filter-output))
              (candidates (if candidates
                              candidates
                            (alchemsit-complete--dabbrev-code-candidates))))
