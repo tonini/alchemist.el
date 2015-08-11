@@ -44,6 +44,7 @@ Alchemist comes with a bunch of **features**, which are:
 - [Server](#server)
 - [Mix](#mix)
   - [Mix Task Mode](#mix-task-mode)
+- [Testing](#testing)
 - [Compile & Execute](#compile-and-execute)
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
@@ -56,7 +57,7 @@ Alchemist comes with a bunch of **features**, which are:
 - [IEx](#iex)
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
-- [Testing](#testing)
+- [Testing Mode](#testing-mode)
   - [Testing-Report](#testing-report)
 - [Modeline](#modeline)
 - [Keymap](#keymap)
@@ -254,11 +255,6 @@ Alchemist-Server-Status: [Project: /Users/tonini/Projects/ek/ Status: Connected]
 | Keybinding | Description |
 |-------------------|-------------|
 |<kbd>C-c a x</kbd>|Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
-|<kbd>C-c a t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
-|<kbd>C-c a r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test`|
-|<kbd>C-c a m t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
-|<kbd>C-c a m t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
-|<kbd>C-c a m t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
 |<kbd>C-c a m c</kbd>|Compile the whole elixir project. `alchemist-mix-compile`|
 |<kbd>C-c a m r</kbd>|Runs the given file or expression in the context of the application. `alchemist-mix-run`|
 
@@ -273,6 +269,17 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |--------------|------------------------------------------------------|
 |<kbd>q</kbd>  |Quit `*mix*` buffer window                            |
 |<kbd>i</kbd>  |Send an input to the current running mix task process.|
+
+## Testing
+
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
+|<kbd>C-c a r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test`|
+|<kbd>C-c a m t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
+|<kbd>C-c a m t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
+|<kbd>C-c a m t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
+|<kbd>C-c M-r</kbd>|Toggle between displaying or hidding the test report buffer. `alchemist-test-toggle-test-report-display`|
 
 ## Compile And Execute
 
@@ -443,7 +450,7 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 |<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
 |<kbd>C-c a v !</kbd>| Quit the Elixir evaluation buffer popup. `alchemist-eval-close-popup`.|
 
-## Testing
+## Testing Mode
 
 Alchemist comes with an minor mode for testing which will be enabled by default inside `*_test.exs` files.
 
