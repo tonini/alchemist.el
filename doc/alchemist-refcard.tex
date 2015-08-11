@@ -4,7 +4,7 @@
 \usepackage{fullpage}
 \usepackage{boxedminipage}
 \usepackage{multicol}
-\usepackage[a4paper,left=0.5cm,right=0.5cm,top=1cm,bottom=1cm]{geometry}
+\usepackage[a4paper,left=0.5cm,right=0.5cm,top=1cm,bottom=0.5cm]{geometry}
 \pagestyle{empty}
 
 \marginparwidth = 10pt
@@ -47,7 +47,7 @@
 
 \end{boxedminipage}
 
-\setlength{\bigskipamount}{1cm}
+\setlength{\bigskipamount}{0.7cm}
 
 \bigskip
 \bigskip
@@ -59,13 +59,16 @@
 \group{Mix}
 
 \key{C-c a x}{alchemist-mix}
-\key{C-c a t}{alchemist-mix-test}
-\key{C-c a r}{alchemist-mix-rerun-last-test}
 \key{C-c a m c}{alchemist-mix-compile}
 \key{C-c a m r}{alchemist-mix-run}
+
+\group{Testing}
+\key{C-c a t}{alchemist-mix-test}
+\key{C-c a r}{alchemist-mix-rerun-last-test}
 \key{C-c a m t f}{alchemist-mix-test-file}
 \key{C-c a m t b}{alchemist-mix-test-this-buffer}
 \key{C-c a m t .}{alchemist-mix-test-at-point}
+\key{C-c M-r}{alchemist-test-toggle-test-report-display}
 
 \group{Compilation}
 
@@ -79,14 +82,14 @@
 \key{C-c a e f}{alchemist-execute-file}
 \key{C-c a e b}{alchemist-execute-this-buffer}
 
-\group{Documentation Lookup}
+\group{Documentation}
 
 \key{C-c a h h}{alchemist-help}
 \key{C-c a h i}{alchemist-help-history}
 \key{C-c a h e}{alchemist-help-search-at-point}
 \key{C-c a h r}{alchemist-refcard}
 
-\group{Definition Lookup}
+\group{Navigation}
 
 \key{M-.}{alchemist-goto-definition-at-point}
 \key{M-,}{alchemist-goto-jump-back}
@@ -101,7 +104,7 @@
 \key{C-c a p o}{alchemist-project-toggle-file-and-tests-other-window}
 \key{C-c a p t}{alchemist-project-run-tests-for-current-file}
 
-\group{IEx}
+\group{IEx REPL}
 
 \key{C-c a i i}{alchemist-iex-run}
 \key{C-c a i p}{alchemist-iex-project-run}
@@ -111,7 +114,7 @@
 \key{C-c a i m}{alchemist-iex-send-region-and-go}
 \key{C-c a i b}{alchemist-iex-compile-this-buffer}
 
-\group{Eval}
+\group{Evaluation}
 
 \key{C-c a v l}{alchemist-eval-current-line}
 \key{C-c a v k}{alchemist-eval-print-current-line}
@@ -129,7 +132,7 @@
 
 \end{multicols}
 
-\setlength{\bigskipamount}{1cm}
+\setlength{\bigskipamount}{0.7cm}
 
 \bigskip
 
