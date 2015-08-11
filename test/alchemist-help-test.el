@@ -25,29 +25,17 @@
 
 (require 'test-helper)
 
-(ert-deftest test-search-output/contains-bad-text ()
-  "Should return t"
-  (setq alchemist-help-current-search-text "CustomModule")
-  (should (equal (alchemist-help--bad-search-output-p "No documentation for CustomModule was found")
-                 t))
-  (should (equal (alchemist-help--bad-search-output-p
-                  "Invalid arguments for h helper")
-                 t))
-  (should (equal (alchemist-help--bad-search-output-p
-                  "** (TokenMissingError)....")
-                 t))
-  (should (equal (alchemist-help--bad-search-output-p
-                  "** (SyntaxError)....")
-                 t))
-  (should (equal (alchemist-help--bad-search-output-p
-                  "** (FunctionClauseError)...")
-                 t))
-  (should (equal (alchemist-help--bad-search-output-p
-                  "Could not load module....")
-                 t))
-  (should (equal (alchemist-help--bad-search-output-p
-                  "** (CompileError) nofile:5:")
-                 t)))
+(ert-deftest test-no-doc-available-p ()
+  (should (alchemist-help-no-doc-available-p
+           "Could not load module CustomModule, got: nofile"))
+  (should (alchemist-help-no-doc-available-p
+           "No documentation for List.Chars.Atom was found"))
+  (should (alchemist-help-no-doc-available-p
+           ":lists is an Erlang module and, as such, it does not have Elixir-style docs"))
+  (should (alchemist-help-no-doc-available-p
+           ""))
+  (should-not (alchemist-help-no-doc-available-p
+               "List ...")))
 
 (provide 'alchemist-help-tests)
 

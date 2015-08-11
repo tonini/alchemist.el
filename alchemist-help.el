@@ -37,8 +37,6 @@
   :prefix "alchemist-help-"
   :group 'alchemist)
 
-;; Variables
-
 (defcustom alchemist-help-buffer-name "*alchemist help*"
   "Name of the Elixir help buffer."
   :type 'string
@@ -52,15 +50,10 @@
 
 (defvar alchemist-help-filter-output nil)
 
-;; Faces
-
 (defface alchemist-help--key-face
   '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
-  "Fontface for the letter keys in the summary."
+  "Face for the letter keys in the summary."
   :group 'alchemist-help)
-
-;; Private functions
-
 
 (defun alchemist-help--execute (search)
   (setq alchemist-help-current-search-text search)
@@ -71,41 +64,37 @@
        #'alchemist-help-complete-filter-output)
     (message "No documentation for [%s] found." search)))
 
-(defun alchemist-help--bad-search-output-p (string)
-  (let ((match (or (string-match-p "No documentation for " string)
-                   (string-match-p "Invalid arguments for h helper" string)
-                   (string-match-p "** (TokenMissingError)" string)
-                   (string-match-p "** (SyntaxError)" string)
-                   (string-match-p "** (FunctionClauseError)" string)
-                   (string-match-p "** (CompileError)" string)
-                   (string-match-p "Could not load module" string))))
-    (if match
-        t
-      nil)))
+(defun alchemist-help-no-doc-available-p (string)
+  "Return non-nil if STRING contains Elixir no documentation message."
+  (or (string-match-p "No documentation for" string)
+      (string-match-p "Could not load module" string)
+      (string-match-p "it does not have Elixir-style docs" string)
+      (alchemist-utils--empty-string-p string)))
 
-(defun alchemist-help--initialize-buffer (content)
-  (let ((default-directory (alchemist-project-root-or-default-dir)))
+(defun alchemist-help-store-search-in-history ()
+  "Store the last `alchemist-help-current-search-text' in `alchemist-help-search-history'."
+  (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
+    (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text)))
+
+(defun alchemist-help-display-doc (content)
+  "Initialize the `alchemist-help-buffer-name' and insert CONTENT."
+  (let ((default-directory (alchemist-project-root-or-default-dir))
+        (buffer (get-buffer-create alchemist-help-buffer-name)))
     (cond
-     ((alchemist-help--bad-search-output-p content)
-      (message (propertize
-                (format "No documentation for [ %s ] found." alchemist-help-current-search-text)
-                'face 'alchemist-help--key-face)))
+     ((alchemist-help-no-doc-available-p content)
+      (message (format "No documentation for [%s] found."
+                       alchemist-help-current-search-text)))
      (t
-      (if (get-buffer alchemist-help-buffer-name)
-          (kill-buffer alchemist-help-buffer-name))
-      (pop-to-buffer alchemist-help-buffer-name)
-      (with-current-buffer alchemist-help-buffer-name
-        (let ((inhibit-read-only t)
-              (buffer-undo-list t))
+      (alchemist-help-store-search-in-history)
+      (with-current-buffer buffer
+        (let ((inhibit-read-only t))
+          (goto-char (point-min))
           (erase-buffer)
           (insert content)
-          (unless (memq 'alchemist-help-current-search-text alchemist-help-search-history)
-            (add-to-list 'alchemist-help-search-history alchemist-help-current-search-text))
-          (delete-matching-lines "do not show this result in output" (point-min) (point-max))
-          (delete-matching-lines "^Compiled lib\\/" (point-min) (point-max))
+          (goto-char (point-min))
           (ansi-color-apply-on-region (point-min) (point-max))
-          (read-only-mode 1)
-          (alchemist-help-minor-mode 1)))))))
+          (alchemist-help-minor-mode)))
+      (pop-to-buffer buffer)))))
 
 (defun alchemist-help--search-at-point ()
   "Search through `alchemist-help' with the expression under the cursor"
@@ -195,9 +184,7 @@ Argument END where the mark ends."
   (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
   (if (alchemist-server-contains-end-marker-p output)
       (let ((string (alchemist-server-prepare-filter-output alchemist-help-filter-output)))
-        (if (alchemist-utils--empty-string-p string)
-            (message "No documentation for [%s] found." alchemist-help-current-search-text)
-          (alchemist-help--initialize-buffer string))
+        (alchemist-help-display-doc string)
         (setq alchemist-help-current-search-text nil)
         (setq alchemist-help-filter-output nil))))
 
@@ -251,7 +238,11 @@ the actively marked region will be used for passing to `alchemist-help'."
 (define-minor-mode alchemist-help-minor-mode
   "Minor mode for displaying elixir help."
   :group 'alchemist-help
-  :keymap alchemist-help-minor-mode-map)
+  :keymap alchemist-help-minor-mode-map
+  (cond (alchemist-help-minor-mode
+         (setq buffer-read-only t))
+        (t
+         (setq buffer-read-only nil))))
 
 (defun alchemist-help ()
   "Load Elixir documentation for SEARCH."
