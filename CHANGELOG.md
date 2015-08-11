@@ -1,11 +1,14 @@
 # Changelog
 
-## v1.4.0 (unreleased)
+## v1.4.0 (2015-08-11)
 
 ### Enhancements
 
   * [Test] Control the output of compilation information inside the test report. (variable `alchemist-test-display-compilation-output`)
+  * [Test] The hook `alchemist-hooks-test-on-save` should run in the background.
+  * [Test] The function `alchemist-test-toggle-test-report-display` to toggle dispaying or hidden of the test report buffer.
   * [Help] Better documentation lookup for currently selected completion candidates.
+  * [Refcard] Display all defined keys for a function not just the first defined.
   * [Codebase] Fixed all byte-compile warnings.
   * [Codebase] Add missing docstrings for all Alchemist-Server library functions/variables.
 
