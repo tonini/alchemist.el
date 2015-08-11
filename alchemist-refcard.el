@@ -29,10 +29,10 @@
 (require 'dash)
 (require 'tabulated-list)
 
-;; Tell the byte compiler to assume that functions are defined
+;; Tell the byte compiler about autoloaded functions from packages
 (eval-when-compile
-  (defvar alchemist--version nil)
-  (declare-function alchemist-mode "alchemist.el"))
+  (declare-function alchemist-mode "alchemist.el")
+  (declare-function alchemist-version "alchemist.el"))
 
 (defgroup alchemist-refcard nil
   "Generate a refcard of alchemist functionality."
@@ -62,23 +62,27 @@
                            k))) keys))
          (keys (-remove 'null keys)))
     (if keys
-        (key-description (car keys))
+        (progn
+          (mapconcat (lambda (k) (key-description k)) keys " , "))
       "")))
 
 (defun alchemist-refcard--tabulated-list-entries ()
   (alchemist-mode +1) ;; needs to be enabled for fetching current keybindings
   (let ((rows (list (alchemist-refcard--build-empty-tabulated-row)
-                    (alchemist-refcard--build-tabulated-refcard-title-row (format "Alchemist Refcard v%s" alchemist--version))
+                    (alchemist-refcard--build-tabulated-refcard-title-row (format "Alchemist Refcard v%s" (alchemist-version)))
                     (alchemist-refcard--build-empty-tabulated-row)
                     (alchemist-refcard--build-tabulated-title-row "Mix")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix")
+                    (alchemist-refcard--build-tabulated-row "alchemist-mix-compile")
+                    (alchemist-refcard--build-tabulated-row "alchemist-mix-run")
+                    (alchemist-refcard--build-empty-tabulated-row)
+                    (alchemist-refcard--build-tabulated-title-row "Testing")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-test")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-rerun-last-test")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-test-file")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-test-this-buffer")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-test-at-point")
-                    (alchemist-refcard--build-tabulated-row "alchemist-mix-compile")
-                    (alchemist-refcard--build-tabulated-row "alchemist-mix-run")
+                    (alchemist-refcard--build-tabulated-row "alchemist-test-toggle-test-report-display")
                     (alchemist-refcard--build-empty-tabulated-row)
                     (alchemist-refcard--build-tabulated-title-row "Compilation")
                     (alchemist-refcard--build-tabulated-row "alchemist-compile")
