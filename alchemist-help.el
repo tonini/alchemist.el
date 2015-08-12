@@ -50,12 +50,13 @@
 
 (defvar alchemist-help-filter-output nil)
 
-(defface alchemist-help--key-face
+(defface alchemist-help-key-face
   '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
   "Face for the letter keys in the summary."
   :group 'alchemist-help)
 
-(defun alchemist-help--execute (search)
+(defun alchemist-help-lookup-doc (search)
+  "Lookup Elixir documentation for SEARCH."
   (setq alchemist-help-current-search-text search)
   (setq alchemist-help-filter-output nil)
   (if (not (alchemist-utils--empty-string-p search))
@@ -99,14 +100,14 @@
 (defun alchemist-help--search-at-point ()
   "Search through `alchemist-help' with the expression under the cursor"
   (let* ((expr (alchemist-scope-expression)))
-    (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
+    (alchemist-help-lookup-doc (alchemist-help--prepare-search-expr expr))))
 
 (defun alchemist-help--search-marked-region (begin end)
   "Run `alchemist-help' with the marked region.
 Argument BEGIN where the mark starts.
 Argument END where the mark ends."
   (let ((expr (buffer-substring-no-properties begin end)))
-    (alchemist-help--execute (alchemist-help--prepare-search-expr expr))))
+    (alchemist-help-lookup-doc (alchemist-help--prepare-search-expr expr))))
 
 (defun alchemist-help--prepare-search-expr (expr)
   (let* ((module (alchemist-scope-extract-module expr))
@@ -135,15 +136,15 @@ Argument END where the mark ends."
 (defun alchemist-help-minor-mode-key-binding-summary ()
   (interactive)
   (message
-   (concat "[" (propertize "q" 'face 'alchemist-help--key-face)
+   (concat "[" (propertize "q" 'face 'alchemist-help-key-face)
            "]-quit ["
-           (propertize "e" 'face 'alchemist-help--key-face)
+           (propertize "e" 'face 'alchemist-help-key-face)
            "]-search-at-point ["
-           (propertize "s" 'face 'alchemist-help--key-face)
+           (propertize "s" 'face 'alchemist-help-key-face)
            "]-search ["
-           (propertize "h" 'face 'alchemist-help--key-face)
+           (propertize "h" 'face 'alchemist-help-key-face)
            "]-history ["
-           (propertize "?" 'face 'alchemist-help--key-face)
+           (propertize "?" 'face 'alchemist-help-key-face)
            "]-keys")))
 
 (defun alchemist-help--server-arguments (args)
@@ -210,7 +211,7 @@ Argument END where the mark ends."
                          (concat module "."))
                         (t
                          search))))
-          (alchemist-help--execute search)))))
+          (alchemist-help-lookup-doc search)))))
 
 ;; Public functions
 
@@ -255,7 +256,7 @@ the actively marked region will be used for passing to `alchemist-help'."
   (interactive
    (list
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
-  (alchemist-help--execute search))
+  (alchemist-help-lookup-doc search))
 
 ;; Deprecated functions; these will get removed in v1.5.0
 (defun alchemist-help-search-marked-region () (interactive)
