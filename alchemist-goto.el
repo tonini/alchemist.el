@@ -121,8 +121,12 @@
                                               (alchemist-goto--fetch-symbols-from-propertize-list symbol)))
                (position (cdr (assoc selected-def alchemist-goto--symbol-name-and-pos))))
           (goto-char (if (overlayp position) (overlay-start position) position)))
-      (let* ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos-bare))))
-        (goto-char (if (overlayp position) (overlay-start position) position))))))
+      (let* ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos-bare)))
+             (position (if (overlayp position) (overlay-start position) position))
+             (line-number-at-pos))
+        (when (not (equal (line-number-at-pos)
+                     (line-number-at-pos position)))
+          (goto-char position))))))
 
 (defun alchemist-goto-list-symbol-definitions ()
   "List all symbol definitions in the current file like functions/macros/modules.
