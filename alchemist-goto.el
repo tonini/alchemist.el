@@ -66,12 +66,12 @@
 
 (defface alchemist-goto--def-face
   '((t (:inherit font-lock-constant-face)))
-  ""
+  "Face for def* symbols."
   :group 'alchemist-goto)
 
 (defface alchemist-goto--name-face
   '((t (:bold t)))
-  ""
+  "Face for def* symbol names."
   :group 'alchemist-goto)
 
 ;; Private functions
