@@ -57,10 +57,10 @@
 (defvar alchemist-goto-callback nil)
 
 (defconst alchemist-goto--symbol-def-extract-regex
-  "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
+  "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\|defimpl\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
 
 (defconst alchemist-goto--symbol-def-regex
-  "^[[:space:]]*\\(defmodule\\|defmacrop?\\|defp?\\)")
+  "^[[:space:]]*\\(defmodule\\|defmacrop?\\|defimpl\\|defp?\\)")
 
 ;; Faces
 
@@ -110,7 +110,7 @@
 
 (defun alchemist-goto--fetch-symbols-from-propertize-list (symbol)
   (-remove 'null (-map (lambda (e)
-                         (when (string-match-p (format "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s+%s\\((.*\\)?$" symbol) e)
+                         (when (string-match-p (format "^\\s-*\\(defp?\\|defmacrop?\\|defimpl\\|defmodule\\)\s+%s\\((.*\\)?$" symbol) e)
                            e)) alchemist-goto--symbol-list)))
 
 (defun alchemist-goto--goto-symbol (symbol)
@@ -136,7 +136,7 @@ It will jump to the position of the symbol definition after selection."
     (goto-char (if (overlayp position) (overlay-start position) position))))
 
 (defun alchemist-goto--fetch-symbol-definitions ()
-  (alchemist-goto--search-for-symbols "^\\s-*\\(defp?\\|defmacrop?\\|defmodule\\)\s.*"))
+  (alchemist-goto--search-for-symbols "^\\s-*\\(defp?\\|defmacrop?\\|defimpl\\|defstruct\\|defmodule\\)\s.*"))
 
 (defun alchemist-goto--extract-symbol (str)
   (save-match-data
@@ -248,9 +248,6 @@ It will jump to the position of the symbol definition after selection."
            (alchemist-goto--jump-to-elixir-source module function))
           ((alchemist-goto--erlang-file-p file)
            (alchemist-goto--jump-to-erlang-source module function)))))
-
-(defun alchemist-gogo--symbol-definition-regex (symbol)
-  (format "^\s+\\(defp?\s+%s\(?\\|defmacrop?\s+%s\(?\\)" symbol symbol))
 
 (defun alchemist-goto--jump-to-elixir-source (module function)
   (cond

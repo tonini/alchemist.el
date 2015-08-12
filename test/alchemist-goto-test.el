@@ -81,28 +81,6 @@
   (should (equal (alchemist-goto--extract-symbol "def __pubsub_server__, do: @pubsub_server")
                  "def __pubsub_server__")))
 
-(ert-deftest match-functions-inside-buffer ()
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "cwd!")
-                          "  def cwd! do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "delete")
-                          "  def delete(list, item) do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "do_zip")
-                          "  defp do_zip(list, acc) do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "keymember?")
-                          "  def keymember?(list, key, position) do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "has_key?")
-                          "  def has_key?(map, key), do: :maps.is_key(key, map)"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "left")
-                          "  defmacro left or right do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "defimpl!")
-                          "  defmacro defimpl!(name, opts, do_block \\ []) do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "parse!")
-                          "  defmacro parse! do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "has_key?")
-                          "  defmacrop has_key? do"))
-  (should (string-match-p (alchemist-gogo--symbol-definition-regex "read")
-                          "  defmacro read(source) do")))
-
 (provide 'alchemist-goto-test)
 
 ;;; alchemist-goto-test.el ends here
