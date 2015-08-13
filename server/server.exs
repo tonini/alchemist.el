@@ -33,8 +33,6 @@ defmodule Alchemist.Server do
         Case.Complete.process!
       ["COMPLETE", hint] ->
         Case.Complete.process!(hint)
-      ["COMPLETE-WITH-CONTEXT", hint] ->
-        Case.Complete.process_with_context!(hint)
       ["DOC", exp] ->
         Case.Doc.process!(exp)
       ["MODULES"] ->
