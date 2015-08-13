@@ -27,8 +27,7 @@ defmodule Alchemist.Informant do
   end
 
   def get_modules do
-    Application.get_env(:"alchemist.el", :loaded_modules)
-    ++ all_applications_modules
+    all_applications_modules
     |> Enum.uniq
     |> Stream.filter(fn(module) -> moduledoc?(module) end)
   end
