@@ -50,6 +50,7 @@
 (defvar alchemist-refcard-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "i") 'alchemist-refcard--describe-funtion-at-point)
+    (define-key map (kbd "q") 'quit-window)
     map)
   "Keymap for `alchemist-refcard-mode'.")
 
