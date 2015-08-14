@@ -86,12 +86,7 @@
     (alchemist-report-run command
                           "alchemist-execute-report"
                           alchemist-execute-buffer-name
-                          'alchemist-execute-mode
-                          nil
-                          #'(lambda (buffer)
-                              (with-current-buffer buffer
-                                (let ((inhibit-read-only t))
-                                  (alchemist-test--render-files)))))))
+                          'alchemist-execute-mode)))
 
 (provide 'alchemist-execute)
 
