@@ -25,27 +25,27 @@ defmodule ServerTest do
 
   test "Empty expression completion" do
     assert send_signal("COMPLETE") =~ """
-    cmp:get_and_update_in/2
-    cmp:get_and_update_in/3
-    cmp:put_in/2
-    cmp:put_in/3
-    cmp:reraise/2
-    cmp:reraise/3
+    get_and_update_in/2
+    get_and_update_in/3
+    put_in/2
+    put_in/3
+    reraise/2
+    reraise/3
     """
   end
 
   test "Expression completion" do
     assert send_signal("COMPLETE def;[];[]") =~ """
-    cmp:def
-    cmp:defexception/1
-    cmp:defoverridable/1
-    cmp:defstruct/1
-    cmp:def/2
-    cmp:defdelegate/2
-    cmp:defmacro/2
-    cmp:defmacrop/2
-    cmp:defmodule/2
-    cmp:defp/2
+    def
+    defexception/1
+    defoverridable/1
+    defstruct/1
+    def/2
+    defdelegate/2
+    defmacro/2
+    defmacrop/2
+    defmodule/2
+    defp/2
     """
   end
 

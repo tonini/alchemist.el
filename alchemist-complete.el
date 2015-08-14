@@ -97,14 +97,8 @@
     (-distinct candidates)))
 
 (defun alchemist-complete--output-to-list (output)
-  (let* ((output (replace-regexp-in-string "^cmp:" "" output))
-         (output (split-string output)))
+  (let* ((output (split-string output)))
     (-remove 'null output)))
-
-(defun alchemist-complete--clear-buffer (buffer)
-  "Clears the BUFFER from not used lines."
-  (with-current-buffer buffer
-    (delete-non-matching-lines "^cmp:" (point-min) (point-max))))
 
 (defun alchemist-complete--build-candidates-from-process-output (output)
   (let* ((output (alchemist-server-prepare-filter-output output))

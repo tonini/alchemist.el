@@ -9,7 +9,7 @@ defmodule Alchemist.Case do
   defmodule Complete do
     def process! do
       Completer.run('')
-      |> Enum.map &IO.puts('cmp:' ++ &1)
+      |> Enum.map &IO.puts/1
       IO.puts "END-OF-COMPLETE"
     end
 
@@ -34,7 +34,7 @@ defmodule Alchemist.Case do
 
       funcs ++ completes
       |> Enum.uniq
-      |> Enum.map &IO.puts('cmp:' ++ &1)
+      |> Enum.map &IO.puts/1
 
       IO.puts "END-OF-COMPLETE"
     end
