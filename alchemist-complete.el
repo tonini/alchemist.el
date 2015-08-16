@@ -135,14 +135,11 @@
 
 Please have a look at the company-dabbrev-code function for more
 detailed information."
-  (let ((case-fold-search company-dabbrev-code-ignore-case)
+  (let ((case-fold-search nil)
         (candidates (company-dabbrev--search
                      (company-dabbrev-code--make-regexp alchemist-company-last-completion)
                      company-dabbrev-code-time-limit
-                     (pcase company-dabbrev-code-other-buffers
-                       (`t (list major-mode))
-                       (`code company-dabbrev-code-modes)
-                       (`all `all))
+                     (list major-mode)
                      t)))
     (-distinct candidates)))
 
