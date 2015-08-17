@@ -33,11 +33,11 @@ unit:
 
 test_server:
 	@ echo "\n$(INFO_COLOR)Run server tests: $(NO_COLOR)\n"
-	$(ELIXIR) test/server/server_test.exs
+	$(ELIXIR) alchemist-server/test/server_test.exs
 
 test_doc:
 	@ echo "\n$(INFO_COLOR)Run documentation tests: $(NO_COLOR)\n"
-	$(ELIXIR) test/server/documentation_test.exs
+	$(ELIXIR) alchemist-server/test/documentation_test.exs
 
 cask:
 	@ echo "\n$(INFO_COLOR)Install package dependencies: $(NO_COLOR)\n"

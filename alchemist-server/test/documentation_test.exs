@@ -1,5 +1,5 @@
 Code.require_file "test_helper.exs", __DIR__
-Code.require_file "../../server/documentation.exs", __DIR__
+Code.require_file "../lib/documentation.exs", __DIR__
 
 defmodule DocumentationTest do
   use ExUnit.Case
