@@ -8,63 +8,88 @@ defmodule Alchemist.Case do
 
   defmodule Complete do
     def process! do
-      Completer.run('')
-      |> Enum.map &IO.puts/1
-      IO.puts "END-OF-COMPLETE"
+      Completer.run('') |> print
     end
 
-    def process!(hint) do
-      [hint, modules, aliases] = String.split(hint, ";", parts: 3)
-      process!(hint, modules, aliases)
+    def process!(input) when is_binary(input) do
+      input
+      |> normalize
+      |> process!
     end
 
-    def process!(hint, modules, aliases) do
-      {modules, _} = Code.eval_string(modules)
-      {aliases, _} = Code.eval_string(aliases)
-
+    def process!([hint, modules, aliases]) do
       Application.put_env(:"alchemist.el", :aliases, aliases)
 
       funcs = for module <- modules do
         Informant.get_functions(module, hint)
-      end
-      |> List.flatten
-      |> Enum.map &Kernel.to_string/1
+      end |> List.flatten
+      candidates = Completer.run(hint)
 
-      completes = Completer.run(hint) |> Enum.map &Kernel.to_string/1
+      print(funcs ++ candidates)
+    end
 
-      funcs ++ completes
+    def normalize(input) do
+      [hint, modules, aliases] = String.split(input, ";", parts: 3)
+      {modules, _} = Code.eval_string(modules)
+      {aliases, _} = Code.eval_string(aliases)
+      [hint, modules, aliases]
+    end
+
+    def print(result) do
+      result
       |> Enum.uniq
       |> Enum.map &IO.puts/1
-
       IO.puts "END-OF-COMPLETE"
     end
   end
 
   defmodule Modules do
     def process! do
-      modules = Completer.run(':')
-      |> Enum.map &Module.split/1
+      modules = Informant.all_applications_modules
+      |> Enum.uniq
+      |> Enum.reject(&is_nil/1)
+      |> Enum.filter(&Documentation.moduledoc?/1)
+
       functions = Completer.run('')
-      |> Enum.map &Kernel.to_string/1
-      modules ++ functions |> Enum.map &IO.puts/1
+      print(modules ++ functions)
+    end
+
+    def print(result) do
+      result
+      |> Enum.uniq
+      |> Enum.map &IO.puts/1
       IO.puts "END-OF-MODULES"
     end
   end
 
   defmodule Doc do
-    def process!(exp) do
-      [exp, modules] = String.split(exp, ";", parts: 2)
-      {modules, _} = Code.eval_string(modules)
-      process!(exp, modules)
+    def process!(input) when is_binary(input) do
+      input
+      |> normalize
+      |> process!
     end
 
-    def process!(exp, []) do
-      Documentation.search(exp)
-      IO.puts "END-OF-DOC"
+    def process!([expr]) do
+      Documentation.search(expr)
+      print
     end
 
-    def process!(exp, modules) do
-      Documentation.search(exp, modules)
+    def process!([expr, modules]) do
+      Documentation.search(expr, modules)
+      print
+    end
+
+    def normalize(input) do
+      [expr, modules] = String.split(input, ";", parts: 2)
+      {modules, _}    = Code.eval_string(modules)
+      if modules do
+        [expr, modules]
+      else
+        [expr]
+      end
+    end
+
+    def print do
       IO.puts "END-OF-DOC"
     end
   end
@@ -100,12 +125,20 @@ defmodule Alchemist.Case do
   end
 
   defmodule Find do
-    def process!(exp) do
-      [module, function] = String.split(exp, ",", parts: 2)
-      {module, _} = Code.eval_string module
-      function = String.to_atom function
-      Alchemist.Source.find(module, function)
+    def process!(input) do
+      input
+      |> normalize
+      |> Alchemist.Source.find
+      |> IO.puts
+
       IO.puts "END-OF-SOURCE"
+    end
+
+    def normalize(input) do
+      [module, function] = String.split(input, ",", parts: 2)
+      {module, _} = Code.eval_string module
+      function    = String.to_atom function
+      [module, function]
     end
   end
 

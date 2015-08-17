@@ -1,47 +1,51 @@
 defmodule Alchemist.Informant do
 
-  def get_functions(mod, hint) do
-    {mod, _} = Code.eval_string(mod)
-    falist = get_module_funs(mod)
+  def get_functions(module, hint) do
+    {module, _} = Code.eval_string(module)
+    functions = get_module_funs(module)
 
-    list = Enum.reduce falist, [], fn({f, a}, acc) ->
+    list = Enum.reduce functions, [], fn({f, a}, acc) ->
       case :lists.keyfind(f, 1, acc) do
         {f, aa} -> :lists.keyreplace(f, 1, acc, {f, [a|aa]})
         false -> [{f, [a]}|acc]
       end
     end
 
-    case hint do
-      "" ->
-        for {fun, arities} <- list,
-        name = Atom.to_string(fun) do
-          "#{name}/#{List.first(arities)}"
-        end |> :lists.sort()
-      _otherwise ->
-        for {fun, arities} <- list,
-        name = Atom.to_string(fun),
-        String.starts_with?(name, hint) do
-          "#{name}/#{List.first(arities)}"
-        end |> :lists.sort()
-    end
+    do_get_functions(list, hint) |> :lists.sort()
   end
 
-  def get_modules do
-    all_applications_modules
-    |> Enum.uniq
-    |> Stream.filter(fn(module) -> moduledoc?(module) end)
+  defp do_get_functions(list, "") do
+    all_functions(list)
   end
 
-  defp get_module_funs(mod) do
-    case Code.ensure_loaded(mod) do
+  defp do_get_functions(list, hint) do
+    all_functions(list, hint)
+  end
+
+  defp get_module_funs(module) do
+    case Code.ensure_loaded(module) do
       {:module, _} ->
-        mod.module_info(:functions) ++ mod.__info__(:macros)
+        module.module_info(:functions) ++ module.__info__(:macros)
       _otherwise ->
         []
     end
   end
 
-  defp all_applications_modules do
+  defp all_functions(list) do
+    for {fun, arities} <- list, name = Atom.to_string(fun) do
+      "#{name}/#{List.first(arities)}"
+    end
+  end
+
+  defp all_functions(list, hint) do
+    for {fun, arities} <- list,
+    name = Atom.to_string(fun),
+    String.starts_with?(name, hint) do
+      "#{name}/#{List.first(arities)}"
+    end
+  end
+
+  def all_applications_modules do
     for [app] <- loaded_applications(),
     {:ok, modules} = :application.get_key(app, :modules),
     module <- modules do
@@ -58,11 +62,4 @@ defmodule Alchemist.Informant do
     :ets.match(:ac_tab, {{:loaded, :"$1"}, :_})
   end
 
-  defp moduledoc?(module) when is_atom(module) do
-    case Code.get_docs(module, :moduledoc) do
-      {_line, moduledoc} ->
-        is_binary moduledoc
-      _ -> false
-    end
-  end
 end

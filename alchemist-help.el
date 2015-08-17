@@ -193,7 +193,7 @@ Argument END where the mark ends."
   (with-local-quit
     (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
     (if (alchemist-server-contains-end-marker-p output)
-        (let* ((output (apply #'concat (reverse alchemist-help-filter-output)))
+        (let* ((output (alchemist-server-prepare-filter-output alchemist-help-filter-output))
                (modules (alchemist-help--elixir-modules-to-list output))
                (search (completing-read
                         "Elixir help: "
@@ -211,7 +211,7 @@ Argument END where the mark ends."
                          (concat module "."))
                         (t
                          search))))
-          (alchemist-help-lookup-doc search)))))
+          (alchemist-help-lookup-doc (alchemist-utils--remove-dot-at-the-end search))))))
 
 ;; Public functions
 

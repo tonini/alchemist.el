@@ -106,7 +106,7 @@
   (let ((modules '())
         (context (alchemist-scope-module)))
     (save-excursion
-      (when (alchemist-scope-inside-module-p)
+      (when (not (alchemist-utils--empty-string-p context))
         (while (re-search-backward regex nil t)
           (when (and (match-string 1)
                      (not (alchemist-scope-inside-string-p))
