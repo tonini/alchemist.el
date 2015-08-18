@@ -11,28 +11,29 @@ defmodule Alchemist.Case do
       Completer.run('') |> print
     end
 
-    def process!(input) when is_binary(input) do
-      input
+    def process!(request) when is_binary(request) do
+      request
       |> normalize
       |> process!
     end
 
-    def process!([hint, modules, aliases]) do
+    def process!({expr,
+                  [ context: _context,
+                    imports: imports,
+                    aliases: aliases ]}) do
       Application.put_env(:"alchemist.el", :aliases, aliases)
 
-      funcs = for module <- modules do
-        Informant.get_functions(module, hint)
+      funcs = for module <- imports do
+        Informant.get_functions(module, expr)
       end |> List.flatten
-      candidates = Completer.run(hint)
+      candidates = Completer.run(expr)
 
       print(funcs ++ candidates)
     end
 
-    def normalize(input) do
-      [hint, modules, aliases] = String.split(input, ";", parts: 3)
-      {modules, _} = Code.eval_string(modules)
-      {aliases, _} = Code.eval_string(aliases)
-      [hint, modules, aliases]
+    def normalize(request) do
+      {{expr, context_info}, _} = Code.eval_string(request)
+      {expr, context_info}
     end
 
     def print(result) do
@@ -63,8 +64,8 @@ defmodule Alchemist.Case do
   end
 
   defmodule Doc do
-    def process!(input) when is_binary(input) do
-      input
+    def process!(request) when is_binary(request) do
+      request
       |> normalize
       |> process!
     end
@@ -79,11 +80,10 @@ defmodule Alchemist.Case do
       print
     end
 
-    def normalize(input) do
-      [expr, modules] = String.split(input, ";", parts: 2)
-      {modules, _}    = Code.eval_string(modules)
-      if modules do
-        [expr, modules]
+    def normalize(request) do
+      {{expr, [context: _, imports: imports, aliases: _]}, _} = Code.eval_string(request)
+      if imports do
+        [expr, imports]
       else
         [expr]
       end
@@ -125,8 +125,8 @@ defmodule Alchemist.Case do
   end
 
   defmodule Find do
-    def process!(input) do
-      input
+    def process!(request) do
+      request
       |> normalize
       |> Alchemist.Source.find
       |> IO.puts
@@ -134,11 +134,12 @@ defmodule Alchemist.Case do
       IO.puts "END-OF-SOURCE"
     end
 
-    def normalize(input) do
-      [module, function] = String.split(input, ",", parts: 2)
-      {module, _} = Code.eval_string module
-      function    = String.to_atom function
-      [module, function]
+    def normalize(request) do
+      {{expr, context_info}, _} = Code.eval_string(request)
+      [module, function] = String.split(expr, ",", parts: 2)
+      {module, _} = Code.eval_string(module)
+      function = String.to_atom function
+      [module, function, context_info]
     end
   end
 

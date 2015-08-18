@@ -151,8 +151,8 @@ Argument END where the mark ends."
   (if (not (equal major-mode 'alchemist-iex-mode))
       (let* ((modules (alchemist-utils--prepare-modules-for-elixir
                        (alchemist-scope-all-modules))))
-        (format "%s;%s" args modules))
-    (format "%s;[];" args)))
+        (format "{ \"%s\", [ context: %s, imports: %s, aliases: [] ] }" args (alchemist-scope-module) modules))
+    (format "{ \"%s\", [ context: Elixir, imports: [], aliases: [] ] }" args)))
 
 (defun alchemist-help--completion-server-arguments (args)
   "Build informations about the current context."
@@ -161,9 +161,9 @@ Argument END where the mark ends."
                        (alchemist-scope-all-modules)))
              (aliases (alchemist-utils--prepare-aliases-for-elixir
                        (alchemist-scope-aliases))))
-        (format "%s;%s;%s" args modules aliases))
-    (format "%s;[];[]" args)))
-
+        (format "{ \"%s\", [ context: %s, imports: %s, aliases: %s ] }"
+                args (alchemist-scope-module) modules aliases))
+    (format "{ \"%s\", [ context: Elixir, imports: [], aliases: [] ] }" args)))
 (defun alchemist-help-complete-filter-output (_process output)
   (with-local-quit
     (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))

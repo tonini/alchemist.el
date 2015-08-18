@@ -17,7 +17,7 @@ defmodule ServerTest do
   end
 
   test "Documentation lookup" do
-    assert send_signal("DOC List;[]") =~ """
+    assert send_signal("DOC {\"List\", [context: Elixir, imports: [], aliases: []]}") =~ """
     Implements functions that only make sense for lists and cannot be part of the
     Enum protocol. In general, favor using the Enum API instead of List.
     """
@@ -35,7 +35,7 @@ defmodule ServerTest do
   end
 
   test "Expression completion" do
-    assert send_signal("COMPLETE def;[];[]") =~ """
+    assert send_signal("COMPLETE {\"def\", [context: Elixir, imports: [], aliases: []]}") =~ """
     def
     defexception/1
     defoverridable/1
@@ -50,7 +50,7 @@ defmodule ServerTest do
   end
 
   test "Getting the definition source file information of code" do
-    assert send_signal("SOURCE List,delete") =~ "/lib/elixir/lib/list.ex"
+    assert send_signal("SOURCE {\"List,delete\", [context: Elixir, imports: [], aliases: []]}") =~ "/lib/elixir/lib/list.ex"
   end
 
   test "Evaluate the content of a file" do

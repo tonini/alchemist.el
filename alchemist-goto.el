@@ -241,7 +241,7 @@ It will jump to the position of the symbol definition after selection."
                                             (t
                                              (pop-tag-mark)
                                              (message "Don't know how to find: %s" expr)))))
-      (alchemist-server-goto (format "%s,%s" module function)
+      (alchemist-server-goto (format "{ \"%s,%s\", [ context: [], imports: [], aliases: [] ] }" module function)
                              #'alchemist-goto-filter)))))
 
 (defun alchemist-goto--open-file (file module function)

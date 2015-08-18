@@ -79,12 +79,12 @@
                    (alchemist-scope-all-modules)))
          (aliases (alchemist-utils--prepare-aliases-for-elixir
                    (alchemist-scope-aliases))))
-    (format "%s;%s;%s" arg modules aliases)))
+    (format "{ \"%s\", [ context: Elixir, imports: %s, aliases: %s ] }" arg modules aliases)))
 
 (defun alchemist-company-build-server-arg (arg)
   (if (not (equal major-mode 'alchemist-iex-mode))
       (alchemist-company-build-scope-arg arg)
-    (format "%s;[];[]" arg)))
+    (format "{ \"%s\", [ context: [], imports: [], aliases: [] ] }" arg)))
 
 (defun alchemist-company-filter (_process output)
   (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))

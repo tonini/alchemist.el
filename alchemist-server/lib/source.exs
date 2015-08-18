@@ -4,7 +4,7 @@ defmodule Alchemist.Source do
 
   alias Alchemist.Documentation
 
-  def find([nil, function]) do
+  def find([nil, function, _context_info]) do
     cond do
       Documentation.func_doc?(Kernel, function) ->
         source(Kernel)
@@ -14,7 +14,7 @@ defmodule Alchemist.Source do
     end
   end
 
-  def find([module, _function]) do
+  def find([module, _function, _context_info]) do
     if Code.ensure_loaded?(module) do
       source(module)
     else

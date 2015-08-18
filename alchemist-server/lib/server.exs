@@ -5,6 +5,8 @@ Code.require_file "case.exs", __DIR__
 
 defmodule Alchemist.Server do
 
+  @version "0.7.0"
+
   alias Alchemist.Case
 
   def start([env]) do
@@ -29,18 +31,18 @@ defmodule Alchemist.Server do
     case line |> String.split(" ", parts: 2) do
       ["COMPLETE"] ->
         Case.Complete.process!
-      ["COMPLETE", hint] ->
-        Case.Complete.process!(hint)
-      ["DOC", exp] ->
-        Case.Doc.process!(exp)
+      ["COMPLETE", request] ->
+        Case.Complete.process!(request)
+      ["DOC", request] ->
+        Case.Doc.process!(request)
       ["MODULES"] ->
         Case.Modules.process!
-      ["EVAL", exp] ->
-        Case.Eval.process!(exp)
+      ["EVAL", file] ->
+        Case.Eval.process!(file)
       ["QUOTE", file] ->
         Case.Quote.process!(file)
-      ["SOURCE", exp] ->
-        Case.Find.process!(exp)
+      ["SOURCE", request] ->
+        Case.Find.process!(request)
       ["MIXTASKS"] ->
         Case.MixTask.process!
       _ ->
