@@ -16,8 +16,6 @@ defmodule Alchemist.Server do
     paths = load_paths(env)
     apps  = load_apps(env)
 
-    store_loaded_modules(loaded)
-
     read_input(line)
 
     purge_modules(loaded)
@@ -33,8 +31,6 @@ defmodule Alchemist.Server do
         Case.Complete.process!
       ["COMPLETE", hint] ->
         Case.Complete.process!(hint)
-      ["COMPLETE-WITH-CONTEXT", hint] ->
-        Case.Complete.process_with_context!(hint)
       ["DOC", exp] ->
         Case.Doc.process!(exp)
       ["MODULES"] ->
@@ -54,10 +50,6 @@ defmodule Alchemist.Server do
 
   defp all_loaded() do
     for {m,_} <- :code.all_loaded, do: m
-  end
-
-  defp store_loaded_modules(modules) do
-    Application.put_env(:"alchemist.el", :loaded_modules, modules)
   end
 
   defp load_paths(env) do

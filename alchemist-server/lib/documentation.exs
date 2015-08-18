@@ -16,16 +16,16 @@ defmodule Alchemist.Documentation do
   end
 
   def search(expr, modules) do
-    modules = modules ++ [Kernel, Kernel.SpecialForms]
-    unless func?(expr) do
+    unless function?(expr) do
       search(expr)
     else
-      build_search(expr, modules)
+      modules ++ [Kernel, Kernel.SpecialForms]
+      |> build_search(expr)
       |> search
     end
   end
 
-  def build_search(search, modules) do
+  def build_search(modules, search) do
     function = Regex.replace(~r/\/[0-9]$/, search, "")
     function = String.to_atom(function)
     for module <- modules,
@@ -39,8 +39,10 @@ defmodule Alchemist.Documentation do
   Otherwise, returns `false`.
   """
   def moduledoc?(module) do
-    {_, doc} = Code.get_docs module, :moduledoc
-    is_binary doc
+    case Code.get_docs module, :moduledoc do
+      {_, doc} -> is_binary doc
+      _ -> false
+    end
   end
 
   @doc """
@@ -69,7 +71,7 @@ defmodule Alchemist.Documentation do
     false
   end
 
-  def func?(expr) do
+  defp function?(expr) do
     Regex.match?(~r/^[a-z_]/, expr)
   end
 end

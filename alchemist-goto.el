@@ -215,7 +215,8 @@ It will jump to the position of the symbol definition after selection."
     (ring-insert find-tag-marker-ring (point-marker))
     (cond
      ((and (null module)
-           (alchemist-goto--symbol-definition-p function))
+           (alchemist-goto--symbol-definition-p function)
+           (not (string= (buffer-name) alchemist-help-buffer-name)))
       (alchemist-goto--goto-symbol function))
      (t
       (setq alchemist-goto-callback (lambda (file)
@@ -272,7 +273,7 @@ It will jump to the position of the symbol definition after selection."
     (setq alchemist-goto-filter-output (cons output alchemist-goto-filter-output))
     (if (alchemist-server-contains-end-marker-p output)
         (let* ((output (alchemist-server-prepare-filter-output alchemist-goto-filter-output))
-               (file (replace-regexp-in-string "source-file-path:" "" output)))
+               (file output))
           (setq alchemist-goto-filter-output nil)
           (funcall alchemist-goto-callback file)))))
 
