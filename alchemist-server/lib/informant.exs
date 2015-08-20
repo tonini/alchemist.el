@@ -1,4 +1,5 @@
 defmodule Alchemist.Informant do
+  @moduledoc false
 
   def get_functions(module, hint) do
     {module, _} = Code.eval_string(module)

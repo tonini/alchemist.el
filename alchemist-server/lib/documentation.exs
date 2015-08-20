@@ -1,4 +1,5 @@
 defmodule Alchemist.Documentation do
+  @moduledoc false
 
   import IEx.Helpers, warn: false
 

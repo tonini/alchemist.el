@@ -1,23 +1,24 @@
 Code.require_file "documentation.exs", __DIR__
 
 defmodule Alchemist.Case do
+  @moduledoc false
 
   alias Alchemist.Completer
   alias Alchemist.Informant
   alias Alchemist.Documentation
 
   defmodule Complete do
-    def process! do
+    def process do
       Completer.run('') |> print
     end
 
-    def process!(request) when is_binary(request) do
+    def process(request) when is_binary(request) do
       request
       |> normalize
-      |> process!
+      |> process
     end
 
-    def process!({expr,
+    def process({expr,
                   [ context: _context,
                     imports: imports,
                     aliases: aliases ]}) do
@@ -45,7 +46,7 @@ defmodule Alchemist.Case do
   end
 
   defmodule Modules do
-    def process! do
+    def process do
       modules = Informant.all_applications_modules
       |> Enum.uniq
       |> Enum.reject(&is_nil/1)
@@ -64,13 +65,13 @@ defmodule Alchemist.Case do
   end
 
   defmodule Doc do
-    def process!(request) when is_binary(request) do
+    def process(request) when is_binary(request) do
       request
       |> normalize
-      |> process!
+      |> process
     end
 
-    def process!([expr, modules, aliases]) do
+    def process([expr, modules, aliases]) do
       Documentation.search(expr, modules, aliases)
       print
     end
@@ -86,7 +87,7 @@ defmodule Alchemist.Case do
   end
 
   defmodule Eval do
-    def process!(file) do
+    def process(file) do
       try do
         File.read!("#{file}")
         |> Code.eval_string
@@ -101,7 +102,7 @@ defmodule Alchemist.Case do
   end
 
   defmodule Quote do
-    def process!(file) do
+    def process(file) do
       try do
         File.read!("#{file}")
         |> Code.string_to_quoted
@@ -116,7 +117,7 @@ defmodule Alchemist.Case do
   end
 
   defmodule Find do
-    def process!(request) do
+    def process(request) do
       request
       |> normalize
       |> Alchemist.Source.find
@@ -135,7 +136,7 @@ defmodule Alchemist.Case do
   end
 
   defmodule MixTask do
-    def process! do
+    def process do
       # append things like hex or phoenix archives to the load_path
       Mix.Local.append_archives
 

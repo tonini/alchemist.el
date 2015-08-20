@@ -6,3 +6,5 @@ sudo: false
 install: mix local.hex --force
 script:
   - make
+notifications:
+  irc: "irc.freenode.org#emacs-elixir"

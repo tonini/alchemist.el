@@ -1,6 +1,7 @@
 Code.require_file "documentation.exs", __DIR__
 
 defmodule Alchemist.Source do
+  @moduledoc false
 
   alias Alchemist.Documentation
 
