@@ -2,6 +2,14 @@
 
 ## v1.5.0 (unreleased)
 
+### Enhancements
+
+  * [Completion] Fix dabbrev-code fallback lookup and case - insensitivity lookup.
+  * [Help] Better documentation lookup with search term handling.
+  * [Goto] Big performance boost for fetching symbols.
+  * [Goto] Add more def symbols for code navigation.
+  * [Goto] Jump to definition just when position line differ.
+
 ## v1.4.0 (2015-08-11)
 
 ### Enhancements
