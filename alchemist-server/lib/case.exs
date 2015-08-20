@@ -70,23 +70,14 @@ defmodule Alchemist.Case do
       |> process!
     end
 
-    def process!([expr]) do
-      Documentation.search(expr)
-      print
-    end
-
-    def process!([expr, modules]) do
-      Documentation.search(expr, modules)
+    def process!([expr, modules, aliases]) do
+      Documentation.search(expr, modules, aliases)
       print
     end
 
     def normalize(request) do
-      {{expr, [context: _, imports: imports, aliases: _]}, _} = Code.eval_string(request)
-      if imports do
-        [expr, imports]
-      else
-        [expr]
-      end
+      {{expr, [context: _, imports: imports, aliases: aliases]}, _} = Code.eval_string(request)
+      [expr, imports, aliases]
     end
 
     def print do

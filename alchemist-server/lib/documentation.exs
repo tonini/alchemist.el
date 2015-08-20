@@ -15,14 +15,28 @@ defmodule Alchemist.Documentation do
     end
   end
 
-  def search(expr, modules) do
+  def search(expr, modules, []) do
     unless function?(expr) do
       search(expr)
     else
-      modules ++ [Kernel, Kernel.SpecialForms]
-      |> build_search(expr)
-      |> search
+      search_with_context(modules, expr)
     end
+  end
+
+  def search(expr, modules, aliases) do
+    unless function?(expr) do
+      String.split(expr, ".")
+      |> expand_alias(aliases)
+      |> search
+    else
+      search_with_context(modules, expr)
+    end
+  end
+
+  defp search_with_context(modules, expr) do
+    modules ++ [Kernel, Kernel.SpecialForms]
+    |> build_search(expr)
+    |> search
   end
 
   def build_search(modules, search) do
@@ -74,4 +88,19 @@ defmodule Alchemist.Documentation do
   defp function?(expr) do
     Regex.match?(~r/^[a-z_]/, expr)
   end
+
+  defp expand_alias([name | rest] = list, aliases) do
+    module = Module.concat(Elixir, name)
+    Enum.find_value aliases, list, fn {alias, mod} ->
+      if alias === module do
+        case Atom.to_string(mod) do
+          "Elixir." <> mod ->
+            Module.concat [mod|rest]
+          _ ->
+            mod
+        end
+      end
+    end
+  end
+
 end
