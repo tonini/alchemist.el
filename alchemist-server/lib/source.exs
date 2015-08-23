@@ -8,13 +8,18 @@ defmodule Alchemist.Source do
   alias Alchemist.Informant
 
   def find([nil, function, [context: _, imports: [], aliases: _]]) do
-    look_for_kernel_functions(function)
+    function
+    |> look_for_kernel_functions
   end
 
   def find([nil, function, [context: _, imports: imports, aliases: _ ]]) do
-    Enum.filter(imports, &Informant.has_function? &1, function)
+    module = Enum.filter(imports, &Informant.has_function? &1, function)
     |> List.first
-    |> source
+
+    case module do
+      nil -> look_for_kernel_functions(function)
+      _ -> source(module)
+    end
   end
 
   def find([module, _function, [context: _, imports: _, aliases: aliases]]) do
