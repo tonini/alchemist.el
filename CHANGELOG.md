@@ -6,6 +6,7 @@
 
   * [Completion] Fix dabbrev-code fallback lookup and case - insensitivity lookup.
   * [Help] Better documentation lookup with search term handling.
+  * [Goto] Definition lookup for functions which are imported. Alchemist-Server now works with context informations.
   * [Goto] Big performance boost for fetching symbols.
   * [Goto] Add more def symbols for code navigation.
   * [Goto] Jump to definition just when position line differ.
