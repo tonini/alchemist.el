@@ -26,6 +26,8 @@ test:	clean-elc
 	${MAKE} clean-elc
 	${MAKE} test_server
 	${MAKE} test_doc
+	${MAKE} test_informant
+	${MAKE} test_source
 
 unit:
 	@ echo "\n$(INFO_COLOR)Run tests: $(NO_COLOR)\n"
@@ -38,6 +40,14 @@ test_server:
 test_doc:
 	@ echo "\n$(INFO_COLOR)Run documentation tests: $(NO_COLOR)\n"
 	$(ELIXIR) alchemist-server/test/documentation_test.exs
+
+test_informant:
+	@ echo "\n$(INFO_COLOR)Run informant tests: $(NO_COLOR)\n"
+	$(ELIXIR) alchemist-server/test/informant_test.exs
+
+test_source:
+	@ echo "\n$(INFO_COLOR)Run source tests: $(NO_COLOR)\n"
+	$(ELIXIR) alchemist-server/test/source_test.exs
 
 cask:
 	@ echo "\n$(INFO_COLOR)Install package dependencies: $(NO_COLOR)\n"

@@ -210,8 +210,11 @@ It will jump to the position of the symbol definition after selection."
 
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-scope-extract-module expr))
-         (module (alchemist-scope-alias-full-path module))
-         (function (alchemist-scope-extract-function expr)))
+         (aliases (alchemist-utils--prepare-aliases-for-elixir
+                   (alchemist-scope-aliases)))
+         (function (alchemist-scope-extract-function expr))
+         (modules (alchemist-utils--prepare-modules-for-elixir
+                   (alchemist-scope-all-modules))))
     (ring-insert find-tag-marker-ring (point-marker))
     (cond
      ((and (null module)
@@ -241,7 +244,7 @@ It will jump to the position of the symbol definition after selection."
                                             (t
                                              (pop-tag-mark)
                                              (message "Don't know how to find: %s" expr)))))
-      (alchemist-server-goto (format "{ \"%s,%s\", [ context: [], imports: [], aliases: [] ] }" module function)
+      (alchemist-server-goto (format "{ \"%s,%s\", [ context: Elixir, imports: %s, aliases: %s ] }" module function modules aliases)
                              #'alchemist-goto-filter)))))
 
 (defun alchemist-goto--open-file (file module function)

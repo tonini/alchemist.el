@@ -15,6 +15,10 @@ defmodule Alchemist.Informant do
     do_get_functions(list, hint) |> :lists.sort()
   end
 
+  def has_function?(module, function) do
+    List.keymember? get_module_funs(module), function, 0
+  end
+
   defp do_get_functions(list, "") do
     all_functions(list)
   end

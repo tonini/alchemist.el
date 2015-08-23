@@ -102,6 +102,7 @@ defmodule Alchemist.Server do
   ```
   MODULES
   ```
+
   """
 
   alias Alchemist.Case
