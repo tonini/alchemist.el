@@ -152,7 +152,7 @@ Argument END where the mark ends."
            (not (bound-and-true-p alchemist-help-minor-mode)))
       (let* ((modules (alchemist-utils--prepare-modules-for-elixir
                        (alchemist-scope-all-modules))))
-        (format "{ \"%s\", [ context: %s, imports: %s, aliases: [] ] }" args (alchemist-scope-module) modules))
+        (format "{ \"%s\", [ context: Elixir, imports: %s, aliases: [] ] }" args modules))
     (format "{ \"%s\", [ context: Elixir, imports: [], aliases: [] ] }" args)))
 
 (defun alchemist-help--completion-server-arguments (args)
@@ -162,10 +162,11 @@ Argument END where the mark ends."
       (let* ((modules (alchemist-utils--prepare-modules-for-elixir
                        (alchemist-scope-all-modules)))
              (aliases (alchemist-utils--prepare-aliases-for-elixir
-                       (alchemist-scope-aliases))))
-        (format "{ \"%s\", [ context: %s, imports: %s, aliases: %s ] }"
-                args (alchemist-scope-module) modules aliases))
+                       (alchemist-scope-aliases)))
+             (context (alchemist-scope-module)))
+        (format "{ \"%s\", [ context: Elixir, imports: %s, aliases: %s ] }" args modules aliases))
     (format "{ \"%s\", [ context: Elixir, imports: [], aliases: [] ] }" args)))
+
 (defun alchemist-help-complete-filter-output (_process output)
   (with-local-quit
     (setq alchemist-help-filter-output (cons output alchemist-help-filter-output))
