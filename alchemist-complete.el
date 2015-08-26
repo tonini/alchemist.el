@@ -27,6 +27,7 @@
 
 (require 'cl-lib)
 (require 'dash)
+(require 'ansi-color)
 (require 'company-dabbrev-code)
 (require 'alchemist-utils)
 
@@ -104,7 +105,7 @@
   (let* ((output (alchemist-server-prepare-filter-output output))
          (candidates (if (not (alchemist-utils--empty-string-p output))
                          (alchemist-complete--output-to-list
-                          (alchemist--utils-clear-ansi-sequences output))
+                          (ansi-color-filter-apply output))
                        '()))
          (candidates (if candidates
                          (alchemist-complete--build-candidates candidates)

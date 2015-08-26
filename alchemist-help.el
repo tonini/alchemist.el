@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'dash)
+(require 'ansi-color)
 (require 'alchemist-utils)
 (require 'alchemist-project)
 (require 'alchemist-server)
@@ -173,7 +174,7 @@ Argument END where the mark ends."
     (if (alchemist-server-contains-end-marker-p output)
         (let* ((string (alchemist-server-prepare-filter-output alchemist-help-filter-output))
                (candidates (alchemist-complete--output-to-list
-                            (alchemist--utils-clear-ansi-sequences string)))
+                            (ansi-color-filter-apply string)))
                (candidates (if (= (length candidates) 2)
                                nil
                              candidates)))

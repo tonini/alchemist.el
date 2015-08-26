@@ -45,13 +45,6 @@
   (should (equal (alchemist-utils--clear-search-text "__CALLER__.")
                  "__CALLER__")))
 
-(ert-deftest test-utils/remove-newline-at-end ()
-  "Remove newline at the end of string."
-  (should (equal (alchemist-utils--remove-newline-at-end "This is
-a text
-") "This is
-a text")))
-
 (ert-deftest test-utils/is-test-file-p ()
   "Should return t if visited file is a test file"
   (with-sandbox

@@ -27,7 +27,6 @@
 
 (require 'cl-lib)
 (require 'dash)
-(require 'ansi-color)
 
 ;; Variables
 
@@ -68,23 +67,6 @@ It walks the directory tree until it finds a elixir project root indicator."
          (search-text (replace-regexp-in-string  ",$" "" search-text))
          (search-text (replace-regexp-in-string  "^,$" "" search-text)))
     search-text))
-
-(defun alchemist-utils--erase-buffer (buffer)
-  "Use `erase-buffer' inside BUFFER."
-  (with-current-buffer buffer
-    (erase-buffer)))
-
-(defun alchemist-utils--get-buffer-content (buffer)
-  "Return the content of BUFFER."
-  (with-current-buffer buffer
-    (buffer-substring (point-min) (point-max))))
-
-(defun alchemist--utils-clear-ansi-sequences (string)
-  "Clear STRING from all ansi escape sequences."
-  (ansi-color-filter-apply string))
-
-(defun alchemist-utils--remove-newline-at-end (string)
-  (replace-regexp-in-string "\n$" "" string))
 
 (defun alchemist-utils--count-char-in-str (regexp str)
   (cl-loop with start = 0
