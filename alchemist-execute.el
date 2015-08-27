@@ -41,7 +41,7 @@
   :type 'string
   :group 'alchemist-execute)
 
-(defvar alchemist-execute-buffer-name "*elixir*"
+(defvar alchemist-execute-buffer-name "*alchemist elixir*"
   "Name of the elixir output buffer.")
 
 (defvar alchemist-execute-mode-map

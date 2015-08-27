@@ -40,7 +40,7 @@
   :type 'string
   :group 'alchemist-compile)
 
-(defvar alchemist-compile-buffer-name "*elixirc*"
+(defvar alchemist-compile-buffer-name "*alchemist elixirc*"
   "Name of the elixir output buffer.")
 
 (defvar alchemist-compile-mode-map
