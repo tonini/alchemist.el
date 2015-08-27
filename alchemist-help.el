@@ -163,8 +163,7 @@ Argument END where the mark ends."
       (let* ((modules (alchemist-utils--prepare-modules-for-elixir
                        (alchemist-scope-all-modules)))
              (aliases (alchemist-utils--prepare-aliases-for-elixir
-                       (alchemist-scope-aliases)))
-             (context (alchemist-scope-module)))
+                       (alchemist-scope-aliases))))
         (format "{ \"%s\", [ context: Elixir, imports: %s, aliases: %s ] }" args modules aliases))
     (format "{ \"%s\", [ context: Elixir, imports: [], aliases: [] ] }" args)))
 
