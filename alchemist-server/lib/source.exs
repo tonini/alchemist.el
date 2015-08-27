@@ -13,7 +13,7 @@ defmodule Alchemist.Source do
   end
 
   def find([nil, function, [context: _, imports: imports, aliases: _ ]]) do
-    module = Enum.filter(imports, &Informant.has_function? &1, function)
+    module = Enum.filter(imports, &Informant.has_function?(&1, function))
     |> List.first
 
     case module do
