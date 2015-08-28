@@ -1,8 +1,7 @@
 # Contribution guidelines
 
-If you discovered bugs and issues, have ideas for improvements or new features,
-or want to contribute a new syntax checker, please report to the
-[issue tracker][] the repository and send a pull request, but respect the
+If you discovered bugs and issues, have ideas for improvements or new features, please report to the
+[issue tracker][] of the repository and send a pull request, but respect the
 following guidelines.
 
 [issue tracker]: https://github.com/tonini/alchemist.el/issues
