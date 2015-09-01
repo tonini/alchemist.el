@@ -96,11 +96,13 @@
            (source-directory (expand-file-name alchemist-goto-erlang-source-dir)))
       (concat source-directory file))))
 
-(defun alchemist-goto--elixir-file-p (file)
-  (string-match-p  "\\.ex\\(s\\)?$" file))
+(defun alchemist-goto-elixir-file-p (file)
+  "Return non-nil if FILE is an Elixir file type."
+  (string-match-p "\\.ex\\(s\\)?$" file))
 
-(defun alchemist-goto--erlang-file-p (file)
-  (string-match-p  "\\.erl$" file))
+(defun alchemist-goto-erlang-file-p (file)
+  "Return non-nil if FILE is an Erlang file type."
+  (string-match-p "\\.erl$" file))
 
 (defun alchemist-goto--symbol-definition-p (symbol)
   (alchemist-goto--fetch-symbol-definitions)
@@ -227,12 +229,12 @@ It will jump to the position of the symbol definition after selection."
                                              (message "Don't know how to find: %s" expr))
                                             ((file-exists-p file)
                                              (alchemist-goto--open-file file module function))
-                                            ((alchemist-goto--elixir-file-p file)
+                                            ((alchemist-goto-elixir-file-p file)
                                              (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
                                                (if (file-exists-p elixir-source-file)
                                                    (alchemist-goto--open-file elixir-source-file module function)
                                                  (message "Don't know how to find: %s" expr))))
-                                            ((alchemist-goto--erlang-file-p file)
+                                            ((alchemist-goto-erlang-file-p file)
                                              (let* ((elixir-source-file (alchemist-goto--build-elixir-erl-core-file file))
                                                     (erlang-source-file (alchemist-goto--build-erlang-core-file file)))
                                                (cond ((file-exists-p elixir-source-file)
@@ -251,9 +253,9 @@ It will jump to the position of the symbol definition after selection."
   (let ((buf (find-file-noselect file)))
     (switch-to-buffer buf)
     (goto-char (point-min))
-    (cond ((alchemist-goto--elixir-file-p file)
+    (cond ((alchemist-goto-elixir-file-p file)
            (alchemist-goto--jump-to-elixir-source module function))
-          ((alchemist-goto--erlang-file-p file)
+          ((alchemist-goto-erlang-file-p file)
            (alchemist-goto--jump-to-erlang-source module function)))))
 
 (defun alchemist-goto--jump-to-elixir-source (module function)
