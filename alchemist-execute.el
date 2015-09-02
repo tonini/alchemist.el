@@ -82,7 +82,7 @@
 (defun alchemist-execute (cmdlist)
   "Run a elixir with CMDLIST."
   (interactive (list (alchemist-execute--read-command alchemist-execute-command)))
-  (let ((command (alchemist-utils--build-command cmdlist)))
+  (let ((command (alchemist-utils-build-command cmdlist)))
     (alchemist-report-run command
                           "alchemist-execute-report"
                           alchemist-execute-buffer-name

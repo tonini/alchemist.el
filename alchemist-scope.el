@@ -98,15 +98,15 @@
             (let* ((alias (match-string 1))
                    (as (if (match-string 3) (match-string 3) nil))
                    (as (if as as (car (last (split-string alias "\\."))))))
-              (setq aliases (append aliases (list (list (alchemist-utils--remove-dot-at-the-end alias)
-                                                        (alchemist-utils--remove-dot-at-the-end as))))))))))
+              (setq aliases (append aliases (list (list (alchemist-utils-remove-dot-at-the-end alias)
+                                                        (alchemist-utils-remove-dot-at-the-end as))))))))))
     aliases))
 
 (defun alchemist-scope--modules (regex)
   (let ((modules '())
         (context (alchemist-scope-module)))
     (save-excursion
-      (when (not (alchemist-utils--empty-string-p context))
+      (when (not (alchemist-utils-empty-string-p context))
         (while (re-search-backward regex nil t)
           (when (and (match-string 1)
                      (not (alchemist-scope-inside-string-p))
@@ -141,7 +141,7 @@
     (when (string-match-p "^[a-z_\?!]+" function)
       (delete function parts))
     (unless (string-match-p "^[a-z_\?!]+" (car parts))
-      (alchemist-utils--remove-dot-at-the-end (mapconcat 'concat parts ".")))))
+      (alchemist-utils-remove-dot-at-the-end (mapconcat 'concat parts ".")))))
 
 (defun alchemist-scope-extract-function (expr)
   "Extract function from EXPR."
@@ -154,7 +154,7 @@
 
 (defun alchemist-scope-alias-full-path (module)
   "Solve the full path for the MODULE alias."
-  (if (not (alchemist-utils--empty-string-p module))
+  (if (not (alchemist-utils-empty-string-p module))
       (let* ((aliases (-map (lambda (m)
                               (when (string-match-p (format "^%s" (car (cdr m))) module)
                                 (replace-regexp-in-string (format "^%s" (car (cdr m))) (car m) module t)))

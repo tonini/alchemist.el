@@ -272,14 +272,14 @@ macro) while the values are the position at which the test matched."
 position, jump to the first test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
-  (alchemist-utils--jump-to-next-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
+  (alchemist-utils-jump-to-next-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
 
 (defun alchemist-test-mode-jump-to-previous-test ()
   "Jump to the previous ExUnit test. If there are no tests before the current
 position, jump to the last test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
-  (alchemist-utils--jump-to-previous-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
+  (alchemist-utils-jump-to-previous-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
 
 (defun alchemist-test-next-result ()
   "Jump to the next error in the test report.
@@ -288,7 +288,7 @@ If there are no error after the current position,
 jump to the first error in the test report.
 Do nothing if there are no error in this test report."
   (interactive)
-  (alchemist-utils--jump-to-next-matching-line alchemist-test--failing-files-regex
+  (alchemist-utils-jump-to-next-matching-line alchemist-test--failing-files-regex
                                                'back-to-indentation))
 
 (defun alchemist-test-previous-result ()
@@ -298,7 +298,7 @@ If there are no error before the current position,
 jump to the first error in the test report.
 Do nothing if there are no error in this test report."
   (interactive)
-  (alchemist-utils--jump-to-previous-matching-line alchemist-test--failing-files-regex
+  (alchemist-utils-jump-to-previous-matching-line alchemist-test--failing-files-regex
                                                    #'(lambda ()
                                                        (forward-line 1)
                                                        (back-to-indentation))))
@@ -310,7 +310,7 @@ If there are no stacktrace file after the current position,
 jump to the first stacktrace file in the test report.
 Do nothing if there are no stacktrace file in this test report."
   (interactive)
-  (alchemist-utils--jump-to-next-matching-line alchemist-test--stacktrace-files-regex
+  (alchemist-utils-jump-to-next-matching-line alchemist-test--stacktrace-files-regex
                                                'back-to-indentation))
 
 (defun alchemist-test-previous-stacktrace-file ()
@@ -320,7 +320,7 @@ If there are no stacktrace file before the current position,
 jump to the first stacktrace file in the test report.
 Do nothing if there are no stacktrace file in this test report."
   (interactive)
-  (alchemist-utils--jump-to-previous-matching-line alchemist-test--stacktrace-files-regex
+  (alchemist-utils-jump-to-previous-matching-line alchemist-test--stacktrace-files-regex
                                                    'back-to-indentation))
 
 (defun alchemist-test-mode-list-tests ()
@@ -359,7 +359,7 @@ The following commands are available:
 
 ;;;###autoload
 (defun alchemist-test-enable-mode ()
-  (if (alchemist-utils--is-test-file-p)
+  (if (alchemist-utils-test-file-p)
       (alchemist-test-mode)))
 
 ;;;###autoload

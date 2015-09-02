@@ -79,14 +79,14 @@
 (defun alchemist-goto--build-elixir-ex-core-file (file)
   (when (string-match "\\/\\(lib\\/.+\\/lib\\)\\/.+\.ex$" file)
     (let* ((file (substring-no-properties file (match-beginning 1)))
-           (source-directory (alchemist-utils--add-trailing-slash
+           (source-directory (alchemist-utils-add-trailing-slash
                               (expand-file-name alchemist-goto-elixir-source-dir))))
       (concat source-directory file))))
 
 (defun alchemist-goto--build-elixir-erl-core-file (file)
   (when (string-match "\\/\\(lib\\/.+\\/src\\)\\/.+\.erl$" file)
     (let* ((file (substring-no-properties file (match-beginning 1)))
-           (source-directory (alchemist-utils--add-trailing-slash
+           (source-directory (alchemist-utils-add-trailing-slash
                               (expand-file-name alchemist-goto-elixir-source-dir))))
       (concat source-directory file))))
 
@@ -162,11 +162,11 @@ It will jump to the position of the symbol definition after selection."
 
 (defun alchemist-goto-jump-to-next-def-symbol ()
   (interactive)
-  (alchemist-utils--jump-to-next-matching-line alchemist-goto--symbol-def-regex 'back-to-indentation))
+  (alchemist-utils-jump-to-next-matching-line alchemist-goto--symbol-def-regex 'back-to-indentation))
 
 (defun alchemist-goto-jump-to-previous-def-symbol ()
   (interactive)
-  (alchemist-utils--jump-to-previous-matching-line alchemist-goto--symbol-def-regex 'back-to-indentation))
+  (alchemist-utils-jump-to-previous-matching-line alchemist-goto--symbol-def-regex 'back-to-indentation))
 
 (defun alchemist-goto--extract-symbol-bare (str)
   (save-match-data
@@ -212,10 +212,10 @@ It will jump to the position of the symbol definition after selection."
 
 (defun alchemist-goto--open-definition (expr)
   (let* ((module (alchemist-scope-extract-module expr))
-         (aliases (alchemist-utils--prepare-aliases-for-elixir
+         (aliases (alchemist-utils-prepare-aliases-for-elixir
                    (alchemist-scope-aliases)))
          (function (alchemist-scope-extract-function expr))
-         (modules (alchemist-utils--prepare-modules-for-elixir
+         (modules (alchemist-utils-prepare-modules-for-elixir
                    (alchemist-scope-all-modules))))
     (ring-insert find-tag-marker-ring (point-marker))
     (cond
@@ -225,7 +225,7 @@ It will jump to the position of the symbol definition after selection."
       (alchemist-goto--goto-symbol function))
      (t
       (setq alchemist-goto-callback (lambda (file)
-                                      (cond ((alchemist-utils--empty-string-p file)
+                                      (cond ((alchemist-utils-empty-string-p file)
                                              (message "Don't know how to find: %s" expr))
                                             ((file-exists-p file)
                                              (alchemist-goto--open-file file module function))

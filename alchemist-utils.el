@@ -28,14 +28,6 @@
 (require 'cl-lib)
 (require 'dash)
 
-;; Variables
-
-(defvar alchemist-utils--elixir-project-root-indicator
-  "mix.exs"
-  "The file which indicate an elixir project root.")
-
-;; Face
-
 (defface alchemist-utils--deprecated-face
   '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
   "Face for 'deprecated' word inside deprecated message."
@@ -47,13 +39,7 @@
                                 'face 'alchemist-utils--deprecated-face)
            new-function))
 
-(defun alchemist-utils--elixir-project-root ()
-  "Find the root directory of the project.
-It walks the directory tree until it finds a elixir project root indicator."
-  (let* ((file (file-name-as-directory (expand-file-name default-directory))))
-    (locate-dominating-file file alchemist-utils--elixir-project-root-indicator)))
-
-(defun alchemist-utils--build-command (command-list)
+(defun alchemist-utils-build-command (command-list)
   "Build the commands list for the runner."
   (let* ((command-list (-flatten (if (stringp command-list)
                                      (split-string command-list)
@@ -61,66 +47,61 @@ It walks the directory tree until it finds a elixir project root indicator."
          (command (-remove (lambda (e) (equal e "")) command-list)))
     (mapconcat 'concat command " ")))
 
-(defun alchemist-utils--clear-search-text (search-text)
-  (let* ((search-text (alchemist-utils--remove-dot-at-the-end search-text))
-         (search-text (replace-regexp-in-string  "^\\.$" "" search-text))
-         (search-text (replace-regexp-in-string  ",$" "" search-text))
-         (search-text (replace-regexp-in-string  "^,$" "" search-text)))
-    search-text))
-
-(defun alchemist-utils--count-char-in-str (regexp str)
+(defun alchemist-utils-count-char-occurence (regexp str)
+  "Count occurrence of char with REGEXP inside STR."
   (cl-loop with start = 0
            for count from 0
            while (string-match regexp str start)
            do (setq start (match-end 0))
            finally return count))
 
-(defun alchemist-utils--is-test-file-p ()
-  "Check whether the visited file is a test file."
-  (string-match "_test\.exs$" (or (buffer-file-name) "")))
+(defun alchemist-utils-test-file-p ()
+  "Return non-nil `current-buffer' holds an Elixir test file."
+  (string-match "_test\\.exs$" (or (buffer-file-name) "")))
 
-(defun alchemist-utils--remove-dot-at-the-end (string)
+(defun alchemist-utils-remove-dot-at-the-end (string)
+  "Remove dot character at the end of STRING."
   (replace-regexp-in-string "\\.$" "" string))
 
-(defun alchemist-utils--empty-string-p (string)
+(defun alchemist-utils-empty-string-p (string)
+  "Return non-nil if STRING is null, blank or whitespace only."
   (or (null string)
-      (let* ((string (replace-regexp-in-string "^\s+" "" string ))
-             (string (replace-regexp-in-string "\s+$" "" string)))
-        (string= string ""))))
+      (string= string "")
+      (if (string-match-p "^\s+$" string) t)))
 
-(defun alchemist-utils--prepare-aliases-for-elixir (aliases)
+(defun alchemist-utils-prepare-aliases-for-elixir (aliases)
   (let* ((aliases (-map (lambda (a)
-                            (let ((module (alchemist-utils--remove-dot-at-the-end (car a)))
-                                  (alias (alchemist-utils--remove-dot-at-the-end (car (cdr a)))))
-                            (if (not (or (alchemist-utils--empty-string-p alias)
+                            (let ((module (alchemist-utils-remove-dot-at-the-end (car a)))
+                                  (alias (alchemist-utils-remove-dot-at-the-end (car (cdr a)))))
+                            (if (not (or (alchemist-utils-empty-string-p alias)
                                          (string= alias module)))
                                 (format "{%s, %s}"
-                                        (if (alchemist-utils--empty-string-p alias)
+                                        (if (alchemist-utils-empty-string-p alias)
                                             module
                                           alias)
                                         module)))) aliases))
          (aliases (mapconcat #'identity aliases ",")))
     (format "[%s]" aliases)))
 
-(defun alchemist-utils--prepare-modules-for-elixir (modules)
+(defun alchemist-utils-prepare-modules-for-elixir (modules)
   (let* ((modules (mapconcat #'identity modules ",")))
     (format "[%s]" modules)))
 
 (defun alchemist-utils--snakecase-to-camelcase (str)
-  "Convert a snake_case string `STR' to a CamelCase string.
+  "Convert a snake_case string STR to a CamelCase string.
 
 This function is useful for converting file names like my_module to Elixir
 module names (MyModule)."
   (mapconcat 'capitalize (split-string str "_") ""))
 
-(defun alchemist-utils--add-ext-to-path-if-not-present (path ext)
-  "Add `EXT' to `PATH' if `PATH' doesn't already ends with `EXT'."
+(defun alchemist-utils-add-ext-to-path-if-not-present (path ext)
+  "Add EXT to PATH if PATH doesn't already ends with EXT."
   (if (string-suffix-p ext path)
       path
     (concat path ext)))
 
-(defun alchemist-utils--path-to-module-name (path)
-  "Convert `PATH' to its Elixir module name equivalent.
+(defun alchemist-utils-path-to-module-name (path)
+  "Convert PATH to its Elixir module name equivalent.
 
 For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
   (let* ((path (file-name-sans-extension path))
@@ -128,25 +109,25 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
          (path (-remove (lambda (str) (equal str "")) path)))
     (mapconcat #'alchemist-utils--snakecase-to-camelcase path ".")))
 
-(defun alchemist-utils--add-trailing-slash (path)
+(defun alchemist-utils-add-trailing-slash (path)
+  "Add trailing slash to PATH if not already contain."
   (if (not (string-match-p "/$" path))
       (format "%s/" path)
     path))
 
 (defun alchemist-utils-occur-in-buffer-p (buffer regex)
-  "Return non-nil if `BUFFER' contains at least one occurrence of `REGEX'."
+  "Return non-nil if BUFFER contains at least one occurrence of REGEX."
   (with-current-buffer buffer
     (save-excursion
       (save-match-data
         (goto-char (point-min))
         (re-search-forward regex nil t)))))
 
-(defun alchemist-utils--jump-to-regex (regex before-fn after-fn search-fn reset-fn)
-  "Jump to `REGEX' using `SEARCH-FN' to search for it.
-
-A common use case would be to use 're-search-forward' as the `SEARCH-FN'. Call
-`RESET-FN' if the regex isn't found at the first try. `BEFORE-FN' is called
-before performing the search while `AFTER-FN' after."
+(defun alchemist-utils-jump-to-regex (regex before-fn after-fn search-fn reset-fn)
+  "Jump to REGEX using SEARCH-FN to search for it.
+A common use case would be to use `re-search-forward' as the SEARCH-FN.
+Call RESET-FN if the regex isn't found at the first try. BEFORE-FN is called
+before performing the search while AFTER-FN after."
   (when (alchemist-utils-occur-in-buffer-p (current-buffer) regex)
     (save-match-data
       (funcall before-fn)
@@ -155,17 +136,16 @@ before performing the search while `AFTER-FN' after."
         (funcall search-fn regex nil t))
       (funcall after-fn))))
 
-(defun alchemist-utils--jump-to-next-matching-line (regex after-fn)
-  "Jump to the next line matching `REGEX'.
+(defun alchemist-utils-jump-to-next-matching-line (regex after-fn)
+  "Jump to the next line matching REGEX.
+Call AFTER-FN after performing the search."
+  (alchemist-utils-jump-to-regex regex 'end-of-line after-fn 're-search-forward 'beginning-of-buffer))
 
-Call `AFTER-FN' after performing the search (for example, you could use back-to-indentation to go back to the indentation after the search."
-  (alchemist-utils--jump-to-regex regex 'end-of-line after-fn 're-search-forward 'beginning-of-buffer))
+(defun alchemist-utils-jump-to-previous-matching-line (regex after-fn)
+  "Jump to the previous line matching REGEX.
 
-(defun alchemist-utils--jump-to-previous-matching-line (regex after-fn)
-  "Jump to the previous line matching `REGEX'.
-
-Call `AFTER-FN' after performing the search (for example, you could use back-to-indentation to go back to the indentation after the search."
-  (alchemist-utils--jump-to-regex regex 'beginning-of-line after-fn 're-search-backward 'end-of-buffer))
+Call AFTER-FN after performing the search."
+  (alchemist-utils-jump-to-regex regex 'beginning-of-line after-fn 're-search-backward 'end-of-buffer))
 
 (provide 'alchemist-utils)
 

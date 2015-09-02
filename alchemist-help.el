@@ -60,7 +60,7 @@
   "Lookup Elixir documentation for SEARCH."
   (setq alchemist-help-current-search-text search)
   (setq alchemist-help-filter-output nil)
-  (if (not (alchemist-utils--empty-string-p search))
+  (if (not (alchemist-utils-empty-string-p search))
       (alchemist-server-complete-candidates
        (alchemist-help--completion-server-arguments search)
        #'alchemist-help-complete-filter-output)
@@ -71,7 +71,7 @@
   (or (string-match-p "No documentation for" string)
       (string-match-p "Could not load module" string)
       (string-match-p "it does not have Elixir-style docs" string)
-      (alchemist-utils--empty-string-p string)))
+      (alchemist-utils-empty-string-p string)))
 
 (defun alchemist-help-store-search-in-history ()
   "Store the last `alchemist-help-current-search-text' in `alchemist-help-search-history'."
@@ -117,10 +117,10 @@ Argument END where the mark ends."
          (function (alchemist-scope-extract-function expr))
          (function (if function function ""))
          (expr (cond
-                ((and (not (alchemist-utils--empty-string-p module))
-                      (not (alchemist-utils--empty-string-p function)))
+                ((and (not (alchemist-utils-empty-string-p module))
+                      (not (alchemist-utils-empty-string-p function)))
                  (format "%s.%s" module function))
-                ((not (alchemist-utils--empty-string-p module))
+                ((not (alchemist-utils-empty-string-p module))
                  module)
                 (t
                  expr))))
@@ -151,7 +151,7 @@ Argument END where the mark ends."
 (defun alchemist-help--server-arguments (args)
   (if (and (not (equal major-mode 'alchemist-iex-mode))
            (not (bound-and-true-p alchemist-help-minor-mode)))
-      (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+      (let* ((modules (alchemist-utils-prepare-modules-for-elixir
                        (alchemist-scope-all-modules))))
         (format "{ \"%s\", [ context: Elixir, imports: %s, aliases: [] ] }" args modules))
     (format "{ \"%s\", [ context: Elixir, imports: [], aliases: [] ] }" args)))
@@ -160,9 +160,9 @@ Argument END where the mark ends."
   "Build informations about the current context."
   (if (and (not (equal major-mode 'alchemist-iex-mode))
            (not (bound-and-true-p alchemist-help-minor-mode)))
-      (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+      (let* ((modules (alchemist-utils-prepare-modules-for-elixir
                        (alchemist-scope-all-modules)))
-             (aliases (alchemist-utils--prepare-aliases-for-elixir
+             (aliases (alchemist-utils-prepare-aliases-for-elixir
                        (alchemist-scope-aliases))))
         (format "{ \"%s\", [ context: Elixir, imports: %s, aliases: %s ] }" args modules aliases))
     (format "{ \"%s\", [ context: Elixir, imports: [], aliases: [] ] }" args)))
@@ -214,7 +214,7 @@ Argument END where the mark ends."
                          (concat module "."))
                         (t
                          search))))
-          (alchemist-help-lookup-doc (alchemist-utils--remove-dot-at-the-end search))))))
+          (alchemist-help-lookup-doc (alchemist-utils-remove-dot-at-the-end search))))))
 
 ;; Public functions
 

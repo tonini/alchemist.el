@@ -74,15 +74,15 @@
     (cond
      ((and (string-match-p "\\.$" search-term)
            (not (string-match-p "\\.$" alchemist-company-last-completion)))
-      (push (alchemist-utils--remove-dot-at-the-end search-term) candidates))
+      (push (alchemist-utils-remove-dot-at-the-end search-term) candidates))
      (t candidates))))
 
 (defun alchemist-complete--build-help-candidates (a-list)
   (let* ((search-term (car a-list))
-         (candidates (cond ((> (alchemist-utils--count-char-in-str "\\." search-term) 1)
+         (candidates (cond ((> (alchemist-utils-count-char-occurence "\\." search-term) 1)
                             (let ((search (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                                               (list (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "" search-term))
-                                            (list (alchemist-utils--remove-dot-at-the-end search-term))))
+                                            (list (alchemist-utils-remove-dot-at-the-end search-term))))
                                   (candidates (-map (lambda (c)
                                                         (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                                                             (concat (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "." search-term) c)
@@ -103,7 +103,7 @@
 
 (defun alchemist-complete--build-candidates-from-process-output (output)
   (let* ((output (alchemist-server-prepare-filter-output output))
-         (candidates (if (not (alchemist-utils--empty-string-p output))
+         (candidates (if (not (alchemist-utils-empty-string-p output))
                          (alchemist-complete--output-to-list
                           (ansi-color-filter-apply output))
                        '()))

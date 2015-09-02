@@ -81,7 +81,7 @@
 (defun alchemist-compile (cmdlist)
   "Compile CMDLIST with elixirc."
   (interactive (list (alchemist-compile--read-command alchemist-compile-command)))
-  (let ((command (alchemist-utils--build-command cmdlist)))
+  (let ((command (alchemist-utils-build-command cmdlist)))
     (alchemist-report-run command "alchemist-compile-report" alchemist-compile-buffer-name 'alchemist-compile-mode)))
 
 (provide 'alchemist-compile)

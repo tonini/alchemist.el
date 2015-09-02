@@ -156,7 +156,7 @@
 (defun alchemist-refcard--describe-funtion-at-point ()
   (interactive)
   (let ((function-name (get-text-property (point) 'tabulated-list-id)))
-    (when (not (alchemist-utils--empty-string-p function-name))
+    (when (not (alchemist-utils-empty-string-p function-name))
       (describe-function (intern function-name)))))
 
 (defun alchemist-refcard--buffer ()

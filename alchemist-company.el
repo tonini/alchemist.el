@@ -75,9 +75,9 @@
 
 (defun alchemist-company-build-scope-arg (arg)
   "Build informations about the current context."
-  (let* ((modules (alchemist-utils--prepare-modules-for-elixir
+  (let* ((modules (alchemist-utils-prepare-modules-for-elixir
                    (alchemist-scope-all-modules)))
-         (aliases (alchemist-utils--prepare-aliases-for-elixir
+         (aliases (alchemist-utils-prepare-aliases-for-elixir
                    (alchemist-scope-aliases))))
     (format "{ \"%s\", [ context: Elixir, imports: %s, aliases: %s ] }" arg modules aliases)))
 

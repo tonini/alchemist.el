@@ -81,14 +81,14 @@
 (defun alchemist-project-toggle-file-and-tests-other-window ()
   "Toggle between a file and its tests in other window."
   (interactive)
-  (if (alchemist-utils--is-test-file-p)
+  (if (alchemist-utils-test-file-p)
       (alchemist--project-open-file-for-current-tests 'find-file-other-window)
     (alchemist--project-open-tests-for-current-file 'find-file-other-window)))
 
 (defun alchemist-project-toggle-file-and-tests ()
   "Toggle between a file and its tests in the current window."
   (interactive)
-  (if (alchemist-utils--is-test-file-p)
+  (if (alchemist-utils-test-file-p)
       (alchemist--project-open-file-for-current-tests 'find-file)
     (alchemist--project-open-tests-for-current-file 'find-file)))
 
@@ -159,14 +159,14 @@ The newly created buffer is filled with a module definition based on the file na
         (message "You're not in a Mix project")
       (let* ((lib-path (concat root "lib/"))
              (abs-path (read-file-name "New file in lib/: " lib-path))
-             (abs-path (alchemist-utils--add-ext-to-path-if-not-present abs-path ".ex"))
+             (abs-path (alchemist-utils-add-ext-to-path-if-not-present abs-path ".ex"))
              (relative-path (file-relative-name abs-path lib-path)))
         (if (file-readable-p abs-path)
             (message "%s already exists" relative-path)
           (make-directory (file-name-directory abs-path) t)
           (find-file abs-path)
           (insert (concat "defmodule "
-                          (alchemist-utils--path-to-module-name relative-path)
+                          (alchemist-utils-path-to-module-name relative-path)
                           " do\n"
                           "  \n"
                           "end\n"))
