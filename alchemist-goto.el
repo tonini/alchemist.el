@@ -158,7 +158,7 @@ It will jump to the position of the symbol definition after selection."
          (replace-regexp-in-string ",?\s+do:.*$" "" (replace-regexp-in-string "\s+do$" "" arguments)))))))
 
 (defun alchemist-goto--file-contains-defs-p ()
-  (alchemist-utils--regex-in-buffer-p (current-buffer) alchemist-goto--symbol-def-extract-regex))
+  (alchemist-utils-occur-in-buffer-p (current-buffer) alchemist-goto--symbol-def-extract-regex))
 
 (defun alchemist-goto-jump-to-next-def-symbol ()
   (interactive)

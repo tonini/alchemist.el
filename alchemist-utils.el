@@ -133,9 +133,8 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
       (format "%s/" path)
     path))
 
-(defun alchemist-utils--regex-in-buffer-p (buffer regex)
-  "Return non-nil if the given `BUFFER' contains at least one occurrence of
-  `REGEX', nil otherwise."
+(defun alchemist-utils-occur-in-buffer-p (buffer regex)
+  "Return non-nil if `BUFFER' contains at least one occurrence of `REGEX'."
   (with-current-buffer buffer
     (save-excursion
       (save-match-data
@@ -148,7 +147,7 @@ For example, convert 'my_app/my_module.ex' to 'MyApp.MyModule'."
 A common use case would be to use 're-search-forward' as the `SEARCH-FN'. Call
 `RESET-FN' if the regex isn't found at the first try. `BEFORE-FN' is called
 before performing the search while `AFTER-FN' after."
-  (when (alchemist-utils--regex-in-buffer-p (current-buffer) regex)
+  (when (alchemist-utils-occur-in-buffer-p (current-buffer) regex)
     (save-match-data
       (funcall before-fn)
       (unless (funcall search-fn regex nil t)

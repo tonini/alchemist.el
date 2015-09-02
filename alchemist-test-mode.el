@@ -196,7 +196,7 @@ Otherwise, it saves all modified buffers without asking."
 
 (defun alchemist-test-mode--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
-  (alchemist-utils--regex-in-buffer-p (current-buffer) alchemist-test-mode--test-regex))
+  (alchemist-utils-occur-in-buffer-p (current-buffer) alchemist-test-mode--test-regex))
 
 (defun alchemist-test-mode--tests-in-buffer ()
   "Return an alist of tests in this buffer.
