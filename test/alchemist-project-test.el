@@ -38,7 +38,7 @@
    (f-touch "mix.exs")
    (f-touch ".hex")
    (f-mkdir "path" "to" "lib")
-   (should (equal (alchemist-project-root) nil))))
+   (should-not (alchemist-project-root))))
 
 (ert-deftest test-project-root/directory-as-argument  ()
   "Should find root directory when directory as argument."
