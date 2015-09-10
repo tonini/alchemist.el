@@ -73,12 +73,6 @@ directory from there instead."
                 default-directory)))
     dir))
 
-(defun alchemist-project--establish-root-directory ()
-  "Set the default-directory to the Elixir project root."
-  (let ((project-root (alchemist-project-root)))
-    (when project-root
-      (setq default-directory project-root))))
-
 (defun alchemist-project-toggle-file-and-tests-other-window ()
   "Toggle between a file and its tests in other window."
   (interactive)

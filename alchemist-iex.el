@@ -193,14 +193,10 @@ Show the IEx buffer if an IEx process is already run."
 context of an Elixir project.
 Show the IEx buffer if an IEx process is already run."
   (interactive)
-  (let ((old-directory default-directory))
   (if (alchemist-project-p)
-      (progn
-        (alchemist-project--establish-root-directory)
-        (let ((proc (alchemist-iex-process " -S mix")))
-          (cd old-directory)
-          (pop-to-buffer (process-buffer proc))))
-    (message "No mix.exs file available. Please use `alchemist-iex-run' instead."))))
+      (let ((default-directory (alchemist-project-root)))
+        (pop-to-buffer (process-buffer (alchemist-iex-process " -S mix"))))
+    (message "No mix.exs file available. Please use `alchemist-iex-run' instead.")))
 
 (provide 'alchemist-iex)
 
