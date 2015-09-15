@@ -71,6 +71,7 @@
 (require 'alchemist-hooks)
 (require 'alchemist-message)
 (require 'alchemist-iex)
+(require 'alchemist-compile)
 (require 'alchemist-refcard)
 (require 'alchemist-complete)
 (require 'alchemist-company)
