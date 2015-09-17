@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.1 (2015-09-17)
+
+### Bug fixes
+
+  * [Base] The missing `alchemist-compile` library is now required properly.
+
 ## v1.5.0 (2015-08-23)
 
 ### Enhancements
