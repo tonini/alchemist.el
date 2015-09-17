@@ -93,7 +93,8 @@
 (defun alchemist-goto--build-erlang-core-file (file)
   (when (string-match "\\/\\(lib\\/.+\\/src\\)\\/.+\.erl$" file)
     (let* ((file (substring-no-properties file (match-beginning 1)))
-           (source-directory (expand-file-name alchemist-goto-erlang-source-dir)))
+           (source-directory (alchemist-utils-add-trailing-slash
+                              (expand-file-name alchemist-goto-erlang-source-dir))))
       (concat source-directory file))))
 
 (defun alchemist-goto-elixir-file-p (file)
