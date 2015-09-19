@@ -46,8 +46,8 @@ defmodule Alchemist.Source do
   end
   defp source(module), do: do_source(module)
 
-  defp do_source([head|tail]) do
-    [head] ++ tail
+  defp do_source([_head|_tail] = list) do
+    list
     |> Module.concat
     |> do_source
   end
