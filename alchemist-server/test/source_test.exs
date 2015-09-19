@@ -31,6 +31,11 @@ defmodule SourceTest do
     assert find([String, nil, context]) =~ "lib/elixir/lib/string.ex"
   end
 
+  test "find call with module namespace" do
+    context = [context: Elixir, imports: [], aliases: []]
+    assert find([String.Chars, :to_string, context]) =~ "lib/elixir/lib/string/chars.ex"
+  end
+
   test "find call for erlang module" do
     context = [ context: Elixir, imports: [], aliases: [] ]
     assert find([:lists, :duplicate, context]) =~ "lib/stdlib/src/lists.erl"
@@ -40,5 +45,4 @@ defmodule SourceTest do
     context = [ context: Elixir, imports: [], aliases: [] ]
     assert find([Rock, :duplicate, context]) == nil
   end
-
 end

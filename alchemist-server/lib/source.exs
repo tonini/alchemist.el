@@ -46,6 +46,12 @@ defmodule Alchemist.Source do
   end
   defp source(module), do: do_source(module)
 
+  defp do_source([head|tail]) do
+    [head] ++ tail
+    |> Module.concat
+    |> do_source
+  end
+
   defp do_source(module) do
     if Code.ensure_loaded? module do
       case module.module_info(:compile)[:source] do
