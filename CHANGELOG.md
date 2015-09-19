@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.2 (2015-09-19)
+
+### Bug fixes
+
+  * [Goto] Fix issue with definition lookup when namespace with multiple modules where involved.
+
 ## v1.5.1 (2015-09-17)
 
 ### Bug fixes
