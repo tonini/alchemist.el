@@ -228,10 +228,7 @@ Key bindings:
     ("Project"
      ["Project find all tests" alchemist-project-find-test]
      ["Project toggle between file and test" alchemist-project-toggle-file-and-tests]
-     ["Project toggle between file and test in other window" alchemist-project-toggle-file-and-tests-other-window]
-     "---"
-     ["Project toggle compile when needed" alchemist-project-toggle-compile-when-needed
-      :style toggle :selected alchemist-project-compile-when-needed])
+     ["Project toggle between file and test in other window" alchemist-project-toggle-file-and-tests-other-window])
     ("Documentation"
      ["Documentation search..." alchemist-help]
      ["Documentation search history..." alchemist-help-history]
