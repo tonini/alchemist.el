@@ -312,7 +312,7 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 
 ### Phoenix directory support
 
-There are a punch of helper functions available to list files of certain directories like `web`, `web/modules` etc.
+There are a bunch of helper functions available to list files of certain directories like `web`, `web/modules` etc.
 These functions exists because of the famous Elixir webframework [Phoenix](http://www.phoenixframework.org/) which comes with `web` based directory structure.
 
 | Keybinding | Description |
