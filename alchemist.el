@@ -128,22 +128,25 @@ Key bindings:
   (define-key map (kbd "m t f") 'alchemist-mix-test-file)
   (define-key map (kbd "m t b") 'alchemist-mix-test-this-buffer)
   (define-key map (kbd "m t .") 'alchemist-mix-test-at-point)
+
   (define-key map (kbd "c c") 'alchemist-compile)
   (define-key map (kbd "c f") 'alchemist-compile-file)
   (define-key map (kbd "c b") 'alchemist-compile-this-buffer)
+
   (define-key map (kbd "e e") 'alchemist-execute)
   (define-key map (kbd "e f") 'alchemist-execute-file)
   (define-key map (kbd "e b") 'alchemist-execute-this-buffer)
+
   (define-key map (kbd "h h") 'alchemist-help)
   (define-key map (kbd "h i") 'alchemist-help-history)
   (define-key map (kbd "h e") 'alchemist-help-search-at-point)
   (define-key map (kbd "h m") 'alchemist-help-search-marked-region)
   (define-key map (kbd "h r") 'alchemist-refcard)
+
   (define-key map (kbd "p f") 'alchemist-project-find-test)
   (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
   (define-key map (kbd "p o") 'alchemist-project-toggle-file-and-tests-other-window)
   (define-key map (kbd "p t") 'alchemist-project-run-tests-for-current-file)
-
   (define-key map (kbd "p l") 'alchemist-project-find-lib)
   (define-key map (kbd "p w") 'alchemist-project-find-web)
   (define-key map (kbd "p c") 'alchemist-project-find-controllers)
@@ -160,6 +163,7 @@ Key bindings:
   (define-key map (kbd "i r") 'alchemist-iex-send-region)
   (define-key map (kbd "i m") 'alchemist-iex-send-region-and-go)
   (define-key map (kbd "i b") 'alchemist-iex-compile-this-buffer)
+
   (define-key map (kbd "v l") 'alchemist-eval-current-line)
   (define-key map (kbd "v k") 'alchemist-eval-print-current-line)
   (define-key map (kbd "v j") 'alchemist-eval-quoted-current-line)
