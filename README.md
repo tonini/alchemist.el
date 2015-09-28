@@ -310,10 +310,10 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>C-c a p f</kbd>|List all files available in the `test` directory. `alchemist-project-find-test`|
 |<kbd>C-c a p l</kbd>|List all files available in the `lib` directory. `alchemist-project-find-lib` |
 
+### Phoenix directory support
+
 There are a punch of helper functions available to list files of certain directories like `web`, `web/modules` etc.
 These functions exists because of the famous Elixir webframework [Phoenix](http://www.phoenixframework.org/) which comes with `web` based directory structure.
-
-### Phoenix directory support
 
 | Keybinding | Description |
 |-------------------|-------------|
