@@ -143,6 +143,16 @@ Key bindings:
   (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
   (define-key map (kbd "p o") 'alchemist-project-toggle-file-and-tests-other-window)
   (define-key map (kbd "p t") 'alchemist-project-run-tests-for-current-file)
+
+  (define-key map (kbd "p l") 'alchemist-project-find-lib)
+  (define-key map (kbd "p w") 'alchemist-project-find-web)
+  (define-key map (kbd "p c") 'alchemist-project-find-controllers)
+  (define-key map (kbd "p h") 'alchemist-project-find-channels)
+  (define-key map (kbd "p e") 'alchemist-project-find-templates)
+  (define-key map (kbd "p m") 'alchemist-project-find-modules)
+  (define-key map (kbd "p i") 'alchemist-project-find-static)
+  (define-key map (kbd "p v") 'alchemist-project-find-views)
+
   (define-key map (kbd "i i") 'alchemist-iex-run)
   (define-key map (kbd "i p") 'alchemist-iex-project-run)
   (define-key map (kbd "i l") 'alchemist-iex-send-current-line)

@@ -49,6 +49,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
 - [Project](#project)
+  - [Phoenix directory support](#phoenix-directory-support)
 - [Documentation lookup](#documentation-lookup)
   - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Definition lookup](#definition-lookup)
@@ -303,10 +304,26 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a p f</kbd>|Open project test directory and list all test files. `alchemist-project-find-test`|
-|<kbd>C-c a p s</kbd>|Toggle between a file and its tests in the current window. `alchemist-project-toggle-file-and-tests`
-|<kbd>C-c a p o</kbd>|Toggle between a file and its tests in other window. `alchemist-project-toggle-file-and-tests-other-window`
-|<kbd>C-c a p t</kbd>|Run the tests related to the current file.. `alchemist-project-run-tests-for-current-file`
+|<kbd>C-c a p s</kbd>|Toggle between a file and its tests in the current window. `alchemist-project-toggle-file-and-tests`|
+|<kbd>C-c a p o</kbd>|Toggle between a file and its tests in other window. `alchemist-project-toggle-file-and-tests-other-window`|
+|<kbd>C-c a p t</kbd>|Run the tests related to the current file. `alchemist-project-run-tests-for-current-file`|
+|<kbd>C-c a p f</kbd>|List all files available in the `test` directory. `alchemist-project-find-test`|
+|<kbd>C-c a p l</kbd>|List all files available in the `lib` directory. `alchemist-project-find-lib` |
+
+There are a punch of helper functions available to list files of certain directories like `web`, `web/modules` etc.
+These functions exists because of the famous Elixir webframework [Phoenix](http://www.phoenixframework.org/) which comes with `web` based directory structure.
+
+### Phoenix directory support
+
+| Keybinding | Description |
+|-------------------|-------------|
+|<kbd>C-c a p w</kbd>|List all files available in the `web` directory. `alchemist-project-find-web`|
+|<kbd>C-c a p c</kbd>|List all files available in the `web/controllers` directory. `alchemist-project-find-controllers`|
+|<kbd>C-c a p h</kbd>|List all files available in the `web/channels` directory. `alchemist-project-find-channels`|
+|<kbd>C-c a p e</kbd>|List all files available in the `web/templates` directory. `alchemist-project-find-templates`|
+|<kbd>C-c a p m</kbd>|List all files available in the `web/modules` directory. `alchemist-project-find-modules`|
+|<kbd>C-c a p i</kbd>|List all files available in the `web/static` directory. `alchemist-project-find-static`|
+|<kbd>C-c a p v</kbd>|List all files available in the `web/views` directory. `alchemist-project-find-views`|
 
 ## Documentation lookup
 

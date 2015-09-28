@@ -90,4 +90,23 @@
    (should (equal (file-name-nondirectory (buffer-file-name))
                   "other_file_test.exs"))))
 
+(ert-deftest test-project-find-files-in-directory ()
+  (with-sandbox
+   (f-touch "mix.exs")
+   (f-mkdir "lib")
+   (f-mkdir "lib" "path")
+   (f-touch "lib/file.ex")
+   (f-touch "lib/another.ex")
+   (f-touch "lib/path/foo.ex")
+   (f-mkdir "web")
+   (f-mkdir "web" "controllers")
+   (f-mkdir "web" "controllers" "path")
+   (f-touch "web/controllers/file.ex")
+   (f-touch "web/controllers/another.ex")
+   (f-touch "web/controllers/path/foo.ex")
+   (should (equal (alchemist-project-files (alchemist-project-root) "lib")
+                  '("lib/another.ex" "lib/file.ex" "lib/path/foo.ex")))
+   (should (equal (alchemist-project-files (alchemist-project-root) "web/controllers")
+                  '("web/controllers/another.ex" "web/controllers/file.ex" "web/controllers/path/foo.ex")))))
+
 (provide 'alchemist-project-tests)
