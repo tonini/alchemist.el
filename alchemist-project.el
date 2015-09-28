@@ -169,29 +169,75 @@ The newly created buffer is filled with a module definition based on the file na
           (beginning-of-line 2)
           (back-to-indentation))))))
 
-(defun alchemist-project-find-test ()
-  "Open project test directory and list all test files."
-  (interactive)
-  (when (alchemist-project-p)
-    (find-file (alchemist-project--open-directory-files "test"))))
-
-(defun alchemist-project--open-directory-files (directory)
-  (let ((directory (concat (replace-regexp-in-string "\/?$" "" (concat (alchemist-project-root) directory) "/"))))
-    (message directory)
-    (concat directory "/" (completing-read (concat directory ": ")
-                                           (-map (lambda (path)
-                                                   (replace-regexp-in-string (concat "^" (regexp-quote directory) "/") "" path))
-                                                 (split-string
-                                                  (shell-command-to-string
-                                                   (concat
-                                                    "find \"" directory
-                                                    "\" -type f | grep \"_test\.exs\" | grep -v \"/.git/\""))))))))
-
 (defun alchemist-project-name ()
-  "Return the name of the current Elixir project."
+  "Return the name of the current Elixir Mix project."
   (if (alchemist-project-p)
       (car (cdr (reverse (split-string (alchemist-project-root) "/"))))
     ""))
+
+(defun alchemist-project-find-dir (directory)
+  "Open DIRECTORY and list all files."
+  (unless (alchemist-project-p)
+    (error "Could not find an Elixir Mix project root."))
+  (let* ((root-dir (alchemist-project-root))
+         (files (alchemist-project-files root-dir directory))
+         (project-name (alchemist-project-name))
+         (file (completing-read (format "[%s] %s: " (alchemist-project-name) directory)
+                                files)))
+    (find-file (expand-file-name file root-dir))))
+
+(defun alchemist-project-files (root directory)
+  "Return all files in DIRECTORY and use ROOT as `default-directory'."
+  (let ((default-directory root))
+    (-map (lambda (file) (file-relative-name file root))
+          (alchemist-project-dir-files directory))))
+
+(defun alchemist-project-dir-files (directory)
+  "Return all files in DIRECTORY.
+The files lookup in DIRECTORY is recursive."
+  (--mapcat
+   (if (file-directory-p it)
+       (unless (or (equal (file-relative-name it directory) "..")
+                   (equal (file-relative-name it directory) "."))
+         (alchemist-project-dir-files it))
+     (list it))
+   (directory-files directory t)))
+
+(defun alchemist-project-find-lib ()
+  (interactive)
+  (alchemist-project-find-dir "lib"))
+
+(defun alchemist-project-find-test ()
+  (interactive)
+  (alchemist-project-find-dir "test"))
+
+(defun alchemist-project-find-web ()
+  (interactive)
+  (alchemist-project-find-dir "web"))
+
+(defun alchemist-project-find-views ()
+  (interactive)
+  (alchemist-project-find-dir "web/views"))
+
+(defun alchemist-project-find-controllers ()
+  (interactive)
+  (alchemist-project-find-dir "web/controllers"))
+
+(defun alchemist-project-find-channels ()
+  (interactive)
+  (alchemist-project-find-dir "web/channels"))
+
+(defun alchemist-project-find-templates ()
+  (interactive)
+  (alchemist-project-find-dir "web/templates"))
+
+(defun alchemist-project-find-modules ()
+  (interactive)
+  (alchemist-project-find-dir "web/modules"))
+
+(defun alchemist-project-find-static ()
+  (interactive)
+  (alchemist-project-find-dir "web/static"))
 
 (provide 'alchemist-project)
 
