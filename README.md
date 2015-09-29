@@ -321,7 +321,7 @@ These functions exists because of the famous Elixir webframework [Phoenix](http:
 |<kbd>C-c a p c</kbd>|List all files available in the `web/controllers` directory. `alchemist-project-find-controllers`|
 |<kbd>C-c a p h</kbd>|List all files available in the `web/channels` directory. `alchemist-project-find-channels`|
 |<kbd>C-c a p e</kbd>|List all files available in the `web/templates` directory. `alchemist-project-find-templates`|
-|<kbd>C-c a p m</kbd>|List all files available in the `web/modules` directory. `alchemist-project-find-modules`|
+|<kbd>C-c a p m</kbd>|List all files available in the `web/models` directory. `alchemist-project-find-models`|
 |<kbd>C-c a p i</kbd>|List all files available in the `web/static` directory. `alchemist-project-find-static`|
 |<kbd>C-c a p v</kbd>|List all files available in the `web/views` directory. `alchemist-project-find-views`|
 

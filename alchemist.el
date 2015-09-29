@@ -152,7 +152,7 @@ Key bindings:
   (define-key map (kbd "p c") 'alchemist-project-find-controllers)
   (define-key map (kbd "p h") 'alchemist-project-find-channels)
   (define-key map (kbd "p e") 'alchemist-project-find-templates)
-  (define-key map (kbd "p m") 'alchemist-project-find-modules)
+  (define-key map (kbd "p m") 'alchemist-project-find-models)
   (define-key map (kbd "p i") 'alchemist-project-find-static)
   (define-key map (kbd "p v") 'alchemist-project-find-views)
 

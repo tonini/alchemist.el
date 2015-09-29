@@ -231,9 +231,9 @@ The files lookup in DIRECTORY is recursive."
   (interactive)
   (alchemist-project-find-dir "web/templates"))
 
-(defun alchemist-project-find-modules ()
+(defun alchemist-project-find-models ()
   (interactive)
-  (alchemist-project-find-dir "web/modules"))
+  (alchemist-project-find-dir "web/models"))
 
 (defun alchemist-project-find-static ()
   (interactive)
