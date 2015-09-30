@@ -74,8 +74,21 @@
    (find-file "test/path/to/file_test.exs")
 
    (alchemist-project-toggle-file-and-tests)
-   (should (equal (file-name-nondirectory (buffer-file-name))
-                  "file.ex"))))
+   (should (string-match "lib/path/to/file.ex"
+                         (buffer-file-name)))))
+
+(ert-deftest test-project-toggle/from-test-to-implementation/with_web_dir ()
+  (with-sandbox
+   (f-touch "mix.exs")
+   (f-mkdir "web" "path" "to")
+   (f-mkdir "test" "path" "to")
+   (f-touch "web/path/to/web_file.ex")
+   (f-touch "test/path/to/web_file_test.exs")
+   (find-file "test/path/to/web_file_test.exs")
+
+   (alchemist-project-toggle-file-and-tests)
+   (should (string-match "web/path/to/web_file.ex"
+                         (buffer-file-name)))))
 
 (ert-deftest test-project-toggle/from-implementation-to-test ()
   (with-sandbox
@@ -87,8 +100,21 @@
 
    (find-file "lib/path/to/other_file.ex")
    (alchemist-project-toggle-file-and-tests)
-   (should (equal (file-name-nondirectory (buffer-file-name))
-                  "other_file_test.exs"))))
+   (should (string-match "test/path/to/other_file_test.exs"
+                         (buffer-file-name)))))
+
+(ert-deftest test-project-toggle/from-implementation-to-test/with-web-dir ()
+  (with-sandbox
+   (f-touch "mix.exs")
+   (f-mkdir "web" "path" "to")
+   (f-mkdir "test" "path" "to")
+   (f-touch "web/path/to/web_other_file.ex")
+   (f-touch "test/path/to/web_other_file_test.exs")
+
+   (find-file "web/path/to/web_other_file.ex")
+   (alchemist-project-toggle-file-and-tests)
+   (should (string-match "test/path/to/web_other_file_test.exs"
+                         (buffer-file-name)))))
 
 (ert-deftest test-project-find-files-in-directory ()
   (with-sandbox
