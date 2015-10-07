@@ -9,24 +9,27 @@ STAT_COLOR=\033[2;33m
 all: test
 
 test:	test_server
-	${MAKE} test_doc
-	${MAKE} test_informant
-	${MAKE} test_source
+	${MAKE} test_helpers
+	${MAKE} test_api
 
 test_server:
 	@ echo "\n$(INFO_COLOR)Run server tests: $(NO_COLOR)\n"
 	$(ELIXIR) test/server_test.exs
 
-test_doc:
-	@ echo "\n$(INFO_COLOR)Run documentation tests: $(NO_COLOR)\n"
-	$(ELIXIR) test/documentation_test.exs
+test_helpers:
+	@ echo "\n$(INFO_COLOR)Run helper tests: $(NO_COLOR)\n"
+	$(ELIXIR) test/helpers/module_info_test.exs
+	$(ELIXIR) test/helpers/complete_test.exs
 
-test_informant:
-	@ echo "\n$(INFO_COLOR)Run informant tests: $(NO_COLOR)\n"
-	$(ELIXIR) test/informant_test.exs
+test_api:
+	@ echo "\n$(INFO_COLOR)Run api tests: $(NO_COLOR)\n"
+	$(ELIXIR) test/api/docl_test.exs
+	$(ELIXIR) test/api/comp_test.exs
+	$(ELIXIR) test/api/defl_test.exs
 
-test_source:
-	@ echo "\n$(INFO_COLOR)Run source tests: $(NO_COLOR)\n"
-	$(ELIXIR) test/source_test.exs
+api_completer:
+	@ echo "\n$(INFO_COLOR)Run api tests: $(NO_COLOR)\n"
+	$(ELIXIR) test/api_test.exs
 
-.PHONY: test test_server test_doc test_informant test_source
+
+.PHONY: test test_server test_helpers test_api

@@ -1,7 +1,7 @@
 [![License GPL 3](https://img.shields.io/badge/license-GPL_3-green.svg)](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Build Status](https://img.shields.io/travis/tonini/alchemist-server.svg)](https://travis-ci.org/tonini/alchemist-server)
 
-**INFO:** The Alchemist-Server is in Beta status and feedback and critic are highly appreciated.
+**INFO:** The Alchemist-Server is in Beta status and the API will most likey change until the first release. Feedback and critic are highly appreciated though.
 
 # Alchemist Server
 
@@ -22,11 +22,10 @@ The server needs to be started inside an Elixir mix project like below:
 ```
 $ cd elixir_project
 $ elixir path/to/alchemist-server/run.exs dev
-Alchemist-Server (0.7.0) - press Ctrl+C to exit
 ```
 
-The Alchemist-Server API is STDIN/STDOUT based, when input sent to a
-running server process it responds by sending information back to the STDOUT.
+The Alchemist-Server API is `STDIN/STDOUT` based, when input sent to a
+running server process it responds by sending information back to the `STDOUT`.
 
 A request consisting of two parts, the request type and the request arguments.
 
@@ -35,7 +34,7 @@ Example for a completion request:
 ```
 [type]   [arguments]
 
-COMPLETE { "def" [ context: Elixir, imports: [Enum], aliases: [{MyList, List}] ] }
+COMP { "def", [ context: Elixir, imports: [Enum], aliases: [{MyList, List}] ] }
 ```
 
 # API
@@ -45,9 +44,9 @@ COMPLETE { "def" [ context: Elixir, imports: [Enum], aliases: [{MyList, List}] ]
 Return a completion list of all the available candidates.
 
 ```
-COMPLETE
-COMPLETE { "def" [ context: Elixir, imports: [], aliases: [] ] }
-COMPLETE { "List.fla" [ context: Elixir, imports: [], aliases: [] ] }
+COMP
+COMP { "def", [ context: Elixir, imports: [], aliases: [] ] }
+COMP { "List.fla", [ context: Elixir, imports: [], aliases: [] ] }
 ```
 
 ## Documentation lookup
@@ -55,24 +54,26 @@ COMPLETE { "List.fla" [ context: Elixir, imports: [], aliases: [] ] }
 Return the documentation.
 
 ```
-DOC { "defmodule" [ context: Elixir, imports: [], aliases: [] ] }
-DOC { "List.flatten/1" [ context: Elixir, imports: [], aliases: [] ] }
+DOCL { "defmodule", [ context: Elixir, imports: [], aliases: [] ] }
+DOCL { "List.flatten/1", [ context: Elixir, imports: [], aliases: [] ] }
 ```
 
-## Evaluation
+## Evaluation & Quoted
+
+### Evaluation
 
 Return the evaluation result of the code from the file.
 
 ```
-EVAL path/to/file/which/holds/content/to/eval.tmp
+EVAL { :eval, 'path/to/file/which/holds/content/to/eval.tmp' }
 ```
 
-## Quoted
+### Quoted
 
 Return the code from the file quoted.
 
 ```
-QUOTE path/to/file/which/holds/content/to/quote.tmp
+EVAL { :quote, 'path/to/file/which/holds/content/to/quote.tmp' }
 ```
 
 ## Definition lookup
@@ -80,23 +81,49 @@ QUOTE path/to/file/which/holds/content/to/quote.tmp
 Return the path to the source file which holds the definition.
 
 ```
-SOURCE  { "List,flatten", [ context: [], imports: [], aliases: [] ] }
-SOURCE  { "nil,defmacro", [ context: [], imports: [], aliases: [] ] }
-SOURCE  { "String,nil", [ context: [], imports: [], aliases: [] ] }
+DEFL  { "List,flatten", [ context: Elixir, imports: [], aliases: [] ] }
+DEFL  { "nil,defmacro", [ context: Elixir, imports: [], aliases: [] ] }
+DEFL  { "nil,create_file", [ context: Elixir, imports: [Mix.Generator], aliases: [] ] }
+DEFL  { "MyList,nil", [ context: Elixir, imports: [], aliases: [{MyList, List}] ] }
 ```
 
-## Mixtasks
+## Informations
+
+### Mix tasks
 
 Return a list of all available mix tasks.
 
 ```
-MIXTASKS
+INFO { :type, :mixtasks }
 ```
 
-## Modules
+### Modules
 
 Return a list of all available modules which has documentation.
 
 ```
-MODULES
+INFO { :type, :modules }
+```
+
+## End Markers
+
+Each request type ends with a specific end marker tag to notify that the request is done.
+
+An end tag looks like the following:
+
+```
+END-OF-<REQUEST TYPE>
+```
+
+For example, after the following request an end tag would look like this:
+
+```
+INFO { :type, :modules }
+List
+String
+Enum
+.
+...
+....
+END-OF-INFO
 ```

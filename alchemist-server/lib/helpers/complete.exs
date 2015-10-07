@@ -1,5 +1,19 @@
-defmodule Alchemist.Completer do
-  @moduledoc false
+Code.require_file "module_info.exs", __DIR__
+
+defmodule Alchemist.Helpers.Complete do
+
+  alias Alchemist.Helpers.ModuleInfo
+
+  @moduledoc """
+  This Alchemist.Completer holds a codebase copy of the
+  IEx.Autocomplete because for the use of context specific
+  aliases.
+
+  With the release of Elixir v1.1 the IEx.Autocomplete will
+  look for aliases in a certain environment variable
+  `Application.get_env(:iex, :autocomplete_server)` and until
+  then we'll use our own autocomplete codebase.
+  """
 
   def run(exp) do
     code = case is_bitstring(exp) do
@@ -14,6 +28,12 @@ defmodule Alchemist.Completer do
       { :yes, [], _ } -> List.insert_at(list, 0, exp)
       { :yes, _,  _ } -> run(code ++ result)
     end
+  end
+
+  def run(hint, modules) do
+    for module <- modules do
+      ModuleInfo.get_functions(module, hint)
+    end |> List.flatten
   end
 
   def expand('') do
@@ -38,7 +58,7 @@ defmodule Alchemist.Completer do
   end
 
   defp identifier?(h) do
-  (h in ?a..?z) or (h in ?A..?Z) or (h in ?0..?9) or h in [?_, ??, ?!]
+    (h in ?a..?z) or (h in ?A..?Z) or (h in ?0..?9) or h in [?_, ??, ?!]
   end
 
   defp expand_dot(expr) do
@@ -293,8 +313,7 @@ defmodule Alchemist.Completer do
   end
 
   defp ensure_loaded(Elixir), do: {:error, :nofile}
-  defp ensure_loaded(mod),
-  do: Code.ensure_compiled(mod)
+  defp ensure_loaded(mod), do: Code.ensure_compiled(mod)
 
   defp starts_with?(_string, ""),  do: true
   defp starts_with?(string, hint), do: String.starts_with?(string, hint)

@@ -1,9 +1,37 @@
-defmodule Alchemist.Informant do
+defmodule Alchemist.Helpers.ModuleInfo do
+
   @moduledoc false
 
+  def moduledoc?(module) do
+    case Code.get_docs module, :moduledoc do
+      {_, doc} -> is_binary doc
+      _ -> false
+    end
+  end
+
+  def docs?(module, function) do
+    docs = Code.get_docs module, :docs
+    do_docs?(docs, function)
+  end
+
+  def expand_alias([name | rest] = list, aliases) do
+    module = Module.concat(Elixir, name)
+    Enum.find_value(aliases, list, fn {alias, mod} ->
+      if alias === module do
+        case Atom.to_string(mod) do
+          "Elixir." <> mod ->
+            Module.concat [mod|rest]
+          _ ->
+            mod
+        end
+      end
+    end) |> normalize_module
+  end
+
   def get_functions(module, hint) do
+    hint        = to_string hint
     {module, _} = Code.eval_string(module)
-    functions = get_module_funs(module)
+    functions   = get_module_funs(module)
 
     list = Enum.reduce functions, [], fn({f, a}, acc) ->
       case :lists.keyfind(f, 1, acc) do
@@ -58,6 +86,17 @@ defmodule Alchemist.Informant do
     end
   end
 
+  defp do_docs?([head|tail], function) do
+    {{func, _}, _, _, _, doc} = head
+    if func == function and is_binary(doc) do
+      true
+    else
+      do_docs?(tail, function)
+    end
+  end
+  defp do_docs?([], _function), do: false
+  defp do_docs?(nil, _function), do: false
+
   defp loaded_applications do
     # If we invoke :application.loaded_applications/0,
     # it can error if we don't call safe_fixtable before.
@@ -65,6 +104,14 @@ defmodule Alchemist.Informant do
     # application controller internals, we choose to match
     # for performance.
     :ets.match(:ac_tab, {{:loaded, :"$1"}, :_})
+  end
+
+  defp normalize_module(mod) do
+    if is_list(mod) do
+      Module.concat(mod)
+    else
+      mod
+    end
   end
 
 end
