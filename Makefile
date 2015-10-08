@@ -25,29 +25,10 @@ test:	clean-elc
 	${MAKE} unit
 	${MAKE} clean-elc
 	${MAKE} test_server
-	${MAKE} test_doc
-	${MAKE} test_informant
-	${MAKE} test_source
 
 unit:
 	@ echo "\n$(INFO_COLOR)Run tests: $(NO_COLOR)\n"
 	$(CASK) exec ert-runner
-
-test_server:
-	@ echo "\n$(INFO_COLOR)Run server tests: $(NO_COLOR)\n"
-	$(ELIXIR) alchemist-server/test/server_test.exs
-
-test_doc:
-	@ echo "\n$(INFO_COLOR)Run documentation tests: $(NO_COLOR)\n"
-	$(ELIXIR) alchemist-server/test/documentation_test.exs
-
-test_informant:
-	@ echo "\n$(INFO_COLOR)Run informant tests: $(NO_COLOR)\n"
-	$(ELIXIR) alchemist-server/test/informant_test.exs
-
-test_source:
-	@ echo "\n$(INFO_COLOR)Run source tests: $(NO_COLOR)\n"
-	$(ELIXIR) alchemist-server/test/source_test.exs
 
 cask:
 	@ echo "\n$(INFO_COLOR)Install package dependencies: $(NO_COLOR)\n"
@@ -76,4 +57,7 @@ packageclean:
 	@ echo "\n$(INFO_COLOR)Clean Alchemist Package: $(NO_COLOR)\n"
 	rm dist/$(PACKAGE_NAME).tar
 
-.PHONY: info test test_server test_doc cask clean clean-elc test-elc
+test_server:
+	cd alchemist-server && ${MAKE} test
+
+.PHONY: info test test_server cask clean clean-elc test-elc
