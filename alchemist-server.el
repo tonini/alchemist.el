@@ -52,13 +52,11 @@
           alchemist-server-env)
   "Alchemist server command.")
 
-(defconst alchemist-server-codes '((evaluate "EVAL")
-                                   (eval-quote "QUOTE")
-                                   (source "SOURCE")
-                                   (mixtasks "MIXTASKS")
-                                   (modules "MODULES")
-                                   (doc "DOC")
-                                   (complete "COMPLETE"))
+(defconst alchemist-server-codes '((server-eval "EVAL")
+                                   (server-defl "DEFL")
+                                   (server-info "INFO")
+                                   (server-docl "DOCL")
+                                   (server-comp "COMP"))
   "Alchemist server API codes.")
 
 (defun alchemist-server-start (env)
@@ -121,14 +119,12 @@ Elixir mix project is live."
   (car (cdr (assoc symbol alchemist-server-codes))))
 
 (defconst alchemist-server-code-end-marker-regex
-  (format "END-OF-\\(%s\\|%s\\|%s\\|%s\\|%s\\|%s\\|%s\\)$"
-          (alchemist-server-api-code 'evaluate)
-          (alchemist-server-api-code 'eval-quote)
-          (alchemist-server-api-code 'source)
-          (alchemist-server-api-code 'mixtasks)
-          (alchemist-server-api-code 'modules)
-          (alchemist-server-api-code 'doc)
-          (alchemist-server-api-code 'complete))
+  (format "END-OF-\\(%s\\|%s\\|%s\\|%s\\|%s\\)$"
+          (alchemist-server-api-code 'server-eval)
+          (alchemist-server-api-code 'server-defl)
+          (alchemist-server-api-code 'server-info)
+          (alchemist-server-api-code 'server-docl)
+          (alchemist-server-api-code 'server-comp))
   "Regular expression to identify Alchemist server API end markers.")
 
 (defun alchemist-server-contains-end-marker-p (string)
@@ -162,49 +158,42 @@ If ARGS available add them to the request string."
 
 Process server respond with FILTER."
   (alchemist-server-start-if-not-running)
-  (alchemist-server-send-request (alchemist-server-build-request-string 'source args) filter))
+  (alchemist-server-send-request (alchemist-server-build-request-string 'server-defl args) filter))
 
-(defun alchemist-server--mix (filter)
+(defun alchemist-server-info (args filter)
   "Make an Alchemist server mix request.
 
 Process server respond with FILTER."
   (alchemist-server-start-if-not-running)
-  (alchemist-server-send-request (alchemist-server-build-request-string 'mixtasks) filter))
+  (alchemist-server-send-request (alchemist-server-build-request-string 'server-info args) filter))
 
 (defun alchemist-server-help-with-modules (filter)
   "Make an Alchemist server modules request.
 
 Process server respond with FILTER."
   (alchemist-server-start-if-not-running)
-  (alchemist-server-send-request (alchemist-server-build-request-string 'modules) filter))
+  (alchemist-server-send-request (alchemist-server-build-request-string 'server-info) filter))
 
 (defun alchemist-server-help (args filter)
   "Make an Alchemist server doc request with ARGS.
 
 Process server respond with FILTER."
   (alchemist-server-start-if-not-running)
-  (alchemist-server-send-request (alchemist-server-build-request-string 'doc args) filter))
+  (alchemist-server-send-request (alchemist-server-build-request-string 'server-docl args) filter))
 
-(defun alchemist-server-eval (file filter)
+(defun alchemist-server-eval (args filter)
   "Make an Alchemist server evaluate request with FILE.
 
 Process server respond with FILTER."
   (alchemist-server-start-if-not-running)
-  (alchemist-server-send-request (alchemist-server-build-request-string 'evaluate file) filter))
-
-(defun alchemist-server-eval-quote (file filter)
-  "Make an Alchemist server quote request with FILE.
-
-Process server respond with FILTER."
-  (alchemist-server-start-if-not-running)
-  (alchemist-server-send-request (alchemist-server-build-request-string 'eval-quote file) filter))
+  (alchemist-server-send-request (alchemist-server-build-request-string 'server-eval args) filter))
 
 (defun alchemist-server-complete-candidates (args filter)
   "Make an Alchemist server complete request with ARGS.
 
 Process server respond with FILTER."
   (alchemist-server-start-if-not-running)
-  (alchemist-server-send-request (alchemist-server-build-request-string 'complete args) filter))
+  (alchemist-server-send-request (alchemist-server-build-request-string 'server-comp args) filter))
 
 (defun alchemist-server-status ()
   "Report the server status for the current Elixir project."

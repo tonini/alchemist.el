@@ -106,7 +106,7 @@ If the command `universal-argument' is called before `alchemist-mix',
 a prompt for a specific mix environment in which the task will be
 executed, gets called."
   (interactive)
-  (alchemist-server--mix #'alchemist-mix-filter))
+  (alchemist-server-info "{ :type, :mixtasks }" #'alchemist-mix-filter))
 
 (defun alchemist-mix-display-mix-buffer ()
   "Display the mix buffer when exists."

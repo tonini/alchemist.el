@@ -252,7 +252,7 @@ the actively marked region will be used for passing to `alchemist-help'."
   "Load Elixir documentation for SEARCH."
   (interactive)
   (setq alchemist-help-filter-output nil)
-  (alchemist-server-help-with-modules #'alchemist-help-modules-filter))
+  (alchemist-server-info "{ :type, :modules }" #'alchemist-help-modules-filter))
 
 (defun alchemist-help-history (search)
   "Load Elixir from the documentation history for SEARCH."

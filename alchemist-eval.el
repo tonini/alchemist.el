@@ -65,25 +65,25 @@
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval file #'alchemist-eval-filter)))
+    (alchemist-server-eval (format "{ :eval, '%s' }" file) #'alchemist-eval-filter)))
 
 (defun alchemist-eval--expression-and-print (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval file #'alchemist-eval-insert-filter)))
+    (alchemist-server-eval (format "{ :eval, '%s' }" file) #'alchemist-eval-insert-filter)))
 
 (defun alchemist-eval--quote-expression (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-quote file #'alchemist-eval-quoted-filter)))
+    (alchemist-server-eval (format "{ :quote, '%s' }" file) #'alchemist-eval-quoted-filter)))
 
 (defun alchemist-eval--quote-expression-and-print (expression)
   (let ((file (make-temp-file "alchemist-eval" nil ".exs")))
     (with-temp-file file
       (insert expression))
-    (alchemist-server-eval-quote file #'alchemist-eval-quoted-insert-filter)))
+    (alchemist-server-eval (format "{ :quote, '%s' }" file) #'alchemist-eval-quoted-insert-filter)))
 
 (defun alchemist-eval-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
