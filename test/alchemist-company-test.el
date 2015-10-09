@@ -59,8 +59,7 @@ defmodule Foo do
   def bar do
     say_
   end
-end" 89)
-                        '("say_hi" "say_bye"))))
+end" 89) '("say_hi" "say_bye"))))
 
 (ert-deftest alchemist-company-test/module-import-aware ()
   (should (-same-items? (write-and-complete-in-buffer "
@@ -110,8 +109,7 @@ defmodule Foo do
     defmacro
   end
 end
-" 61) '("defmacro" "defmacro" "defmacrocallback" "defmacrop")))
-  )
+" 61) '("defmacro" "defmacro" "defmacrocallback" "defmacrop"))))
 
 (provide 'alchemist-company-test)
 
