@@ -28,6 +28,7 @@
 (require 'cl-lib)
 (require 'dash)
 (require 'alchemist-utils)
+(require 'alchemist-file)
 
 (defgroup alchemist-project nil
   "API to identify Elixir mix projects."
@@ -77,32 +78,41 @@ directory from there instead."
   "Toggle between a file and its tests in other window."
   (interactive)
   (if (alchemist-utils-test-file-p)
-      (alchemist--project-open-file-for-current-tests 'find-file-other-window)
-    (alchemist--project-open-tests-for-current-file 'find-file-other-window)))
+      (alchemist-project-open-file-for-current-tests 'find-file-other-window)
+    (alchemist-project-open-tests-for-current-file 'find-file-other-window)))
 
 (defun alchemist-project-toggle-file-and-tests ()
   "Toggle between a file and its tests in the current window."
   (interactive)
   (if (alchemist-utils-test-file-p)
-      (alchemist--project-open-file-for-current-tests 'find-file)
-    (alchemist--project-open-tests-for-current-file 'find-file)))
+      (alchemist-project-open-file-for-current-tests 'find-file)
+    (alchemist-project-open-tests-for-current-file 'find-file)))
 
-(defun alchemist--project-open-file-for-current-tests (toggler)
-  "Open the appropriate implementation file for the current buffer by calling TOGGLER with filename."
-  (let* ((filename (file-relative-name (buffer-file-name) (alchemist-project-root)))
-         (filename (replace-regexp-in-string "^test/" "lib/" filename))
-         (filename (replace-regexp-in-string "_test\.exs$" "\.ex" filename))
-         (filename (format "%s/%s" (alchemist-project-root) filename)))
-    (funcall toggler filename)))
+(defun alchemist-project-file-under-test (file directory)
+  "Return the file which are tested by FILE.
+DIRECTORY is the place where the file under test is located."
+  (let* ((filename (file-relative-name file (alchemist-project-root)))
+         (filename (replace-regexp-in-string "^test" directory filename))
+         (filename (replace-regexp-in-string "_test\.exs$" "\.ex" filename)))
+    (concat (alchemist-project-root) filename)))
 
-(defun alchemist--project-open-tests-for-current-file (toggler)
-  "Opens the appropriate test file by calling TOGGLER with filename."
+(defun alchemist-project-open-file-for-current-tests (opener)
+  "Visit the implementation file for the current buffer with OPENER."
+  (let* ((filename (alchemist-project-file-under-test (buffer-file-name) "web"))
+         (filename (if (file-exists-p filename)
+                       filename
+                     (alchemist-project-file-under-test (buffer-file-name) "lib"))))
+    (funcall opener filename)))
+
+(defun alchemist-project-open-tests-for-current-file (opener)
+  "Visit the test file for the current buffer with OPENER."
   (let* ((filename (file-relative-name (buffer-file-name) (alchemist-project-root)))
          (filename (replace-regexp-in-string "^lib/" "test/" filename))
+         (filename (replace-regexp-in-string "^web/" "test/" filename))
          (filename (replace-regexp-in-string "\.ex$" "_test\.exs" filename))
          (filename (format "%s/%s" (alchemist-project-root) filename)))
     (if (file-exists-p filename)
-        (funcall toggler filename)
+        (funcall opener filename)
       (if (y-or-n-p "No test file found; create one now?")
           (alchemist-project--create-test-for-current-file
            filename (current-buffer))
@@ -142,7 +152,7 @@ Point is left in a convenient location."
 (defun alchemist-project-run-tests-for-current-file ()
   "Run the tests related to the current file."
   (interactive)
-  (alchemist--project-open-tests-for-current-file 'alchemist-mix-test-file))
+  (alchemist-project-open-tests-for-current-file 'alchemist-mix-test-file))
 
 (defun alchemist-project-create-file ()
   "Create a file under lib/ in the current project.
@@ -176,32 +186,9 @@ The newly created buffer is filled with a module definition based on the file na
     ""))
 
 (defun alchemist-project-find-dir (directory)
-  "Open DIRECTORY and list all files."
   (unless (alchemist-project-p)
     (error "Could not find an Elixir Mix project root."))
-  (let* ((root-dir (alchemist-project-root))
-         (files (alchemist-project-files root-dir directory))
-         (project-name (alchemist-project-name))
-         (file (completing-read (format "[%s] %s: " (alchemist-project-name) directory)
-                                files)))
-    (find-file (expand-file-name file root-dir))))
-
-(defun alchemist-project-files (root directory)
-  "Return all files in DIRECTORY and use ROOT as `default-directory'."
-  (let ((default-directory root))
-    (-map (lambda (file) (file-relative-name file root))
-          (alchemist-project-dir-files directory))))
-
-(defun alchemist-project-dir-files (directory)
-  "Return all files in DIRECTORY.
-The files lookup in DIRECTORY is recursive."
-  (--mapcat
-   (if (file-directory-p it)
-       (unless (or (equal (file-relative-name it directory) "..")
-                   (equal (file-relative-name it directory) "."))
-         (alchemist-project-dir-files it))
-     (list it))
-   (directory-files directory t)))
+  (alchemist-file-find-files (alchemist-project-root) directory))
 
 (defun alchemist-project-find-lib ()
   (interactive)
@@ -210,34 +197,6 @@ The files lookup in DIRECTORY is recursive."
 (defun alchemist-project-find-test ()
   (interactive)
   (alchemist-project-find-dir "test"))
-
-(defun alchemist-project-find-web ()
-  (interactive)
-  (alchemist-project-find-dir "web"))
-
-(defun alchemist-project-find-views ()
-  (interactive)
-  (alchemist-project-find-dir "web/views"))
-
-(defun alchemist-project-find-controllers ()
-  (interactive)
-  (alchemist-project-find-dir "web/controllers"))
-
-(defun alchemist-project-find-channels ()
-  (interactive)
-  (alchemist-project-find-dir "web/channels"))
-
-(defun alchemist-project-find-templates ()
-  (interactive)
-  (alchemist-project-find-dir "web/templates"))
-
-(defun alchemist-project-find-models ()
-  (interactive)
-  (alchemist-project-find-dir "web/models"))
-
-(defun alchemist-project-find-static ()
-  (interactive)
-  (alchemist-project-find-dir "web/static"))
 
 (provide 'alchemist-project)
 
