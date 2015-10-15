@@ -27,11 +27,8 @@
 
 (require 'comint)
 (require 'company)
+(require 'alchemist-key)
 (require 'alchemist-project)
-
-;; Tell the byte compiler to assume that variables are defined
-(eval-when-compile
-  (defvar alchemist-key-command-prefix nil))
 
 (defgroup alchemist-iex nil
   "Interaction with an Elixir IEx process."

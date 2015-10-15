@@ -53,17 +53,12 @@
   :link '(url-link :tag "Github" "https://github.com/tonini/alchemist.el")
   :link '(emacs-commentary-link :tag "Commentary" "alchemist"))
 
-(defcustom alchemist-key-command-prefix
-  (kbd "C-c a")
-  "The prefix for alchemist related key commands."
-  :type 'string
-  :group 'alchemist)
-
 (defvar alchemist-mode-keymap nil)
 
 (require 'easymenu)
 (require 'company)
 (require 'elixir-mode)
+(require 'alchemist-key)
 (require 'alchemist-eval)
 (require 'alchemist-goto)
 (require 'alchemist-report)
@@ -75,6 +70,7 @@
 (require 'alchemist-refcard)
 (require 'alchemist-complete)
 (require 'alchemist-company)
+(require 'alchemist-phoenix)
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
@@ -143,18 +139,11 @@ Key bindings:
   (define-key map (kbd "h m") 'alchemist-help-search-marked-region)
   (define-key map (kbd "h r") 'alchemist-refcard)
 
-  (define-key map (kbd "p f") 'alchemist-project-find-test)
   (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
   (define-key map (kbd "p o") 'alchemist-project-toggle-file-and-tests-other-window)
   (define-key map (kbd "p t") 'alchemist-project-run-tests-for-current-file)
   (define-key map (kbd "p l") 'alchemist-project-find-lib)
-  (define-key map (kbd "p w") 'alchemist-project-find-web)
-  (define-key map (kbd "p c") 'alchemist-project-find-controllers)
-  (define-key map (kbd "p h") 'alchemist-project-find-channels)
-  (define-key map (kbd "p e") 'alchemist-project-find-templates)
-  (define-key map (kbd "p m") 'alchemist-project-find-models)
-  (define-key map (kbd "p i") 'alchemist-project-find-static)
-  (define-key map (kbd "p v") 'alchemist-project-find-views)
+  (define-key map (kbd "p f") 'alchemist-project-find-test)
 
   (define-key map (kbd "i i") 'alchemist-iex-run)
   (define-key map (kbd "i p") 'alchemist-iex-project-run)
@@ -240,7 +229,8 @@ Key bindings:
      "---"
      ["IEx run" alchemist-iex-run])
     ("Project"
-     ["Project find all tests" alchemist-project-find-test]
+     ["Project list all files inside test directory" alchemist-project-find-test]
+     ["Project list all files inside lib directory" alchemist-project-find-lib]
      ["Project toggle between file and test" alchemist-project-toggle-file-and-tests]
      ["Project toggle between file and test in other window" alchemist-project-toggle-file-and-tests-other-window])
     ("Documentation"

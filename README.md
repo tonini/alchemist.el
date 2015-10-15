@@ -49,7 +49,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [Compile](#compile-functions)
   - [Execute](#execute-functions)
 - [Project](#project)
-  - [Phoenix directory support](#phoenix-directory-support)
+- [alchemist-phoenix-mode](#alchemist-phoenix-mode)
 - [Documentation lookup](#documentation-lookup)
   - [Keymap](#alchemist-help-minor-mode-keymap)
 - [Definition lookup](#definition-lookup)
@@ -310,20 +310,19 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>C-c a p f</kbd>|List all files available in the `test` directory. `alchemist-project-find-test`|
 |<kbd>C-c a p l</kbd>|List all files available in the `lib` directory. `alchemist-project-find-lib` |
 
-### Phoenix directory support
-
-There are a bunch of helper functions available to list files of certain directories like `web`, `web/modules` etc.
-These functions exists because of the famous Elixir webframework [Phoenix](http://www.phoenixframework.org/) which comes with `web` based directory structure.
+## alchemist-phoenix-mode
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a p w</kbd>|List all files available in the `web` directory. `alchemist-project-find-web`|
-|<kbd>C-c a p c</kbd>|List all files available in the `web/controllers` directory. `alchemist-project-find-controllers`|
-|<kbd>C-c a p h</kbd>|List all files available in the `web/channels` directory. `alchemist-project-find-channels`|
-|<kbd>C-c a p e</kbd>|List all files available in the `web/templates` directory. `alchemist-project-find-templates`|
-|<kbd>C-c a p m</kbd>|List all files available in the `web/models` directory. `alchemist-project-find-models`|
-|<kbd>C-c a p i</kbd>|List all files available in the `web/static` directory. `alchemist-project-find-static`|
-|<kbd>C-c a p v</kbd>|List all files available in the `web/views` directory. `alchemist-project-find-views`|
+|<kbd>C-c a n w</kbd>|List all files available in the `web` directory. `alchemist-phoenix-find-web`|
+|<kbd>C-c a n c</kbd>|List all controllers in `web/controllers` directory. `alchemist-phoenix-find-controllers`|
+|<kbd>C-c a n l</kbd>|List all channels in `web/channels` directory. `alchemist-phoenix-find-channels`|
+|<kbd>C-c a n t</kbd>|List all all templates in `web/templates` directory. `alchemist-phoenix-find-templates`|
+|<kbd>C-c a n m</kbd>|List all models in `web/models` directory. `alchemist-phoenix-find-models`|
+|<kbd>C-c a n v</kbd>|List all views in `web/views` directory. `alchemist-phoenix-find-views`|
+|<kbd>C-c a n s</kbd>|List all files in `web/static` directory. `alchemist-phoenix-find-static`|
+|<kbd>C-c a n r</kbd>|Open the `router.ex` file in `web` directory. `alchemist-phoenix-router`|
+|<kbd>C-c a n R</kbd>|Run the Mix task `phoenix.routes`. `alchemist-phoenix-routes`|
 
 ## Documentation lookup
 
