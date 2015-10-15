@@ -33,7 +33,7 @@ defmodule Alchemist.API.Eval do
       e -> IO.inspect e
     end
 
-    IO.puts "END-OF-QUOTE"
+    IO.puts "END-OF-EVAL"
   end
 
   def normalize(request) do
