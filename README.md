@@ -80,7 +80,7 @@ Alchemist comes with a bunch of **features**, which are:
 `package.el` is the built-in package manager in Emacs.
 
 Alchemist.el is available on the three major community maintained repositories -
-[MELPA STABLE](http://melpa-stable.milkbox.net), [MELPA](http://melpa.milkbox.net) and [Marmalade](https://marmalade-repo.org/).
+[MELPA STABLE](https://stable.melpa.org), [MELPA](https://melpa.org) and [Marmalade](https://marmalade-repo.org/).
 
 You can install `Alchemist` with the following command:
 
