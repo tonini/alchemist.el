@@ -80,7 +80,7 @@ Alchemist comes with a bunch of **features**, which are:
 `package.el` is the built-in package manager in Emacs.
 
 Alchemist.el is available on the three major community maintained repositories -
-[MELPA STABLE](http://melpa-stable.milkbox.net), [MELPA](http://melpa.milkbox.net) and [Marmalade](https://marmalade-repo.org/).
+[MELPA STABLE](https://stable.melpa.org), [MELPA](https://melpa.org) and [Marmalade](https://marmalade-repo.org/).
 
 You can install `Alchemist` with the following command:
 
@@ -317,7 +317,7 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>C-c a n w</kbd>|List all files available in the `web` directory. `alchemist-phoenix-find-web`|
 |<kbd>C-c a n c</kbd>|List all controllers in `web/controllers` directory. `alchemist-phoenix-find-controllers`|
 |<kbd>C-c a n l</kbd>|List all channels in `web/channels` directory. `alchemist-phoenix-find-channels`|
-|<kbd>C-c a n t</kbd>|List all all templates in `web/templates` directory. `alchemist-phoenix-find-templates`|
+|<kbd>C-c a n t</kbd>|List all templates in `web/templates` directory. `alchemist-phoenix-find-templates`|
 |<kbd>C-c a n m</kbd>|List all models in `web/models` directory. `alchemist-phoenix-find-models`|
 |<kbd>C-c a n v</kbd>|List all views in `web/views` directory. `alchemist-phoenix-find-views`|
 |<kbd>C-c a n s</kbd>|List all files in `web/static` directory. `alchemist-phoenix-find-static`|
