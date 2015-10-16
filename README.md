@@ -317,7 +317,7 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>C-c a n w</kbd>|List all files available in the `web` directory. `alchemist-phoenix-find-web`|
 |<kbd>C-c a n c</kbd>|List all controllers in `web/controllers` directory. `alchemist-phoenix-find-controllers`|
 |<kbd>C-c a n l</kbd>|List all channels in `web/channels` directory. `alchemist-phoenix-find-channels`|
-|<kbd>C-c a n t</kbd>|List all all templates in `web/templates` directory. `alchemist-phoenix-find-templates`|
+|<kbd>C-c a n t</kbd>|List all templates in `web/templates` directory. `alchemist-phoenix-find-templates`|
 |<kbd>C-c a n m</kbd>|List all models in `web/models` directory. `alchemist-phoenix-find-models`|
 |<kbd>C-c a n v</kbd>|List all views in `web/views` directory. `alchemist-phoenix-find-views`|
 |<kbd>C-c a n s</kbd>|List all files in `web/static` directory. `alchemist-phoenix-find-static`|
