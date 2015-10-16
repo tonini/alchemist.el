@@ -6,6 +6,8 @@ defmodule Alchemist.API.Eval do
     args
     |> normalize
     |> process
+
+    IO.puts "END-OF-EVAL"
   end
 
   def process({:eval, file}) do
@@ -18,8 +20,6 @@ defmodule Alchemist.API.Eval do
     rescue
       e -> IO.inspect e
     end
-
-    IO.puts "END-OF-EVAL"
   end
 
   def process({:quote, file}) do
@@ -32,8 +32,28 @@ defmodule Alchemist.API.Eval do
     rescue
       e -> IO.inspect e
     end
+  end
 
-    IO.puts "END-OF-EVAL"
+  def process({:expand, file}) do
+    try do
+      {_, expr} = File.read!("#{file}")
+      |> Code.string_to_quoted
+      res = Macro.expand(expr, __ENV__)
+      IO.puts Macro.to_string(res)
+    rescue
+      e -> IO.inspect e
+    end
+  end
+
+  def process({:expand_once, file}) do
+    try do
+      {_, expr} = File.read!("#{file}")
+      |> Code.string_to_quoted
+      res = Macro.expand_once(expr, __ENV__)
+      IO.puts Macro.to_string(res)
+    rescue
+      e -> IO.inspect e
+    end
   end
 
   def normalize(request) do

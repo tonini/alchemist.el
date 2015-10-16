@@ -46,6 +46,31 @@ defmodule ServerTest do
     """
   end
 
+  test "Expand macro once" do
+    filename = Path.expand("fixtures/macro_expand_once_fixture.exs", __DIR__)
+    File.write(filename, "unless true, do: IO.puts \"this should never be printed\"")
+    assert send_signal("EVAL { :expand_once, '#{filename}' }") =~ """
+    if(true) do
+      nil
+    else
+      IO.puts("this should never be printed")
+    end
+    """
+  end
+
+  test "Expand macro" do
+    filename = Path.expand("fixtures/macro_expand_fixture.exs", __DIR__)
+    File.write(filename, "unless true, do: IO.puts \"this should never be printed\"")
+    assert send_signal("EVAL { :expand, '#{filename}' }") =~ """
+    case(true) do
+      x when x in [false, nil] ->
+        IO.puts("this should never be printed")
+      _ ->
+        nil
+    end
+    """
+  end
+
   test "Get all available application modules" do
     assert send_signal("INFO { :type, :modules }") =~ """
     Elixir.Logger

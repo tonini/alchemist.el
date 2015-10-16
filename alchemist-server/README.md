@@ -58,7 +58,7 @@ DOCL { "defmodule", [ context: Elixir, imports: [], aliases: [] ] }
 DOCL { "List.flatten/1", [ context: Elixir, imports: [], aliases: [] ] }
 ```
 
-## Evaluation & Quoted
+## Evaluation, Quoted & Macro expand
 
 ### Evaluation
 
@@ -74,6 +74,20 @@ Return the code from the file quoted.
 
 ```
 EVAL { :quote, 'path/to/file/which/holds/content/to/quote.tmp' }
+```
+
+### Macro expand
+
+Return the code from the file expanded.
+
+```
+EVAL { :expand, 'path/to/file/which/holds/content/to/expand.tmp' }
+```
+
+Return the code from the file expanded once.
+
+```
+EVAL { :expand_once, 'path/to/file/which/holds/content/to/expand_once.tmp' }
 ```
 
 ## Definition lookup
