@@ -485,11 +485,13 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 
 **Note**
 
-Macroexpand works only for Elixir core macros, but why is this?
+Macroexpand works currently only for Elixir core macros, but why is this?
 
 > Macros are lexical: it is impossible to inject code or macros globally. In order to use a macro, you need to explicitly require or import the module that defines the macro.
 
-But if you like to expand a macro you know where it comes from, you can do something like the following with the Alchemist inline evaluation functionality.
+The [Alchemist-Server](https://github.com/tonini/alchemist-server) is currently under development to handle more knowledge about the current context. After that update expanding custom macros will supported too.
+
+But if you like to expand a custom macro in the mean time and you know where it comes from, you can do something like the following with the Alchemist inline evaluation functionality.
 
 As example, select the code and call the `alchemist-eval-print-region` and you get the macro expansion below.
 
