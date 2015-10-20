@@ -492,6 +492,7 @@ But if you like to expand a macro you know where it comes from, you can do somet
 As example, select the code and call the `alchemist-eval-print-region` and you get the macro expansion below.
 
 ```elixir
+require Unless # In order to use a macro, you need to explicitly require the module
 expr = quote do: Unless.macro_unless(true, IO.puts "this should never be printed")
 res  = Macro.expand_once(expr, __ENV__)
 IO.puts Macro.to_string(res)
