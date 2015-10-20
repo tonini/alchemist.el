@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.6.0 (2015-10-20)
+
+### Enhancements
+
+  * [Macroexpand] Implement functionality to expand Elixir macros.
+  * [Phoenix] Implement Alchemist-Phoenix minor mode to work with phoenix mix based Elixir applications.
+
 ## v1.5.2 (2015-09-19)
 
 ### Bug fixes
