@@ -27,20 +27,21 @@
 
 (require 'elixir-mode)
 (require 'alchemist-server)
+(require 'alchemist-interact)
 
 (defgroup alchemist-eval nil
   "Elixir code inline evaluation functionality."
   :prefix "alchemist-eval-"
   :group 'alchemist)
 
-(defvar alchemist-eval-buffer-name "*alchemist-eval-mode*"
+(defconst alchemist-eval-buffer-name "*alchemist-eval-mode*"
   "Name of the Elixir evaluation buffer.")
 
-(defvar alchemist-eval-minor-mode-map
+(defvar alchemist-eval-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") #'quit-window)
     map)
-  "Keymap for `alchemist-eval-minor-mode'.")
+  "Keymap for `alchemist-eval-mode'.")
 
 (defvar alchemist-eval-filter-output nil)
 
@@ -88,28 +89,32 @@
 (defun alchemist-eval-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
   (when (alchemist-server-contains-end-marker-p output)
-    (alchemist-eval-popup-buffer
-     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (alchemist-interact-create-popup alchemist-eval-buffer-name
+                                     (alchemist-server-prepare-filter-output alchemist-eval-filter-output)
+                                     #'(lambda ()
+                                         (elixir-mode)
+                                         (alchemist-eval-mode)))
     (setq alchemist-eval-filter-output nil)))
 
 (defun alchemist-eval-insert-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
   (when (alchemist-server-contains-end-marker-p output)
-    (alchemist-eval--insert
+    (alchemist-interact-insert-as-comment
      (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
     (setq alchemist-eval-filter-output nil)))
 
 (defun alchemist-eval-quoted-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
   (when (alchemist-server-contains-end-marker-p output)
-    (alchemist-eval-popup-buffer
-     (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
+    (alchemist-interact-create-popup alchemist-eval-buffer-name
+                                     (alchemist-server-prepare-filter-output alchemist-eval-filter-output)
+                                     #'alchemist-eval-mode)
     (setq alchemist-eval-filter-output nil)))
 
 (defun alchemist-eval-quoted-insert-filter (_process output)
   (setq alchemist-eval-filter-output (cons output alchemist-eval-filter-output))
   (when (alchemist-server-contains-end-marker-p output)
-    (alchemist-eval--insert
+    (alchemist-interact-insert-as-comment
      (alchemist-server-prepare-filter-output alchemist-eval-filter-output))
     (setq alchemist-eval-filter-output nil)))
 
@@ -189,7 +194,6 @@
   (interactive)
   (let ((string (buffer-substring-no-properties (point-min) (point-max))))
     (alchemist-eval--quote-expression string)))
-
 (defun alchemist-eval-print-quoted-buffer ()
   "Get the Elixir code representation of the expression in the current buffer and insert result."
   (interactive)
@@ -201,23 +205,13 @@
   (interactive)
   (quit-windows-on alchemist-eval-buffer-name))
 
-(defun alchemist-eval-popup-buffer (eval)
-  (let ((buffer (get-buffer-create alchemist-eval-buffer-name)))
-    (with-current-buffer buffer
-      (with-current-buffer-window
-       buffer (cons 'display-buffer-below-selected
-                    '((window-height . fit-window-to-buffer)))
-       (lambda (window _value))
-      (let ((inhibit-read-only t))
-        (insert eval)
-        (goto-char (point-min))
-        (elixir-mode)
-        (alchemist-eval-minor-mode))))))
+(define-minor-mode alchemist-eval-mode
+  "Minor mode for Alchemist Elixir code evaluation.
 
-(define-minor-mode alchemist-eval-minor-mode
-  "Minor mode for displaying Elixir evaluation results."
-  :group 'alchemist-eval
-  :keymap alchemist-eval-minor-mode-map)
+\\{alchemist-eval-mode-map}"
+  nil
+  " Alchemist-Eval"
+  alchemist-eval-mode-map)
 
 (provide 'alchemist-eval)
 

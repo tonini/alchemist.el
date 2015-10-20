@@ -261,10 +261,6 @@ the actively marked region will be used for passing to `alchemist-help'."
     (completing-read "Elixir help history: " alchemist-help-search-history nil nil "")))
   (alchemist-help-lookup-doc search))
 
-;; Deprecated functions; these will get removed in v1.5.0
-(defun alchemist-help-search-marked-region () (interactive)
-       (alchemist-utils-deprecated-message "alchemist-help-search-marked-region" "alchemist-help-search-at-point"))
-
 (provide 'alchemist-help)
 
 ;;; alchemist-help.el ends here
