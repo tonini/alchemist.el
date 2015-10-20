@@ -167,14 +167,14 @@ Key bindings:
   (define-key map (kbd "v r") 'alchemist-eval-print-quoted-buffer)
   (define-key map (kbd "v !") 'alchemist-eval-close-popup)
 
-  (define-key map (kbd "o l") 'alchemist-macroexpand-expand-once-current-line)
-  (define-key map (kbd "o L") 'alchemist-macroexpand-expand-once-print-current-line)
-  (define-key map (kbd "o k") 'alchemist-macroexpand-expand-current-line)
-  (define-key map (kbd "o K") 'alchemist-macroexpand-expand-print-current-line)
-  (define-key map (kbd "o i") 'alchemist-macroexpand-expand-once-region)
-  (define-key map (kbd "o I") 'alchemist-macroexpand-expand-once-print-region)
-  (define-key map (kbd "o r") 'alchemist-macroexpand-expand-region)
-  (define-key map (kbd "o R") 'alchemist-macroexpand-expand-print-region)
+  (define-key map (kbd "o l") 'alchemist-macroexpand-once-current-line)
+  (define-key map (kbd "o L") 'alchemist-macroexpand-once-print-current-line)
+  (define-key map (kbd "o k") 'alchemist-macroexpand-current-line)
+  (define-key map (kbd "o K") 'alchemist-macroexpand-print-current-line)
+  (define-key map (kbd "o i") 'alchemist-macroexpand-once-region)
+  (define-key map (kbd "o I") 'alchemist-macroexpand-once-print-region)
+  (define-key map (kbd "o r") 'alchemist-macroexpand-region)
+  (define-key map (kbd "o R") 'alchemist-macroexpand-print-region)
   (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup)
 
   )
@@ -208,15 +208,15 @@ Key bindings:
      ["Evaluate quoted buffer" alchemist-eval-quoted-buffer]
      ["Evaluate quoted buffer and print" alchemist-eval-print-quoted-buffer])
     ("Macroexpand"
-     ["Macro expand once current line" alchemist-macroexpand-expand-once-current-line]
-     ["Macro expand once current line and print" alchemist-macroexpand-expand-print-current-line]
-     ["Macro expand current line" alchemist-macroexpand-expand-current-line]
-     ["Macro expand current line and print" alchemist-macroexpand-expand-print-current-line]
+     ["Macro expand once current line" alchemist-macroexpand-once-current-line]
+     ["Macro expand once current line and print" alchemist-macroexpand-print-current-line]
+     ["Macro expand current line" alchemist-macroexpand-current-line]
+     ["Macro expand current line and print" alchemist-macroexpand-print-current-line]
      "---"
-     ["Macro expand once region" alchemist-macroexpand-expand-once-region]
-     ["Macro expand once region and print" alchemist-macroexpand-expand-print-region]
-     ["Macro expand region" alchemist-macroexpand-expand-region]
-     ["Macro expand region and print" alchemist-macroexpand-expand-print-region])
+     ["Macro expand once region" alchemist-macroexpand-once-region]
+     ["Macro expand once region and print" alchemist-macroexpand-print-region]
+     ["Macro expand region" alchemist-macroexpand-region]
+     ["Macro expand region and print" alchemist-macroexpand-print-region])
     ("Compile"
      ["Compile..." alchemist-compile]
      ["Compile this buffer" alchemist-compile-this-buffer]

@@ -471,14 +471,14 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 
 | Keybinding | Description | Command |
 |--------------------|------------------------------------------|------------------------------------------------|
-|<kbd>C-c a o l</kbd>| Macro expand once on the current line. | `alchemist-macroexpand-expand-once-current-line`.|
-|<kbd>C-c a o L</kbd>| Macro expand once on the current line and print the result. | `alchemist-macroexpand-expand-once-print-current-line`.|
-|<kbd>C-c a o k</kbd>| Macro expand on the current line. | `alchemist-macroexpand-expand-current-line`.|
-|<kbd>C-c a o K</kbd>| Macro expand on the current line and print the result. | `alchemist-macroexpand-expand-print-current-line`.|
-|<kbd>C-c a o i</kbd>| Macro expand once on region. | `alchemist-macroexpand-expand-once-region`.|
-|<kbd>C-c a o I</kbd>| Macro expand once on region and print the result. | `alchemist-macroexpand-expand-once-print-region`.|
-|<kbd>C-c a o r</kbd>| Macro expand on region. | `alchemist-macroexpand-expand-region`.|
-|<kbd>C-c a o R</kbd>| Macro expand on region and print the result. | `alchemist-macroexpand-expand-print-region`.|
+|<kbd>C-c a o l</kbd>| Macro expand once on the current line. | `alchemist-macroexpand-once-current-line`.|
+|<kbd>C-c a o L</kbd>| Macro expand once on the current line and print the result. | `alchemist-macroexpand-once-print-current-line`.|
+|<kbd>C-c a o k</kbd>| Macro expand on the current line. | `alchemist-macroexpand-current-line`.|
+|<kbd>C-c a o K</kbd>| Macro expand on the current line and print the result. | `alchemist-macroexpand-print-current-line`.|
+|<kbd>C-c a o i</kbd>| Macro expand once on region. | `alchemist-macroexpand-once-region`.|
+|<kbd>C-c a o I</kbd>| Macro expand once on region and print the result. | `alchemist-macroexpand-once-print-region`.|
+|<kbd>C-c a o r</kbd>| Macro expand on region. | `alchemist-macroexpand-region`.|
+|<kbd>C-c a o R</kbd>| Macro expand on region and print the result. | `alchemist-macroexpand-print-region`.|
 |<kbd>C-c a o !</kbd>| Quit the Elixir macroexpand popup window. | `alchemist-macroexpand-close-popup`.|
 
 **Note**

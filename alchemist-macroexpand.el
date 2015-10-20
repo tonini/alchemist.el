@@ -79,27 +79,27 @@
       (insert expr))
     (alchemist-server-eval (format "{ :expand_once, '%s' }" file) #'alchemist-macroexpand-insert-filter)))
 
-(defun alchemist-macroexpand-expand-current-line ()
+(defun alchemist-macroexpand-current-line ()
   "Macro expand the Elixir code on the current line."
   (interactive)
   (alchemist-macroexpand-expand-request (thing-at-point 'line)))
 
-(defun alchemist-macroexpand-expand-print-current-line ()
+(defun alchemist-macroexpand-print-current-line ()
   "Macro expand the Elixir code on the current line and insert the result."
   (interactive)
   (alchemist-macroexpand-expand-and-print-request (thing-at-point 'line)))
 
-(defun alchemist-macroexpand-expand-once-current-line ()
+(defun alchemist-macroexpand-once-current-line ()
   "Macro expand the Elixir code on the current line."
   (interactive)
   (alchemist-macroexpand-expand-once-request (thing-at-point 'line)))
 
-(defun alchemist-macroexpand-expand-once-print-current-line ()
+(defun alchemist-macroexpand-once-print-current-line ()
   "Macro expand the Elixir code on the current line and insert the result."
   (interactive)
   (alchemist-macroexpand-expand-once-and-print-request (thing-at-point 'line)))
 
-(defun alchemist-macroexpand-expand-print-region (beg end)
+(defun alchemist-macroexpand-print-region (beg end)
   "Macro expand the Elixir code on marked region and insert the result."
   (interactive (list (point) (mark)))
   (unless (and beg end)
@@ -109,7 +109,7 @@
       (exchange-point-and-mark))
     (alchemist-macroexpand-expand-and-print-request string)))
 
-(defun alchemist-macroexpand-expand-region (beg end)
+(defun alchemist-macroexpand-region (beg end)
   "Macro expand the Elixir code on marked region."
   (interactive (list (point) (mark)))
   (unless (and beg end)
@@ -117,7 +117,7 @@
   (let ((string (buffer-substring-no-properties beg end)))
     (alchemist-macroexpand-expand-request string)))
 
-(defun alchemist-macroexpand-expand-once-print-region (beg end)
+(defun alchemist-macroexpand-once-print-region (beg end)
   "Macro expand the Elixir code on marked region once and insert the result."
   (interactive "r")
   (let ((string (buffer-substring-no-properties beg end)))
@@ -125,7 +125,7 @@
       (exchange-point-and-mark))
     (alchemist-macroexpand-expand-once-and-print-request string)))
 
-(defun alchemist-macroexpand-expand-once-region (beg end)
+(defun alchemist-macroexpand-once-region (beg end)
   "Macro expand the Elixir code on marked region once."
   (interactive (list (point) (mark)))
   (unless (and beg end)

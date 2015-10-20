@@ -37,7 +37,7 @@
   (with-temp-buffer
     (alchemist-mode)
     (insert "unless false, do: IO.puts 'Please no!'")
-    (alchemist-macroexpand-expand-once-current-line)
+    (alchemist-macroexpand-once-current-line)
     (wait 1))
   (should (equal "if(false) do
   nil
@@ -50,7 +50,7 @@ end"
   (with-temp-buffer
     (alchemist-mode)
     (insert "unless false, do: IO.puts 'Please no!'")
-    (alchemist-macroexpand-expand-current-line)
+    (alchemist-macroexpand-current-line)
     (wait 1))
   (should (equal "case(false) do
   x when x in [false, nil] ->
@@ -66,7 +66,7 @@ end"
     (insert "unless false do
   IO.puts 'Please no!'
 end")
-    (alchemist-macroexpand-expand-once-region (point-min) (point-max))
+    (alchemist-macroexpand-once-region (point-min) (point-max))
     (wait 1))
   (should (equal "if(false) do
   nil
@@ -81,7 +81,7 @@ end"
     (insert "unless false do
   IO.puts 'Please no!'
 end")
-    (alchemist-macroexpand-expand-region (point-min) (point-max))
+    (alchemist-macroexpand-region (point-min) (point-max))
     (wait 1))
   (should (equal "case(false) do
   x when x in [false, nil] ->
@@ -100,7 +100,7 @@ end"
 # => end" (with-temp-buffer
             (alchemist-mode)
             (insert "unless false, do: IO.puts 'Please no!'")
-            (alchemist-macroexpand-expand-once-print-current-line)
+            (alchemist-macroexpand-once-print-current-line)
             (wait 1)
             (buffer-substring-no-properties (point-min) (point-max))))))
 
@@ -115,7 +115,7 @@ end"
 # => end" (with-temp-buffer
             (alchemist-mode)
             (insert "unless false, do: IO.puts 'Please no!'")
-            (alchemist-macroexpand-expand-print-current-line)
+            (alchemist-macroexpand-print-current-line)
             (wait 1)
             (buffer-substring-no-properties (point-min) (point-max))))))
 
@@ -132,7 +132,7 @@ end
             (insert "unless false do
   IO.puts 'Please no!'
 end")
-            (alchemist-macroexpand-expand-once-print-region (point-max) (point-min))
+            (alchemist-macroexpand-once-print-region (point-max) (point-min))
             (wait 1)
             (buffer-substring-no-properties (point-min) (point-max))))))
 
@@ -150,7 +150,7 @@ end
             (insert "unless false do
   IO.puts 'Please no!'
 end")
-            (alchemist-macroexpand-expand-print-region (point-max) (point-min))
+            (alchemist-macroexpand-print-region (point-max) (point-min))
             (wait 1)
             (buffer-substring-no-properties (point-min) (point-max))))))
 
