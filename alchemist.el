@@ -32,13 +32,16 @@
 ;;
 ;;  Alchemist comes with a bunch of features, which are:
 ;;
-;;    * Compile & Execution
-;;    * Inline code evaluation
 ;;    * Mix integration
+;;    * Compile & Execution of Elixir code
+;;    * Inline code evaluation
+;;    * Inline macro expanding
 ;;    * Documentation lookup
-;;    * Code definition lookup
-;;    * Smart code completion
+;;    * Definition lookup
 ;;    * Powerful IEx integration
+;;    * Smart code completion
+;;    * Elixir project management
+;;    * Phoenix support
 
 ;;; Code:
 
