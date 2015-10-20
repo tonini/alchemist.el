@@ -58,6 +58,7 @@ Alchemist comes with a bunch of **features**, which are:
 - [IEx](#iex)
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
+- [Macroexpand](#macroexpand)
 - [Testing Mode](#testing-mode)
   - [Testing-Report](#testing-report)
 - [Modeline](#modeline)
@@ -464,7 +465,41 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 |<kbd>C-c a v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
 |<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
 |<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
-|<kbd>C-c a v !</kbd>| Quit the Elixir evaluation buffer popup. `alchemist-eval-close-popup`.|
+|<kbd>C-c a v !</kbd>| Quit the Elixir evaluation popup window. `alchemist-eval-close-popup`.|
+
+## Macroexpand
+
+| Keybinding | Description | Command |
+|--------------------|------------------------------------------|------------------------------------------------|
+|<kbd>C-c a o l</kbd>| Macro expand once on the current line. | `alchemist-macroexpand-expand-once-current-line`.|
+|<kbd>C-c a o L</kbd>| Macro expand once on the current line and print the result. | `alchemist-macroexpand-expand-once-print-current-line`.|
+|<kbd>C-c a o k</kbd>| Macro expand on the current line. | `alchemist-macroexpand-expand-current-line`.|
+|<kbd>C-c a o K</kbd>| Macro expand on the current line and print the result. | `alchemist-macroexpand-expand-print-current-line`.|
+|<kbd>C-c a o i</kbd>| Macro expand once on region. | `alchemist-macroexpand-expand-once-region`.|
+|<kbd>C-c a o I</kbd>| Macro expand once on region and print the result. | `alchemist-macroexpand-expand-once-print-region`.|
+|<kbd>C-c a o r</kbd>| Macro expand on region. | `alchemist-macroexpand-expand-region`.|
+|<kbd>C-c a o R</kbd>| Macro expand on region and print the result. | `alchemist-macroexpand-expand-print-region`.|
+|<kbd>C-c a o !</kbd>| Quit the Elixir macroexpand popup window. | `alchemist-macroexpand-close-popup`.|
+
+**Note**
+
+Macroexpand works only for Elixir core macros, but why is this?
+
+> Macros are lexical: it is impossible to inject code or macros globally. In order to use a macro, you need to explicitly require or import the module that defines the macro.
+
+But if you like to expand a macro you know where it comes from, you can do something like the following with the Alchemist inline evaluation functionality.
+
+As example, select the code and call the `alchemist-eval-print-region` and you get the macro expansion below.
+
+```elixir
+expr = quote do: Unless.macro_unless(true, IO.puts "this should never be printed")
+res  = Macro.expand_once(expr, __ENV__)
+IO.puts Macro.to_string(res)
+# => if(!true) do
+# =>   IO.puts("this should never be printed")
+# => end
+# => :ok
+```
 
 ## Testing Mode
 

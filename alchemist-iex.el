@@ -57,7 +57,6 @@
     (define-key map (kbd (format "%s i r" alchemist-key-command-prefix)) 'alchemist-iex-open-input-ring)
     (define-key map (kbd (format "%s i c" alchemist-key-command-prefix)) 'alchemist-iex-clear-buffer)
     (define-key map (kbd (format "%s h e" alchemist-key-command-prefix)) 'alchemist-help-search-at-point)
-    (define-key map (kbd (format "%s h m" alchemist-key-command-prefix)) 'alchemist-help-search-marked-region)
     (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
     map))
 
