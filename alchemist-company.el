@@ -89,12 +89,9 @@
 (defun alchemist-company-filter (_process output)
   (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))
   (if (alchemist-server-contains-end-marker-p output)
-      (let* ((candidates (alchemist-complete--build-candidates-from-process-output alchemist-company-filter-output))
-             (candidates (if candidates
-                             candidates
-                           (alchemsit-complete--dabbrev-code-candidates))))
+      (let* ((candidates (alchemist-complete--build-candidates-from-process-output alchemist-company-filter-output)))
         (setq alchemist-company-filter-output nil)
-        (alchemist-company-serve-candidates-to-callback candidates))))
+        (alchemist-company-serve-candidates-to-callback (-distinct candidates)))))
 
 (defun alchemist-company-doc-buffer-filter (_process output)
   (setq alchemist-company-filter-output (cons output alchemist-company-filter-output))
@@ -110,9 +107,13 @@
         (setq alchemist-company-doc-lookup-done t))))
 
 (defun alchemist-company-serve-candidates-to-callback (candidates)
-  (let ((candidates (if candidates
+  (let* ((candidates (if candidates
                         candidates
-                      (alchemsit-complete--dabbrev-code-candidates))))
+                      (alchemsit-complete--dabbrev-code-candidates)))
+         (candidates (if (eq (length candidates) 1)
+                        (-insert-at 0 company-prefix candidates)
+                       candidates))
+         (candidates (-distinct candidates)))
     (funcall alchemist-company-callback candidates)))
 
 (defun alchemist-company (command &optional arg &rest ignored)

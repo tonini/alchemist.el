@@ -109,7 +109,25 @@ defmodule Foo do
     defmacro
   end
 end
-" 61) '("defmacro" "defmacro" "defmacrocallback" "defmacrop"))))
+" 61) '("defmacro" "defmacrocallback" "defmacrop"))))
+
+(ert-deftest alchemist-company-test/add-prefix-at-single-candidate ()
+  (should (-same-items? (write-and-complete-in-buffer "
+defmodule Foo do
+  def do_this do
+    do
+  end
+end
+" 41) '("do" "do_this")))
+  (should (-same-items? (write-and-complete-in-buffer "
+defmodule Foo do
+  import String
+
+  def bar do
+    end
+  end
+end
+" 55) '("end" "ends_with?"))))
 
 (provide 'alchemist-company-test)
 
