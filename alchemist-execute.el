@@ -53,7 +53,7 @@
 
 (defun alchemist-execute--file (filename)
   (when (not (file-exists-p filename))
-    (error "The given file doesn't exists"))
+    (error "The given file doesn't exist"))
   (alchemist-execute (list alchemist-execute-command (expand-file-name filename))))
 
 (defun alchemist-execute--read-command (command)
