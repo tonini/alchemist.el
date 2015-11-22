@@ -94,7 +94,7 @@ run all tests)."
 (defun alchemist-mix--test-file (filename)
   "Run a specific FILENAME as argument for the mix command test."
   (when (not (file-exists-p filename))
-    (error "The given file doesn't exists"))
+    (error "The given file doesn't exist"))
   (alchemist-mix--execute-test (expand-file-name filename)))
 
 ;; Public functions
