@@ -27,7 +27,7 @@ defmodule Alchemist.API.Docl do
     try do
       Code.eval_string("h(#{expr})", [], __ENV__)
     rescue
-      _e ->
+      _e -> nil
     end
   end
 

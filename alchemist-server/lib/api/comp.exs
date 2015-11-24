@@ -34,7 +34,7 @@ defmodule Alchemist.API.Comp do
   defp print(result) do
     result
     |> Enum.uniq
-    |> Enum.map &IO.puts/1
+    |> Enum.map(&IO.puts/1)
 
     IO.puts "END-OF-COMP"
   end

@@ -24,7 +24,7 @@ defmodule Alchemist.API.Info do
 
     modules ++ functions
     |> Enum.uniq
-    |> Enum.map &IO.puts/1
+    |> Enum.map(&IO.puts/1)
 
     IO.puts "END-OF-INFO"
   end
@@ -37,7 +37,7 @@ defmodule Alchemist.API.Info do
     |> Mix.Task.load_tasks
     |> Enum.map(&Mix.Task.task_name/1)
     |> Enum.sort
-    |> Enum.map &IO.puts/1
+    |> Enum.map(&IO.puts/1)
 
     IO.puts "END-OF-INFO"
   end

@@ -8,11 +8,11 @@ defmodule ServerTest do
   setup_all do
     on_exit fn ->
       {_status, files} = File.ls Path.expand("fixtures", __DIR__)
-      files |> Enum.each fn(file) ->
+      files |> Enum.each(fn(file) ->
         unless file == ".gitkeep" do
           File.rm Path.expand("fixtures/#{file}", __DIR__)
         end
-      end
+      end)
     end
   end
 
@@ -24,7 +24,7 @@ defmodule ServerTest do
 
   test "Documentation lookup" do
     assert send_signal("DOCL { 'List', [context: Elixir, imports: [], aliases: []]}") =~ """
-    Implements functions that only make sense for lists and cannot be part of the
+    Erlang's standard library\nbut follow Elixir's convention of receiving the target (in this case, a list)\nas the first argument.\n\e[0m\nEND-OF-DOCL
     """
   end
 
