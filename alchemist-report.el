@@ -137,6 +137,7 @@ If there is already a running process, ask for interrupting it."
   "Enable MODE inside BUFFER."
   (with-current-buffer buffer
     (funcall mode)
+    (setq-local truncate-lines t) ;; Do not display continuation lines.
     (setq-local window-point-insertion-type t)))
 
 (defun alchemist-report-run (command process-name buffer-name mode &optional on-exit hidden)
