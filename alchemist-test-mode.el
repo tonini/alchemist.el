@@ -109,6 +109,7 @@ Otherwise, it saves all modified buffers without asking."
 (defvar alchemist-test-report-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "q" #'quit-window)
+    (define-key map "g" #'alchemist-mix-rerun-last-test)
     (define-key map (kbd "M-n") #'alchemist-test-next-result)
     (define-key map (kbd "M-p") #'alchemist-test-previous-result)
     (define-key map (kbd "M-N") #'alchemist-test-next-stacktrace-file)
