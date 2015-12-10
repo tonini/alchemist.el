@@ -147,6 +147,16 @@ Call AFTER-FN after performing the search."
 Call AFTER-FN after performing the search."
   (alchemist-utils-jump-to-regex regex 'beginning-of-line after-fn 're-search-backward 'end-of-buffer))
 
+(defun alchemist-utils-elixir-version ()
+  "Return the current Elixir version on the system."
+  (let* ((output (shell-command-to-string (format "%s --version" alchemist-execute-command)))
+         (output (split-string output "\n"))
+         (output (-remove (lambda (string) (alchemist-utils-empty-string-p string))
+                          output))
+         (version (-last-item output))
+         (version (replace-regexp-in-string "Elixir " "" version)))
+    version))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here

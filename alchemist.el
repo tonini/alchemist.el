@@ -61,6 +61,7 @@
 (require 'easymenu)
 (require 'company)
 (require 'elixir-mode)
+(require 'alchemist-utils)
 (require 'alchemist-key)
 (require 'alchemist-eval)
 (require 'alchemist-goto)
@@ -97,6 +98,11 @@ just return nil."
     (when show-version
       (message "Alchemist version: %s" version))
     version))
+
+(defun alchemist-elixir-version ()
+  "Display the current Elixir version on the system."
+  (interactive)
+  (message "Elixir %s" (alchemist-utils-elixir-version)))
 
 (define-prefix-command 'alchemist-mode-keymap)
 
@@ -178,9 +184,7 @@ Key bindings:
   (define-key map (kbd "o I") 'alchemist-macroexpand-once-print-region)
   (define-key map (kbd "o r") 'alchemist-macroexpand-region)
   (define-key map (kbd "o R") 'alchemist-macroexpand-print-region)
-  (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup)
-
-  )
+  (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup))
 
 (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
 (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)

@@ -126,6 +126,10 @@ foo
     (alchemist-utils-jump-to-previous-matching-line "foo" 'beginning-of-line)
     (should (equal (point) 2))))
 
+(ert-deftest test-utils/get-current-elixir-version ()
+  (should (string-match-p "^[0-9]+\.[0-9]+\.[0-9]+.*$"
+                          (alchemist-utils-elixir-version))))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here
