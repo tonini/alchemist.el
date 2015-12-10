@@ -119,6 +119,24 @@ Return a list of all available modules which has documentation.
 INFO { :type, :modules }
 ```
 
+### Datatype Information
+
+Return information about any datatype.
+
+```
+INFO { :type, :info, List }
+```
+
+### Module Or Function/Arity Types Information
+
+Return types for a module or function/arity pair.
+
+```
+INFO { :type, :types, 'List' }
+INFO { :type, :types, 'Enum.t' }
+INFO { :type, :types, 'Agent.on_start/0' }
+```
+
 ## End Markers
 
 Each request type ends with a specific end marker tag to notify that the request is done.
