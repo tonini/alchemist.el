@@ -24,7 +24,7 @@ defmodule ServerTest do
 
   test "Documentation lookup" do
     assert send_signal("DOCL { 'List', [context: Elixir, imports: [], aliases: []]}") =~ """
-    Erlang's standard library\nbut follow Elixir's convention of receiving the target (in this case, a list)\nas the first argument.\n\e[0m\nEND-OF-DOCL
+    \e[0m\n\e[7m\e[33m                                      List                                      \e[0m\n\e[0m
     """
   end
 
@@ -90,6 +90,32 @@ defmodule ServerTest do
     cmd
     compile
     """
+  end
+
+  # The IEx.Helpers.t and IEx.Helpers.i are functionality which come with
+  # Elixir version 1.2.0
+  if Version.match?(System.version, ">=1.2.0-rc.0") do
+    test "Get information from data type" do
+      assert send_signal("INFO { :type, :info, List}") =~ """
+      Reference modules\e[0m\n\e[22m  Module, Atom\e[0m\nEND-OF-INFO
+      """
+    end
+
+    test "Don't crash server if data type argument is faulty" do
+      assert send_signal("INFO { :type, :info, whatever}") =~ """
+      END-OF-INFO
+      """
+    end
+
+    test "Prints the types for the given module or for the given function/arity pair" do
+      assert send_signal("INFO { :type, :types, 'Agent'}") =~ """
+      @type agent() :: pid() | {atom(), node()} | name()\e[0m\n\e[22m@type state() :: term()\e[0m\nEND-OF-INFO
+      """
+
+      assert send_signal("INFO { :type, :types, 'Agent.on_start/0'}") =~ """
+      @type on_start() :: {:ok, pid()} | {:error, {:already_started, pid()} | term()}\e[0m
+      """
+    end
   end
 
   defp send_signal(signal) do
