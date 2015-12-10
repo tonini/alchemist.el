@@ -439,10 +439,11 @@ before run <kbd>M-x alchemist-iex-run</kbd>
 |<kbd>C-c a i i</kbd>| Start an IEx process. `alchemist-iex-run`|
 |<kbd>C-c a i p</kbd>| Start an IEx process with mix (`iex -S mix`). `alchemist-iex-project-run`|
 |<kbd>C-c a i l</kbd>| Sends the current line to the IEx process. `alchemist-iex-send-current-line`|
-|<kbd>C-c a i c</kbd>| Sends the current line to the IEx process and jump to the buffer.. `alchemist-iex-send-current-line-and-go`|
+|<kbd>C-c a i c</kbd>| Sends the current line to the IEx process and jump to the buffer. `alchemist-iex-send-current-line-and-go`|
 |<kbd>C-c a i r</kbd>| Sends the marked region to the IEx process. `alchemist-iex-send-region`|
 |<kbd>C-c a i m</kbd>| Sends the marked region to the IEx process and jump to the buffer. `alchemist-iex-send-region-and-go`|
 |<kbd>C-c a i b</kbd>| Compiles the current buffer in the IEx process. `alchemist-iex-compile-this-buffer`|
+|<kbd>C-c a i R</kbd>| Recompiles and reloads the current module in the IEx process. `alchemist-iex-reload-module`|
 
 ### Complete & Documentation lookup
 
