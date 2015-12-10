@@ -28,6 +28,7 @@
 (require 'comint)
 (require 'company)
 (require 'alchemist-key)
+(require 'alchemist-scope)
 (require 'alchemist-project)
 
 (defgroup alchemist-iex nil
@@ -143,10 +144,10 @@ and jump to the buffer."
   (let ((str (format "c(\"%s\")" (buffer-file-name))))
     (alchemist-iex--send-command (alchemist-iex-process) str)))
 
-(defun alchemist-iex-recompile-this-buffer ()
-  "Recompiles and reloads the current buffer in the IEx process."
+(defun alchemist-iex-reload-module ()
+  "Recompiles and reloads the current module in the IEx process."
   (interactive)
-  (let ((str (format "r(\"%s\")" (buffer-file-name))))
+  (let ((str (format "r(%s)" (alchemist-scope-module))))
     (alchemist-iex--send-command (alchemist-iex-process) str)))
 
 (defun alchemist-iex--send-command (proc str)

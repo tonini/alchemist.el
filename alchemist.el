@@ -161,6 +161,7 @@ Key bindings:
   (define-key map (kbd "i r") 'alchemist-iex-send-region)
   (define-key map (kbd "i m") 'alchemist-iex-send-region-and-go)
   (define-key map (kbd "i b") 'alchemist-iex-compile-this-buffer)
+  (define-key map (kbd "i R") 'alchemist-iex-reload-module)
 
   (define-key map (kbd "v l") 'alchemist-eval-current-line)
   (define-key map (kbd "v k") 'alchemist-eval-print-current-line)
