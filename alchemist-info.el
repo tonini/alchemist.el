@@ -49,6 +49,7 @@
     (alchemist-interact-create-popup alchemist-info-buffer-name
                                      (alchemist-server-prepare-filter-output alchemist-info-filter-output)
                                      #'(lambda ()
+                                         (alchemist-info-mode)
                                          (ansi-color-apply-on-region (point-min) (point-max))))
     (setq alchemist-info-filter-output nil)))
 
