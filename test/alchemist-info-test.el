@@ -44,43 +44,45 @@
     (insert expr)
     (goto-char (point-min))
     (alchemist-info-datatype-at-point)
-    (wait 2)))
+    (wait 3)))
 
-(ert-deftest alchemist-info/datatype-info ()
-  (write-expr-and-get-datatype "List")
-  (should (string-match "Term
+;; Because the following functionality are Elixir v1.2 dependent
+;; the tests will just run if a proper Elixir version is available.
+(when (string-match "Elixir 1\.2.*" (alchemist-elixir-version))
+  (ert-deftest alchemist-info/datatype-info ()
+    (write-expr-and-get-datatype "List")
+    (should (string-match "Term
   List
 Data type
   Atom" (info-buffer-content)))
-  (write-expr-and-get-datatype ":ok")
-  (should (string-match "Term
+    (write-expr-and-get-datatype ":ok")
+    (should (string-match "Term
   :ok
 Data type
   Atom
 Reference modules
   Atom" (info-buffer-content)))
-  (write-expr-and-get-datatype "\"string\"")
-  (should (string-match "Term
+    (write-expr-and-get-datatype "\"string\"")
+    (should (string-match "Term
   \"string\"
 Data type
   BitString
 Byte size
   6" (info-buffer-content))))
 
-(ert-deftest alchemist-info/expression-at-point ()
-  (should (equal (datatype-info-of-expr "Enum.any?")
-                 "Enum.any?"))
-  (should (equal (datatype-info-of-expr "String")
-                 "String"))
-  (should (equal (datatype-info-of-expr "String.Unicode")
-                 "String.Unicode"))
-  (should (equal (datatype-info-of-expr ":ok")
-                 ":ok"))
-  (should (equal (datatype-info-of-expr "'Bitstring'")
-                 "'Bitstring'"))
-  (should (equal (datatype-info-of-expr "\"And?\"")
-                 "\"And?\"")))
-
+  (ert-deftest alchemist-info/expression-at-point ()
+    (should (equal (datatype-info-of-expr "Enum.any?")
+                   "Enum.any?"))
+    (should (equal (datatype-info-of-expr "String")
+                   "String"))
+    (should (equal (datatype-info-of-expr "String.Unicode")
+                   "String.Unicode"))
+    (should (equal (datatype-info-of-expr ":ok")
+                   ":ok"))
+    (should (equal (datatype-info-of-expr "'Bitstring'")
+                   "'Bitstring'"))
+    (should (equal (datatype-info-of-expr "\"And?\"")
+                   "\"And?\""))))
 (provide 'alchemist-info-test)
 
 ;;; alchemist-info-test.el ends here
