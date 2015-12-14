@@ -61,6 +61,7 @@ Alchemist comes with a bunch of **features**, which are:
   - [Complete & Documentation lookup](#complete--documentation-lookup)
 - [Eval](#eval)
 - [Macroexpand](#macroexpand)
+- [Datatype Informations](#datatype-informations)
 - [Testing Mode](#testing-mode)
   - [Testing-Report](#testing-report)
 - [Modeline](#modeline)
@@ -506,6 +507,20 @@ IO.puts Macro.to_string(res)
 # => end
 # => :ok
 ```
+
+## Datatype Informations
+
+With Elixir `v1.2` comes two new `IEx` helper functions `t/1` and `i/1`.
+
+- Display type docs with `t(Module.type)` and `t(Module.type/arity)`
+- Prints information about any data type with `i/1`.
+
+These two helper functions are available now with the following keybindings/functions.
+
+| Keybinding | Description |
+|--------------------|------------------------------------------|
+|<kbd>C-c a n i</kbd>| Prints information about any datatype under the cursor. `alchemist-info-datatype-at-point` |
+|<kbd>C-c a n t</kbd>| Prints information of types under the cursor. `alchemist-info-types-at-point` |
 
 ## Testing Mode
 

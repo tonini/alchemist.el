@@ -65,6 +65,7 @@
 (require 'alchemist-key)
 (require 'alchemist-eval)
 (require 'alchemist-goto)
+(require 'alchemist-info)
 (require 'alchemist-report)
 (require 'alchemist-mix)
 (require 'alchemist-hooks)
@@ -185,7 +186,10 @@ Key bindings:
   (define-key map (kbd "o I") 'alchemist-macroexpand-once-print-region)
   (define-key map (kbd "o r") 'alchemist-macroexpand-region)
   (define-key map (kbd "o R") 'alchemist-macroexpand-print-region)
-  (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup))
+  (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup)
+
+  (define-key map (kbd "n i") 'alchemist-info-datatype-at-point)
+  (define-key map (kbd "n t") 'alchemist-info-types-at-point))
 
 (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
 (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
