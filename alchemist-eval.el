@@ -93,7 +93,8 @@
                                      (alchemist-server-prepare-filter-output alchemist-eval-filter-output)
                                      #'(lambda ()
                                          (elixir-mode)
-                                         (alchemist-eval-mode)))
+                                         (alchemist-eval-mode)
+                                         (ansi-color-apply-on-region (point-min) (point-max))))
     (setq alchemist-eval-filter-output nil)))
 
 (defun alchemist-eval-insert-filter (_process output)
