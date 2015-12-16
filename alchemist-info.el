@@ -66,7 +66,9 @@
 (defun alchemist-info-datatype-at-point ()
   "Return information about any datatype under the cursor."
   (interactive)
-  (let ((expr (alchemist-info-expression-at-point)))
+  (let ((expr (if mark-active
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (alchemist-info-expression-at-point))))
     (alchemist-server-info (format "{ :type, :info, '%s' }" expr) #'alchemist-info-datatype-filter)))
 
 (defun alchemist-info-types-at-point ()
