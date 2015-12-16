@@ -70,20 +70,17 @@ defmodule Alchemist.API.Info do
 
   def normalize(request) do
     try do
-      arguments = Code.eval_string(request)
-      case arguments do
-        {{_, type }, _}     -> type
-        {{_, type, arg}, _} ->
-          IO.puts System.version
-          if Version.match?(System.version, ">=1.2.0-rc.0") do
-            {type, arg}
-          else
-            nil
-          end
-      end
+      Code.eval_string(request)
     rescue
       _e -> nil
+    else
+      {{_, type }, _}     -> type
+      {{_, type, arg}, _} ->
+        if Version.match?(System.version, ">=1.2.0-rc") do
+          {type, arg}
+        else
+          nil
+        end
     end
-
   end
 end

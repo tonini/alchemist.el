@@ -94,7 +94,7 @@ defmodule ServerTest do
 
   # The IEx.Helpers.t and IEx.Helpers.i are functionality which come with
   # Elixir version 1.2.0
-  if Version.match?(System.version, ">=1.2.0-rc.0") do
+  if Version.match?(System.version, ">=1.2.0-rc") do
     test "Get information from data type" do
       assert send_signal("INFO { :type, :info, List}") =~ """
       Reference modules\e[0m\n\e[22m  Module, Atom\e[0m\nEND-OF-INFO
