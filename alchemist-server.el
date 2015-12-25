@@ -84,7 +84,9 @@ An Alchemist server will be started for the current Elixir mix project."
          (default-directory (if (string= process-name "alchemist-server")
                                 default-directory
                               process-name))
-         (server-command (format "elixir %s %s" alchemist-server env))
+         (server-command (format "elixir %s %s"
+                                 (shell-quote-argument alchemist-server)
+                                 (shell-quote-argument env)))
          (process (start-process-shell-command process-name "*alchemist-server*" server-command)))
     (set-process-query-on-exit-flag process nil)
     (alchemist-server--store-process process)))
