@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.7.0 (unreleased)
+
+### Enhancements
+
+  * [Info] Introduce Elixir v1.2 `IEx.Helpers.t` and `IEx.Helpers.i` functionality.
+  * [Eval] Display ansi escape sequences inside evaluation buffers correctly.
+
 ## v1.6.0 (2015-10-20)
 
 ### Enhancements
