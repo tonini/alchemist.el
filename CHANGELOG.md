@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.7.0 (unreleased)
+
+### Bug fixes
+
+  * [IEx] Proper handling of sending multiline input to the IEx process.
+
 ## v1.6.0 (2015-10-20)
 
 ### Enhancements
