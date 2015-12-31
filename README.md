@@ -526,6 +526,8 @@ The tests are reported in the `alchemist-test-report-mode`, which have the follo
 
 | Keybinding | Description |
 |--------------------|------------------------------------------|
+|<kbd>r</kbd>| Rerun the latest test run. `alchemist-mix-rerun-last-test` |
+|<kbd>t</kbd>| Toggle truncating of long lines for the current test buffer. `toggle-truncate-lines` |
 |<kbd>M-n</kbd>| Jump to the next error in the test report. `alchemist-test-next-result` |
 |<kbd>M-p</kbd>| Jump to the previous error in the test report. `alchemist-test-previous-result` |
 |<kbd>M-N</kbd>| Jump to the next stacktrace file in the test report. `alchemist-test-next-stacktrace-file` |
