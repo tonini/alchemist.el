@@ -2,6 +2,10 @@
 
 ## v1.7.0 (unreleased)
 
+### Enhancements
+
+  * [Test] Add a new key (`t`) to toggle the truncation of lines in the test report buffer.
+
 ### Bug fixes
 
   * [IEx] Proper handling of sending multiline input to the IEx process.
