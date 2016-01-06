@@ -100,6 +100,32 @@ defmodule Phoenix.Router do
   end
 
 end")
+                   (alchemist-scope-aliases))))
+  (should (equal (list '("Phoenix.Router.Resource" "Resource")
+                       '("Phoenix.Router.Scope" "Scope"))
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  alias Phoenix.Router.{Resource, Scope}
+
+end")
+                   (alchemist-scope-aliases))))
+  (should (equal (list '("Phoenix.Router.Scope" "Scope")
+                       '("Phoenix.Router.Resource" "Special")
+                       '("List.Chars.Atom" "Atom")
+                       '("List.Chars.Float" "Float"))
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Phoenix.Router do
+
+  alias List.Chars.{Atom, Float}
+  alias Phoenix.Router.Resource, as: Special
+  alias Phoenix.Router.Scope
+
+end")
                    (alchemist-scope-aliases)))))
 
 (ert-deftest test-scope-module ()

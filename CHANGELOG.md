@@ -4,6 +4,7 @@
 
 ### Enhancements
 
+  * [Completion] New shortcut alias handling for Elixir v1.2 is now supported.
   * [Info] Introduce Elixir v1.2 `IEx.Helpers.t` and `IEx.Helpers.i` functionality.
   * [Eval] Display ansi escape sequences inside evaluation buffers correctly.
   * [Test] Add a new key (`t`) to toggle the truncation of lines in the test report buffer.

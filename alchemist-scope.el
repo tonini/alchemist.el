@@ -37,7 +37,15 @@
 
 (defconst alchemist-scope-alias-regex
   "^\s+alias\s+\\([-:_A-Za-z0-9,\.\?!\]+\\)\\(\s*,\s*as:\s*\\)?\\([-_A-Za-z0-9,\.\?!\]+\\)?\n"
-  "The regex for matching Elixir alias definitions.")
+  "The regex for matching Elixir alias definitions.
+   Example:
+   alias Phoenix.Router.Resource, as: Special")
+
+(defconst alchemist-scope-alias-regex-two
+  "^\s+alias\s+\\([-:_A-Za-z0-9,\.\?!\]+\\)\.{\\([-:_A-Za-z0-9\s,\.\?!\]+\\)}\n"
+  "The regex for matching Elixir alias definitions.
+   Example:
+   alias List.Chars.{Atom, Float}")
 
 (defconst alchemist-scope-use-regex
   "^\s+use\s+\\([A-Za-z0-9\.]+\\)"
@@ -91,6 +99,9 @@
     (save-excursion
       (when (alchemist-scope-inside-module-p)
         (end-of-line)
+        ;; alias definition like:
+        ;;
+        ;;   alias Phoenix.Router.Resource, as: Special
         (while (re-search-backward alchemist-scope-alias-regex nil t)
           (when (and
                  (not (alchemist-scope-inside-string-p))
@@ -99,7 +110,22 @@
                    (as (if (match-string 3) (match-string 3) nil))
                    (as (if as as (car (last (split-string alias "\\."))))))
               (setq aliases (append aliases (list (list (alchemist-utils-remove-dot-at-the-end alias)
-                                                        (alchemist-utils-remove-dot-at-the-end as))))))))))
+                                                        (alchemist-utils-remove-dot-at-the-end as))))))))
+        ;; alias definition like:
+        ;;
+        ;;   alias List.Chars.{Atom, Float}
+        (while (re-search-backward alchemist-scope-alias-regex-two nil t)
+          (when (and
+                 (not (alchemist-scope-inside-string-p))
+                 (equal context (alchemist-scope-module)))
+            (let* ((prefix (match-string 1))
+                   (alias-collection (if (match-string 2) (split-string (match-string 2) ",") nil)))
+              (-map (lambda (alias)
+                      (let* ((alias (replace-regexp-in-string "\s+" "" alias))
+                             (namespace (format "%s.%s" prefix alias)))
+                        (setq aliases (append aliases (list (list (alchemist-utils-remove-dot-at-the-end namespace)
+                                                                  (alchemist-utils-remove-dot-at-the-end alias)))))))
+                    alias-collection))))))
     aliases))
 
 (defun alchemist-scope--modules (regex)
