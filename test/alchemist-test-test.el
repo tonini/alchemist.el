@@ -71,6 +71,8 @@ defmodule MyTest do
   end
 
   test \"...\" do
+    flunk \"failed\"
+    flunk(\"failed\")
   end
 end
 "
@@ -81,7 +83,11 @@ end
    (should (eq (alchemist-test-face-at 179) 'font-lock-type-face))
    (should (eq (alchemist-test-face-at 213) 'font-lock-type-face))
    (should (eq (alchemist-test-face-at 237) 'font-lock-type-face))
-   (should (eq (alchemist-test-face-at 267) 'font-lock-variable-name-face))))
+   (should (eq (alchemist-test-face-at 267) 'font-lock-variable-name-face))
+
+   (should (eq (alchemist-test-face-at 283) 'font-lock-type-face)) ;; flunk "msg"
+   (should (eq (alchemist-test-face-at 302) 'font-lock-type-face)) ;; flunk("msg")
+   ))
 
 (ert-deftest get-list-of-all-tests-in-buffer ()
   (should (equal '("\"create a pkg file/dir skeleton\"" ":symbol")
