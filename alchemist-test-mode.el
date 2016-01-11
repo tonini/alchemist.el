@@ -221,9 +221,9 @@ macro) while the values are the position at which the test matched."
       (font-lock-add-keywords nil
                               '(("^\s+\\(test\\)\s+" 1
                                  font-lock-variable-name-face t)
-                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\s+" 1
+                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\|flunk\\)\s+" 1
                                  font-lock-type-face t)
-                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\)\(" 1
+                                ("^\s+\\(assert[_a-z]*\\|refute[_a-z]*\\|flunk\\)\(" 1
                                  font-lock-type-face t)))))
 
 ;; Public functions
