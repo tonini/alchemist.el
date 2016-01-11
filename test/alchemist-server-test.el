@@ -36,7 +36,7 @@
   (with-sandbox
    (f-touch "mix.exs")
    (alchemist-server-start-if-not-running)
-   (should (string-match-p "alchemist\\.el\\/test\\/sandbox\\/$"
+   (should (string-match-p "alchemist\\.el\\/test\\/sandbox\\/.*$"
                            (process-name (alchemist-server-process))))
    (should (string= "run"
                     (process-status (process-name (alchemist-server-process)))))))
@@ -45,7 +45,7 @@
   (with-sandbox
    (f-touch "mix.exs")
    (alchemist-server-start-if-not-running)
-   (should (string-match-p "alchemist\\.el\\/test\\/sandbox\\/$"
+   (should (string-match-p "alchemist\\.el\\/test\\/sandbox\\/.*$"
                            (alchemist-server-process-name)))))
 
 (ert-deftest check-if-process-is-running ()
