@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.0 (unreleased)
+
+### Bug fixes
+
+  * [Server] Just start one Alchemist-Server process when inside the Elixir codebase.
+
 ## v1.7.0 (2016-06-01)
 
 ### Enhancements
