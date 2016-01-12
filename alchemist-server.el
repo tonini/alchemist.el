@@ -108,7 +108,9 @@ Elixir mix project is live."
 
 (defun alchemist-server-process-name ()
   "Return process name for the current Elixir mix project."
-  (let* ((process-name (alchemist-project-root))
+  (let* ((process-name (if (alchemist-project-elixir-p)
+                           "alchemist-server"
+                         (alchemist-project-root)))
          (process-name (if process-name
                            process-name
                          "alchemist-server")))

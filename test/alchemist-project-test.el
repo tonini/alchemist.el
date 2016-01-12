@@ -130,4 +130,26 @@
    (should (equal (file-name-nondirectory (buffer-file-name))
                   "my_view_test.exs"))))
 
+(ert-deftest alchemist-project/inside-elixir-codebase ()
+  (with-sandbox
+   (f-mkdir "lib" "eex")
+   (f-mkdir "lib" "elixir")
+   (f-mkdir "lib" "mix")
+   (f-mkdir "lib" "logger")
+   (f-mkdir "lib" "ex_unit")
+   (f-mkdir "lib" "iex")
+   (f-touch "lib/eex/eex.ex")
+   (find-file "lib/eex/eex.ex")
+   (should (alchemist-project-elixir-p))
+   (should (equal (alchemist-project-elixir-root) alchemist-sandbox-path))))
+
+(ert-deftest alchemist-project/not-inside-elixir-codebase ()
+(with-sandbox
+   (f-mkdir "lib" "parser")
+   (f-mkdir "lib" "iex")
+   (f-touch "lib/parser/run.ex")
+   (find-file "lib/parser/run.ex")
+   (should-not (alchemist-project-elixir-p))
+   (should (equal nil (alchemist-project-elixir-root)))))
+
 (provide 'alchemist-project-tests)

@@ -41,6 +41,25 @@
 (defconst alchemist-project-hex-pkg-indicator ".hex"
   "File which indicates the root directory of an Elixir Hex package.")
 
+(defun alchemist-project-elixir-p ()
+  "Return non-nil if `default-directory' is inside the Elixir source codebase."
+  (stringp (alchemist-project-elixir-root)))
+
+(defun alchemist-project-elixir-root (&optional dir)
+  "Return root directory of the Elixir source."
+  (let* ((dir (file-name-as-directory (or dir (expand-file-name default-directory))))
+         (present-files (directory-files dir)))
+    (cond ((alchemist-project-top-level-dir-p dir)
+           nil)
+          ((and (-contains-p present-files "eex")
+                (-contains-p present-files "elixir")
+                (-contains-p present-files "logger")
+                (-contains-p present-files "mix")
+                (-contains-p present-files "iex")
+                (-contains-p present-files "ex_unit"))
+           (file-name-directory (directory-file-name dir)))
+          (t (alchemist-project-elixir-root (file-name-directory (directory-file-name dir)))))))
+
 (defun alchemist-project-p ()
   "Return non-nil if `default-directory' is inside an Elixir Mix project."
   (stringp (alchemist-project-root)))
