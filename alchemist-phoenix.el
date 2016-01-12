@@ -35,7 +35,7 @@
 
 ;;;###autoload
 (defun alchemist-phoenix-project-p ()
-  "Return non-nil if `default- is inside an Phoenix project."
+  "Return non-nil if `default-directory' is inside an Phoenix project."
   (and (alchemist-project-p)
        (file-directory-p (concat (alchemist-project-root) "web"))))
 
