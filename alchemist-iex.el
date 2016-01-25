@@ -41,6 +41,13 @@
   :type 'string
   :group 'alchemist-iex)
 
+(defvar alchemist-iex-prompt-regexp "^\\(iex\\|\\.\\.\\.\\)(.+)>"
+  "Prompt regex pattern of IEx interpreter.
+
+Should match prompts that looks like these:
+iex(1)>
+...(1)>")
+
 (defcustom alchemist-iex-prompt-read-only t
   "If non-nil, the prompt will be read-only."
   :type 'boolean
@@ -72,7 +79,7 @@
 
 \\<alchemist-iex-mode-map>"
   nil "Alchemist-IEx"
-  (set (make-local-variable 'comint-prompt-regexp) "^\\(iex\\|\.\.\.\\)\(.+\)>")
+  (set (make-local-variable 'comint-prompt-regexp) alchemist-iex-prompt-regexp)
   (set (make-local-variable 'comint-prompt-read-only) alchemist-iex-prompt-read-only)
   (set (make-local-variable 'comint-input-autoexpand) nil)
   (set (make-local-variable 'comint-input-sender) 'alchemist-iex--send-command)
