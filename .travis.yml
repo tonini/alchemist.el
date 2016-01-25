@@ -1,3 +1,4 @@
+sudo: required
 language: elixir
 elixir:
   - 1.1.1
