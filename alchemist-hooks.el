@@ -41,6 +41,11 @@
   :type 'boolean
   :group 'alchemist-hooks)
 
+(defcustom alchemist-hooks-compile-on-save nil
+  "If t, run `alchemist-mix-compile' on save."
+  :type 'boolean
+  :group 'alchemist-hooks)
+
 (defun alchemist-hooks-test-on-save ()
   (when (and alchemist-hooks-test-on-save
              (alchemist-project-p))
@@ -51,9 +56,20 @@
                           #'alchemist-test--handle-exit
                           t)))
 
+(defun alchemist-hooks-compile-on-save ()
+  (when (and alchemist-hooks-compile-on-save
+             (alchemist-project-p))
+    (alchemist-report-run "mix compile"
+                          alchemist-mix-process-name
+                          alchemist-mix-buffer-name
+                          #'alchemist-mix-mode
+                          nil
+                          t)))
+
 (eval-after-load 'elixir-mode
   '(progn
-     (add-hook 'after-save-hook 'alchemist-hooks-test-on-save nil nil)))
+     (add-hook 'after-save-hook 'alchemist-hooks-test-on-save nil nil)
+     (add-hook 'after-save-hook 'alchemist-hooks-compile-on-save nil nil)))
 
 (provide 'alchemist-hooks)
 

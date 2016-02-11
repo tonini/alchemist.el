@@ -238,6 +238,12 @@ through the variable.
 (setq alchemist-hooks-test-on-save t)
 ```
 
+* Compile your project with `alchemist-mix-compile` after saving a buffer.
+
+```el
+(setq alchemist-hooks-compile-on-save t)
+```
+
 ## Server
 
 Alchemist works as a server & client model, where the Alchemist server is written in Elixir and Emacs takes the part of the client.
