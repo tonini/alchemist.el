@@ -73,6 +73,9 @@ not set explicitly."
 (defvar alchemist-mix--envs '("dev" "prod" "test")
   "The list of mix envs to use as defaults.")
 
+(defconst alchemist-mix-process-name "alchemist-mix-report"
+  "Name of the mix process.")
+
 ;; Private functions
 
 (defun alchemist-mix--completing-read (prompt cmdlist)
@@ -220,7 +223,7 @@ If PREFIX is non-nil, prompt for a mix environment variable."
          (command (alchemist-utils-build-command
                    (list (when mix-env (concat "MIX_ENV=" mix-env))
                          alchemist-mix-command command-list))))
-    (alchemist-report-run command "alchemist-mix-report" alchemist-mix-buffer-name 'alchemist-mix-mode)))
+    (alchemist-report-run command alchemist-mix-process-name alchemist-mix-buffer-name 'alchemist-mix-mode)))
 
 (provide 'alchemist-mix)
 
