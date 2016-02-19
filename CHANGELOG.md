@@ -6,7 +6,7 @@
 
   * [Server] Just start one Alchemist-Server process when inside the Elixir codebase.
 
-## v1.7.0 (2016-06-01)
+## v1.7.0 (2016-01-06)
 
 ### Enhancements
 
