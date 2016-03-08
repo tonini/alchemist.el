@@ -43,20 +43,23 @@
 (defun alchemist-report--kill-process (process)
   "Interrupt and kill the running report PROCESS."
   (when process
-    (let ((mode-name (replace-regexp-in-string ":.+$" "" mode-name)))
-      (if (or (not (eq (process-status process) 'run))
-              (eq (process-query-on-exit-flag process) nil)
-              (yes-or-no-p
-               (format "A %s process already running; kill it? "
-                       mode-name)))
-          (condition-case ()
-              (progn
-                (interrupt-process process)
-                (sit-for 1)
-                (delete-process process))
-            (error nil))
-        (error "Cannot have two processes in `%s' at once"
-               (buffer-name))))))
+    (with-current-buffer (process-buffer process)
+      (let* ((mode-name (if (stringp mode-name)
+                  (replace-regexp-in-string ":.+$" "" mode-name)
+                mode-name)))
+        (if (or (not (eq (process-status process) 'run))
+                (eq (process-query-on-exit-flag process) nil)
+                (yes-or-no-p
+                 (format "A %s process already running; kill it? "
+                         mode-name)))
+            (condition-case ()
+                (progn
+                  (interrupt-process process)
+                  (sit-for 1)
+                  (delete-process process))
+              (error nil))
+          (error "Cannot have two processes in `%s' at once"
+                 (buffer-name)))))))
 
 (defun alchemist-report--sentinel (process status)
   "Sentinel for test report buffer."
@@ -108,18 +111,21 @@ Argument for the exit function is the STATUS and BUFFER of the finished process.
 (defun alchemist-report-update-mode-name (process)
   "Update the `mode-name' with the status of PROCESS."
   (with-current-buffer (process-buffer process)
-    (setq-local mode-name (format "%s:%s"
-                                  (replace-regexp-in-string ":.+$" "" mode-name)
-                                  (process-status process)))))
+    (when (stringp mode-name)
+      (setq-local mode-name (format "%s:%s"
+                                    (replace-regexp-in-string ":.+$" "" mode-name)
+                                    (process-status process))))))
 
 (defun alchemist-report-interrupt-current-process ()
   "Interrupt the current running report process."
   (interactive)
   (let ((buffer (current-buffer))
-        (name (replace-regexp-in-string ":.+" "" mode-name)))
+        (name (if (stringp mode-name)
+                  (replace-regexp-in-string ":.+" "" mode-name)
+                mode-name)))
     (if (get-buffer-process buffer)
         (interrupt-process (get-buffer-process buffer))
-      (error "The [%s] process is not running" (downcase name)))))
+      (error "The [%s] process is not running" name))))
 
 (defun alchemist-report-cleanup-process-buffer (buffer)
   "Clean the content BUFFER of process.
