@@ -200,7 +200,7 @@ arg is set."
     (when (alchemist-server-contains-end-marker-p output)
       (let* ((output (alchemist-server-prepare-filter-output alchemist-mix-filter-output))
              (tasks (split-string output "\n"))
-             (selected-task (alchemist-mix--completing-read "mix: " tasks))
+             (selected-task (alchemist-mix--completing-read "mix: " (-distinct tasks)))
              (command (read-shell-command "mix " (concat selected-task " "))))
         (setq alchemist-mix-filter-output nil)
         (alchemist-mix-execute (list command) current-prefix-arg)))))
