@@ -82,7 +82,7 @@ defmodule Foo do
     MyPersonalList.key
   end
 end
-" 87) '("MyPersonalList.keydelete" "MyPersonalList.keyfind"
+" 88) '("MyPersonalList.keydelete" "MyPersonalList.keyfind"
         "MyPersonalList.keymember?" "MyPersonalList.keyreplace"
         "MyPersonalList.keysort" "MyPersonalList.keystore"
         "MyPersonalList.keytake")))
@@ -118,7 +118,7 @@ defmodule Foo do
     do
   end
 end
-" 41) '("do" "do_this")))
+" 42) '("do" "do_this")))
   (should (-same-items? (write-and-complete-in-buffer "
 defmodule Foo do
   import String
@@ -127,7 +127,21 @@ defmodule Foo do
     end
   end
 end
-" 55) '("end" "ends_with?"))))
+" 56) '("end" "ends_with?"))))
+
+(ert-deftest test-erlang-module-completion ()
+  (should (-same-items? (write-and-complete-in-buffer "
+:li
+" 5) '(":lib" ":lists")))
+  (should (-same-items? (write-and-complete-in-buffer "
+:file
+" 7) '(":file" ":file_io_server" ":file_server" ":file_sorter" ":filelib" ":filename")))
+  (should (-same-items? (write-and-complete-in-buffer "
+  foo:
+" 8) '()))
+  (should (-same-items? (write-and-complete-in-buffer "
+foo[:bar:]
+" 11) '())))
 
 (provide 'alchemist-company-test)
 
