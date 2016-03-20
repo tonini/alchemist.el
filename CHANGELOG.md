@@ -3,6 +3,7 @@
 ## v1.8.0 (unreleased)
 
 ### Bug fixes
+  * [Completion] The char 'colon' is a none valid expression for completion.
   * [System] The `mode-name` should not be updated if it's not a string.
   * [Server] Just start one Alchemist-Server process when inside the Elixir codebase.
 
