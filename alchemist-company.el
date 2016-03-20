@@ -116,6 +116,11 @@
          (candidates (-distinct candidates)))
     (funcall alchemist-company-callback candidates)))
 
+(defun alchemist-company-get-prefix ()
+  (if (or (looking-at "\s") (eolp))
+      (unless (looking-back ".+:")
+        (alchemist-scope-expression))))
+
 (defun alchemist-company (command &optional arg &rest ignored)
   "`company-mode' completion back-end for Elixir."
   (interactive (list 'interactive))
@@ -127,7 +132,7 @@
               (string= mode-name "Alchemist-IEx")))
     (prefix (and (or (eq major-mode 'elixir-mode)
                      (string= mode-name "Alchemist-IEx"))
-                 (alchemist-scope-expression)))
+                 (alchemist-company-get-prefix)))
     (doc-buffer (alchemist-company-show-documentation arg))
     (location (alchemist-company-open-definition arg))
     (candidates (cons :async
