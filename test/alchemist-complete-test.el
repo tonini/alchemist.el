@@ -34,9 +34,6 @@ to_string/1")
 
 (ert-deftest test-complete-candidates/build-candidates ()
   "Build a candidates list"
-  (setq alchemist-company-last-completion "List")
-  (should (equal (alchemist-complete--build-candidates '("List." "delete/2" "to_string/1"))
-                 '("List.delete" "List.to_string")))
   (setq alchemist-company-last-completion "Lis")
   (should (equal (alchemist-complete--build-candidates '("List." "delete/2" "to_string/1"))
                  '("List" "List.delete" "List.to_string")))
@@ -66,10 +63,7 @@ to_string/1")
                  '(":file.pid2name" ":file.set_cwd" ":file.rename")))
   (setq alchemist-company-last-completion "pid2name")
   (should (equal (alchemist-complete--build-candidates '("pid2name/1"))
-                 '("pid2name")))
-  (setq alchemist-company-last-completion "no")
-  (should (equal (alchemist-complete--build-candidates '("no" "nor" "normalized"))
-                 '("nor" "normalized"))))
+                 '("pid2name"))))
 
 (ert-deftest test-complete-candidates/build-help-candidates ()
   "Build a candidates list"
