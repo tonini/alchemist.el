@@ -110,10 +110,10 @@
   (let* ((candidates (if candidates
                         candidates
                       (alchemsit-complete--dabbrev-code-candidates)))
-         (candidates (if (eq (length candidates) 1)
-                        (-insert-at 0 company-prefix candidates)
-                       candidates))
-         (candidates (-distinct candidates)))
+         (candidates (-distinct candidates))
+         (candidates (-remove (lambda (candidate)
+                                (string-equal alchemist-company-last-completion candidate))
+                              candidates)))
     (funcall alchemist-company-callback candidates)))
 
 (defun alchemist-company-get-prefix ()

@@ -46,11 +46,11 @@
   (should (-same-items? (write-and-complete-in-buffer "List.del")
                         '("List.delete" "List.delete_at")))
   (should (-same-items? (write-and-complete-in-buffer "Str")
-                        '("Str" "Stream" "String" "StringIO")))
+                        '("Stream" "String" "StringIO")))
   (should (-same-items? (write-and-complete-in-buffer "En")
                         '("Enum" "Enumerable")))
   (should (-same-items? (write-and-complete-in-buffer "defm")
-                        '("defm" "defmacro" "defmacrop" "defmodule")))
+                        '("defmacro" "defmacrop" "defmodule")))
   (should (-same-items? (write-and-complete-in-buffer "
 defmodule Foo do
   def say_hi, do: true
@@ -109,25 +109,7 @@ defmodule Foo do
     defmacro
   end
 end
-" 61) '("defmacro" "defmacrocallback" "defmacrop"))))
-
-(ert-deftest alchemist-company-test/add-prefix-at-single-candidate ()
-  (should (-same-items? (write-and-complete-in-buffer "
-defmodule Foo do
-  def do_this do
-    do
-  end
-end
-" 42) '("do" "do_this")))
-  (should (-same-items? (write-and-complete-in-buffer "
-defmodule Foo do
-  import String
-
-  def bar do
-    end
-  end
-end
-" 56) '("end" "ends_with?"))))
+" 61) '("defmacrocallback" "defmacrop"))))
 
 (ert-deftest test-erlang-module-completion ()
   (should (-same-items? (write-and-complete-in-buffer "
@@ -135,7 +117,7 @@ end
 " 5) '(":lib" ":lists")))
   (should (-same-items? (write-and-complete-in-buffer "
 :file
-" 7) '(":file" ":file_io_server" ":file_server" ":file_sorter" ":filelib" ":filename")))
+" 7) '(":file_io_server" ":file_server" ":file_sorter" ":filelib" ":filename")))
   (should (-same-items? (write-and-complete-in-buffer "
   foo:
 " 8) '()))
