@@ -9,8 +9,7 @@
 
 `package.el` is the built-in package manager in Emacs.
 
-Alchemist.el is available on the three major community maintained repositories -
-[MELPA STABLE](https://stable.melpa.org), [MELPA](https://melpa.org) and [Marmalade](https://marmalade-repo.org/).
+Alchemist.el is available on the two major `package.el` community maintained repos - [MELPA Stable](http://stable.melpa.org) and [MELPA](http://melpa.org).
 
 You can install `Alchemist` with the following command:
 

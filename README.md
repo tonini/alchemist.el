@@ -46,7 +46,7 @@ You can install `Alchemist` with the following command:
 
 Documentation is available [here](http://alchemist.readthedocs.org/).
 
-## Support
+# Support
 
 If you hit any problems, please first ensure that you are using the latest version of this code,
 and that you have updated your packages to the most recent available versions.
@@ -55,11 +55,11 @@ and that you have updated your packages to the most recent available versions.
 * To talk about the project with people in real time: please join the #emacs-elixir channel on [IRC](http://de.wikipedia.org/wiki/Internet_Relay_Chat)
   or the #emacs channel on [Elixir Slack](https://elixir-lang.slack.com).
 
-## Contributing
+# Contributing
 
 We appreciate any contribution to Alchemist, so check out our [Contribution guidelines](CONTRIBUTING.md) for more information.
 
-## License
+# License
 
 Copyright © 2014-2015 Samuel Tonini and
 [contributors](https://github.com/tonini/alchemist.el/contributors).
