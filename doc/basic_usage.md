@@ -18,6 +18,15 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>q</kbd>  |Quit `*mix*` buffer window                            |
 |<kbd>i</kbd>  |Send an input to the current running mix task process.|
 
+## Mix Hex
+
+| Keybinding   | Description                                          |
+|--------------|------------------------------------------------------|
+|<kbd>X i</kbd>  | Display Hex package information for the package at point. |
+|<kbd>X r</kbd>  | Display Hex package releases for the package at point. |
+|<kbd>X I</kbd>  | Display Hex package info for a certain package. |
+|<kbd>X S</kbd>  | Search for Hex packages. |
+
 ## Testing
 
 | Keybinding | Description |
