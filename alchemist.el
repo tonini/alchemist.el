@@ -188,8 +188,8 @@ Key bindings:
   (define-key map (kbd "o R") 'alchemist-macroexpand-print-region)
   (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup)
 
-  (define-key map (kbd "n i") 'alchemist-info-datatype-at-point)
-  (define-key map (kbd "n t") 'alchemist-info-types-at-point))
+  (define-key map (kbd "f i") 'alchemist-info-datatype-at-point)
+  (define-key map (kbd "f t") 'alchemist-info-types-at-point))
 
 (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
 (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)

@@ -262,8 +262,8 @@ These two helper functions are available now with the following keybindings/func
 
 | Keybinding | Description |
 |--------------------|------------------------------------------|
-|<kbd>C-c a n i</kbd>| Prints information about any datatype under the cursor. `alchemist-info-datatype-at-point` |
-|<kbd>C-c a n t</kbd>| Prints information of types under the cursor. `alchemist-info-types-at-point` |
+|<kbd>C-c a f i</kbd>| Prints information about any datatype under the cursor. `alchemist-info-datatype-at-point` |
+|<kbd>C-c a f t</kbd>| Prints information of types under the cursor. `alchemist-info-types-at-point` |
 
 ## Testing Mode
 
