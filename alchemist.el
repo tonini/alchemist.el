@@ -241,6 +241,7 @@ Key bindings:
      ["Mix compile..." alchemist-mix-compile]
      ["Mix run..." alchemist-mix-run]
      "---"
+     ["Mix run whole test suite." alchemist-mix-test]
      ["Mix test this buffer" alchemist-mix-test-this-buffer]
      ["Mix test file..." alchemist-mix-test-file]
      ["Mix test at point" alchemist-mix-test-at-point]
