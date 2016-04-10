@@ -68,6 +68,7 @@
 (require 'alchemist-info)
 (require 'alchemist-report)
 (require 'alchemist-mix)
+(require 'alchemist-hex)
 (require 'alchemist-hooks)
 (require 'alchemist-message)
 (require 'alchemist-iex)
@@ -189,7 +190,12 @@ Key bindings:
   (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup)
 
   (define-key map (kbd "f i") 'alchemist-info-datatype-at-point)
-  (define-key map (kbd "f t") 'alchemist-info-types-at-point))
+  (define-key map (kbd "f t") 'alchemist-info-types-at-point)
+
+  (define-key map (kbd "X i") 'alchemist-hex-info-at-point)
+  (define-key map (kbd "X r") 'alchemist-hex-releases-at-point)
+  (define-key map (kbd "X I") 'alchemist-hex-releases)
+  (define-key map (kbd "X s") 'alchemist-hex-info))
 
 (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
 (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
