@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.8.0 (unreleased)
+## v1.8.0 (2016-11-04)
 
 ### Enhancements
   * [Hex] Add Hex package interface for fetching specific package informations.
