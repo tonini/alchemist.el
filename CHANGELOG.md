@@ -2,6 +2,10 @@
 
 ## v1.8.0 (unreleased)
 
+### Enhancements
+  * [Hex] Add Hex package interface for fetching specific package informations.
+  * [Refcard] Update dynamic generated refcard with phoenix-mode
+
 ### Bug fixes
   * [Completion] The char 'colon' is a none valid expression for completion.
   * [System] The `mode-name` should not be updated if it's not a string.
