@@ -149,11 +149,12 @@
         (insert "\n")
         (insert (propertize "Links: " 'face font-lock-string-face))
         (-map (lambda (link)
-                (let ((link (decode-coding-string (cdr link) 'utf-8-auto)))
-                  (insert (format "\n  %s: " link))
-                  (insert-button link
+                (let ((link-name (car link))
+                      (url (decode-coding-string (cdr link) 'utf-8-auto)))
+                  (insert (format "\n  %s: " link-name))
+                  (insert-button url
                                  'action (lambda (x) (browse-url (button-get x 'url)))
-                                 'url link))) (cdr (assoc 'links meta)))
+                                 'url url))) (cdr (assoc 'links meta)))
         (insert "\n")
         (insert (propertize "Releases: \n" 'face font-lock-string-face))
         (-map (lambda (release)
