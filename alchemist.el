@@ -194,8 +194,9 @@ Key bindings:
 
   (define-key map (kbd "X i") 'alchemist-hex-info-at-point)
   (define-key map (kbd "X r") 'alchemist-hex-releases-at-point)
-  (define-key map (kbd "X I") 'alchemist-hex-releases)
-  (define-key map (kbd "X s") 'alchemist-hex-info))
+  (define-key map (kbd "X R") 'alchemist-hex-releases)
+  (define-key map (kbd "X s") 'alchemist-hex-search)
+  (define-key map (kbd "X I") 'alchemist-hex-info))
 
 (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
 (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)

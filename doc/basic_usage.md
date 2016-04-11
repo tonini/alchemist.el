@@ -25,7 +25,8 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>C-c a X i</kbd>  | Display Hex package information for the package at point. |
 |<kbd>C-c a X r</kbd>  | Display Hex package releases for the package at point. |
 |<kbd>C-c a X I</kbd>  | Display Hex package info for a certain package. |
-|<kbd>C-c a X S</kbd>  | Search for Hex packages. |
+|<kbd>C-c a X R</kbd>  | Display Hex package releases for a certain package.|
+|<kbd>C-c a X s</kbd>  | Search for Hex packages. |
 
 ## Testing
 
