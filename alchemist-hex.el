@@ -1,4 +1,4 @@
-;;; alchemist-hex.el --- Interface to the Hex package manager API.
+;;; alchemist-hex.el --- Interface to the Hex package manager API. -*- lexical-binding: t -*-
 
 ;; Copyright © 2014-2016 Samuel Tonini
 
@@ -218,6 +218,52 @@
         (alchemist-hex-mode)))
     (pop-to-buffer buffer)))
 
+(defun alchemist-hex-all-dependencies ()
+  "Display Hex package dependencies for the current Mix project."
+  (interactive)
+  (unless (alchemist-project-p)
+    (error "No 'mix.exs' file exists."))
+  (let* ((mix-content
+          (with-temp-buffer
+            (insert-file-contents (concat (alchemist-project-root) "mix.exs"))
+            (goto-char (point-min))
+            (delete-matching-lines "#")
+            (buffer-string)))
+         (deps-start (with-temp-buffer
+                       (insert mix-content)
+                       (goto-char (point-min))
+                       (search-forward "defp deps do")))
+         (deps-end (with-temp-buffer
+                     (insert mix-content)
+                     (goto-char deps-start)
+                     (search-forward "end")))
+         (deps (substring mix-content deps-start (- deps-end 4)))
+         (deps (replace-regexp-in-string "\\(\\[\\|\\]\\)" "" deps))
+         (deps (split-string deps "}\s*,"))
+         (deps (-map (lambda (dep)
+                       (replace-regexp-in-string "\\(\{\\|\}\\|\n\\|^\s*\\)" "" dep))
+                     deps))
+         (deps (-sort 'equal deps)))
+    (unless (string-match-p "\s*defp? deps do" mix-content)
+      (error "No dependency informations available in 'mix.exs'."))
+    (let* ((content (with-temp-buffer
+                      (goto-char (point-min))
+                      (erase-buffer)
+                      (-map (lambda (dep)
+                              (insert dep)
+                              (insert "\n")) deps)
+                      (goto-char (point-min))
+                      (align-regexp (point-min) (point-max) (concat "\\(\\s-*\\)" ", ") 1 1 t)
+                      (while (search-forward ", " nil t)
+                        (replace-match " " nil t))
+                      (sort-lines nil (point-min) (point-max))
+                      (buffer-string))))
+      (alchemist-interact-create-popup alchemist-hex-buffer-name
+                                       content
+                                       #'(lambda ()
+                                           (elixir-mode)
+                                           (alchemist-hex-mode))))))
+
 (defun alchemist-hex-info-at-point ()
   "Display Hex package information for the package at point."
   (interactive)
@@ -238,10 +284,13 @@
   (interactive "Mhex info: \n")
   (alchemist-hex--display-info-for package-name))
 
-(define-derived-mode alchemist-hex-mode fundamental-mode "Elixir Hex Mode"
+(define-minor-mode alchemist-hex-mode
   "Minor mode for displaying Hex package manager informations.
 
 \\{alchemist-hex-mode-map}"
+  nil
+  "Alchemist-Hex"
+  alchemist-hex-mode-map
   (setq buffer-read-only t))
 
 (provide 'alchemist-hex)
