@@ -74,16 +74,10 @@
 It starts walking the directory tree to find the Elixir Mix root directory
 from `default-directory'. If DIR is non-nil it starts walking the
 directory from there instead."
-  (let* ((dir (file-name-as-directory (or dir (expand-file-name default-directory))))
-         (present-files (directory-files dir)))
-    (cond ((alchemist-project-top-level-dir-p dir)
-           nil)
-          ((-contains-p present-files alchemist-project-hex-pkg-indicator)
-           (alchemist-project-root (file-name-directory (directory-file-name dir))))
-          ((-contains-p present-files alchemist-project-mix-project-indicator)
-           dir)
-          (t
-           (alchemist-project-root (file-name-directory (directory-file-name dir)))))))
+  (let ((start-dir (or dir (expand-file-name default-directory))))
+    (or
+     (locate-dominating-file start-dir alchemist-project-mix-project-indicator)
+     (locate-dominating-file start-dir alchemist-project-hex-pkg-indicator))))
 
 (defun alchemist-project-root-or-default-dir ()
   "Return the current Elixir mix project root or `default-directory'."
