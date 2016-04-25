@@ -30,6 +30,10 @@
 (require 'alchemist-utils)
 (require 'alchemist-file)
 
+;; Tell the byte compiler about autoloaded functions from packages
+(eval-when-compile
+  (declare-function alchemist-goto-elixir-source-dir ""))
+
 (defgroup alchemist-project nil
   "API to identify Elixir mix projects."
   :prefix "alchemist-help-"
@@ -41,24 +45,20 @@
 (defconst alchemist-project-hex-pkg-indicator ".hex"
   "File which indicates the root directory of an Elixir Hex package.")
 
+(defvar alchemist-project-root-path-cache nil
+  "Variable which holds the cached project root path.")
+
 (defun alchemist-project-elixir-p ()
   "Return non-nil if `default-directory' is inside the Elixir source codebase."
   (stringp (alchemist-project-elixir-root)))
 
 (defun alchemist-project-elixir-root (&optional dir)
   "Return root directory of the Elixir source."
-  (let* ((dir (file-name-as-directory (or dir (expand-file-name default-directory))))
-         (present-files (directory-files dir)))
-    (cond ((alchemist-project-top-level-dir-p dir)
-           nil)
-          ((and (-contains-p present-files "eex")
-                (-contains-p present-files "elixir")
-                (-contains-p present-files "logger")
-                (-contains-p present-files "mix")
-                (-contains-p present-files "iex")
-                (-contains-p present-files "ex_unit"))
-           (file-name-directory (directory-file-name dir)))
-          (t (alchemist-project-elixir-root (file-name-directory (directory-file-name dir)))))))
+  (if (and alchemist-goto-elixir-source-dir
+	   (string-prefix-p (expand-file-name alchemist-goto-elixir-source-dir)
+			    (expand-file-name default-directory)))
+      alchemist-goto-elixir-source-dir
+    nil))
 
 (defun alchemist-project-p ()
   "Return non-nil if `default-directory' is inside an Elixir Mix project."
@@ -74,16 +74,21 @@
 It starts walking the directory tree to find the Elixir Mix root directory
 from `default-directory'. If DIR is non-nil it starts walking the
 directory from there instead."
-  (let* ((dir (file-name-as-directory (or dir (expand-file-name default-directory))))
-         (present-files (directory-files dir)))
-    (cond ((alchemist-project-top-level-dir-p dir)
-           nil)
-          ((-contains-p present-files alchemist-project-hex-pkg-indicator)
-           (alchemist-project-root (file-name-directory (directory-file-name dir))))
-          ((-contains-p present-files alchemist-project-mix-project-indicator)
-           dir)
-          (t
-           (alchemist-project-root (file-name-directory (directory-file-name dir)))))))
+  (if (and alchemist-project-root-path-cache
+	   (string-prefix-p alchemist-project-root-path-cache
+			    (expand-file-name default-directory)))
+      alchemist-project-root-path-cache
+    (let* ((dir (file-name-as-directory (or dir (expand-file-name default-directory))))
+	   (present-files (directory-files dir)))
+      (cond ((alchemist-project-top-level-dir-p dir)
+	     nil)
+	    ((-contains-p present-files alchemist-project-hex-pkg-indicator)
+	     (alchemist-project-root (file-name-directory (directory-file-name dir))))
+	    ((-contains-p present-files alchemist-project-mix-project-indicator)
+	     (setq alchemist-project-root-path-cache dir)
+	     dir)
+	    (t
+	     (alchemist-project-root (file-name-directory (directory-file-name dir))))))))
 
 (defun alchemist-project-root-or-default-dir ()
   "Return the current Elixir mix project root or `default-directory'."

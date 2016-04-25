@@ -27,6 +27,7 @@
 
 (ert-deftest test-project-root/no-argument ()
   "Should use `default-directory' when no argument."
+  (setq alchemist-project-root-path-cache nil)
   (with-sandbox
    (f-touch "mix.exs")
    (f-mkdir "path" "to" "lib")
@@ -34,6 +35,7 @@
 
 (ert-deftest test-project-root/except-files-exists ()
   "Should use `default-directory' when no argument."
+  (setq alchemist-project-root-path-cache nil)
   (with-sandbox
    (f-touch "mix.exs")
    (f-touch ".hex")
@@ -42,6 +44,7 @@
 
 (ert-deftest test-project-root/directory-as-argument  ()
   "Should find root directory when directory as argument."
+  (setq alchemist-project-root-path-cache nil)
   (with-sandbox
    (f-touch "mix.exs")
    (f-mkdir "path" "to" "lib")
@@ -49,16 +52,19 @@
 
 (ert-deftest test-project-root/no-project-root  ()
   "Should return nil when no root."
+  (setq alchemist-project-root-path-cache nil)
   (with-sandbox
    (f-mkdir "path" "to" "lib")
    (should (equal (alchemist-project-root "path/to/lib") nil))))
 
 (ert-deftest test-project-name/no-project-root ()
   "Should return an empty string"
+  (setq alchemist-project-root-path-cache nil)
   (with-sandbox
    (should (equal (alchemist-project-name) ""))))
 
 (ert-deftest test-project-name/project-exists ()
+  (setq alchemist-project-root-path-cache nil)
   "Should return name of the project"
   (with-sandbox
    (f-touch "mix.exs")
@@ -131,24 +137,14 @@
                   "my_view_test.exs"))))
 
 (ert-deftest alchemist-project/inside-elixir-codebase ()
+  (setq alchemist-goto-elixir-source-dir alchemist-sandbox-path)
   (with-sandbox
-   (f-mkdir "lib" "eex")
-   (f-mkdir "lib" "elixir")
-   (f-mkdir "lib" "mix")
-   (f-mkdir "lib" "logger")
-   (f-mkdir "lib" "ex_unit")
-   (f-mkdir "lib" "iex")
-   (f-touch "lib/eex/eex.ex")
-   (find-file "lib/eex/eex.ex")
    (should (alchemist-project-elixir-p))
    (should (equal (alchemist-project-elixir-root) alchemist-sandbox-path))))
 
 (ert-deftest alchemist-project/not-inside-elixir-codebase ()
-(with-sandbox
-   (f-mkdir "lib" "parser")
-   (f-mkdir "lib" "iex")
-   (f-touch "lib/parser/run.ex")
-   (find-file "lib/parser/run.ex")
+  (setq alchemist-goto-elixir-source-dir nil)
+  (with-sandbox
    (should-not (alchemist-project-elixir-p))
    (should (equal nil (alchemist-project-elixir-root)))))
 
