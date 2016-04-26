@@ -32,7 +32,7 @@
   :prefix "alchemist-scope-"
   :group 'alchemist)
 
-(defconst alchemist-scope-defmodule-regex "defmodule \\([A-Za-z\._]+\\)\s+"
+(defconst alchemist-scope-defmodule-regex "defmodule \\([A-Z][A-Za-z0-9\._]+\\)\s+"
   "The regex for matching Elixir defmodule macro.")
 
 (defconst alchemist-scope-alias-regex
