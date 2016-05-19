@@ -54,7 +54,7 @@
 
 (defun alchemist-project-elixir-root (&optional dir)
   "Return root directory of the Elixir source."
-  (if (and alchemist-goto-elixir-source-dir
+  (if (and (not (alchemist-utils-empty-string-p alchemist-goto-elixir-source-dir))
 	   (string-prefix-p (expand-file-name alchemist-goto-elixir-source-dir)
 			    (expand-file-name default-directory)))
       alchemist-goto-elixir-source-dir
