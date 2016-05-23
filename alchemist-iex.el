@@ -68,12 +68,6 @@ iex(1)>
     (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
     map))
 
-(eval-after-load 'company
-  '(progn
-     (defun alchemist-iex--set-company-as-completion-at-point-function ()
-       (setq completion-at-point-functions '(company-complete)))
-     (add-hook 'alchemist-iex-mode-hook 'alchemist-iex--set-company-as-completion-at-point-function)))
-
 (define-derived-mode alchemist-iex-mode comint-mode "Alchemist-IEx"
   "Major mode for interacting with an Elixir IEx process.
 
