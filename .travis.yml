@@ -7,15 +7,16 @@ otp_release:
   - 18.0
 cache: apt
 env:
-  - EVM_EMACS=emacs-24.4-bin
-  - EVM_EMACS=emacs-24.5-bin
+  - EVM_EMACS=emacs-24.4-travis
+  - EVM_EMACS=emacs-24.5-travis
 before_install:
-  - curl -fsSkL https://gist.githubusercontent.com/tonini/09a8bec7a0b2c219e0d7/raw > travis.sh && source ./travis.sh
+  - curl -fsSkL https://gist.githubusercontent.com/tonini/74a12bfd4f99e872385de6ea0bc39700/raw > x.sh && source ./x.sh
   - evm install $EVM_EMACS --use --skip
-  - cask
+  - cask --debug
 install:
   - cask install
 script:
+  - emacs --version
   - make
 notifications:
   irc: "irc.freenode.org#emacs-elixir"
