@@ -111,24 +111,6 @@ defmodule Foo do
 end
 " 61) '("defmacro" "defmacrocallback" "defmacrop"))))
 
-(ert-deftest alchemist-company-test/add-prefix-at-single-candidate ()
-  (should (-same-items? (write-and-complete-in-buffer "
-defmodule Foo do
-  def do_this do
-    do
-  end
-end
-" 42) '("do" "do_this")))
-  (should (-same-items? (write-and-complete-in-buffer "
-defmodule Foo do
-  import String
-
-  def bar do
-    end
-  end
-end
-" 56) '("end" "ends_with?"))))
-
 (ert-deftest test-erlang-module-completion ()
   (should (-same-items? (write-and-complete-in-buffer "
 :li

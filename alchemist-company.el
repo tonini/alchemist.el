@@ -110,9 +110,6 @@
   (let* ((candidates (if candidates
                         candidates
                       (alchemsit-complete--dabbrev-code-candidates)))
-         (candidates (if (eq (length candidates) 1)
-                        (-insert-at 0 company-prefix candidates)
-                       candidates))
          (candidates (-distinct candidates)))
     (funcall alchemist-company-callback candidates)))
 
