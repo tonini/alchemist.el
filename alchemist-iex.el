@@ -153,7 +153,7 @@ and jump to the buffer."
   (let* ((path (if (alchemist-project-p)
 		   (format "%s/_build/dev/" (alchemist-project-root))
 		 "."))
-	 (str (format "c(\"%s\", %s)" (buffer-file-name) path)))
+	 (str (format "c(\"%s\", \"%s\")" (buffer-file-name) path)))
     (alchemist-iex--send-command (alchemist-iex-process) str)))
 
 (defun alchemist-iex-reload-module ()
