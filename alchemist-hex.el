@@ -52,9 +52,12 @@
          (url (concat alchemist-hex-api-url pkg-name))
          (string
           (with-current-buffer (url-retrieve-synchronously url t)
-            (search-forward "\n\n")
-            (delete-region (point-min) (point))
+	    (goto-char (point-min))
+	    (search-forward "\n\n")
+	    (delete-region (point-min) (point))
             (buffer-string))))
+    (when (string-match-p "\"status\":404" string)
+      (error (format "There is no hex package [%s] available" pkg-name)))
     (json-read-from-string string)))
 
 (defun alchemist-hex--fetch-search-packages (pkg-name)
