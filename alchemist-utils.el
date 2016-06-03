@@ -28,17 +28,6 @@
 (require 'cl-lib)
 (require 'dash)
 
-(defface alchemist-utils--deprecated-face
-  '((t (:inherit font-lock-variable-name-face :bold t :foreground "red")))
-  "Face for 'deprecated' word inside deprecated message."
-  :group 'alchemist)
-
-(defun alchemist-utils-deprecated-message (function new-function)
-  (message "'%s is %s in favor of '%s"
-           function (propertize "deprecated"
-                                'face 'alchemist-utils--deprecated-face)
-           new-function))
-
 (defun alchemist-utils-build-command (command-list)
   "Build the commands list for the runner."
   (let* ((command-list (-flatten (if (stringp command-list)
