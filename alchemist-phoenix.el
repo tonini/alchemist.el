@@ -27,11 +27,18 @@
 
 (require 'alchemist-key)
 (require 'alchemist-project)
+(require 'alchemist-report)
 
 (defgroup alchemist-phoenix nil
   "Minor mode for the Phoenix web framework."
   :prefix "alchemist-phoenix-"
   :group 'alchemist)
+
+(defvar alchemist-phoenix-server-buffer-name "*alchemist phoenix server*"
+  "Name of the phoenix server's output buffer")
+
+(defcustom alchemist-phoenix-server-cmdlist "mix phoenix.server"
+  "The command to use to run the phoenix server")
 
 ;;;###autoload
 (defun alchemist-phoenix-project-p ()
@@ -84,6 +91,18 @@
     (error "Could not find an Phoenix Mix project root."))
   (find-file (concat (alchemist-project-root) "web/router.ex")))
 
+(defun alchemist-phoenix-server ()
+  "Run the phoenix server"
+  (interactive)
+  (if (member alchemist-phoenix-server-buffer-name (mapcar 'buffer-name (buffer-list)))
+      (switch-to-buffer alchemist-phoenix-server-buffer-name)
+    (alchemist-report-run alchemist-phoenix-server-cmdlist
+                          "alchemist-phoenix-server"
+                          alchemist-phoenix-server-buffer-name
+                          'alchemist-phoenix-server-mode
+                          nil
+                          t)))
+
 (defvar alchemist-phoenix-command-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "n w") #'alchemist-phoenix-find-web)
@@ -93,6 +112,7 @@
     (define-key map (kbd "n t") #'alchemist-phoenix-find-templates)
     (define-key map (kbd "n m") #'alchemist-phoenix-find-models)
     (define-key map (kbd "n s") #'alchemist-phoenix-find-static)
+    (define-key map (kbd "n S") #'alchemist-phoenix-server)
     (define-key map (kbd "n r") #'alchemist-phoenix-router)
     (define-key map (kbd "n R") #'alchemist-phoenix-routes)
     map)
@@ -117,7 +137,8 @@
      ["Lookup 'web/models' " alchemist-phoenix-find-models]
      ["Lookup 'web/static'" alchemist-phoenix-find-static])
     ("Mix tasks"
-     ["Run 'phoenix.routes'" alchemist-phoenix-routes])
+     ["Run 'phoenix.routes'" alchemist-phoenix-routes]
+     ["Run 'phoenix.server'" alchemist-phoenix-server])
     ["Open the 'router.ex' file" alchemist-phoenix-router]))
 
 ;;;###autoload
@@ -130,6 +151,12 @@ The following commands are available:
   :lighter " alchemist-phoenix"
   :keymap alchemist-phoenix-mode-map
   :group 'alchemist)
+
+(define-derived-mode alchemist-phoenix-server-mode alchemist-phoenix-mode "Phoenix Server Mode"
+  "Major mode for the output of the Phoenix server."
+  (setq buffer-read-only t)
+  (setq-local truncate-lines t)
+  (setq-local electric-indent-chars nil))
 
 ;;;###autoload
 (defun alchemist-phoenix-enable-mode ()
