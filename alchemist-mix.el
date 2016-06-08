@@ -123,9 +123,11 @@ executed, gets called."
   (alchemist-mix--execute-test))
 
 (defun alchemist-mix-test-this-buffer ()
-  "Run the current buffer through mix test."
+  "Run the current buffer or a test for the current buffer through mix test."
   (interactive)
-  (alchemist-mix--test-file buffer-file-name))
+  (if (alchemist-utils-test-file-p)
+      (alchemist-mix--test-file buffer-file-name)
+      (alchemist-project-run-tests-for-current-file)))
 
 (defun alchemist-mix-test-file (filename)
   "Run `alchemist-mix--test-file' with the FILENAME."
