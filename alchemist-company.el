@@ -109,7 +109,7 @@
 (defun alchemist-company-serve-candidates-to-callback (candidates)
   (let* ((candidates (if candidates
                         candidates
-                      (alchemsit-complete--dabbrev-code-candidates)))
+                      (alchemist-complete--dabbrev-code-candidates)))
          (candidates (-distinct candidates)))
     (funcall alchemist-company-callback candidates)))
 
