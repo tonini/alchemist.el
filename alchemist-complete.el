@@ -125,7 +125,7 @@
             (replace-regexp-in-string "\\.$" "" initial)))
           (t initial))))
 
-(defun alchemsit-complete--dabbrev-code-candidates ()
+(defun alchemist-complete--dabbrev-code-candidates ()
   "This function uses a piece of functionality of company-dabbrev-code backend.
 
 Please have a look at the company-dabbrev-code function for more
