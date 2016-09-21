@@ -142,6 +142,11 @@
             (add-to-list (make-local-variable 'company-backends)
                          'alchemist-company)))
 
+(add-hook 'alchemist-iex-mode-hook
+          (lambda ()
+            (add-to-list (make-local-variable 'company-backends)
+                         'alchemist-company)))
+
 (provide 'alchemist-company)
 
 ;;; alchemist-company.el ends here
