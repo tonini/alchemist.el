@@ -9,7 +9,9 @@
   * [Goto] Module names start with A-Z and can contain digits
 
 ### Bug fixes
+
   * [Hex] Fix case when no info for a hex package is found
+  * [Completion] Make doc-buffer lookup also async with company-mode
   * [Completion] Fix issue with bad usage of 'company-prefix' variable
 
 ## v1.8.0 (2016-11-04)
@@ -83,7 +85,7 @@
 
   * [Help] Continue with help search although no candidates was found.
   * [Test] Correct rendering of stacktrace and failing tests files.
-    Just expand file with project root if the path file doesnt't resolve.
+	Just expand file with project root if the path file doesnt't resolve.
 
 ## v1.3.1 (2015-07-26)
 
@@ -107,12 +109,12 @@
   * [Mix] The establishing of the project root path before running Mix tasks, is now working properly.
   * [Test] The test report mode brings now several useful functions, toggle through failed test results or stacktrace files.
   * [Goto] Jump to to a function definition in a source file which is defined multiple times is now much more accessible.
-    A prompt with all the possible available functions gets now opened after jumping to source file.
+	A prompt with all the possible available functions gets now opened after jumping to source file.
 
 ### Changes
 
   * [Buffer] Replace the whole buffer package which used the compile.el library to handle command runs with
-     an own more lightweight solution. `alchemist-report`
+	 an own more lightweight solution. `alchemist-report`
   * [Mix] Declare most of the alchemist-mix interactive functions as obsolete. (because of `alchemist-mix` server feature)
 
 ## v1.2.0 (2015-07-06)
@@ -149,7 +151,7 @@
 ### Bugfixes
 
   * [Server] Remove legacy IEx.Autocomplete call, it's not working anymore because
-    IEx.Server is now added through application environemnt.
+	IEx.Server is now added through application environemnt.
   * [Complete] Fix doc and definition lookup through company candidate selection
   * [Goto] Fix issue that mark will be moved even without founded definition
 
@@ -189,7 +191,7 @@
   * [Completion] Functions in the context of the current module will be completed.
   * [Goto] Handle Erlang syntax specific aliases
   * [Completion] Use the company-mode specific functions for doc and location lookup
-    The functionality to open the doc and jumpt to location for the current selected completion candidate is now called through the proper company-mode functions.
+	The functionality to open the doc and jumpt to location for the current selected completion candidate is now called through the proper company-mode functions.
   * [Goto] Improvement of symbols for one line definitions.
 
 ### Changes
@@ -228,13 +230,13 @@
 
   * [Goto] Support jumping to `Kernel` and `Kernel.Specialforms` functions
   * [Project] `alchemist-project-open-tests-for-current-file` needs to be an interactive function
-    and `alchemist--project-open-tests-for-current-file` not (it's a private function)
+	and `alchemist--project-open-tests-for-current-file` not (it's a private function)
   * [Keybindings] Add customizable keybinding prefix (default: `C-c a`)
   * [Keybindings] Add keybinding for `alchemist-mix` (`C-c a x`)
   * [IEx] IEx prompt should not be deletable, set it read-only.
   * [Mix] Add keybinding for `alchemist-mix-compile`. (`C-c a m c`)
   * [Completion] Make documentation lookup and jump to defintion for selected completion
-    candidate more accessable with using the same keybindings as company-mode uses.
+	candidate more accessable with using the same keybindings as company-mode uses.
   * [Refcard] Update refcard with keybinding for `alchemist-mix` (`C-c a x`)
   * [Refcard] Update refcard with new keybindings for project test files functionality.
 
@@ -273,7 +275,7 @@
   * [Goto] Functionality to jump to Module and Function definition. Works for Elixir and Erlang source.
   * [Refcard] Update refcard with new keybindings.
   * [Project] Add functionality to bootstrap a new test file when try to jump to it and
-    it's not existsing.
+	it's not existsing.
   * [Help] Inform with message when no documentation is found for given search term.
 
 ## v0.12.0 (2015-01-08)
@@ -303,7 +305,7 @@
 ### Bugfixes
 
   * [Eval] Project root needs to be established before evaluate code in context
-    of the mix projects.
+	of the mix projects.
 
 ## v0.11.0
 
@@ -312,40 +314,40 @@
   * [Eval] Implementation of Eval functionality.
   * [Eval] Evaluate the Elixir code on the current line with `alchemist-eval-current-line`.
   * [Eval] Evaluate the Elixir code on the current line and
-    insert the result with `alchemist-eval-print-current-line`.
+	insert the result with `alchemist-eval-print-current-line`.
   * [Eval] Get the Elixir code representation of the expression on the current
-    line  with `alchemist-eval-quoted-current-line`.
+	line  with `alchemist-eval-quoted-current-line`.
   * [Eval] Get the Elixir code representation of the expression on the current line
-    and insert the result with `alchemist-eval-print-quoted-current-line`.
+	and insert the result with `alchemist-eval-print-quoted-current-line`.
   * [Eval] Evaluate the Elixir code on marked region with
-    `alchemist-eval-region`.
+	`alchemist-eval-region`.
   * [Eval] Evaluate the Elixir code on marked region and
-    insert the result with `alchemist-eval-print-region`.
+	insert the result with `alchemist-eval-print-region`.
   * [Eval] Get the Elixir code representation of the expression on marked region
-    with `alchemist-eval-quoted-region`.
+	with `alchemist-eval-quoted-region`.
   * [Eval] Get the Elixir code representation of the expression on marked region
-    and insert the result with `alchemist-eval-print-quoted-region`.
+	and insert the result with `alchemist-eval-print-quoted-region`.
   * [Eval] Evaluate the Elixir code in the current buffer with
-    `alchemist-eval-buffer`.
+	`alchemist-eval-buffer`.
   * [Eval] Evaluate the Elixir code in the current buffer and insert the result
-    with `alchemist-eval-print-buffer`.
+	with `alchemist-eval-print-buffer`.
   * [Eval] Get the Elixir code representation of the expression in the current
-    buffer with `alchemist-eval-quoted-buffer`.
+	buffer with `alchemist-eval-quoted-buffer`.
   * [Eval] Get the Elixir code representation of the expression in the current buffer
-    and insert result with `alchemist-eval-print-quoted-buffer`.
+	and insert result with `alchemist-eval-print-quoted-buffer`.
   * [IEx] compile the current buffer file within an IEx process. `alchemist-iex-compile-this-buffer`
 
 ### Changes
 
   * [Complete] `alchemist-complete-debug-mode` is `t` by default and failed
-    completions output will be displayed.
+	completions output will be displayed.
 
 ## v0.10.1
 
 ### Changes
 
   * [IEx] Remove default keymap, TAB is not needed because users have theyre own
-    setup for `company-complete`.
+	setup for `company-complete`.
 
 ### Bugfixes
 
@@ -359,28 +361,28 @@
    * [Alchemist] Add keybindings for Alchemist-IEx.
    * [IEx] Implemention of an Elixir IEx process buffer.
    * [Message] Implement Alchemist internal message API for things like debug
-     message etc.
+	 message etc.
    * [Complete] Add the function `alchemist-complete-debug-mode` for controlling
-     the display of the error output from completion.
+	 the display of the error output from completion.
 
 ## v0.9.0
 
 ### Enhancements
 
    * [Project] `alchemist-project-find-test` Open project test directory and
-     list all test files.
+	 list all test files.
    * [Project] `alchemist-project-open-tests-for-current-file` Opens the appropriate test file for the current buffer file in a new window.
    * [Project] Add keybindings for `alchemist-project-` specific interactive
-     functions.
+	 functions.
    * [Project] Refine the controlling of documentation lookup and completion
-     inside Elixir project codebase. The variable
-     `alchemist-project-compile-when-needed` brings a much better handeling.
+	 inside Elixir project codebase. The variable
+	 `alchemist-project-compile-when-needed` brings a much better handeling.
    * [Company] Documentation lookup for current company candidate selection with
-     `C-d`.
+	 `C-d`.
    * [Project] Configuration variable
-     `alchemist-project-compile-when-needed` is set to value
-     `nil` default. Many users didn't realize how completion for theyr own
-     Elixir project codebase works, when they start the first time using Alchemist.
+	 `alchemist-project-compile-when-needed` is set to value
+	 `nil` default. Many users didn't realize how completion for theyr own
+	 Elixir project codebase works, when they start the first time using Alchemist.
    * Update Refcard with project keybindings.
 
 ## v0.8.0
@@ -388,9 +390,9 @@
 ### Enhancements
 
    * Toggle between completion and documention lookup for current codebase with
-     `alchemist-project-toggle-complete-and-docs`.
+	 `alchemist-project-toggle-complete-and-docs`.
    * Introduce `.alchemist` file for project specific configuration
-     (`docs-ansi-color-enabled`, `complete-and-docs-enabled`).
+	 (`docs-ansi-color-enabled`, `complete-and-docs-enabled`).
    * Big refining of `alchemist-help` and `alchemist-complete`.
    * Better handling of non-complete output in the subprocesses.
    * Improve README file.
@@ -415,7 +417,7 @@
    * Separate alchemist-complete functionality.
    * Optimize the building of the complete list.
    * Replace `shell-command-to-string` with background processes to improve.
-     performance and remove emacs workflow distruption.
+	 performance and remove emacs workflow distruption.
    * Add project directory check to save-hook (thx @pragdave)
    * Remove dispensable informations in compilation buffers
 
@@ -424,24 +426,24 @@
 ### Enhancements
 
    * Introduce autocomplete feature for
-     searching. `alchemist-help-search-at-point` and
-     `alchemist-help-search-marked-region` use the autocomplete functionality.
+	 searching. `alchemist-help-search-at-point` and
+	 `alchemist-help-search-marked-region` use the autocomplete functionality.
    * Introduce `alchemist-help-history` for toggle through search
-     history. `alchemist-help` has no history completing anymore.
+	 history. `alchemist-help` has no history completing anymore.
    * Remove the `Code.eval_sting/1` call inside the
-     `alchemist-help--eval-string-command` function
+	 `alchemist-help--eval-string-command` function
    * Improve the readability of the alchemist buffer through removing
-     dispensable output
+	 dispensable output
 
 ## v0.5.0
 
 ### Enhancements
 
    * Make `alchemist-help-search-marked-region` also useful via short key inside
-     the `*elixir help*` buffer.
+	 the `*elixir help*` buffer.
    * Build status from `mix`, `compile` or `execute` will now shown they're
-     status inside the `mode-name` of the `elixir-mode` instead in the
-     `global-mode-line`. (thanks @pragdave)
+	 status inside the `mode-name` of the `elixir-mode` instead in the
+	 `global-mode-line`. (thanks @pragdave)
    * Add a alchemist keymap refcard
    * Add a [default-keymap](https://github.com/tonini/alchemist.el/pull/2/files?diff=unified#diff-0)
 
@@ -460,29 +462,29 @@
 ### Enhancements
 
   * Documentation for dependencies under the `deps` directory is now be
-    included in the documentation search.
+	included in the documentation search.
   * Inform about no documentation for the current search in minibuffer.
-    It's not handy if workflow is cut apart when there is no
-    documentation for a given search term.
+	It's not handy if workflow is cut apart when there is no
+	documentation for a given search term.
   * Improve loading time for documention by means of removing the temporary
-    file for evaluation.
+	file for evaluation.
   * Simplify the search function for searching for the current `expression` under
-    cursor position. `alchemist-help-search-at-point`
+	cursor position. `alchemist-help-search-at-point`
   * Add a project logo
 
 ### Deprecated
 
   * Mark `alchemist-help-sexp-at-point` and
-    `alchemist-help-module-sexp-at-point` as deprecated. The new function
-    `alchemist-help-search-at-point` will adapt the functionality of both.
+	`alchemist-help-module-sexp-at-point` as deprecated. The new function
+	`alchemist-help-search-at-point` will adapt the functionality of both.
 
 ### Bug fixes
 
   * "No documentation found.." will be displayed in the minibuffer
-    when `TokenMissingError`, `SyntaxError` or `FunctionClauseError` apears in
-    the search output.
+	when `TokenMissingError`, `SyntaxError` or `FunctionClauseError` apears in
+	the search output.
   * Search term used to fail when dots and commas where at the end or beginning
-    of it. `__CALLER__.` / `List.to_integer/1,`
+	of it. `__CALLER__.` / `List.to_integer/1,`
 
 ## v0.3.0
 
