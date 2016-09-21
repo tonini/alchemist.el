@@ -137,7 +137,10 @@
     (annotation (when alchemist-company-show-annotation
                   (alchemist-company--annotation arg)))))
 
-(add-to-list 'company-backends 'alchemist-company)
+(add-hook 'alchemist-mode-hook
+          (lambda ()
+            (add-to-list (make-local-variable 'company-backends)
+                         'alchemist-company)))
 
 (provide 'alchemist-company)
 
