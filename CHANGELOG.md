@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.8.1 (2016-21-10)
+
+### Enhancements
+  * [Hex] Display all hex package dependencies of current mix project
+  * [IEx] Use path to '_build/dev' as default directory for BEAM files
+  * [IEx] Fix retrieving server process name
+  * [Goto] Module names start with A-Z and can contain digits
+
+### Bug fixes
+  * [Hex] Fix case when no info for a hex package is found
+  * [Completion] Fix issue with bad usage of 'company-prefix' variable
+
 ## v1.8.0 (2016-11-04)
 
 ### Enhancements
