@@ -1,8 +1,15 @@
 # Changelog
 
+## v1.9.0-cvs (master)
+
+### Bug fixes
+
+  * [Completion] Add alchemist-company backend correctly.
+
 ## v1.8.1 (2016-21-10)
 
 ### Enhancements
+
   * [Hex] Display all hex package dependencies of current mix project
   * [IEx] Use path to '_build/dev' as default directory for BEAM files
   * [IEx] Fix retrieving server process name
@@ -17,10 +24,12 @@
 ## v1.8.0 (2016-11-04)
 
 ### Enhancements
+
   * [Hex] Add Hex package interface for fetching specific package informations.
   * [Refcard] Update dynamic generated refcard with phoenix-mode
 
 ### Bug fixes
+
   * [Completion] The char 'colon' is a none valid expression for completion.
   * [System] The `mode-name` should not be updated if it's not a string.
   * [Server] Just start one Alchemist-Server process when inside the Elixir codebase.
