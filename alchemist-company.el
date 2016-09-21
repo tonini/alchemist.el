@@ -46,13 +46,9 @@
   :group 'alchemist-company)
 
 (defvar alchemist-company-callback nil)
+(defvar alchemist-company-doc-callback nil)
 (defvar alchemist-company-filter-output nil)
 (defvar alchemist-company-last-completion nil)
-(defvar alchemist-company-doc-lookup-done nil)
-
-(defun alchemist-company--wait-for-doc-buffer ()
-  (while (not alchemist-company-doc-lookup-done)
-    (sit-for 0.01)))
 
 (defun alchemist-company-show-documentation (candidate)
   (interactive)
@@ -61,10 +57,7 @@
                         (format "%s%s" candidate annotation)
                       candidate))
          (candidate (alchemist-help--prepare-search-expr candidate)))
-    (setq alchemist-company-doc-lookup-done nil)
-    (alchemist-server-help (alchemist-help--server-arguments candidate) #'alchemist-company-doc-buffer-filter)
-    (alchemist-company--wait-for-doc-buffer)
-    (get-buffer alchemist-help-buffer-name)))
+    (alchemist-server-help (alchemist-help--server-arguments candidate) #'alchemist-company-doc-buffer-filter)))
 
 (defun alchemist-company-open-definition (candidate)
   (interactive)
@@ -104,7 +97,7 @@
           (insert string)
           (ansi-color-apply-on-region (point-min) (point-max))
           (alchemist-help-minor-mode 1))
-        (setq alchemist-company-doc-lookup-done t))))
+	(funcall alchemist-company-doc-callback (get-buffer alchemist-help-buffer-name)))))
 
 (defun alchemist-company-serve-candidates-to-callback (candidates)
   (let* ((candidates (if candidates
@@ -130,7 +123,10 @@
     (prefix (and (or (eq major-mode 'elixir-mode)
                      (string= mode-name "Alchemist-IEx"))
                  (alchemist-company-get-prefix)))
-    (doc-buffer (alchemist-company-show-documentation arg))
+    (doc-buffer (cons :async
+		      (lambda (cb)
+			(setq alchemist-company-doc-callback cb)
+			(alchemist-company-show-documentation arg))))
     (location (alchemist-company-open-definition arg))
     (candidates (cons :async
                       (lambda (cb)
