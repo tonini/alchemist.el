@@ -1,8 +1,5 @@
-Code.require_file "api/comp.exs", __DIR__
-Code.require_file "api/docl.exs", __DIR__
-Code.require_file "api/defl.exs", __DIR__
-Code.require_file "api/eval.exs", __DIR__
-Code.require_file "api/info.exs", __DIR__
+Code.require_file "server/io.exs", __DIR__
+Code.require_file "server/socket.exs", __DIR__
 
 defmodule Alchemist.Server do
 
@@ -20,74 +17,18 @@ defmodule Alchemist.Server do
     * Listing of all available Modules with documentation.
   """
 
-  alias Alchemist.API
+  alias Alchemist.Server.IO, as: ServerIO
+  alias Alchemist.Server.Socket, as: ServerSocket
 
-  def start([env]) do
-    loop(all_loaded(), env)
-  end
-
-  def loop(loaded, env) do
-    line  = IO.gets("") |> String.rstrip()
-    paths = load_paths(env)
-    apps  = load_apps(env)
-
-    read_input(line)
-
-    purge_modules(loaded)
-    purge_paths(paths)
-    purge_apps(apps)
-
-    loop(loaded, env)
-  end
-
-  def read_input(line) do
-    case line |> String.split(" ", parts: 2) do
-      ["COMP", args] ->
-        API.Comp.request(args)
-      ["DOCL", args] ->
-        API.Docl.request(args)
-      ["INFO", args] ->
-        API.Info.request(args)
-      ["EVAL", args] ->
-        API.Eval.request(args)
-      ["DEFL", args] ->
-        API.Defl.request(args)
-      _ ->
-        nil
+  def start([args]) do
+    {opts, _, _} = OptionParser.parse(args)
+    env = Keyword.get(opts, :env, "dev")
+    noansi = Keyword.get(opts, :no_ansi, false)
+    Application.put_env(:iex, :colors, [enabled: !noansi])
+    case Keyword.get(opts, :listen, false) do
+      false -> ServerIO.start([env: env])
+      true -> ServerSocket.start([env: env])
     end
-  end
-
-  defp all_loaded() do
-    for {m,_} <- :code.all_loaded, do: m
-  end
-
-  defp load_paths(env) do
-    for path <- Path.wildcard("_build/#{env}/lib/*/ebin") do
-      Code.prepend_path(path)
-      path
-    end
-  end
-
-  defp load_apps(env) do
-    for path <- Path.wildcard("_build/#{env}/lib/*/ebin/*.app") do
-      app = path |> Path.basename() |> Path.rootname() |> String.to_atom
-      Application.load(app)
-      app
-    end
-  end
-
-  defp purge_modules(loaded) do
-    for m <- (all_loaded() -- loaded) do
-      :code.delete(m)
-      :code.purge(m)
-    end
-  end
-
-  defp purge_paths(paths) do
-    for p <- paths, do: Code.delete_path(p)
-  end
-
-  defp purge_apps(apps) do
-    for a <- apps, do: Application.unload(a)
+    :timer.sleep :infinity
   end
 end

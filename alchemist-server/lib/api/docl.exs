@@ -1,4 +1,6 @@
 Code.require_file "../helpers/module_info.exs", __DIR__
+Code.require_file "../helpers/capture_io.exs", __DIR__
+Code.require_file "../helpers/response.exs", __DIR__
 
 defmodule Alchemist.API.Docl do
 
@@ -7,15 +9,14 @@ defmodule Alchemist.API.Docl do
   import IEx.Helpers, warn: false
 
   alias Alchemist.Helpers.ModuleInfo
+  alias Alchemist.Helpers.CaptureIO
+  alias Alchemist.Helpers.Response
 
   def request(args) do
-    Application.put_env(:iex, :colors, [enabled: true])
-
     args
     |> normalize
     |> process
-
-    IO.puts "END-OF-DOCL"
+    |> Response.endmark("DOCL")
   end
 
   def process([expr, modules, aliases]) do
@@ -25,7 +26,10 @@ defmodule Alchemist.API.Docl do
   def search(nil), do: true
   def search(expr) do
     try do
-      Code.eval_string("h(#{expr})", [], __ENV__)
+      help = CaptureIO.capture_io(fn ->
+        Code.eval_string("h(#{expr})", [], __ENV__)
+      end)
+      help
     rescue
       _e -> nil
     end

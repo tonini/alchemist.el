@@ -1,19 +1,28 @@
 Code.require_file "../helpers/module_info.exs", __DIR__
+Code.require_file "../helpers/response.exs", __DIR__
 
 defmodule Alchemist.API.Defl do
 
   @moduledoc false
 
   alias Alchemist.Helpers.ModuleInfo
+  alias Alchemist.Helpers.Response
 
   def request(args) do
     args
     |> normalize
     |> process
-    |> IO.puts
-
-    IO.puts "END-OF-DEFL"
+    |> endmark("DEFL")
   end
+
+  defp endmark(nil , cmd) do
+    "\n" <> Response.endmark(nil, cmd)
+  end
+
+  defp endmark(response , cmd) do
+    Response.endmark(response, cmd)
+  end
+
 
   def process([nil, function, [context: _, imports: [], aliases: _]]) do
     look_for_kernel_functions(function)

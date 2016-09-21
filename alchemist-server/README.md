@@ -17,15 +17,15 @@ Elixir Mix project and serves with informations as the following:
 
 # Usage
 
-The server needs to be started inside an Elixir mix project like below:
+The server needs to be started inside an Elixir mix project, it can be started in two ways:
 
+## Read/Write through `STDIN/STDOUT`
 ```
 $ cd elixir_project
-$ elixir path/to/alchemist-server/run.exs dev
+$ elixir path/to/alchemist-server/run.exs --env=dev
 ```
-
-The Alchemist-Server API is `STDIN/STDOUT` based, when input sent to a
-running server process it responds by sending information back to the `STDOUT`.
+In this mode, when input sent to a running server process it
+responds by sending information back to the `STDOUT`.
 
 A request consisting of two parts, the request type and the request arguments.
 
@@ -34,6 +34,22 @@ Example for a completion request:
 ```
 [type]   [arguments]
 
+COMP { "def", [ context: Elixir, imports: [Enum], aliases: [{MyList, List}] ] }
+```
+
+## Read/Write through network socket
+```
+$ cd elixir_project
+$ elixir path/to/alchemist-server/run.exs --env=dev --listen
+ok|localhost:55580
+```
+In this mode, when a client connects to the port, it
+responds by sending information back to the opened connection
+
+Example for a completion request:
+
+```
+$ nc localhost 55580
 COMP { "def", [ context: Elixir, imports: [Enum], aliases: [{MyList, List}] ] }
 ```
 
@@ -135,6 +151,14 @@ Return types for a module or function/arity pair.
 INFO { :type, :types, 'List' }
 INFO { :type, :types, 'Enum.t' }
 INFO { :type, :types, 'Agent.on_start/0' }
+```
+
+## Debugging
+
+Return PONG as response, it can be used for purpose of debugging and checking server's availability.
+
+```
+PING
 ```
 
 ## End Markers

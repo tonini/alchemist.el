@@ -4,14 +4,11 @@ Code.require_file "../../lib/api/comp.exs", __DIR__
 defmodule Alchemist.API.CompTest do
 
   use ExUnit.Case, async: true
-  import ExUnit.CaptureIO
 
   alias Alchemist.API.Comp
 
   test "COMP request with empty hint" do
-    assert capture_io(fn ->
-      Comp.process([nil, Elixir, [], [] ])
-    end) =~ """
+    assert Comp.process([nil, Elixir, [], [] ]) =~ """
     import/2
     quote/2
     require/2
@@ -20,9 +17,7 @@ defmodule Alchemist.API.CompTest do
   end
 
   test "COMP request without empty hint" do
-    assert capture_io(fn ->
-      Comp.process(['is_b', Elixir, [], []])
-    end) =~ """
+    assert Comp.process(['is_b', Elixir, [], []]) =~ """
     is_b
     is_binary/1
     is_bitstring/1
@@ -32,9 +27,7 @@ defmodule Alchemist.API.CompTest do
   end
 
   test "COMP request with an alias" do
-    assert capture_io(fn ->
-      Comp.process(['MyList.flat', Elixir, [], [{MyList, List}]])
-    end) =~ """
+    assert Comp.process(['MyList.flat', Elixir, [], [{MyList, List}]]) =~ """
     MyList.flatten
     flatten/1
     flatten/2
@@ -43,15 +36,17 @@ defmodule Alchemist.API.CompTest do
   end
 
   test "COMP request with a module hint" do
-    assert capture_io(fn ->
-      Comp.process(['Str', Elixir, [], []])
-    end) =~ """
+    assert Comp.process(['Str', Elixir, [], []]) =~ """
     Str
     Stream
     String
     StringIO
     END-OF-COMP
     """
+  end
+
+  test "COMP request with no match" do
+    assert Comp.process(['Fooo', Elixir, [], []]) == "END-OF-COMP\n"
   end
 
 end
