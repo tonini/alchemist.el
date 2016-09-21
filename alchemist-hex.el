@@ -65,6 +65,7 @@
          (url (concat alchemist-hex-api-url "?search=" pkg-name))
          (string
           (with-current-buffer (url-retrieve-synchronously url t)
+            (goto-char (point-min))
             (search-forward "\n\n")
             (delete-region (point-min) (point))
             (buffer-string))))
