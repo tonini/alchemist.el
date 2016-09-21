@@ -143,7 +143,6 @@
 
 (add-hook 'alchemist-mode-hook
           (lambda ()
-            (company-mode)
             (add-to-list (make-local-variable 'company-backends)
                          'alchemist-company)))
 
