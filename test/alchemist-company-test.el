@@ -46,11 +46,11 @@
   (should (-same-items? (write-and-complete-in-buffer "List.del")
                         '("List.delete" "List.delete_at")))
   (should (-same-items? (write-and-complete-in-buffer "Str")
-                        '("Str" "Stream" "String" "StringIO")))
+                        '("Stream" "String" "StringIO")))
   (should (-same-items? (write-and-complete-in-buffer "En")
                         '("Enum" "Enumerable")))
   (should (-same-items? (write-and-complete-in-buffer "defm")
-                        '("defm" "defmacro" "defmacrop" "defmodule")))
+                        '("defmacro" "defmacrop" "defmodule")))
   (should (-same-items? (write-and-complete-in-buffer "
 defmodule Foo do
   def say_hi, do: true

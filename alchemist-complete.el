@@ -52,13 +52,15 @@
 
 (defun alchemist-complete--build-candidates (a-list)
   (let* ((search-term (car a-list))
-         (candidates a-list)
-         (candidates (-map (lambda (f)
+	 (candidates (if (string-match-p "^.+/" (car a-list))
+			 a-list
+		       (cdr a-list)))
+	 (candidates (-map (lambda (f)
                                (let* ((candidate f)
                                       (meta (if (string-match-p "^.+/" f)
                                                 (replace-regexp-in-string "^.+/" "/" f)
                                               "")))
-                                 (cond
+				 (cond
                                   ((and (string-match-p "^:" search-term)
                                         (not (string-match-p "\\." search-term)))
                                    (unless (string= search-term candidate)
@@ -68,7 +70,9 @@
                                    (unless (string= search-term candidate)
                                      (propertize (alchemist-complete--add-prefix-to-function (concat (alchemist-scope-extract-module search-term) ".")
                                                                                              (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta)))
-                                  (t (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta)))))
+                                  ((string-match-p "/[0-9]$" candidate)
+				   (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta))
+				  (t (propertize candidate 'meta meta)))))
                              candidates))
          (candidates (-remove 'null candidates)))
     (cond
@@ -93,8 +97,7 @@
                             (alchemist-complete--concat-prefix-with-functions search-term a-list t))
                            ((string-match-p "\\.[a-z0-9_\?!]+$" search-term)
                             (alchemist-complete--concat-prefix-with-functions search-term a-list))
-                           (t
-                            a-list))))
+                           (t a-list))))
     (-distinct candidates)))
 
 (defun alchemist-complete--output-to-list (output)
