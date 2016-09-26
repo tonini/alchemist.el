@@ -45,6 +45,15 @@ defmodule Alchemist.API.CompTest do
     """
   end
 
+  test "return redundant candidates with COMP" do
+    assert Comp.process(['Enu', Elixir, [], []]) =~ """
+    Enum
+    Enum
+    Enumerable
+    END-OF-COMP
+    """
+  end
+
   test "COMP request with no match" do
     assert Comp.process(['Fooo', Elixir, [], []]) == "END-OF-COMP\n"
   end

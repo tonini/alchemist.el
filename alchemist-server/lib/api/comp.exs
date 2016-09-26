@@ -35,7 +35,6 @@ defmodule Alchemist.API.Comp do
 
   defp response(result) do
     result
-    |> Enum.uniq
     |> Enum.join("\n")
     |> Response.endmark("COMP")
   end
