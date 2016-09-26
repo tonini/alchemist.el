@@ -77,7 +77,7 @@
 ;; Private functions
 
 (defun alchemist-goto--build-elixir-ex-core-file (file)
-  (when (string-match "\\/\\(lib\\/.+\\/lib\\)\\/.+\.ex$" file)
+  (when (string-match "\\/\\(lib\\/.+\\)\\/.+\.ex$" file)
     (let* ((file (substring-no-properties file (match-beginning 1)))
            (source-directory (alchemist-utils-add-trailing-slash
                               (expand-file-name alchemist-goto-elixir-source-dir))))
@@ -127,7 +127,7 @@
       (let* ((position (cdr (assoc symbol alchemist-goto--symbol-name-and-pos-bare)))
              (position (if (overlayp position) (overlay-start position) position)))
         (when (not (equal (line-number-at-pos)
-                     (line-number-at-pos position)))
+			  (line-number-at-pos position)))
           (goto-char position))))))
 
 (defun alchemist-goto-list-symbol-definitions ()
@@ -226,13 +226,13 @@ It will jump to the position of the symbol definition after selection."
       (alchemist-goto--goto-symbol function))
      (t
       (setq alchemist-goto-callback (lambda (file)
-                                      (cond ((alchemist-utils-empty-string-p file)
+				      (cond ((alchemist-utils-empty-string-p file)
                                              (message "Don't know how to find: %s" expr))
                                             ((file-exists-p file)
-                                             (alchemist-goto--open-file file module function))
+					     (alchemist-goto--open-file file module function))
                                             ((alchemist-goto-elixir-file-p file)
-                                             (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
-                                               (if (file-exists-p elixir-source-file)
+					     (let* ((elixir-source-file (alchemist-goto--build-elixir-ex-core-file file)))
+					       (if (and elixir-source-file (file-exists-p elixir-source-file))
                                                    (alchemist-goto--open-file elixir-source-file module function)
                                                  (message "Don't know how to find: %s" expr))))
                                             ((alchemist-goto-erlang-file-p file)
@@ -277,11 +277,11 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto-filter (_process output)
   (with-local-quit
     (setq alchemist-goto-filter-output (cons output alchemist-goto-filter-output))
-    (if (alchemist-server-contains-end-marker-p output)
-        (let* ((output (alchemist-server-prepare-filter-output alchemist-goto-filter-output))
-               (file output))
-          (setq alchemist-goto-filter-output nil)
-          (funcall alchemist-goto-callback file)))))
+    (when (alchemist-server-contains-end-marker-p output)
+      (let* ((output (alchemist-server-prepare-filter-output alchemist-goto-filter-output))
+	     (file output))
+	(setq alchemist-goto-filter-output nil)
+	(funcall alchemist-goto-callback file)))))
 
 ;; Public functions
 

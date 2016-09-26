@@ -134,7 +134,8 @@ Elixir mix project is live."
 
 (defun alchemist-server-contains-end-marker-p (string)
   "Return non-nil if STRING contain an Alchemist server API end marker."
-  (string-match-p alchemist-server-code-end-marker-regex string))
+  (when string
+    (string-match-p alchemist-server-code-end-marker-regex string)))
 
 (defun alchemist-server-build-request-string (code &optional args)
   "Build Alchemist server request string for CODE.

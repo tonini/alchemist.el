@@ -101,6 +101,17 @@ defmodule Phoenix.Router do
 
 end")
                    (alchemist-scope-aliases))))
+  (should (equal (list '("String.Break" "Break")
+                       '("String.Casing" "Casing"))
+                 (with-temp-buffer
+                   (alchemist-mode)
+                   (insert "
+defmodule Test do
+
+  alias String.{Break, Casing}
+
+end")
+                   (alchemist-scope-aliases))))
   (should (equal (list '("Phoenix.Router.Resource" "Resource")
                        '("Phoenix.Router.Scope" "Scope"))
                  (with-temp-buffer

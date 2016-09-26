@@ -53,6 +53,12 @@
             (alchemist-server-start-if-not-running)
             (alchemist-server-process-p))))
 
+(ert-deftest return-t-if-contain-end-marker ()
+  (should-not (alchemist-server-contains-end-marker-p ""))
+  (should (alchemist-server-contains-end-marker-p "END-OF-DEFL"))
+  (should-not (alchemist-server-contains-end-marker-p "\n"))
+  (should-not (alchemist-server-contains-end-marker-p nil)))
+
 (provide 'alchemist-server-test)
 
 ;;; alchemist-server-test.el ends here
