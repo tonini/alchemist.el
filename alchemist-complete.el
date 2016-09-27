@@ -51,12 +51,13 @@
     candidate))
 
 (defun alchemist-complete--build-candidates (a-list)
-  (let* ((search-term (car a-list))
+  (let* ((case-fold-search nil)
+	 (search-term (car a-list))
 	 (candidates (if (string-match-p "^.+/" (car a-list))
 			 a-list
 		       (cdr a-list)))
 	 (candidates (-map (lambda (f)
-                               (let* ((candidate f)
+			     (let* ((candidate f)
                                       (meta (if (string-match-p "^.+/" f)
                                                 (replace-regexp-in-string "^.+/" "/" f)
                                               "")))
@@ -72,7 +73,8 @@
                                                                                              (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta)))
                                   ((string-match-p "/[0-9]$" candidate)
 				   (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta))
-				  (t (propertize candidate 'meta meta)))))
+				  ((string-match-p "^[A-Z0-9]" candidate)
+				   (propertize candidate 'meta meta)))))
                              candidates))
          (candidates (-remove 'null candidates)))
     (cond
