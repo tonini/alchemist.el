@@ -47,9 +47,9 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a c c</kbd>|Compile the current buffer with the `elixirc` command. `alchemist-compile-this-buffer`|
+|<kbd>C-c a c b</kbd>|Compile the current buffer with the `elixirc` command. `alchemist-compile-this-buffer`|
 |<kbd>C-c a c f</kbd>|Compile the given `FILENAME` with the `elixirc` command. `alchemist-compile-file`|
-|<kbd>C-c a c b</kbd>|Run a custom compile command with `elixirc`. `alchemist-compile`|
+|<kbd>C-c a c c</kbd>|Run a custom compile command with `elixirc`. `alchemist-compile`|
 
 ### Execute functions
 
