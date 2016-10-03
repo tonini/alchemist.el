@@ -62,7 +62,7 @@ iex(1)>
 (defvar alchemist-iex-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
     (define-key map "\t" 'company-complete)
-    (define-key map "TAB" 'company-complete)
+    (define-key map (kbd "TAB") 'company-complete)
     (define-key map (kbd (format "%s i r" alchemist-key-command-prefix)) 'alchemist-iex-open-input-ring)
     (define-key map (kbd (format "%s i c" alchemist-key-command-prefix)) 'alchemist-iex-clear-buffer)
     (define-key map (kbd (format "%s h e" alchemist-key-command-prefix)) 'alchemist-help-search-at-point)
