@@ -151,6 +151,12 @@ and jump to the buffer."
 	 (str (format "c(\"%s\", \"%s\")" (buffer-file-name) path)))
     (alchemist-iex--send-command (alchemist-iex-process) str)))
 
+(defun alchemist-iex-compile-this-buffer-and-go ()
+  "Compiles the current buffer in the IEx process and jump to the buffer."
+  (interactive)
+  (alchemist-iex-compile-this-buffer)
+  (pop-to-buffer (process-buffer (alchemist-iex-process))))
+
 (defun alchemist-iex-reload-module ()
   "Recompiles and reloads the current module in the IEx process."
   (interactive)
