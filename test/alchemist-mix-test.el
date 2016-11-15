@@ -47,6 +47,15 @@
   (delay 1.2 (lambda ()
                (should (alchemist-test--last-run-successful-p)))))
 
+(ert-deftest test-mix/run-mix-test-stale ()
+  (prepare-test-report-buffer)
+  (cd "test/dummy_elixir/test/")
+  (shut-up
+   (alchemist-mix-test-stale))
+  (should (equal "--stale" alchemist-last-run-test))
+  (delay 1.2 (lambda ()
+               (should (alchemist-test--last-run-successful-p)))))
+
 (provide 'alchemist-mix-test)
 
 ;;; alchemist-goto-test.el ends here
