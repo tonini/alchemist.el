@@ -122,6 +122,11 @@ executed, gets called."
   (interactive)
   (alchemist-mix--execute-test))
 
+(defun alchemist-mix-test-stale ()
+  "Run stale tests (Elixir 1.3+ only)."
+  (interactive)
+  (alchemist-mix--execute-test "--stale"))
+
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
   (interactive)
