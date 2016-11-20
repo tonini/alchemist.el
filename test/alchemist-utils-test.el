@@ -130,6 +130,13 @@ foo
   (should (string-match-p "^[0-9]+\.[0-9]+\.[0-9]+.*$"
                           (alchemist-utils-elixir-version))))
 
+(ert-deftest test-utils/elixir-version-check-p ()
+  (should (alchemist-utils-elixir-version-check-p 1 3 0 "1.3.0"))
+  (should-not (alchemist-utils-elixir-version-check-p 1 3 1 "1.3.0"))
+  (should-not (alchemist-utils-elixir-version-check-p 1 3 0 "1.2.9"))
+  (should-not (alchemist-utils-elixir-version-check-p 2 0 0 "1.3.0"))
+  (should (alchemist-utils-elixir-version-check-p 1 3 0 "2.0.0")))
+
 (provide 'alchemist-utils-tests)
 
 ;;; alchemist-utils-tests.el ends here
