@@ -54,7 +54,10 @@
   (cd "test/dummy_elixir/test/")
   (shut-up
    (alchemist-mix-test-stale))
-  (should (equal "--stale" alchemist-last-run-test))
+  ;; CI runs multiple elixir versions so check correct version here
+  (if (alchemist-utils-elixir-version-check-p 1 3 0)
+      (should (equal "--stale" alchemist-last-run-test))
+    (should (equal "" alchemist-last-run-test)))
   (delay 1.2 (lambda ()
                (should (alchemist-report--last-run-successful-p))))
   (wait 1.3))
