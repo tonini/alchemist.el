@@ -39,6 +39,7 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>C-c a m t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
 |<kbd>C-c a m t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
 |<kbd>C-c a m t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
+|<kbd>C-c a m t s</kbd>|Run only stale tests (Elixir 1.3+). `alchemist-mix-test-stale` |
 |<kbd>C-c M-r</kbd>|Toggle between displaying or hidding the test report buffer. `alchemist-test-toggle-test-report-display`|
 
 ## Compile And Execute

@@ -91,6 +91,7 @@
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-test-file")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-test-this-buffer")
                     (alchemist-refcard--build-tabulated-row "alchemist-mix-test-at-point")
+                    (alchemist-refcard--build-tabulated-row "alchemist-mix-test-stale")
                     (alchemist-refcard--build-tabulated-row "alchemist-test-toggle-test-report-display")
                     (alchemist-refcard--build-empty-tabulated-row)
                     (alchemist-refcard--build-tabulated-title-row "Compilation")
