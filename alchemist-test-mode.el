@@ -47,6 +47,12 @@ in the test report buffer."
   :type 'boolean
   :group 'alchemist-test-mode)
 
+(defcustom alchemist-test-truncate-lines t
+  "The value of this variable is used to set the value of
+truncate-lines in the test report window."
+  :type 'boolean
+  :group 'alchemist-test-mode)
+
 (defcustom alchemist-test-status-modeline t
   "if Non-nil, the face of local `mode-name' variable will change with test run status.
 
