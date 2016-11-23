@@ -98,6 +98,12 @@ through the variable.
 (setq alchemist-test-display-compilation-output t)
 ```
 
+* Toggle truncating lines in test report.
+
+```el
+(setq alchemist-test-truncate-lines nil) ;; default t
+```
+
 ### Hooks
 
 * Run the whole test suite with `alchemist-mix-test` after saving a buffer.
