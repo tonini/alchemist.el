@@ -122,6 +122,14 @@ executed, gets called."
   (interactive)
   (alchemist-mix--execute-test))
 
+(defun alchemist-mix-test-stale ()
+  "Run stale tests (Elixir 1.3+ only)."
+  (interactive)
+  (if (alchemist-utils-elixir-version-check-p 1 3 0)
+      (alchemist-mix--execute-test "--stale")
+    (progn (message "Elixir needs to be >= 1.3.0 for mix test --stale")
+           (alchemist-mix-test))))
+
 (defun alchemist-mix-test-this-buffer ()
   "Run the current buffer through mix test."
   (interactive)

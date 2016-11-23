@@ -136,6 +136,7 @@ Key bindings:
   (define-key map (kbd "m t f") 'alchemist-mix-test-file)
   (define-key map (kbd "m t b") 'alchemist-mix-test-this-buffer)
   (define-key map (kbd "m t .") 'alchemist-mix-test-at-point)
+  (define-key map (kbd "m t s") 'alchemist-mix-test-stale)
 
   (define-key map (kbd "c c") 'alchemist-compile)
   (define-key map (kbd "c f") 'alchemist-compile-file)
@@ -253,6 +254,7 @@ Key bindings:
      ["Mix test this buffer" alchemist-mix-test-this-buffer]
      ["Mix test file..." alchemist-mix-test-file]
      ["Mix test at point" alchemist-mix-test-at-point]
+     ["Mix run stale tests (Elixir 1.3+)" alchemist-mix-test-stale]
      "---"
      ["Mix..." alchemist-mix]
      "---"

@@ -146,6 +146,19 @@ Call AFTER-FN after performing the search."
          (version (replace-regexp-in-string "Elixir " "" version)))
     version))
 
+(defun alchemist-utils-elixir-version-check-p (major minor tiny &optional version)
+  "Returns t if the current elixir version is greater than or equal to the supplied version"
+  (let* ((version-string (or version (alchemist-utils-elixir-version)))
+         (version-list (split-string version-string "\\."))
+         (current-major (string-to-number (car version-list)))
+         (current-minor (string-to-number (car (cdr version-list))))
+         (current-tiny (string-to-number (car (cdr (cdr version-list))))))
+    (if (> current-major major)
+        t
+      (if (and (= current-major major) (> current-minor minor))
+          t
+        (and (= current-minor minor) (>= current-tiny tiny))))))
+
 (provide 'alchemist-utils)
 
 ;;; alchemist-utils.el ends here
