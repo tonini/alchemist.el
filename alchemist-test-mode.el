@@ -76,9 +76,9 @@ Otherwise, it saves all modified buffers without asking."
   "Name of the test report process.")
 
 (defconst alchemist-test--failing-files-regex
-  "\\(  [0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
+  "\\( *[0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
 (defconst alchemist-test--stacktrace-files-regex
-  "\\(       \\)\\([-A-Za-z0-9./_]+:[0-9]+\\).*")
+  "\\( *\\)\\([-A-Za-z0-9./_]+:[0-9]+\\): (test)")
 
 ;; Faces
 
