@@ -110,7 +110,10 @@
                    (as (if (match-string 3) (match-string 3) nil))
                    (as (if as as (car (last (split-string alias "\\."))))))
               (setq aliases (append aliases (list (list (alchemist-utils-remove-dot-at-the-end alias)
-                                                        (alchemist-utils-remove-dot-at-the-end as))))))))
+                                                        (alchemist-utils-remove-dot-at-the-end as))))))))))
+    (save-excursion
+      (when (alchemist-scope-inside-module-p)
+        (end-of-line)
         ;; alias definition like:
         ;;
         ;;   alias List.Chars.{Atom, Float}
