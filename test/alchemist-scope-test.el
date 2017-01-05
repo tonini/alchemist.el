@@ -125,6 +125,8 @@ end")
                    (alchemist-scope-aliases))))
   (should (equal (list '("Phoenix.Router.Scope" "Scope")
                        '("Phoenix.Router.Resource" "Special")
+                       '("List.Chars.BitString" "BitString")
+                       '("List.Chars.Integer" "Integer")
                        '("List.Chars.Atom" "Atom")
                        '("List.Chars.Float" "Float"))
                  (with-temp-buffer
@@ -134,6 +136,7 @@ defmodule Phoenix.Router do
 
   alias List.Chars.{Atom, Float}
   alias Phoenix.Router.Resource, as: Special
+  alias List.Chars.{BitString, Integer}
   alias Phoenix.Router.Scope
 
 end")
