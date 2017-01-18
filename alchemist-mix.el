@@ -89,7 +89,7 @@ run all tests)."
   (if what
       (setq alchemist-last-run-test what)
     (setq alchemist-last-run-test ""))
-  (alchemist-test-execute (list "mix"
+  (alchemist-test-execute (list alchemist-mix-command
                                 alchemist-mix-test-task
                                 what
                                 alchemist-mix-test-default-options)))
