@@ -288,7 +288,11 @@ It will jump to the position of the symbol definition after selection."
 (defun alchemist-goto-definition-at-point ()
   "Jump to the elixir expression definition at point."
   (interactive)
-  (alchemist-goto--open-definition (alchemist-scope-expression)))
+  (alchemist-goto--open-definition
+   (let ((scope (alchemist-scope-expression)))
+     (if (string-equal "" scope)
+         (read-from-minibuffer "Find definition: ")
+       scope))))
 
 (defalias 'alchemist-goto-jump-back 'pop-tag-mark)
 
