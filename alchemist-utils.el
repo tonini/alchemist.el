@@ -55,8 +55,7 @@
 (defun alchemist-utils-empty-string-p (string)
   "Return non-nil if STRING is null, blank or whitespace only."
   (or (null string)
-      (string= string "")
-      (if (string-match-p "^\s+$" string) t)))
+      (string= string "")))
 
 (defun alchemist-utils-prepare-aliases-for-elixir (aliases)
   (let* ((aliases (-map (lambda (a)
