@@ -1,6 +1,22 @@
 # Changelog
 
-## v1.9.0-cvs (master)
+## v1.8.2 (2017-30-3)
+
+### Enhancements
+
+  * [Mix] Add support for mix test --stale
+  * [Mix] Allow customization of truncate-lines in test report mode
+  * [IEx] Add function to compile buffer in iex and go
+  * [Server] Update Alchemist-Server (Elixir 1.4.2)
+
+### Bug fixes
+
+  * [Mix] Fix `alchemist-test-{next,previous}-result` in test report
+  * [Goto] Fix issue about jumping to core elixir files
+  * [IEx] Add alchemist-backend through iex hook
+  * [Completion] Add alchemist-company backend correctly
+  * [Completion] Fixing weird behaviour of adding completion prefix
+  * [Completion] Fix literal TAB binding to company-complete
 
 ### Bug fixes
 
