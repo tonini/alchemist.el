@@ -1,7 +1,5 @@
 defmodule Alchemist.Helpers.CaptureIO do
 
-  @docmodule false
-
   def capture_io(fun) do
     do_capture_io(:standard_io, [], fun)
   end

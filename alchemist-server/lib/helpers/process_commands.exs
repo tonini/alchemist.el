@@ -4,6 +4,7 @@ Code.require_file "../api/defl.exs", __DIR__
 Code.require_file "../api/eval.exs", __DIR__
 Code.require_file "../api/info.exs", __DIR__
 Code.require_file "../api/ping.exs", __DIR__
+Code.require_file "../api/version.exs", __DIR__
 
 defmodule Alchemist.Helpers.ProcessCommands do
 
@@ -12,7 +13,7 @@ defmodule Alchemist.Helpers.ProcessCommands do
   alias Alchemist.API
 
   def process(line, env) do
-    loaded = all_loaded
+    loaded = all_loaded()
 
     paths = load_paths(env)
     apps  = load_apps(env)
@@ -38,6 +39,8 @@ defmodule Alchemist.Helpers.ProcessCommands do
         API.Defl.request(args)
       ["PING"] ->
         API.Ping.request()
+      ["VERSION"] ->
+        API.Version.request()
       _ ->
         nil
     end
