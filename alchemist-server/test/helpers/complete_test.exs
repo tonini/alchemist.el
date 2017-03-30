@@ -14,9 +14,9 @@ defmodule CompleteTest do
     assert run('List') == ['List.', 'Chars', 'first/1', 'last/1', 'to_atom/1',
                            'to_existing_atom/1', 'to_float/1', 'to_string/1', 'to_tuple/1',
                            'wrap/1', 'zip/1', 'delete/2', 'delete_at/2', 'duplicate/2',
-                           'keysort/2', 'flatten/1', 'flatten/2', 'to_integer/1',
+                           'keysort/2', 'myers_difference/2', 'flatten/1', 'flatten/2', 'to_integer/1',
                            'to_integer/2', 'foldl/3', 'foldr/3', 'insert_at/3', 'keydelete/3',
-                           'keymember?/3', 'keytake/3', 'replace_at/3', 'update_at/3',
+                           'keymember?/3', 'keytake/3', 'pop_at/3', 'replace_at/3', 'update_at/3',
                            'keyfind/4', 'keyreplace/4', 'keystore/4']
   end
 

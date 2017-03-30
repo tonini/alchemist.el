@@ -92,12 +92,12 @@ defmodule ServerTest do
   if Version.match?(System.version, ">=1.2.0-rc") do
     test "Get information from data type" do
       assert send_signal("INFO { :type, :info, List}") =~ """
-      Reference modules\e[0m\n\e[22m  Module, Atom\e[0m\nEND-OF-INFO
+      END-OF-INFO
       """
     end
 
     test "Don't crash server if data type argument is faulty" do
-      assert send_signal("INFO { :type, :info, whatever}") =~ """
+      assert send_signal("INFO { :type, :info, whatever()}") =~ """
       END-OF-INFO
       """
     end

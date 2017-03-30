@@ -30,20 +30,12 @@ defmodule Alchemist.API.DoclTest do
   test "DOCL request for List.flatten" do
     assert Docl.process(["List.flatten", [], []]) =~ """
     Flattens the given \e[36mlist\e[0m of nested lists.
-    \e[0m
-    \e[33mExamples\e[0m
-    \e[0m
-    \e[36m\e[1m┃ iex> List.flatten([1, [[2], 3]])
     """
   end
 
   test "DOCL request for MyCustomList.flatten with alias" do
     assert Docl.process(["MyCustomList.flatten", [], [{MyCustomList, List}]]) =~ """
     Flattens the given \e[36mlist\e[0m of nested lists.
-    \e[0m
-    \e[33mExamples\e[0m
-    \e[0m
-    \e[36m\e[1m┃ iex> List.flatten([1, [[2], 3]])
     """
   end
 

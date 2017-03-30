@@ -3,8 +3,6 @@ Code.require_file "server/socket.exs", __DIR__
 
 defmodule Alchemist.Server do
 
-  @version "0.1.0-beta"
-
   @moduledoc """
   The Alchemist-Server operates as an informant for a specific desired
   Elixir Mix project and serves with informations as the following:
@@ -21,13 +19,13 @@ defmodule Alchemist.Server do
   alias Alchemist.Server.Socket, as: ServerSocket
 
   def start([args]) do
-    {opts, _, _} = OptionParser.parse(args)
+    {opts, _, _} = OptionParser.parse(args, switches: [port: :integer])
     env = Keyword.get(opts, :env, "dev")
     noansi = Keyword.get(opts, :no_ansi, false)
     Application.put_env(:iex, :colors, [enabled: !noansi])
     case Keyword.get(opts, :listen, false) do
       false -> ServerIO.start([env: env])
-      true -> ServerSocket.start([env: env])
+      true -> ServerSocket.start(opts)
     end
     :timer.sleep :infinity
   end
