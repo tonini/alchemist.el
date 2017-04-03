@@ -108,7 +108,7 @@
 
 (defun alchemist-company-get-prefix ()
   (if (or (looking-at "\s") (eolp))
-      (unless (looking-back ".+:")
+      (unless (looking-back ".+:" nil)
         (alchemist-scope-expression))))
 
 (defun alchemist-company (command &optional arg &rest ignored)

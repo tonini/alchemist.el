@@ -27,6 +27,7 @@
 
 (require 'cl-lib)
 (require 'dash)
+(require 's)
 
 (defun alchemist-utils-build-command (command-list)
   "Build the commands list for the runner."
@@ -52,20 +53,14 @@
   "Remove dot character at the end of STRING."
   (replace-regexp-in-string "\\.$" "" string))
 
-(defun alchemist-utils-empty-string-p (string)
-  "Return non-nil if STRING is null, blank or whitespace only."
-  (or (null string)
-      (string= string "")
-      (if (zerop (length (s-trim string))) t)))
-
 (defun alchemist-utils-prepare-aliases-for-elixir (aliases)
   (let* ((aliases (-map (lambda (a)
                             (let ((module (alchemist-utils-remove-dot-at-the-end (car a)))
                                   (alias (alchemist-utils-remove-dot-at-the-end (car (cdr a)))))
-                            (if (not (or (alchemist-utils-empty-string-p alias)
+                            (if (not (or (s-blank? alias)
                                          (string= alias module)))
                                 (format "{%s, %s}"
-                                        (if (alchemist-utils-empty-string-p alias)
+                                        (if (s-blank? alias)
                                             module
                                           alias)
                                         module)))) aliases))
@@ -140,7 +135,7 @@ Call AFTER-FN after performing the search."
   "Return the current Elixir version on the system."
   (let* ((output (shell-command-to-string (format "%s --version" alchemist-execute-command)))
          (output (split-string output "\n"))
-         (output (-remove (lambda (string) (alchemist-utils-empty-string-p string))
+         (output (-remove (lambda (string) (s-blank? string))
                           output))
          (version (-last-item output))
          (version (replace-regexp-in-string "Elixir " "" version)))

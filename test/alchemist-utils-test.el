@@ -42,18 +42,6 @@
    (find-file "this_is_a_test.exs")
    (should (alchemist-utils-test-file-p))))
 
-(ert-deftest test-if-string-is-empty ()
-  (should (equal (alchemist-utils-empty-string-p nil)
-                 t))
-  (should (equal (alchemist-utils-empty-string-p "")
-                 t))
-  (should (equal (alchemist-utils-empty-string-p " ")
-                 t))
-  (should (equal (alchemist-utils-empty-string-p "story")
-                 nil))
-  (should (equal (alchemist-utils-empty-string-p "    ")
-                 t)))
-
 (ert-deftest test-utils/prepare-aliases-for-elixir ()
   (should (equal "[{MyList, List},{AlreadySentError, Plug.Conn.AlreadySentError}]"
                  (alchemist-utils-prepare-aliases-for-elixir

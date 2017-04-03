@@ -26,6 +26,7 @@
 ;;; Code:
 
 (require 'dash)
+(require 's)
 (require 'ansi-color)
 (require 'alchemist-utils)
 (require 'alchemist-project)
@@ -60,7 +61,7 @@
   "Lookup Elixir documentation for SEARCH."
   (setq alchemist-help-current-search-text search)
   (setq alchemist-help-filter-output nil)
-  (if (not (alchemist-utils-empty-string-p search))
+  (if (not (s-blank? search))
       (alchemist-server-complete-candidates
        (alchemist-help--completion-server-arguments search)
        #'alchemist-help-complete-filter-output)
@@ -71,7 +72,7 @@
   (or (string-match-p "No documentation for" string)
       (string-match-p "Could not load module" string)
       (string-match-p "it does not have Elixir-style docs" string)
-      (alchemist-utils-empty-string-p string)))
+      (s-blank? string)))
 
 (defun alchemist-help-store-search-in-history ()
   "Store the last `alchemist-help-current-search-text' in `alchemist-help-search-history'."
@@ -117,10 +118,10 @@ Argument END where the mark ends."
          (function (alchemist-scope-extract-function expr))
          (function (if function function ""))
          (expr (cond
-                ((and (not (alchemist-utils-empty-string-p module))
-                      (not (alchemist-utils-empty-string-p function)))
+                ((and (not (s-blank? module))
+                      (not (s-blank? function)))
                  (format "%s.%s" module function))
-                ((not (alchemist-utils-empty-string-p module))
+                ((not (s-blank? module))
                  module)
                 (t
                  expr))))

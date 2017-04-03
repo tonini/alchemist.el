@@ -27,6 +27,7 @@
 
 (require 'cl-lib)
 (require 'dash)
+(require 's)
 (require 'alchemist-utils)
 (require 'alchemist-file)
 
@@ -54,7 +55,7 @@
 
 (defun alchemist-project-elixir-root (&optional dir)
   "Return root directory of the Elixir source."
-  (if (and (not (alchemist-utils-empty-string-p alchemist-goto-elixir-source-dir))
+  (if (and (not (s-blank? alchemist-goto-elixir-source-dir))
 	   (string-prefix-p (expand-file-name alchemist-goto-elixir-source-dir)
 			    (expand-file-name default-directory)))
       alchemist-goto-elixir-source-dir

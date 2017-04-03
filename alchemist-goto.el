@@ -28,6 +28,7 @@
 (require 'cl-lib)
 (require 'etags)
 (require 'dash)
+(require 's)
 (require 'alchemist-utils)
 (require 'alchemist-server)
 (require 'alchemist-scope)
@@ -226,7 +227,7 @@ It will jump to the position of the symbol definition after selection."
       (alchemist-goto--goto-symbol function))
      (t
       (setq alchemist-goto-callback (lambda (file)
-				      (cond ((alchemist-utils-empty-string-p file)
+				      (cond ((s-blank? file)
                                              (message "Don't know how to find: %s" expr))
                                             ((file-exists-p file)
 					     (alchemist-goto--open-file file module function))
