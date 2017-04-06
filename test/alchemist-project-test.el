@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest test-project-root/no-argument ()
   "Should use `default-directory' when no argument."
   (setq alchemist-project-root-path-cache nil)

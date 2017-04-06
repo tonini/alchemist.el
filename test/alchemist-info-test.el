@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (defun datatype-info-of-expr (expr)
   (with-temp-buffer
     (alchemist-mode)

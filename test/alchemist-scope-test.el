@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest test-inside-string-p ()
   (should (with-temp-buffer
             (alchemist-mode)

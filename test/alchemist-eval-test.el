@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (defun capture-eval-popup-content ()
   (with-current-buffer (get-buffer alchemist-eval-buffer-name)
     (buffer-substring-no-properties (point-min) (point-max))))

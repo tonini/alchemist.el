@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest not-inside-project/start-default-server ()
   (alchemist-server-start-if-not-running)
   (should (string= "alchemist-server"

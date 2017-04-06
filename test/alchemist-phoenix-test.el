@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest alchemist-phoenix-test/a-phoenix-project ()
   (with-sandbox
    (f-touch "mix.exs")

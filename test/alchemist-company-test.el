@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (defun message-current-position ()
   "Test helper function."
   (interactive)

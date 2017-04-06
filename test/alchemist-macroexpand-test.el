@@ -25,7 +25,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
 (require 'alchemist-macroexpand)
 
 (defun capture-macroexpand-popup-content ()

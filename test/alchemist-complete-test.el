@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest test-elixir-output/format-to-list ()
   "Formats the output from elixir into a proper list"
   (should (equal (alchemist-complete--output-to-list "List.

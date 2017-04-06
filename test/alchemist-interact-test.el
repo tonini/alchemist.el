@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest alchemist-interact/insert-string-as-comment ()
   (should (equal "
 # => sum = fn (a, b) ->

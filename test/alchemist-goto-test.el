@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest check-if-an-elixir-source-file ()
   (should (alchemist-goto-elixir-file-p "lib/elixir/lib/list.ex"))
   (should (alchemist-goto-elixir-file-p "lib/elixir/lib/enum.exs"))

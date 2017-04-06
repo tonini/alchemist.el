@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest test-cmdlist-runner-builder ()
   (should (equal (alchemist-utils-build-command "mix help")
                  "mix help"))

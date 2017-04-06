@@ -25,8 +25,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (defun alchemist-test-current-position ()
   (interactive)
   (message "current position > %s"))

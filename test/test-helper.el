@@ -81,6 +81,4 @@
 (require 'alchemist)
 (require 'ert)
 
-(provide 'test-helper)
-
 ;;; test-helper.el ends here

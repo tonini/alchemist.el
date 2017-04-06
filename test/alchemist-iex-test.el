@@ -19,8 +19,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest match-prompt ()
   (let ((prompt alchemist-iex-prompt-regexp))
     (should (equal 0 (string-match prompt "iex(1)>")))

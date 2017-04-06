@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest alchemist-file/list-files-from-directory ()
   (with-sandbox
    (f-touch "mix.exs")

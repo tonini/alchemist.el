@@ -23,8 +23,6 @@
 
 ;;; Code:
 
-(require 'test-helper)
-
 (ert-deftest test-no-doc-available-p ()
   (should (alchemist-help-no-doc-available-p
            "Could not load module CustomModule, got: nofile"))
