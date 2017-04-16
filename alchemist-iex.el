@@ -36,8 +36,8 @@
   :prefix "alchemist-iex-"
   :group 'alchemist)
 
-(defcustom alchemist-iex-program-name "iex"
-  "The shell command for iex."
+(defvar alchemist-iex-program-name "iex"
+  "The shell command for iex. Default is iex"
   :type 'string
   :group 'alchemist-iex)
 
