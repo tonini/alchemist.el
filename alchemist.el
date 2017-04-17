@@ -286,7 +286,10 @@ Key bindings:
     ("About"
      ["Show Alchemist version" alchemist-version t])))
 
-(add-hook 'elixir-mode-hook 'alchemist-mode-hook)
+(add-hook 'elixir-mode-hook
+          (lambda ()
+            (add-to-list (make-local-variable 'company-backends)
+                         'alchemist-company)))
 
 (provide 'alchemist)
 
