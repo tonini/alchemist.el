@@ -5,6 +5,7 @@
 |<kbd>C-c a x</kbd>|Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
 |<kbd>C-c a m c</kbd>|Compile the whole elixir project. `alchemist-mix-compile`|
 |<kbd>C-c a m r</kbd>|Runs the given file or expression in the context of the application. `alchemist-mix-run`|
+|<kbd>C-c a m l</kbd>|Rerun the last mix task which was run by alchemist. `alchemist-mix-rerun-last-task`|
 
 Mix tasks could also be executed in a specific environment with the usage of `C-u` (universal-argument).
 Default environments are `prod`, `dev` and `test`. [Mix environments](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html#environments)
@@ -17,6 +18,7 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |--------------|------------------------------------------------------|
 |<kbd>q</kbd>  |Quit `*mix*` buffer window                            |
 |<kbd>i</kbd>  |Send an input to the current running mix task process.|
+|<kbd>r</kbd>  |Rerun the last mix task which was run by alchemist.   |
 
 ## Mix Hex
 
@@ -40,6 +42,7 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 |<kbd>C-c a m t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
 |<kbd>C-c a m t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
 |<kbd>C-c a m t s</kbd>|Run only stale tests (Elixir 1.3+). `alchemist-mix-test-stale` |
+|<kbd>C-c a m t r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test` |
 |<kbd>C-c M-r</kbd>|Toggle between displaying or hidding the test report buffer. `alchemist-test-toggle-test-report-display`|
 
 ## Compile And Execute
