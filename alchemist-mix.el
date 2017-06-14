@@ -39,6 +39,7 @@
 
 (defvar alchemist-last-run-test nil)
 (defvar alchemist-mix-filter-output nil)
+(defvar alchemist-mix-last-task-command nil)
 
 (defcustom alchemist-mix-command "mix"
   "The shell command for mix."
@@ -65,6 +66,7 @@ not set explicitly."
   (let ((map (make-sparse-keymap)))
     (define-key map "q" #'quit-window)
     (define-key map "i" #'alchemist-mix-send-input-to-mix-process)
+    (define-key map "r" #'alchemist-mix-rerun-last-task)
     map))
 
 (defvar alchemist-mix-buffer-name "*alchemist mix*"
@@ -181,6 +183,16 @@ arg is set."
           (comint-send-string process (concat input "\n")))
       (error "No %s process is running" alchemist-mix-buffer-name))))
 
+(defun alchemist-mix-rerun-last-task ()
+  "Rerun the last mix task which was run by alchemist.
+When no mix task had been run before calling this function, do nothing."
+  (interactive)
+  (if alchemist-mix-last-task-command
+      (alchemist-report-run alchemist-mix-last-task-command
+			    alchemist-mix-process-name
+			    alchemist-mix-buffer-name 'alchemist-mix-mode)
+    (message "No mix task have been run yet")))
+
 (defun alchemist-mix-filter (_process output)
   (with-local-quit
     (setq alchemist-mix-filter-output (cons output alchemist-mix-filter-output))
@@ -210,6 +222,7 @@ If PREFIX is non-nil, prompt for a mix environment variable."
          (command (alchemist-utils-build-command
                    (list (when mix-env (concat "MIX_ENV=" mix-env))
                          alchemist-mix-command command-list))))
+    (setq alchemist-mix-last-task-command command)
     (alchemist-report-run command alchemist-mix-process-name alchemist-mix-buffer-name 'alchemist-mix-mode)))
 
 (provide 'alchemist-mix)

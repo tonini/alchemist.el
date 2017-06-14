@@ -133,10 +133,12 @@ Key bindings:
 
   (define-key map (kbd "m c") 'alchemist-mix-compile)
   (define-key map (kbd "m r") 'alchemist-mix-run)
+  (define-key map (kbd "m l") 'alchemist-mix-rerun-last-task)
   (define-key map (kbd "m t f") 'alchemist-mix-test-file)
   (define-key map (kbd "m t b") 'alchemist-mix-test-this-buffer)
   (define-key map (kbd "m t .") 'alchemist-mix-test-at-point)
   (define-key map (kbd "m t s") 'alchemist-mix-test-stale)
+  (define-key map (kbd "m t r") 'alchemist-mix-rerun-last-test)
 
   (define-key map (kbd "c c") 'alchemist-compile)
   (define-key map (kbd "c f") 'alchemist-compile-file)
