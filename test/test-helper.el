@@ -1,6 +1,6 @@
 ;;; test-helper.el --- Test helper for test suites
 
-;; Copyright © 2014-2015 Samuel Tonini
+;; Copyright © 2014-2017 Samuel Tonini
 ;;
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 

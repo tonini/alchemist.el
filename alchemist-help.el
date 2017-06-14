@@ -1,6 +1,6 @@
 ;;; alchemist-help.el --- Functionality for Elixir documentation lookup -*- lexical-binding: t -*-
 
-;; Copyright © 2014-2015 Samuel Tonini
+;; Copyright © 2014-2017 Samuel Tonini
 
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com
 

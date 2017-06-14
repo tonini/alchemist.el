@@ -1,6 +1,6 @@
 ;;; alchemist.el --- Elixir tooling integration into Emacs
 
-;; Copyright © 2014-2015 Samuel Tonini
+;; Copyright © 2014-2017 Samuel Tonini
 ;;
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 ;; Maintainer: Samuel Tonini <tonini.samuel@gmail.com>

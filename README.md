@@ -61,7 +61,7 @@ We appreciate any contribution to Alchemist, so check out our [Contribution guid
 
 # License
 
-Copyright © 2014-2015 Samuel Tonini and
+Copyright © 2014-2017 Samuel Tonini and
 [contributors](https://github.com/tonini/alchemist.el/contributors).
 
 Distributed under the GNU General Public License, version 3

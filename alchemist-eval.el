@@ -1,6 +1,6 @@
 ;;; alchemist-eval.el --- Elixir code inline evaluation functionality
 
-;; Copyright © 2014-2015 Samuel Tonini
+;; Copyright © 2014-2017 Samuel Tonini
 
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com
 

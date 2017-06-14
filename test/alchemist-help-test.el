@@ -1,6 +1,6 @@
 ;;; alchemist-help-tests.el --- Test suite for alchemist-help.el
 
-;; Copyright © 2014-2015 Samuel Tonini
+;; Copyright © 2014-2017 Samuel Tonini
 ;;
 ;; Author: Samuel Tonini <tonini.samuel@gmail.com>
 
