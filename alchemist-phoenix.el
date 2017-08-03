@@ -35,13 +35,13 @@
 
 ;;;###autoload
 (defun alchemist-phoenix-project-p ()
-  "Return non-nil if `default-directory' is inside an Phoenix project."
+  "Return non-nil if `default-directory' is inside a Phoenix project."
   (and (alchemist-project-p)
        (file-directory-p (concat (alchemist-project-root) "web"))))
 
 (defun alchemist-phoenix-find-dir (directory)
   (unless (alchemist-phoenix-project-p)
-    (error "Could not find an Phoenix Mix project root."))
+    (error "Could not find a Phoenix Mix project root."))
   (alchemist-file-find-files (alchemist-project-root) directory))
 
 (defun alchemist-phoenix-find-web ()
