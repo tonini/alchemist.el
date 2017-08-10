@@ -167,37 +167,16 @@ and jump to the buffer."
   (let ((lines (split-string str "\n" nil)))
     (with-current-buffer (process-buffer proc)
       (-map (lambda (line)
-              (alchemist-iex-wait-for-prompt proc)
               (goto-char (process-mark proc))
               (insert-before-markers (concat line "\n"))
               (move-marker comint-last-input-end (point))
               (comint-send-string proc (concat line "\n"))) lines))))
 
-(defvar alchemist-iex-seen-prompt nil)
-(make-variable-buffer-local 'alchemist-iex-seen-prompt)
-
 (defun alchemist-iex-spot-prompt (_string)
   (let ((proc (get-buffer-process (current-buffer))))
     (when proc
       (save-excursion
-        (goto-char (process-mark proc))
-        (if (re-search-backward comint-prompt-regexp
-                                (line-beginning-position) t)
-            (setq alchemist-iex-seen-prompt t))))))
-
-(defun alchemist-iex-wait-for-prompt (proc &optional timeout)
-  "Wait until PROC sends us a prompt.
-The process PROC should be associated to a comint buffer."
-  (with-current-buffer (process-buffer proc)
-    (while (progn
-             (goto-char comint-last-input-end)
-             (not (or alchemist-iex-seen-prompt
-                      (setq alchemist-iex-seen-prompt
-                            (re-search-forward comint-prompt-regexp nil t))
-                      (not (accept-process-output proc timeout))))))
-    (unless alchemist-iex-seen-prompt
-      (error "Can't find the IEx prompt"))
-    (setq alchemist-iex-seen-prompt nil)))
+        (goto-char (process-mark proc))))))
 
 (defun alchemist-iex-clear-buffer ()
   "Clear the current iex process buffer."
