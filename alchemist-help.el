@@ -232,8 +232,12 @@ the actively marked region will be used for passing to `alchemist-help'."
 (defun alchemist-help-module ()
   (interactive)
   (let* ((current-search (car alchemist-help-search-history))
-         (module-name (car (split-string current-search "\\."))))
-    (alchemist-help-lookup-doc (alchemist-help--prepare-search-expr module-name))))
+         (module (alchemist-scope-extract-module current-search))
+         (module (alchemist-scope-alias-full-path module)))
+
+    (if module
+        (alchemist-help-lookup-doc (alchemist-help--prepare-search-expr module))
+      (message "No module found"))))
 
 (defvar alchemist-help-minor-mode-map
   (let ((map (make-sparse-keymap)))
