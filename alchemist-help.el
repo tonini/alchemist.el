@@ -229,10 +229,17 @@ the actively marked region will be used for passing to `alchemist-help'."
       (alchemist-help--search-marked-region (region-beginning) (region-end))
       (alchemist-help--search-at-point)))
 
+(defun alchemist-help-module ()
+  (interactive)
+  (let* ((current-search (car alchemist-help-search-history))
+         (module-name (car (split-string current-search "\\."))))
+    (alchemist-help-lookup-doc (alchemist-help--prepare-search-expr module-name))))
+
 (defvar alchemist-help-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") #'quit-window)
     (define-key map (kbd "e") #'alchemist-help-search-at-point)
+    (define-key map (kbd "m") #'alchemist-help-module)
     (define-key map (kbd "s") #'alchemist-help)
     (define-key map (kbd "h") #'alchemist-help-history)
     (define-key map (kbd "M-.") #'alchemist-goto-definition-at-point)
