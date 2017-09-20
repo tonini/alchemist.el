@@ -30,7 +30,7 @@
   :prefix "alchemist-key-"
   :group 'alchemist)
 
-(defcustom alchemist-key-command-prefix (kbd "C-c a")
+(defcustom alchemist-key-command-prefix (kbd "C-c ;")
   "The prefix for Alchemist related key commands."
   :type 'string
   :group 'alchemist)
