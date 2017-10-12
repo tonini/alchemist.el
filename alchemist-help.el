@@ -230,6 +230,10 @@ the actively marked region will be used for passing to `alchemist-help'."
       (alchemist-help--search-at-point)))
 
 (defun alchemist-help-module ()
+  "Load Elixir documentation for the module of the most recent SEARCH.
+
+This is helpful to jump from the documentation of, say, the String.split/1
+function to the documetation of the String module."
   (interactive)
   (let* ((current-search (car alchemist-help-search-history))
          (module (alchemist-scope-extract-module current-search))
