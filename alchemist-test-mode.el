@@ -258,7 +258,8 @@ macro) while the values are the position at which the test matched."
 
 (defun alchemist-test-execute (command-list)
   (message "Testing...")
-  (let* ((command (mapconcat 'concat (-flatten command-list) " ")))
+  (let* ((default-directory (or (alchemist-project-root) default-directory))
+         (command (mapconcat 'concat (-flatten command-list) " ")))
     (alchemist-test-save-buffers)
     (compile command 'alchemist-test-compilation-mode)))
 
