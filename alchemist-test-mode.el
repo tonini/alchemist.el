@@ -171,15 +171,6 @@ macro) while the values are the position at which the test matched."
   "Save some modified file-visiting buffers."
   (save-some-buffers (not alchemist-test-ask-about-save) nil))
 
-(defun alchemist-test-clean-compilation-output (output)
-  (if (not alchemist-test-display-compilation-output)
-      (with-temp-buffer
-        (insert output)
-        (delete-matching-lines "^Compiled .+" (point-min) (point-max))
-        (delete-matching-lines "^Generated .+" (point-min) (point-max))
-        (buffer-substring-no-properties (point-min) (point-max)))
-  output))
-
 (defun alchemist-test-execute (command-list)
   (message "Testing...")
   (let* ((default-directory (or (alchemist-project-root) default-directory))
@@ -189,7 +180,18 @@ macro) while the values are the position at which the test matched."
 
 (define-compilation-mode alchemist-test-compilation-mode "Alchemist Test Compilation"
   "Compilation mode for mix test output from Alchemist"
-  (add-hook 'compilation-filter-hook 'alchemist-test-colorize-compilation-buffer nil t))
+  (add-hook 'compilation-filter-hook 'alchemist-test-colorize-compilation-buffer nil t)
+  (add-hook 'compilation-finish-functions 'alchemist-test-clean-compilation-output))
+
+(defun alchemist-test-clean-compilation-output (buffer mesage)
+  (unless alchemist-test-display-compilation-output
+    (toggle-read-only)
+    (save-excursion
+      (delete-matching-lines "^Compiled .+" (point-min) (point-max))
+      (delete-matching-lines "^Generated .+" (point-min) (point-max))
+      (delete-matching-lines "^Compiling .+" (point-min) (point-max))
+      (buffer-substring-no-properties (point-min) (point-max)))
+    (toggle-read-only)))
 
 (defun alchemist-test-colorize-compilation-buffer ()
   (toggle-read-only)
