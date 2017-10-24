@@ -27,6 +27,7 @@
 
 (require 'dash)
 (require 'alchemist-project)
+(require 'compile)
 
 (defgroup alchemist-test-mode nil
   "Minor mode for Elixir ExUnit files."
@@ -259,11 +260,7 @@ macro) while the values are the position at which the test matched."
   (message "Testing...")
   (let* ((command (mapconcat 'concat (-flatten command-list) " ")))
     (alchemist-test-save-buffers)
-    (alchemist-report-run command
-                          alchemist-test-report-process-name
-                          alchemist-test-report-buffer-name
-                          'alchemist-test-report-mode
-                          #'alchemist-test--handle-exit)))
+    (compile command)))
 
 (defun alchemist-test-initialize-modeline ()
   "Initialize the mode-line face."
