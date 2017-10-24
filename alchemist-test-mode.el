@@ -260,7 +260,16 @@ macro) while the values are the position at which the test matched."
   (message "Testing...")
   (let* ((command (mapconcat 'concat (-flatten command-list) " ")))
     (alchemist-test-save-buffers)
-    (compile command)))
+    (compile command 'alchemist-test-compilation-mode)))
+
+(define-compilation-mode alchemist-test-compilation-mode "Alchemist Test Compilation"
+  "Compilation mode for mix test output from Alchemist"
+  (add-hook 'compilation-filter-hook 'alchemist-test-colorize-compilation-buffer nil t))
+
+(defun alchemist-test-colorize-compilation-buffer ()
+  (toggle-read-only)
+  (ansi-color-apply-on-region compilation-filter-start (point))
+  (toggle-read-only))
 
 (defun alchemist-test-initialize-modeline ()
   "Initialize the mode-line face."
