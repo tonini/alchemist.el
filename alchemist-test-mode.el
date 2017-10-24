@@ -76,11 +76,6 @@ Otherwise, it saves all modified buffers without asking."
 (defconst alchemist-test-report-process-name "alchemist-test-process"
   "Name of the test report process.")
 
-(defconst alchemist-test--failing-files-regex
-  "\\( *[0-9]+).+\n\s+\\)\\([-A-Za-z0-9./_]+:[0-9]+\\)$")
-(defconst alchemist-test--stacktrace-files-regex
-  "\\( *\\)\\([-A-Za-z0-9./_]+:[0-9]+\\): (test)")
-
 ;; Faces
 
 (defface alchemist-test--test-file-and-location-face
@@ -113,18 +108,6 @@ Otherwise, it saves all modified buffers without asking."
 (defvar alchemist-test-jump-to-next-test #'alchemist-test-mode-jump-to-next-test)
 (defvar alchemist-test-list-tests #'alchemist-test-mode-list-tests)
 
-(defvar alchemist-test-report-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "q" #'quit-window)
-    (define-key map "t" #'toggle-truncate-lines)
-    (define-key map "r" #'alchemist-mix-rerun-last-test)
-    (define-key map (kbd "M-n") #'alchemist-test-next-result)
-    (define-key map (kbd "M-p") #'alchemist-test-previous-result)
-    (define-key map (kbd "M-N") #'alchemist-test-next-stacktrace-file)
-    (define-key map (kbd "M-P") #'alchemist-test-previous-stacktrace-file)
-    (define-key map (kbd "C-c C-k") #'alchemist-report-interrupt-current-process)
-    map))
-
 (defvar alchemist-test-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c , s") alchemist-test-at-point)
@@ -151,57 +134,6 @@ Otherwise, it saves all modified buffers without asking."
         (if (string-prefix-p "finished" status)
             'alchemist-test--success-face
           'alchemist-test--failed-face)))
-
-(defun alchemist-test--render-report (buffer)
-  (with-current-buffer buffer
-    (let ((inhibit-read-only t))
-      (alchemist-test--render-files))))
-
-(defun alchemist-test--render-files ()
-  (alchemist-test--render-test-failing-files)
-  (alchemist-test--render-stacktrace-files))
-
-(defun alchemist-test--render-test-failing-files ()
-  (alchemist-test--render-file alchemist-test--failing-files-regex
-                               'alchemist-test--test-file-and-location-face))
-
-(defun alchemist-test--render-stacktrace-files ()
-  (alchemist-test--render-file alchemist-test--stacktrace-files-regex
-                               'alchemist-test--stacktrace-file-and-location-face))
-
-(defun alchemist-test--render-file (regex face)
-  (save-excursion
-    (goto-char (point-min))
-    (while (re-search-forward regex nil t)
-      (let ((file (buffer-substring-no-properties (match-beginning 2) (match-end 2))))
-        (goto-char (match-beginning 2))
-        (replace-match "" nil nil nil 2)
-        (insert-text-button file
-                            'face face
-                            'file file
-                            'follow-link t
-                            'action #'alchemist-test--open-file
-                            'help-echo "visit the source location")))))
-
-(defun alchemist-test--open-file (button)
-  (save-match-data
-    (string-match "\\([-A-Za-z0-9./_]+\\):\\([0-9]+\\)" (button-get button 'file))
-    (let* ((file-with-line (button-get button 'file))
-           (file (substring-no-properties file-with-line (match-beginning 1) (match-end 1)))
-           (line (string-to-number (substring-no-properties file-with-line (match-beginning 2) (match-end 2))))
-           (file-path (if (file-exists-p file)
-                          file
-                        (expand-file-name (concat (alchemist-project-root) file)))))
-      (with-current-buffer (find-file-other-window file-path)
-        (goto-char (point-min))
-        (forward-line (- line 1))))))
-
-(defun alchemist-test--handle-exit (status buffer)
-  (when alchemist-test-status-modeline
-    (alchemist-test--set-modeline-color status))
-  (with-current-buffer buffer
-    (let ((inhibit-read-only t))
-      (alchemist-test--render-files))))
 
 (defun alchemist-test-mode--buffer-contains-tests-p ()
   "Return nil if the current buffer contains no tests, non-nil if it does."
@@ -234,14 +166,6 @@ macro) while the values are the position at which the test matched."
                                  font-lock-type-face t)))))
 
 ;; Public functions
-
-(define-derived-mode alchemist-test-report-mode fundamental-mode "Alchemist Test Report"
-  "Major mode for presenting Elixir test results.
-
-\\{alchemist-test-report-mode-map}"
-  (setq buffer-read-only t)
-  (setq-local truncate-lines t)
-  (setq-local electric-indent-chars nil))
 
 (defun alchemist-test-save-buffers ()
   "Save some modified file-visiting buffers."
@@ -295,48 +219,6 @@ position, jump to the last test in the buffer. Do nothing if there are no tests
 in this buffer."
   (interactive)
   (alchemist-utils-jump-to-previous-matching-line alchemist-test-mode--test-regex 'back-to-indentation))
-
-(defun alchemist-test-next-result ()
-  "Jump to the next error in the test report.
-
-If there are no error after the current position,
-jump to the first error in the test report.
-Do nothing if there are no error in this test report."
-  (interactive)
-  (alchemist-utils-jump-to-next-matching-line alchemist-test--failing-files-regex
-                                               'back-to-indentation))
-
-(defun alchemist-test-previous-result ()
-  "Jump to the previous error in the test report.
-
-If there are no error before the current position,
-jump to the first error in the test report.
-Do nothing if there are no error in this test report."
-  (interactive)
-  (alchemist-utils-jump-to-previous-matching-line alchemist-test--failing-files-regex
-                                                   #'(lambda ()
-                                                       (forward-line 1)
-                                                       (back-to-indentation))))
-
-(defun alchemist-test-next-stacktrace-file ()
-  "Jump to the next stacktrace file in the test report.
-
-If there are no stacktrace file after the current position,
-jump to the first stacktrace file in the test report.
-Do nothing if there are no stacktrace file in this test report."
-  (interactive)
-  (alchemist-utils-jump-to-next-matching-line alchemist-test--stacktrace-files-regex
-                                               'back-to-indentation))
-
-(defun alchemist-test-previous-stacktrace-file ()
-  "Jump to the previous stacktrace file in the test report.
-
-If there are no stacktrace file before the current position,
-jump to the first stacktrace file in the test report.
-Do nothing if there are no stacktrace file in this test report."
-  (interactive)
-  (alchemist-utils-jump-to-previous-matching-line alchemist-test--stacktrace-files-regex
-                                                   'back-to-indentation))
 
 (defun alchemist-test-mode-list-tests ()
   "List ExUnit tests (calls to the test/2 macro) in the current buffer and jump
