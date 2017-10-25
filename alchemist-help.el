@@ -142,7 +142,9 @@ Argument END where the mark ends."
            "]-quit ["
            (propertize "e" 'face 'alchemist-help-key-face)
            "]-search-at-point ["
-           (propertize "s" 'face 'alchemist-help-key-face)
+           (propertize "m" 'face 'alchemist-help-key-face)
+           "]-search-module ["
+           (propertize "m" 'face 'alchemist-help-key-face)
            "]-search ["
            (propertize "h" 'face 'alchemist-help-key-face)
            "]-history ["
