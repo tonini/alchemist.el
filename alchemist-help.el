@@ -142,6 +142,8 @@ Argument END where the mark ends."
            "]-quit ["
            (propertize "e" 'face 'alchemist-help-key-face)
            "]-search-at-point ["
+           (propertize "m" 'face 'alchemist-help-key-face)
+           "]-search-module ["
            (propertize "s" 'face 'alchemist-help-key-face)
            "]-search ["
            (propertize "h" 'face 'alchemist-help-key-face)
@@ -229,10 +231,25 @@ the actively marked region will be used for passing to `alchemist-help'."
       (alchemist-help--search-marked-region (region-beginning) (region-end))
       (alchemist-help--search-at-point)))
 
+(defun alchemist-help-module ()
+  "Load Elixir documentation for the module of the most recent SEARCH.
+
+This is helpful to jump from the documentation of, say, the String.split/1
+function to the documetation of the String module."
+  (interactive)
+  (let* ((current-search (car alchemist-help-search-history))
+         (module (alchemist-scope-extract-module current-search))
+         (module (alchemist-scope-alias-full-path module)))
+
+    (if module
+        (alchemist-help-lookup-doc (alchemist-help--prepare-search-expr module))
+      (message "No module found"))))
+
 (defvar alchemist-help-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q") #'quit-window)
     (define-key map (kbd "e") #'alchemist-help-search-at-point)
+    (define-key map (kbd "m") #'alchemist-help-module)
     (define-key map (kbd "s") #'alchemist-help)
     (define-key map (kbd "h") #'alchemist-help-history)
     (define-key map (kbd "M-.") #'alchemist-goto-definition-at-point)
