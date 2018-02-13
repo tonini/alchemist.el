@@ -125,13 +125,13 @@ executed, gets called."
     (display-buffer alchemist-mix-buffer-name)))
 
 (defun alchemist-mix-format ()
-  "Run format on current project's .formatter.exs"
+  "Run format on current project's .formatter.exs (Elixir 1.6 and above only)"
   (interactive)
   (alchemist-test-execute (list alchemist-mix-command
                                 alchemist-mix-format-task)))
 
 (defun alchemist-mix-format-buffer ()
-  "Run format on the current buffer"
+  "Run format on the current buffer (Elixir 1.6 and above only)"
   (interactive)
   (alchemist-test-execute (list alchemist-mix-command
                                 alchemist-mix-format-task
