@@ -51,6 +51,11 @@
   :type 'string
   :group 'alchemist-mix)
 
+(defcustom alchemist-mix-format-task "format"
+  "Default task to run formatting."
+  :type 'string
+  :group 'alchemist-mix)
+
 (defcustom alchemist-mix-test-default-options '()
   "Default options for alchemist test command."
   :type '(repeat string)
@@ -118,6 +123,19 @@ executed, gets called."
   (interactive)
   (when (get-buffer alchemist-mix-buffer-name)
     (display-buffer alchemist-mix-buffer-name)))
+
+(defun alchemist-mix-format ()
+  "Run format on current project's .formatter.exs"
+  (interactive)
+  (alchemist-test-execute (list alchemist-mix-command
+                                alchemist-mix-format-task)))
+
+(defun alchemist-mix-format-buffer ()
+  "Run format on the current buffer"
+  (interactive)
+  (alchemist-test-execute (list alchemist-mix-command
+                                alchemist-mix-format-task
+                                buffer-file-name)))
 
 (defun alchemist-mix-test ()
   "Run the whole elixir test suite."
