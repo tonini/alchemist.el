@@ -1,7 +1,7 @@
 sudo: required
 language: elixir
 elixir:
-  - 1.4.2
+  - 1.6.0
 otp_release:
   - 19.0
 cache: apt
