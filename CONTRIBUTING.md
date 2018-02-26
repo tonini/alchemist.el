@@ -96,3 +96,21 @@ which helps you to comply to these guidelines.
 Pull requests **must** pass all tests on Travis CI before being merged.
 
 [pull request]: https://help.github.com/articles/using-pull-requests
+
+## Setting up your dev environment
+
+Make sure you have Erlang 20.2.2 and Elixir 1.6.1 installed. For instance, with asdf:
+
+```
+asdf install elixir 1.6.1
+asdf install erlang 20.2.2
+```
+
+You'll need the `cask` tool. Installation instructions are available here: https://cask.readthedocs.io/en/latest/guide/installation.html
+
+After that, you can run:
+
+```
+make cask
+make test
+```
