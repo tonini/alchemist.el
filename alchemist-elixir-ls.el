@@ -12,6 +12,7 @@
    (lambda () (alchemist-project-root-or-default-dir))
    '("~/src/projects/alchemist.el/elixir-ls/erl19/language_server.sh"))
 
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
 (add-hook 'alchemist-mode-hook 'lsp-elixir-mode-enable)
 
 (provide 'alchemist-elixir-ls)
