@@ -75,7 +75,6 @@
 (require 'alchemist-compile)
 (require 'alchemist-refcard)
 (require 'alchemist-complete)
-(require 'alchemist-company)
 (require 'alchemist-macroexpand)
 (require 'alchemist-phoenix)
 (require 'alchemist-elixir-ls)
