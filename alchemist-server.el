@@ -42,7 +42,7 @@
   "List of available Alchemist server environments.")
 
 (defconst alchemist-server
-  (concat (file-name-directory load-file-name) "alchemist-server/run.exs")
+  "~/src/projects/alchemist.el/alchemist-server/run.exs"
   "Path to the Alchemist server file.")
 
 (defconst alchemist-server-command

@@ -28,7 +28,9 @@
 (require 'xref)
 (require 'etags)
 
-(defalias 'alchemist-goto-definition-at-point 'xref-find-definitions)
+(defalias 'alchemist-goto-definition-at-point '(lambda ()
+                                                 (interactive)
+                                                 (xref-find-definitions (alchemist-scope-expression))))
 (defalias 'alchemist-goto-jump-back 'pop-tag-mark)
 
 (provide 'alchemist-goto)
