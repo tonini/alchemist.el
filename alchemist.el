@@ -150,7 +150,7 @@ Key bindings:
 
   (define-key map (kbd "h h") 'alchemist-help)
   (define-key map (kbd "h i") 'alchemist-help-history)
-  (define-key map (kbd "h e") 'alchemist-help-search-at-point)
+!  (define-key map (kbd "h e") 'alchemist-help-search-at-point)
   (define-key map (kbd "h r") 'alchemist-refcard)
 
   (define-key map (kbd "p s") 'alchemist-project-toggle-file-and-tests)
@@ -192,8 +192,8 @@ Key bindings:
   (define-key map (kbd "o R") 'alchemist-macroexpand-print-region)
   (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup)
 
-  (define-key map (kbd "f i") 'alchemist-info-datatype-at-point)
-  (define-key map (kbd "f t") 'alchemist-info-types-at-point)
+!  (define-key map (kbd "f i") 'alchemist-info-datatype-at-point)
+!  (define-key map (kbd "f t") 'alchemist-info-types-at-point)
 
   (define-key map (kbd "X i") 'alchemist-hex-info-at-point)
   (define-key map (kbd "X r") 'alchemist-hex-releases-at-point)
@@ -202,9 +202,9 @@ Key bindings:
   (define-key map (kbd "X I") 'alchemist-hex-info)
   (define-key map (kbd "X d") 'alchemist-hex-all-dependencies))
 
-(define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
-(define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
-(define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-list-symbol-definitions)
+ (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
+ (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
+! (define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-list-symbol-definitions)
 (define-key alchemist-mode-map (kbd "M-P") 'alchemist-goto-jump-to-previous-def-symbol)
 (define-key alchemist-mode-map (kbd "M-N") 'alchemist-goto-jump-to-next-def-symbol)
 (define-key alchemist-mode-map (kbd "C-c M-r") 'alchemist-test-toggle-test-report-display)
