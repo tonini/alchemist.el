@@ -30,7 +30,6 @@
 (require 'ansi-color)
 (require 'alchemist-utils)
 (require 'alchemist-project)
-(require 'alchemist-server)
 (require 'alchemist-scope)
 (require 'alchemist-goto)
 

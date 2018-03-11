@@ -25,7 +25,6 @@
 
 ;;; Code:
 
-(require 'alchemist-server)
 (require 'alchemist-interact)
 
 (defgroup alchemist-macroexpand nil

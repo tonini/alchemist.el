@@ -27,7 +27,6 @@
 ;;; Code:
 
 (require 'alchemist-project)
-(require 'alchemist-mix)
 (require 'alchemist-report)
 (require 'alchemist-test-mode)
 
