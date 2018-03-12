@@ -2,10 +2,10 @@
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a x</kbd>|Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
-|<kbd>C-c a m c</kbd>|Compile the whole elixir project. `alchemist-mix-compile`|
-|<kbd>C-c a m r</kbd>|Runs the given file or expression in the context of the application. `alchemist-mix-run`|
-|<kbd>C-c a m l</kbd>|Rerun the last mix task which was run by alchemist. `alchemist-mix-rerun-last-task`|
+|<kbd>C-c ; x</kbd> |Prompt for a mix command including a list of all available mix commands. `alchemist-mix`|
+|<kbd>C-c ; m c</kbd> |Compile the whole elixir project. `alchemist-mix-compile`|
+|<kbd>C-c ; m r</kbd> |Runs the given file or expression in the context of the application. `alchemist-mix-run`|
+|<kbd>C-c ; m l</kbd> |Rerun the last mix task which was run by alchemist. `alchemist-mix-rerun-last-task`|
 
 Mix tasks could also be executed in a specific environment with the usage of `C-u` (universal-argument).
 Default environments are `prod`, `dev` and `test`. [Mix environments](http://elixir-lang.org/getting-started/mix-otp/introduction-to-mix.html#environments)
@@ -24,25 +24,25 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 
 | Keybinding   | Description                                          |
 |--------------|------------------------------------------------------|
-|<kbd>C-c a X i</kbd>  | Display Hex package information for the package at point. |
-|<kbd>C-c a X r</kbd>  | Display Hex package releases for the package at point. |
-|<kbd>C-c a X I</kbd>  | Display Hex package info for a certain package. |
-|<kbd>C-c a X R</kbd>  | Display Hex package releases for a certain package.|
-|<kbd>C-c a X s</kbd>  | Search for Hex packages. |
-|<kbd>C-c a X d</kbd>  | Display Hex package dependencies for the current Mix project. |
+|<kbd>C-c ; X i</kbd>  | Display Hex package information for the package at point. |
+|<kbd>C-c ; X r</kbd>  | Display Hex package releases for the package at point. |
+|<kbd>C-c ; X I</kbd>  | Display Hex package info for a certain package. |
+|<kbd>C-c ; X R</kbd>  | Display Hex package releases for a certain package.|
+|<kbd>C-c ; X s</kbd>  | Search for Hex packages. |
+|<kbd>C-c ; X d</kbd>  | Display Hex package dependencies for the current Mix project. |
 
 
 ## Testing
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
-|<kbd>C-c a r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test`|
-|<kbd>C-c a m t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
-|<kbd>C-c a m t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
-|<kbd>C-c a m t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
-|<kbd>C-c a m t s</kbd>|Run only stale tests (Elixir 1.3+). `alchemist-mix-test-stale` |
-|<kbd>C-c a m t r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test` |
+|<kbd>C-c ; t</kbd>|Run the whole elixir test suite. `alchemist-mix-test`|
+|<kbd>C-c ; r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test`|
+|<kbd>C-c ; m t f</kbd>|Run `alchemist-mix--test-file` with the FILENAME. `alchemist-mix-test-file`|
+|<kbd>C-c ; m t b</kbd>|Run the current buffer through mix test. `alchemist-mix-test-this-buffer`|
+|<kbd>C-c ; m t .</kbd>|Run the test at point. `alchemist-mix-test-at-point`|
+|<kbd>C-c ; m t s</kbd>|Run only stale tests (Elixir 1.3+). `alchemist-mix-test-stale` |
+|<kbd>C-c ; m t r</kbd>|Rerun the last test that was run by alchemist. `alchemist-mix-rerun-last-test` |
 |<kbd>C-c M-r</kbd>|Toggle between displaying or hidding the test report buffer. `alchemist-test-toggle-test-report-display`|
 
 ## Compile And Execute
@@ -51,41 +51,41 @@ The Mix tasks running in a separate `alchemist-mix-mode`, in which the following
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a c b</kbd>|Compile the current buffer with the `elixirc` command. `alchemist-compile-this-buffer`|
-|<kbd>C-c a c f</kbd>|Compile the given `FILENAME` with the `elixirc` command. `alchemist-compile-file`|
-|<kbd>C-c a c c</kbd>|Run a custom compile command with `elixirc`. `alchemist-compile`|
+|<kbd>C-c ; c b</kbd>|Compile the current buffer with the `elixirc` command. `alchemist-compile-this-buffer`|
+|<kbd>C-c ; c f</kbd>|Compile the given `FILENAME` with the `elixirc` command. `alchemist-compile-file`|
+|<kbd>C-c ; c c</kbd>|Run a custom compile command with `elixirc`. `alchemist-compile`|
 
 ### Execute functions
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a e b</kbd>|Run the current buffer through `elixir` command. `alchemist-execute-this-buffer`|
-|<kbd>C-c a e f</kbd>|Run `elixir` command with the given `FILENAME`. `alchemist-execute-file` |
-|<kbd>C-c a e e</kbd>|Run a custom execute command with `elixir`. `alchemist-execute` |
+|<kbd>C-c ; e b</kbd>|Run the current buffer through `elixir` command. `alchemist-execute-this-buffer`|
+|<kbd>C-c ; e f</kbd>|Run `elixir` command with the given `FILENAME`. `alchemist-execute-file` |
+|<kbd>C-c ; e e</kbd>|Run a custom execute command with `elixir`. `alchemist-execute` |
 
 ## Project
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a p s</kbd>|Toggle between a file and its tests in the current window. `alchemist-project-toggle-file-and-tests`|
-|<kbd>C-c a p o</kbd>|Toggle between a file and its tests in other window. `alchemist-project-toggle-file-and-tests-other-window`|
-|<kbd>C-c a p t</kbd>|Run the tests related to the current file. `alchemist-project-run-tests-for-current-file`|
-|<kbd>C-c a p f</kbd>|List all files available in the `test` directory. `alchemist-project-find-test`|
-|<kbd>C-c a p l</kbd>|List all files available in the `lib` directory. `alchemist-project-find-lib` |
+|<kbd>C-c ; p s</kbd>|Toggle between a file and its tests in the current window. `alchemist-project-toggle-file-and-tests`|
+|<kbd>C-c ; p o</kbd>|Toggle between a file and its tests in other window. `alchemist-project-toggle-file-and-tests-other-window`|
+|<kbd>C-c ; p t</kbd>|Run the tests related to the current file. `alchemist-project-run-tests-for-current-file`|
+|<kbd>C-c ; p f</kbd>|List all files available in the `test` directory. `alchemist-project-find-test`|
+|<kbd>C-c ; p l</kbd>|List all files available in the `lib` directory. `alchemist-project-find-lib` |
 
 ## alchemist-phoenix-mode
 
 | Keybinding | Description |
 |-------------------|-------------|
-|<kbd>C-c a n w</kbd>|List all files available in the `web` directory. `alchemist-phoenix-find-web`|
-|<kbd>C-c a n c</kbd>|List all controllers in `web/controllers` directory. `alchemist-phoenix-find-controllers`|
-|<kbd>C-c a n l</kbd>|List all channels in `web/channels` directory. `alchemist-phoenix-find-channels`|
-|<kbd>C-c a n t</kbd>|List all templates in `web/templates` directory. `alchemist-phoenix-find-templates`|
-|<kbd>C-c a n m</kbd>|List all models in `web/models` directory. `alchemist-phoenix-find-models`|
-|<kbd>C-c a n v</kbd>|List all views in `web/views` directory. `alchemist-phoenix-find-views`|
-|<kbd>C-c a n s</kbd>|List all files in `web/static` directory. `alchemist-phoenix-find-static`|
-|<kbd>C-c a n r</kbd>|Open the `router.ex` file in `web` directory. `alchemist-phoenix-router`|
-|<kbd>C-c a n R</kbd>|Run the Mix task `phoenix.routes`. `alchemist-phoenix-routes`|
+|<kbd>C-c ; n w</kbd>|List all files available in the `web` directory. `alchemist-phoenix-find-web`|
+|<kbd>C-c ; n c</kbd>|List all controllers in `web/controllers` directory. `alchemist-phoenix-find-controllers`|
+|<kbd>C-c ; n l</kbd>|List all channels in `web/channels` directory. `alchemist-phoenix-find-channels`|
+|<kbd>C-c ; n t</kbd>|List all templates in `web/templates` directory. `alchemist-phoenix-find-templates`|
+|<kbd>C-c ; n m</kbd>|List all models in `web/models` directory. `alchemist-phoenix-find-models`|
+|<kbd>C-c ; n v</kbd>|List all views in `web/views` directory. `alchemist-phoenix-find-views`|
+|<kbd>C-c ; n s</kbd>|List all files in `web/static` directory. `alchemist-phoenix-find-static`|
+|<kbd>C-c ; n r</kbd>|Open the `router.ex` file in `web` directory. `alchemist-phoenix-router`|
+|<kbd>C-c ; n R</kbd>|Run the Mix task `phoenix.routes`. `alchemist-phoenix-routes`|
 
 ## Documentation lookup
 
@@ -99,10 +99,10 @@ installed on the system, the documentation you get by `alchemist` is the same
 
 | Keybinding | Description                                     |
 |------------|-------------------------------------------------|
-|<kbd>C-c a h h</kbd>| Run a custom search. `alchemist-help`              |
-|<kbd>C-c a h i</kbd>| Look through search history. `alchemist-help-history` |
-|<kbd>C-c a h e</kbd>| Run `alchemist-help` with the expression under the cursor. (example: `is_binary`  or `Code.eval_string`). If there is a currently marked region this will be used as the search term. `alchemist-help-search-at-point` |
-|<kbd>C-c a h r</kbd>| Open a buffer with a refcard of alchemist bindings. `alchemist-refcard`|
+|<kbd>C-c ; h h</kbd>| Run a custom search. `alchemist-help`              |
+|<kbd>C-c ; h i</kbd>| Look through search history. `alchemist-help-history` |
+|<kbd>C-c ; h e</kbd>| Run `alchemist-help` with the expression under the cursor. (example: `is_binary`  or `Code.eval_string`). If there is a currently marked region this will be used as the search term. `alchemist-help-search-at-point` |
+|<kbd>C-c ; h r</kbd>| Open a buffer with a refcard of alchemist bindings. `alchemist-refcard`|
 
 ### Alchemist Help Minor Mode Keymap
 
@@ -203,14 +203,14 @@ before run <kbd>M-x alchemist-iex-run</kbd>
 
 | Keybinding | Description |
 |--------------------|------------------------------------------|
-|<kbd>C-c a i i</kbd>| Start an IEx process. `alchemist-iex-run`|
-|<kbd>C-c a i p</kbd>| Start an IEx process with mix (`iex -S mix`). `alchemist-iex-project-run`|
-|<kbd>C-c a i l</kbd>| Sends the current line to the IEx process. `alchemist-iex-send-current-line`|
-|<kbd>C-c a i c</kbd>| Sends the current line to the IEx process and jump to the buffer. `alchemist-iex-send-current-line-and-go`|
-|<kbd>C-c a i r</kbd>| Sends the marked region to the IEx process. `alchemist-iex-send-region`|
-|<kbd>C-c a i m</kbd>| Sends the marked region to the IEx process and jump to the buffer. `alchemist-iex-send-region-and-go`|
-|<kbd>C-c a i b</kbd>| Compiles the current buffer in the IEx process. `alchemist-iex-compile-this-buffer`|
-|<kbd>C-c a i R</kbd>| Recompiles and reloads the current module in the IEx process. `alchemist-iex-reload-module`|
+|<kbd>C-c ; i i</kbd>| Start an IEx process. `alchemist-iex-run`|
+|<kbd>C-c ; i p</kbd>| Start an IEx process with mix (`iex -S mix`). `alchemist-iex-project-run`|
+|<kbd>C-c ; i l</kbd>| Sends the current line to the IEx process. `alchemist-iex-send-current-line`|
+|<kbd>C-c ; i c</kbd>| Sends the current line to the IEx process and jump to the buffer. `alchemist-iex-send-current-line-and-go`|
+|<kbd>C-c ; i r</kbd>| Sends the marked region to the IEx process. `alchemist-iex-send-region`|
+|<kbd>C-c ; i m</kbd>| Sends the marked region to the IEx process and jump to the buffer. `alchemist-iex-send-region-and-go`|
+|<kbd>C-c ; i b</kbd>| Compiles the current buffer in the IEx process. `alchemist-iex-compile-this-buffer`|
+|<kbd>C-c ; i R</kbd>| Recompiles and reloads the current module in the IEx process. `alchemist-iex-reload-module`|
 
 ### Complete & Documentation lookup
 
@@ -223,33 +223,33 @@ Alchemist comes with the functionality to evaluate code inside the buffer.
 
 | Keybinding | Description |
 |--------------------|------------------------------------------|
-|<kbd>C-c a v l</kbd>| Evaluate the Elixir code on the current line. `alchemist-eval-current-line`.|
-|<kbd>C-c a v k</kbd>| Evaluate the Elixir code on the current line and insert the result. `alchemist-eval-print-current-line`.|
-|<kbd>C-c a v j</kbd>| Get the Elixir code representation of the expression on the current line. `alchemist-eval-quoted-current-line`. |
-|<kbd>C-c a v h</kbd>| Get the Elixir code representation of the expression on the current line and insert the result. `alchemist-eval-print-quoted-current-line`. |
-|<kbd>C-c a v o</kbd>| Evaluate the Elixir code on marked region. `alchemist-eval-region`.|
-|<kbd>C-c a v i</kbd>| Evaluate the Elixir code on marked region and insert the result. `alchemist-eval-print-region`.|
-|<kbd>C-c a v u</kbd>| Get the Elixir code representation of the expression on marked region. `alchemist-eval-quoted-region`.|
-|<kbd>C-c a v y</kbd>| Get the Elixir code representation of the expression on marked region and insert the result. `alchemist-eval-print-quoted-region`.|
-|<kbd>C-c a v q</kbd>| Evaluate the Elixir code in the current buffer. `alchemist-eval-buffer`.|
-|<kbd>C-c a v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
-|<kbd>C-c a v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
-|<kbd>C-c a v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
-|<kbd>C-c a v !</kbd>| Quit the Elixir evaluation popup window. `alchemist-eval-close-popup`.|
+|<kbd>C-c ; v l</kbd>| Evaluate the Elixir code on the current line. `alchemist-eval-current-line`.|
+|<kbd>C-c ; v k</kbd>| Evaluate the Elixir code on the current line and insert the result. `alchemist-eval-print-current-line`.|
+|<kbd>C-c ; v j</kbd>| Get the Elixir code representation of the expression on the current line. `alchemist-eval-quoted-current-line`. |
+|<kbd>C-c ; v h</kbd>| Get the Elixir code representation of the expression on the current line and insert the result. `alchemist-eval-print-quoted-current-line`. |
+|<kbd>C-c ; v o</kbd>| Evaluate the Elixir code on marked region. `alchemist-eval-region`.|
+|<kbd>C-c ; v i</kbd>| Evaluate the Elixir code on marked region and insert the result. `alchemist-eval-print-region`.|
+|<kbd>C-c ; v u</kbd>| Get the Elixir code representation of the expression on marked region. `alchemist-eval-quoted-region`.|
+|<kbd>C-c ; v y</kbd>| Get the Elixir code representation of the expression on marked region and insert the result. `alchemist-eval-print-quoted-region`.|
+|<kbd>C-c ; v q</kbd>| Evaluate the Elixir code in the current buffer. `alchemist-eval-buffer`.|
+|<kbd>C-c ; v w</kbd>| Evaluate the Elixir code in the current buffer and insert the result. `alchemist-eval-print-buffer`.|
+|<kbd>C-c ; v e</kbd>| Get the Elixir code representation of the expression in the current buffer. `alchemist-eval-quoted-buffer`.|
+|<kbd>C-c ; v r</kbd>| Get the Elixir code representation of the expression in the current buffer and insert result. `alchemist-eval-print-quoted-buffer`.|
+|<kbd>C-c ; v !</kbd>| Quit the Elixir evaluation popup window. `alchemist-eval-close-popup`.|
 
 ## Macroexpand
 
 | Keybinding | Description | Command |
 |--------------------|------------------------------------------|------------------------------------------------|
-|<kbd>C-c a o l</kbd>| Macro expand once on the current line. | `alchemist-macroexpand-once-current-line`.|
-|<kbd>C-c a o L</kbd>| Macro expand once on the current line and print the result. | `alchemist-macroexpand-once-print-current-line`.|
-|<kbd>C-c a o k</kbd>| Macro expand on the current line. | `alchemist-macroexpand-current-line`.|
-|<kbd>C-c a o K</kbd>| Macro expand on the current line and print the result. | `alchemist-macroexpand-print-current-line`.|
-|<kbd>C-c a o i</kbd>| Macro expand once on region. | `alchemist-macroexpand-once-region`.|
-|<kbd>C-c a o I</kbd>| Macro expand once on region and print the result. | `alchemist-macroexpand-once-print-region`.|
-|<kbd>C-c a o r</kbd>| Macro expand on region. | `alchemist-macroexpand-region`.|
-|<kbd>C-c a o R</kbd>| Macro expand on region and print the result. | `alchemist-macroexpand-print-region`.|
-|<kbd>C-c a o !</kbd>| Quit the Elixir macroexpand popup window. | `alchemist-macroexpand-close-popup`.|
+|<kbd>C-c ; o l</kbd>| Macro expand once on the current line. | `alchemist-macroexpand-once-current-line`.|
+|<kbd>C-c ; o L</kbd>| Macro expand once on the current line and print the result. | `alchemist-macroexpand-once-print-current-line`.|
+|<kbd>C-c ; o k</kbd>| Macro expand on the current line. | `alchemist-macroexpand-current-line`.|
+|<kbd>C-c ; o K</kbd>| Macro expand on the current line and print the result. | `alchemist-macroexpand-print-current-line`.|
+|<kbd>C-c ; o i</kbd>| Macro expand once on region. | `alchemist-macroexpand-once-region`.|
+|<kbd>C-c ; o I</kbd>| Macro expand once on region and print the result. | `alchemist-macroexpand-once-print-region`.|
+|<kbd>C-c ; o r</kbd>| Macro expand on region. | `alchemist-macroexpand-region`.|
+|<kbd>C-c ; o R</kbd>| Macro expand on region and print the result. | `alchemist-macroexpand-print-region`.|
+|<kbd>C-c ; o !</kbd>| Quit the Elixir macroexpand popup window. | `alchemist-macroexpand-close-popup`.|
 
 **Note**
 
@@ -285,8 +285,8 @@ These two helper functions are available now with the following keybindings/func
 
 | Keybinding | Description |
 |--------------------|------------------------------------------|
-|<kbd>C-c a f i</kbd>| Prints information about any datatype under the cursor. `alchemist-info-datatype-at-point` |
-|<kbd>C-c a f t</kbd>| Prints information of types under the cursor. `alchemist-info-types-at-point` |
+|<kbd>C-c ; f i</kbd>| Prints information about any datatype under the cursor. `alchemist-info-datatype-at-point` |
+|<kbd>C-c ; f t</kbd>| Prints information of types under the cursor. `alchemist-info-types-at-point` |
 
 ## Testing Mode
 
@@ -320,7 +320,7 @@ The tests are reported in the `alchemist-test-report-mode`, which have the follo
 
 Alchemist comes with a default keymap.
 
-The the default prefix keybinding is <kbd>C-c a</kbd>
+The default prefix keybinding is <kbd>C-c ;</kbd>. It can configured to something else easily, see the documentation.
 
 ### Refcards
 

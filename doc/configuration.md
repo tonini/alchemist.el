@@ -66,10 +66,10 @@ through the variable.
 
 ### Keybindings
 
-* Use a different keybinding prefix than <kbd>C-c a</kbd>
+* Use a different keybinding prefix than <kbd>C-c ;</kbd>
 
 ```el
-(setq alchemist-key-command-prefix (kbd "C-c ,")) ;; default: (kbd "C-c a")
+(setq alchemist-key-command-prefix (kbd "C-c ,")) ;; default: (kbd "C-c ;")
 ```
 
 ### Testing Mode
