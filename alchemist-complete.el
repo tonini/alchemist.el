@@ -43,6 +43,9 @@
             (add-to-list (make-local-variable 'company-backends)
                          'company-lsp)))
 
+(eval-after-load 'company
+  '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
+
 (provide 'alchemist-complete)
 
 ;;; alchemist-complete.el ends here
