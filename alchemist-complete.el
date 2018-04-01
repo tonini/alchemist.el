@@ -32,6 +32,7 @@
 
 (require 'company)
 (require 'company-lsp)
+(require 'company-quickhelp)
 
 (add-hook 'alchemist-mode-hook
           (lambda ()
@@ -45,6 +46,9 @@
 
 (eval-after-load 'company
   '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
+
+(add-hook 'alchemist-mode-hook 'company-mode)
+(add-hook 'alchemist-mode-hook 'company-quickhelp-mode)
 
 (provide 'alchemist-complete)
 
