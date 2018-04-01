@@ -15,16 +15,29 @@
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 (add-hook 'alchemist-mode-hook 'lsp-elixir-mode-enable)
 
-(defun alchemist-macro-expand ()
-  (interactive)
+(defun alchemist-macro-expand (start-pos end-pos)
+  "Expands the selected code once.
+
+This function has some string manipulation logic because elixir_sense returns
+a string that begins and ends with parens, so we get rid of them to print something
+meaningful to the user."
+  (interactive "r")
   (lsp--cur-workspace-check)
-  (let (x (lsp-send-request (lsp-make-request
-                           "elixirDocument/macroExpansion"
-                           `(
-                             :position ,(lsp--cur-position)
-                             :textDocument ,(lsp--make-text-document-item)))))
-    (message "%s" x)
-    ))
+  (let* ((selected-code (buffer-substring-no-properties start-pos end-pos))
+         (response (lsp-send-request
+                    (lsp-make-request
+                     "elixirDocument/macroExpansion"
+                     `(:context (:selection ,selected-code)
+                                :position ,(lsp--cur-position)
+                                :textDocument ,(lsp--make-text-document-item)))))
+         (expansion (gethash "expand" response))
+         (lines (cdr (butlast (split-string expansion "\n"))))
+         (insertable (string-join
+                      (mapcar (lambda (x) (concat "# " x)) lines)
+                      "\n")))
+    (save-excursion (goto-char start-pos)
+                    (previous-line)
+                    (insert insertable))))
 
 (defalias 'alchemist-format-buffer 'lsp-format-buffer)
 
