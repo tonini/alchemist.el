@@ -303,18 +303,18 @@ Alchemist comes with an minor mode for testing which will be enabled by default 
 
 ### Testing Report
 
-The tests are reported in the `alchemist-test-report-mode`, which have the following keybindings:
+The tests are reported in a [compilation buffer](https://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html#Compilation-Mode).  Some of the standard keybindings for that mode are:
 
-| Keybinding | Description |
-|--------------------|------------------------------------------|
-|<kbd>r</kbd>| Rerun the latest test run. `alchemist-mix-rerun-last-test` |
-|<kbd>t</kbd>| Toggle truncating of long lines for the current test buffer. `toggle-truncate-lines` |
-|<kbd>M-n</kbd>| Jump to the next error in the test report. `alchemist-test-next-result` |
-|<kbd>M-p</kbd>| Jump to the previous error in the test report. `alchemist-test-previous-result` |
-|<kbd>M-N</kbd>| Jump to the next stacktrace file in the test report. `alchemist-test-next-stacktrace-file` |
-|<kbd>M-P</kbd>| Jump to the previous stacktrace file in the test report. `alchemist-test-previous-stacktrace-file` |
-|<kbd>C-c C-k</kbd>| Interrupt the current running report process. `alchemist-report-interrupt-current-process` |
-|<kbd>q</kbd>| Close the test report window |
+| Keybinding       | Description |
+|------------------|------------------------------------------|
+|<kbd>g</kbd>      | Rerun the latest test run. Equivalent to `alchemist-mix-rerun-last-test` |
+|<kbd>M-n</kbd>    | Jump to the next error in the test report.|
+|<kbd>M-g n</kbd   | Visit the locus of the next error in another buffer.|
+|<kbd>M-p</kbd>    | Jump to the previous error in the test report. |
+|<kbd>M-g n</kbd   | Visit the locus of the previous error in another buffer.|
+|<kbd>C-c C-f</kbd>| Toggle Next Error Follow minor mode, which makes `M-{n|p}` behave like `M-g {n|p}`|
+|<kbd>C-c C-k</kbd>| Interrupt the current running report process. |
+|<kbd>q</kbd>      | Close the test report window |
 
 ## Keymap
 

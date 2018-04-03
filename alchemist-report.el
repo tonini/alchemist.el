@@ -97,9 +97,6 @@ Argument for the exit function is the STATUS and BUFFER of the finished process.
   "Process filter for report buffers."
   (with-current-buffer (process-buffer process)
     (let* ((buffer-read-only nil)
-           (output (if (string= (process-name process) alchemist-test-report-process-name)
-                       (alchemist-test-clean-compilation-output output)
-                     output))
            (moving (= (point) (process-mark process))))
       (save-excursion
         (goto-char (process-mark process))
