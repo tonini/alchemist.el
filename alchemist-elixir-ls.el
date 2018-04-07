@@ -1,6 +1,7 @@
 ;;; alchemist-elixir-ls.el --- Functionality to jump modules and function definitions -*- lexical-binding: t -*-
 
 (require 'alchemist-project)
+(require 'lsp-imenu)
 (require 'lsp-mode)
 (require 'elixir-mode)
 (require 'dash)
@@ -14,6 +15,7 @@
 
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 (add-hook 'alchemist-mode-hook 'lsp-elixir-mode-enable)
+(add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
 
 (defun alchemist-macro-expand (start-pos end-pos)
   "Expands the selected code once.
