@@ -33,6 +33,8 @@
 (require 'company)
 (require 'company-lsp)
 (require 'company-quickhelp)
+(require 'xref)
+(require 'etags)
 
 (add-hook 'alchemist-mode-hook
           (lambda ()
@@ -49,6 +51,17 @@
 
 (add-hook 'alchemist-mode-hook 'company-mode)
 (add-hook 'alchemist-mode-hook 'company-quickhelp-mode)
+
+(defun alchemist-company-open-definition (candidate)
+  (interactive)
+  (alchemist-goto--open-definition candidate))
+
+(defun alchemist-goto--open-definition (completion-candidate)
+  (with-temp-buffer
+    (alchemist-mode)
+    (lsp-elixir-mode-enable)
+    (insert completion-candidate)
+    (xref-find-definitions (alchemist-scope-expression))))
 
 (provide 'alchemist-complete)
 
