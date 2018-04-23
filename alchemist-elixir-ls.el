@@ -7,6 +7,17 @@
 (require 'dash)
 (require 's)
 
+(defgroup alchemist-server nil
+  "Which Language Server Protocol alchemist will use"
+  :prefix "alchemist-server-"
+  :group 'alchemist)
+
+(defcustom alchemist-server-extension 'sh
+  "Help alchemist decide if you are running on a *nix or Microsoft machine"
+  :type '(choice (const :tag "Windows" exe)
+                 (const :tag "*nix" sh))
+  :group 'alchemist-server)
+
 (lsp-define-stdio-client
   lsp-elixir-mode
   "elixir"
