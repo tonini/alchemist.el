@@ -18,6 +18,29 @@
                  (const :tag "*nix" sh))
   :group 'alchemist-server)
 
+(defconst alchemist-server-root-path
+  (lambda () (concat (file-name-directory load-file-name) "elixir-ls/")))
+
+(defun alchemist-server-erlang-version (project-path)
+  (locate-user-emacs-file "alchemist-config")
+  ;; load file
+  ;; if empty, initialize hashmap ({alchemist: {version: 1, projects: {}}})
+  ;; load hashmap's projects key
+  ;; find key related to project
+  ;; if key not there, use completing-read to ask for an erlang version
+  ;; store key in file
+  ;; return erlang version
+  )
+
+(defun alchemist-lsp-server-full-path ()
+  (concat alchemist-server-root-path
+          "erl/"
+          alchemist-server-erlang-version
+          "/"
+          "language_server"
+          "."
+          alchemist-server-extension))
+
 (lsp-define-stdio-client
   lsp-elixir-mode
   "elixir"
@@ -27,6 +50,8 @@
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 (add-hook 'alchemist-mode-hook 'lsp-elixir-mode-enable)
 (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
+
+(defun)
 
 (defun alchemist-macro-expand (start-pos end-pos)
   "Expands the selected code once.
