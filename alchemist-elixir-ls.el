@@ -21,18 +21,55 @@
 (defconst alchemist-server-root-path
   (lambda () (concat (file-name-directory load-file-name) "elixir-ls/")))
 
-(defun alchemist-server-erlang-version (project-path)
-  (locate-user-emacs-file "alchemist-config")
-  ;; load file
-  ;; if empty, initialize hashmap ({alchemist: {version: 1, projects: {}}})
-  ;; load hashmap's projects key
-  ;; find key related to project
-  ;; if key not there, use completing-read to ask for an erlang version
-  ;; store key in file
-  ;; return erlang version
-  )
+(defun alchemist--server-erlang-version (project-path)
+  (let* ((project-settings-map (alchemist--project-settings))
+         (project-erlang-version (or (gethash project-path
+                                              (gethash "alchemist-projects" project-settings-map))
+                                     (completing-read "Choose which version of Erlang the LSP server should use: "
+                                                      '("19" "20")
+                                                      nil
+                                                      t
+                                                      ))))
+    (puthash project-path project-erlang-version (gethash "alchemist-projects" project-settings-map))
+    (setq alchemist--project-settings project-settings-map)
+    (alchemist--project-save-settings project-settings-map)
+    project-erlang-version))
 
-(defun alchemist-lsp-server-full-path ()
+;; (with-temp-file "/tmp/serialized.el" (prin1 (make-hash-table) (current-buffer))) ; serialize
+;; (with-temp-buffer (insert-file-contents "/tmp/serialized.el") (goto-char (point-min)) (read (current-buffer)))
+
+(defvar alchemist--project-settings nil
+  "Where alchemist keeps its project-level settings")
+
+(defun alchemist--project-settings ()
+  (or alchemist--project-settings
+      (setq alchemist--project-settings
+            (or (and (file-exists-p (alchemist--config-file-path))
+                     (alchemist--project-read-file))
+                (alchemist--project-init-settings-file)))))
+
+(defun alchemist--project-read-file ()
+  (with-temp-buffer
+    (insert-file-contents (alchemist--config-file-path))
+    (goto-char (point-min)) (read (current-buffer))))
+
+(defun alchemist--project-init-settings-file ()
+  (alchemist--project-save-settings (alchemist--default-project-settings-map)))
+
+(defun alchemist--project-save-settings (project-settings-map)
+  (with-temp-file (alchemist--config-file-path)
+    (prin1 project-settings-map (current-buffer))))
+
+(defun alchemist--default-project-settings-map ()
+  (let ((default-map (make-hash-table :test 'equal)))
+    (puthash "alchemist-projects-version" 1 default-map)
+    (puthash "alchemist-projects" (make-hash-table :test 'equal) default-map)
+    default-map))
+
+(defun alchemist--config-file-path ()
+  (locate-user-emacs-file "alchemist-project-settings.el"))
+
+(defun alchemist--lsp-server-full-path ()
   (concat alchemist-server-root-path
           "erl/"
           alchemist-server-erlang-version
@@ -42,10 +79,10 @@
           alchemist-server-extension))
 
 (lsp-define-stdio-client
-  lsp-elixir-mode
-  "elixir"
-   (lambda () (alchemist-project-root-or-default-dir))
-   '("~/src/projects/alchemist.el/elixir-ls/erl19/language_server.sh"))
+ lsp-elixir-mode
+ "elixir"
+ (lambda () (alchemist-project-root-or-default-dir))
+ '("~/src/projects/alchemist.el/elixir-ls/erl19/language_server.sh"))
 
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 (add-hook 'alchemist-mode-hook 'lsp-elixir-mode-enable)
