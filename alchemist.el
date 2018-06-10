@@ -81,10 +81,6 @@
 (require 'alchemist-phoenix)
 (require 'alchemist-elixir-ls)
 
-(defun alchemist-mode-hook ()
-  "Hook which enables `alchemist-mode'"
-  (alchemist-mode 1))
-
 (defun alchemist-version (&optional show-version)
   "Get the Alchemist version as string.
 
