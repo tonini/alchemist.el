@@ -119,8 +119,15 @@ Key bindings:
   :global nil
   :keymap `((,alchemist-key-command-prefix . alchemist-mode-keymap))
   (if alchemist-mode
-      (alchemist-test-initialize-modeline)
-    (alchemist-test-reset-modeline))
+      (alchemist-mode--enable)
+    (alchemist-mode--disable)))
+
+(defun alchemist-mode--enable ()
+  (alchemist-test-initialize-modeline)
+  (lsp-elixir-mode-enable))
+
+(defun alchemist-mode--disable ()
+  (alchemist-test-reset-modeline))
 
 (let ((map alchemist-mode-keymap))
   (define-key map (kbd "x") 'alchemist-mix)

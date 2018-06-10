@@ -19,7 +19,26 @@
   :group 'alchemist-server)
 
 (defconst alchemist-server-root-path
-  (lambda () (concat (file-name-directory load-file-name) "elixir-ls/")))
+  (concat (file-name-directory load-file-name) "elixir-ls/"))
+
+(defvar alchemist--project-settings nil
+  "Where alchemist keeps its project-level settings")
+
+(lsp-define-stdio-client
+ lsp-elixir-mode
+ "elixir"
+ (lambda () (alchemist-project-root-or-default-dir))
+ (alchemist--lsp-server-path-for-current-project))
+;; '("~/src/projects/alchemist.el/elixir-ls/erl19/language_server.sh")
+
+(defun alchemist--lsp-server-path-for-current-project ()
+  `(,(concat alchemist-server-root-path
+           "erl"
+           (alchemist--server-erlang-version (alchemist-project-root-or-default-dir))
+           "/"
+           "language_server"
+           "."
+           (alchemist--server-extension))))
 
 (defun alchemist--server-erlang-version (project-path)
   (let* ((project-settings-map (alchemist--project-settings))
@@ -35,11 +54,15 @@
     (alchemist--project-save-settings project-settings-map)
     project-erlang-version))
 
-;; (with-temp-file "/tmp/serialized.el" (prin1 (make-hash-table) (current-buffer))) ; serialize
-;; (with-temp-buffer (insert-file-contents "/tmp/serialized.el") (goto-char (point-min)) (read (current-buffer)))
-
-(defvar alchemist--project-settings nil
-  "Where alchemist keeps its project-level settings")
+(defun alchemist--server-extension ()
+  (let ((extension (or alchemist-server-extension
+                       (completing-read "Choose the kind of executable that runs on this system: "
+                                        '("sh" "exe")
+                                        nil
+                                        t
+                                        ))))
+    (setq alchemist-server-extension extension)
+    extension))
 
 (defun alchemist--project-settings ()
   (or alchemist--project-settings
@@ -69,26 +92,9 @@
 (defun alchemist--config-file-path ()
   (locate-user-emacs-file "alchemist-project-settings.el"))
 
-(defun alchemist--lsp-server-full-path ()
-  (concat alchemist-server-root-path
-          "erl/"
-          alchemist-server-erlang-version
-          "/"
-          "language_server"
-          "."
-          alchemist-server-extension))
-
-(lsp-define-stdio-client
- lsp-elixir-mode
- "elixir"
- (lambda () (alchemist-project-root-or-default-dir))
- '("~/src/projects/alchemist.el/elixir-ls/erl19/language_server.sh"))
-
 (add-hook 'lsp-mode-hook 'lsp-ui-mode)
 (add-hook 'alchemist-mode-hook 'lsp-elixir-mode-enable)
 (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
-
-(defun)
 
 (defun alchemist-macro-expand (start-pos end-pos)
   "Expands the selected code once.
