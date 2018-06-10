@@ -118,11 +118,9 @@ Key bindings:
   :group 'alchemist
   :global nil
   :keymap `((,alchemist-key-command-prefix . alchemist-mode-keymap))
-  (cond (alchemist-mode
-         ;;  (alchemist-server-start-if-not-running)
-         (alchemist-test-initialize-modeline))
-        (t
-         (alchemist-test-reset-modeline))))
+  (if alchemist-mode
+      (alchemist-test-initialize-modeline)
+    (alchemist-test-reset-modeline))
 
 (let ((map alchemist-mode-keymap))
   (define-key map (kbd "x") 'alchemist-mix)
