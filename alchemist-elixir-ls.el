@@ -12,7 +12,7 @@
   :prefix "alchemist-server-"
   :group 'alchemist)
 
-(defcustom alchemist-server-extension 'sh
+(defcustom alchemist-server-extension nil
   "Help alchemist decide if you are running on a *nix or Microsoft machine"
   :type '(choice (const :tag "Windows" exe)
                  (const :tag "*nix" sh))
