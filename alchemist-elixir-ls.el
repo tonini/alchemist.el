@@ -14,7 +14,7 @@
 
 (defcustom alchemist-server-extension nil
   "Help alchemist decide if you are running on a *nix or Microsoft machine"
-  :type '(choice (const :tag "Windows" exe)
+  :type '(choice (const :tag "Windows" bat)
                  (const :tag "*nix" sh))
   :group 'alchemist-server)
 
@@ -57,7 +57,7 @@
 (defun alchemist--server-extension ()
   (let ((extension (or alchemist-server-extension
                        (completing-read "Choose the kind of executable that runs on this system: "
-                                        '("sh" "exe")
+                                        '("sh" "bat")
                                         nil
                                         t
                                         ))))
