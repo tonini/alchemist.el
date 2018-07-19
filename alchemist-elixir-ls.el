@@ -12,12 +12,6 @@
   :prefix "alchemist-server-"
   :group 'alchemist)
 
-(defcustom alchemist-server-extension nil
-  "Help alchemist decide if you are running on a *nix or Microsoft machine"
-  :type '(choice (const :tag "Windows" bat)
-                 (const :tag "*nix" sh))
-  :group 'alchemist-server)
-
 (defconst alchemist-server-root-path
   (concat (file-name-directory load-file-name) "elixir-ls/"))
 
@@ -40,6 +34,7 @@
            "."
            (alchemist--server-extension))))
 
+
 (defun alchemist--server-erlang-version (project-path)
   (let* ((project-settings-map (alchemist--project-settings))
          (project-erlang-version (or (gethash project-path
@@ -55,14 +50,10 @@
     project-erlang-version))
 
 (defun alchemist--server-extension ()
-  (let ((extension (or alchemist-server-extension
-                       (completing-read "Choose the kind of executable that runs on this system: "
-                                        '("sh" "bat")
-                                        nil
-                                        t
-                                        ))))
-    (setq alchemist-server-extension extension)
-    extension))
+  (defvar alchemist-system-extension)
+  (cond ((eq system-type 'gnu/linux) (setq alchemist-system-extension "sh"))
+		((eq system-type 'windows-nt) (setq alchemist-system-extension "bat"))
+		((eq system-type 'darwin) (setq alchemist-system-extension "sh"))))
 
 (defun alchemist--project-settings ()
   (or alchemist--project-settings
