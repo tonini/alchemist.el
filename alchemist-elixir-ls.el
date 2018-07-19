@@ -50,10 +50,14 @@
     project-erlang-version))
 
 (defun alchemist--server-extension ()
-  (defvar alchemist-system-extension)
-  (cond ((eq system-type 'gnu/linux) (setq alchemist-system-extension "sh"))
-		((eq system-type 'windows-nt) (setq alchemist-system-extension "bat"))
-		((eq system-type 'darwin) (setq alchemist-system-extension "sh"))))
+  (make-local-variable 'alchemist--system-extension)
+  (cond	((eq system-type 'windows-nt) (setq alchemist--system-extension "bat"))
+		((eq system-type 'gnu/linux) (setq alchemist--system-extension "sh"))
+		((eq system-type 'gnu) (setq alchemist--system-extension "sh"))
+		((eq system-type 'gnu/kfreebsd) (setq alchemist--system-extension "sh"))
+		((eq system-type 'darwin) (setq alchemist--system-extension "sh"))
+		((eq system-type 'cygwin) (setq alchemist--system-extension "sh"))
+		(t (error "Alchemist.el: Failed to set extension for elixir-ls, you seem to be on an unsupported OS"))))
 
 (defun alchemist--project-settings ()
   (or alchemist--project-settings
