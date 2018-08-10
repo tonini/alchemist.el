@@ -295,7 +295,7 @@ Key bindings:
     ("About"
      ["Show Alchemist version" alchemist-version t])))
 
-(add-hook 'elixir-mode-hook 'alchemist-mode-hook)
+(add-hook 'elixir-mode-hook 'alchemist-mode)
 
 (provide 'alchemist)
 
