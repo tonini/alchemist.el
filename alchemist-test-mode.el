@@ -371,7 +371,7 @@ The following commands are available:
       (alchemist-test-mode)))
 
 ;;;###autoload
-(dolist (hook '(alchemist-mode-hook))
+(dolist (hook 'alchemist-mode-hook)
   (add-hook hook 'alchemist-test-enable-mode))
 
 (provide 'alchemist-test-mode)
