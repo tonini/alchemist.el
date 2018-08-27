@@ -137,8 +137,7 @@ The following commands are available:
     (alchemist-phoenix-mode)))
 
 ;;;###autoload
-(dolist (hook '(alchemist-mode-hook))
-  (add-hook hook 'alchemist-phoenix-enable-mode))
+(add-hook 'alchemist-mode-hook 'alchemist-phoenix-enable-mode)
 
 (provide 'alchemist-phoenix)
 

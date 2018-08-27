@@ -79,10 +79,6 @@
 (require 'alchemist-macroexpand)
 (require 'alchemist-phoenix)
 
-(defun alchemist-mode-hook ()
-  "Hook which enables `alchemist-mode'"
-  (alchemist-mode 1))
-
 (defun alchemist-version (&optional show-version)
   "Get the Alchemist version as string.
 
@@ -288,7 +284,7 @@ Key bindings:
     ("About"
      ["Show Alchemist version" alchemist-version t])))
 
-(add-hook 'elixir-mode-hook 'alchemist-mode-hook)
+(add-hook 'elixir-mode-hook 'alchemist-mode)
 
 (provide 'alchemist)
 
