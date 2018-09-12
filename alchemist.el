@@ -6,7 +6,7 @@
 ;; Maintainer: Samuel Tonini <tonini.samuel@gmail.com>
 ;; URL: http://www.github.com/tonini/alchemist.el
 ;; Version: 1.8.2
-;; Package-Requires: ((elixir-mode "2.2.5") (dash "2.11.0") (emacs "24.4") (company "0.8.0") (pkg-info "0.4") (s "1.11.0"))
+;; Package-Requires: ((elixir-mode "2.2.5") (dash "2.11.0") (emacs "24.4") (company "0.8.0") (pkg-info "0.4") (s "1.11.0") (lsp-mode "4.2"))
 ;; Keywords: languages, elixir, elixirc, mix, hex, alchemist
 
 ;; This file is not part of GNU Emacs.
@@ -63,11 +63,13 @@
 (require 'elixir-mode)
 (require 'alchemist-utils)
 (require 'alchemist-key)
-(require 'alchemist-eval)
 (require 'alchemist-goto)
 (require 'alchemist-info)
+  (require 'alchemist-info)
+  (require 'alchemist-file)
+  (require 'alchemist-project)
 (require 'alchemist-report)
-(require 'alchemist-mix)
+  (require 'alchemist-test-mode)
 (require 'alchemist-hex)
 (require 'alchemist-hooks)
 (require 'alchemist-message)
@@ -75,13 +77,9 @@
 (require 'alchemist-compile)
 (require 'alchemist-refcard)
 (require 'alchemist-complete)
-(require 'alchemist-company)
 (require 'alchemist-macroexpand)
 (require 'alchemist-phoenix)
-
-(defun alchemist-mode-hook ()
-  "Hook which enables `alchemist-mode'"
-  (alchemist-mode 1))
+(require 'alchemist-elixir-ls)
 
 (defun alchemist-version (&optional show-version)
   "Get the Alchemist version as string.
@@ -120,11 +118,16 @@ Key bindings:
   :group 'alchemist
   :global nil
   :keymap `((,alchemist-key-command-prefix . alchemist-mode-keymap))
-  (cond (alchemist-mode
-         (alchemist-server-start-if-not-running)
-         (alchemist-test-initialize-modeline))
-        (t
-         (alchemist-test-reset-modeline))))
+  (if alchemist-mode
+      (alchemist-mode--enable)
+    (alchemist-mode--disable)))
+
+(defun alchemist-mode--enable ()
+  (alchemist-test-initialize-modeline)
+  (lsp-elixir-mode-enable))
+
+(defun alchemist-mode--disable ()
+  (alchemist-test-reset-modeline))
 
 (let ((map alchemist-mode-keymap))
   (define-key map (kbd "x") 'alchemist-mix)
@@ -150,6 +153,7 @@ Key bindings:
 
   (define-key map (kbd "h h") 'alchemist-help)
   (define-key map (kbd "h i") 'alchemist-help-history)
+  ;; !!
   (define-key map (kbd "h e") 'alchemist-help-search-at-point)
   (define-key map (kbd "h r") 'alchemist-refcard)
 
@@ -192,7 +196,9 @@ Key bindings:
   (define-key map (kbd "o R") 'alchemist-macroexpand-print-region)
   (define-key map (kbd "o !") 'alchemist-macroexpand-close-popup)
 
+  ;; !!!
   (define-key map (kbd "f i") 'alchemist-info-datatype-at-point)
+  ;; !!!
   (define-key map (kbd "f t") 'alchemist-info-types-at-point)
 
   (define-key map (kbd "X i") 'alchemist-hex-info-at-point)
@@ -202,8 +208,9 @@ Key bindings:
   (define-key map (kbd "X I") 'alchemist-hex-info)
   (define-key map (kbd "X d") 'alchemist-hex-all-dependencies))
 
-(define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
-(define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
+ (define-key alchemist-mode-map (kbd "M-.") 'alchemist-goto-definition-at-point)
+ (define-key alchemist-mode-map (kbd "M-,") 'alchemist-goto-jump-back)
+;; !!!
 (define-key alchemist-mode-map (kbd "C-c , .") 'alchemist-goto-list-symbol-definitions)
 (define-key alchemist-mode-map (kbd "M-P") 'alchemist-goto-jump-to-previous-def-symbol)
 (define-key alchemist-mode-map (kbd "M-N") 'alchemist-goto-jump-to-next-def-symbol)
@@ -288,7 +295,7 @@ Key bindings:
     ("About"
      ["Show Alchemist version" alchemist-version t])))
 
-(add-hook 'elixir-mode-hook 'alchemist-mode-hook)
+(add-hook 'elixir-mode-hook 'alchemist-mode)
 
 (provide 'alchemist)
 

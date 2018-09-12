@@ -29,119 +29,39 @@
 (require 'dash)
 (require 's)
 (require 'ansi-color)
-(require 'company-dabbrev-code)
-(require 'alchemist-utils)
 
-(defgroup alchemist-complete nil
-  "Complete functionality for Elixir source code."
-  :prefix "alchemist-complete-"
-  :group 'alchemist)
+(require 'company)
+(require 'company-lsp)
+(require 'company-quickhelp)
+(require 'xref)
+(require 'etags)
 
-(defvar alchemist-company-last-completion nil)
+(add-hook 'alchemist-mode-hook
+          (lambda ()
+            (add-to-list (make-local-variable 'company-backends)
+                         'company-lsp)))
 
-(defun alchemist-complete--concat-prefix-with-functions (prefix functions &optional add-prefix)
-  (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
-         (candidates (-map (lambda (c) (concat prefix "." c)) (cdr functions))))
-    (if add-prefix
-        (push prefix candidates)
-      candidates)))
+(add-hook 'alchemist-iex-mode-hook
+          (lambda ()
+            (add-to-list (make-local-variable 'company-backends)
+                         'company-lsp)))
 
-(defun alchemist-complete--add-prefix-to-function (prefix function)
-  (let* ((prefix (mapconcat 'concat (butlast (split-string prefix "\\.") 1) "."))
-         (candidate (concat prefix "." function)))
-    candidate))
+(eval-after-load 'company
+  '(define-key company-active-map (kbd "C-c h") #'company-quickhelp-manual-begin))
 
-(defun alchemist-complete--build-candidates (a-list)
-  (let* ((case-fold-search nil)
-	 (search-term (car a-list))
-	 (candidates (if (string-match-p "^.+/" (car a-list))
-			 a-list
-		       (cdr a-list)))
-	 (candidates (-map (lambda (f)
-			     (let* ((candidate f)
-                                      (meta (if (string-match-p "^.+/" f)
-                                                (replace-regexp-in-string "^.+/" "/" f)
-                                              "")))
-				 (cond
-                                  ((and (string-match-p "^:" search-term)
-                                        (not (string-match-p "\\." search-term)))
-                                   (unless (string= search-term candidate)
-                                     (propertize (concat ":" candidate))
-                                     ))
-                                  ((string-match-p "\\." search-term)
-                                   (unless (string= search-term candidate)
-                                     (propertize (alchemist-complete--add-prefix-to-function (concat (alchemist-scope-extract-module search-term) ".")
-                                                                                             (replace-regexp-in-string "/[0-9]$" "" candidate)) 'meta meta)))
-                                  ((string-match-p "/[0-9]$" candidate)
-				   (propertize (replace-regexp-in-string "/[0-9]$" "" candidate) 'meta meta))
-				  ((string-match-p "^[A-Z0-9]" candidate)
-				   (propertize candidate 'meta meta)))))
-                             candidates))
-         (candidates (-remove 'null candidates)))
-    (cond
-     ((and (string-match-p "\\.$" search-term)
-           (not (string-match-p "\\.$" alchemist-company-last-completion)))
-      (push (alchemist-utils-remove-dot-at-the-end search-term) candidates))
-     (t candidates))))
+(add-hook 'alchemist-mode-hook 'company-mode)
+(add-hook 'alchemist-mode-hook 'company-quickhelp-mode)
 
-(defun alchemist-complete--build-help-candidates (a-list)
-  (let* ((search-term (car a-list))
-         (candidates (cond ((> (alchemist-utils-count-char-occurence "\\." search-term) 1)
-                            (let ((search (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
-                                              (list (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "" search-term))
-                                            (list (alchemist-utils-remove-dot-at-the-end search-term))))
-                                  (candidates (-map (lambda (c)
-                                                        (if (string-match-p "\\.[a-z0-9_\?!]+$" search-term)
-                                                            (concat (replace-regexp-in-string "\\.[a-z0-9_\?!]+$" "." search-term) c)
-                                                          (concat search-term c)))
-                                                      (cdr a-list))))
-                              (append search candidates)))
-                            ((string-match-p "\\.$" search-term)
-                            (alchemist-complete--concat-prefix-with-functions search-term a-list t))
-                           ((string-match-p "\\.[a-z0-9_\?!]+$" search-term)
-                            (alchemist-complete--concat-prefix-with-functions search-term a-list))
-                           (t a-list))))
-    (-distinct candidates)))
+(defun alchemist-company-open-definition (candidate)
+  (interactive)
+  (alchemist-goto--open-definition candidate))
 
-(defun alchemist-complete--output-to-list (output)
-  (let* ((output (split-string output)))
-    (-remove 'null output)))
-
-(defun alchemist-complete--build-candidates-from-process-output (output)
-  (let* ((output (alchemist-server-prepare-filter-output output))
-         (candidates (if (not (s-blank? output))
-                         (alchemist-complete--output-to-list
-                          (ansi-color-filter-apply output))
-                       '()))
-         (candidates (if candidates
-                         (alchemist-complete--build-candidates candidates)
-                       '())))
-    candidates))
-
-(defun alchemist-complete--completing-prompt (initial completing-collection)
-  (let* ((completing-collection (alchemist-complete--build-help-candidates completing-collection)))
-    (cond ((equal (length completing-collection) 1)
-           (car completing-collection))
-          (completing-collection
-           (completing-read
-            "Elixir help: "
-            completing-collection
-            nil
-            nil
-            (replace-regexp-in-string "\\.$" "" initial)))
-          (t initial))))
-
-(defun alchemist-complete--dabbrev-code-candidates ()
-  "This function uses a piece of functionality of company-dabbrev-code backend.
-
-Please have a look at the company-dabbrev-code function for more
-detailed information."
-  (let ((case-fold-search nil))
-    (-distinct (company-dabbrev--search
-                (company-dabbrev-code--make-regexp alchemist-company-last-completion)
-                company-dabbrev-code-time-limit
-                (list major-mode)
-                t))))
+(defun alchemist-goto--open-definition (completion-candidate)
+  (with-temp-buffer
+    (alchemist-mode)
+    (lsp-elixir-mode-enable)
+    (insert completion-candidate)
+    (xref-find-definitions (alchemist-scope-expression))))
 
 (provide 'alchemist-complete)
 

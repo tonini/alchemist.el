@@ -6,8 +6,7 @@ otp_release:
   - 19.0
 cache: apt
 env:
-  - EVM_EMACS=emacs-24.4-travis
-  - EVM_EMACS=emacs-24.5-travis
+  - EVM_EMACS=emacs-25.1-travis
 before_install:
   - curl -fsSkL https://gist.githubusercontent.com/tonini/74a12bfd4f99e872385de6ea0bc39700/raw > x.sh && source ./x.sh
   - evm install $EVM_EMACS --use --skip
