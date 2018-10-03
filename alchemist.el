@@ -6,7 +6,7 @@
 ;; Maintainer: Samuel Tonini <tonini.samuel@gmail.com>
 ;; URL: http://www.github.com/tonini/alchemist.el
 ;; Version: 1.8.2
-;; Package-Requires: ((elixir-mode "2.2.5") (dash "2.11.0") (emacs "24.4") (company "0.8.0") (pkg-info "0.4") (s "1.11.0"))
+;; Package-Requires: ((lsp-mode "4.2") (lsp-ui "20181001.1747") (elixir-mode "2.2.5") (dash "2.11.0") (emacs "24.4") (company "0.8.0") (pkg-info "0.4") (s "1.11.0"))
 ;; Keywords: languages, elixir, elixirc, mix, hex, alchemist
 
 ;; This file is not part of GNU Emacs.
@@ -78,10 +78,6 @@
 (require 'alchemist-company)
 (require 'alchemist-macroexpand)
 (require 'alchemist-phoenix)
-
-(defun alchemist-mode-hook ()
-  "Hook which enables `alchemist-mode'"
-  (alchemist-mode 1))
 
 (defun alchemist-version (&optional show-version)
   "Get the Alchemist version as string.
@@ -288,7 +284,7 @@ Key bindings:
     ("About"
      ["Show Alchemist version" alchemist-version t])))
 
-(add-hook 'elixir-mode-hook 'alchemist-mode-hook)
+(add-hook 'elixir-mode-hook 'alchemist-mode)
 
 (provide 'alchemist)
 
