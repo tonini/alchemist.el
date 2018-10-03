@@ -30,6 +30,11 @@
 (require 'lsp-imenu)
 (require 'alchemist-elixir-ls)
 
+(defcustom alchemist-goto-elixir-source-dir ""
+  "Path to the elixir source code."
+  :type 'string
+  :group 'alchemist-goto)
+
 (defalias 'alchemist-goto-definition-at-point '(lambda ()
                                                  (interactive)
                                                  (xref-find-definitions (alchemist-scope-expression))))
