@@ -1,4 +1,4 @@
-;;; alchemist-phoenix-test.el ---
+;;; alchemist-phoenix-test.el --- Summary
 
 ;; Copyright © 2014-2017 Samuel Tonini
 ;;
@@ -25,14 +25,13 @@
 
 (ert-deftest alchemist-phoenix-test/a-phoenix-project ()
   (with-sandbox
-   (f-touch "mix.exs")
-   (f-mkdir "web")
+   (f-write "{:phoenix, \"~> 1.3.4\"}" 'utf-8 "mix.exs")
    (should (alchemist-phoenix-project-p))))
 
 (ert-deftest alchemist-phoenix-test/no-phoenix-project ()
   (with-sandbox
-   (f-touch "mix.exs")
-   (f-mkdir "lib")
+   (f-write "{:cowboy, \"~> 1.0\"}" 'utf-8 "mix.exs")
    (should-not (alchemist-phoenix-project-p))))
 
 (provide 'alchemist-phoenix-test)
+;;; alchemist-phoenix-test.el ends here

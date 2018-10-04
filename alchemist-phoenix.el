@@ -37,7 +37,10 @@
 (defun alchemist-phoenix-project-p ()
   "Return non-nil if `default-directory' is inside a Phoenix project."
   (and (alchemist-project-p)
-       (file-directory-p (concat (alchemist-project-root) "web"))))
+       (file-exists-p (concat (alchemist-project-root) alchemist-project-mix-project-indicator))
+       (with-temp-buffer
+	 (insert-file-contents (concat (alchemist-project-root) alchemist-project-mix-project-indicator))
+	 (string-match-p ":phoenix" (buffer-string)))))
 
 (defun alchemist-phoenix-find-dir (directory)
   (unless (alchemist-phoenix-project-p)
