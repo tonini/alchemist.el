@@ -87,7 +87,7 @@
 
 (defun alchemist-phoenix--app-name ()
   "Determines the Phoenix app name."
-  (f-filename (alchemist-project-root)))
+  (file-name-nondirectory (directory-file-name (alchemist-project-root))))
 
 (defvar alchemist-phoenix-command-map
   (let ((map (make-sparse-keymap)))
