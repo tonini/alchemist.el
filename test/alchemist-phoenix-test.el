@@ -1,4 +1,4 @@
-;;; alchemist-phoenix-test.el ---
+;;; alchemist-phoenix-test.el --- Summary
 
 ;; Copyright © 2014-2017 Samuel Tonini
 ;;
@@ -34,3 +34,4 @@
    (should-not (alchemist-phoenix-project-p))))
 
 (provide 'alchemist-phoenix-test)
+;;; alchemist-phoenix-test.el ends here
