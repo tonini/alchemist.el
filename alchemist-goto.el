@@ -58,10 +58,10 @@
 (defvar alchemist-goto-callback nil)
 
 (defconst alchemist-goto--symbol-def-extract-regex
-  "^\\s-*\\(defp?\\|defmacrop?\\|quote\\|defmodule\\|defimpl\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
+  "^\\s-*\\(defp?\\|defmacrop?\\|quote\\|defmodule\\|defimpl\\|cond\\)[ \n\t]+\\([a-z_\?!]+\\)\\(.*\\)\\(do\\|\n\\)?$")
 
 (defconst alchemist-goto--symbol-def-regex
-  "^[[:space:]]*\\(defmodule\\|defmacrop?\\|quote\\|defimpl\\|defp?\\)")
+  "^[[:space:]]*\\(defmodule\\|defmacrop?\\|quote\\|defimpl\\|defp?\\|cond\\)")
 
 ;; Faces
 
