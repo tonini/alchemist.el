@@ -60,14 +60,16 @@ iex(1)>
   "Hook for customizing `alchemist-iex-mode'.")
 
 (defvar alchemist-iex-mode-map
-  (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
+  (let ((map (make-sparse-keymap))
+        (submap (make-sparse-keymap)))
     (define-key map "\t" 'company-complete)
     (define-key map (kbd "TAB") 'company-complete)
-    (define-key map (kbd (format "%s i r" alchemist-key-command-prefix)) 'alchemist-iex-open-input-ring)
-    (define-key map (kbd (format "%s i c" alchemist-key-command-prefix)) 'alchemist-iex-clear-buffer)
-    (define-key map (kbd (format "%s h e" alchemist-key-command-prefix)) 'alchemist-help-search-at-point)
+    (define-key submap (kbd "i r") 'alchemist-iex-open-input-ring)
+    (define-key submap (kbd "i c") 'alchemist-iex-clear-buffer)
+    (define-key submap (kbd "h e") 'alchemist-help-search-at-point)
     (define-key map (kbd "M-.") 'alchemist-goto-definition-at-point)
-    map))
+    (define-key map alchemist-key-command-prefix submap)
+    (make-composed-keymap map comint-mode-map)))
 
 (define-derived-mode alchemist-iex-mode comint-mode "Alchemist-IEx"
   "Major mode for interacting with an Elixir IEx process.
