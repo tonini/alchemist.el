@@ -33,7 +33,7 @@
   :prefix "alchemist-scope-"
   :group 'alchemist)
 
-(defconst alchemist-scope-defmodule-regex "defmodule \\([A-Z][A-Za-z0-9\._]+\\)\s+"
+(defconst alchemist-scope-defmodule-regex "defmodule \\([A-Z:][A-Za-z0-9\._]+\\)\s+"
   "The regex for matching Elixir defmodule macro.")
 
 (defconst alchemist-scope-alias-regex
@@ -43,7 +43,7 @@
    alias Phoenix.Router.Resource, as: Special")
 
 (defconst alchemist-scope-alias-regex-two
-  "^\s+alias\s+\\([-:_A-Za-z0-9,\.\?!\]+\\)\.{\\([-:_A-Za-z0-9\s,\.\?!\]+\\)}\n"
+  "^\s+alias\s+\\([-:_A-Za-z0-9,\.\?!\]+\\)\.{\\([\n-:_A-Za-z0-9\s,\.\?!\]+\\)}\n"
   "The regex for matching Elixir alias definitions.
    Example:
    alias List.Chars.{Atom, Float}")
@@ -123,7 +123,7 @@
                  (not (alchemist-scope-inside-string-p))
                  (equal context (alchemist-scope-module)))
             (let* ((prefix (match-string 1))
-                   (alias-collection (if (match-string 2) (split-string (match-string 2) ",") nil)))
+                   (alias-collection (if (match-string 2) (split-string (replace-regexp-in-string "\n" "" (match-string 2)) ",") nil)))
               (-map (lambda (alias)
                       (let* ((alias (replace-regexp-in-string "\s+" "" alias))
                              (namespace (format "%s.%s" prefix alias)))
