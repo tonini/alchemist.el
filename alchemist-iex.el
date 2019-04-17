@@ -214,6 +214,12 @@ Show the IEx buffer if an IEx process is already run."
         (pop-to-buffer (process-buffer (alchemist-iex-process " -S mix"))))
     (message "No mix.exs file available. Please use `alchemist-iex-run' instead.")))
 
+(when (and (not (getenv "ELIXIR_EDITOR"))
+           (boundp 'server-process)
+           server-process
+           (memq (process-status server-process) '(listen connect open run)))
+  (setenv "ELIXIR_EDITOR" "emacsclient --no-wait +__LINE__ __FILE__"))
+
 (provide 'alchemist-iex)
 
 ;;; alchemist-iex.el ends here
