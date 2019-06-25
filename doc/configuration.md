@@ -117,3 +117,9 @@ through the variable.
 ```el
 (setq alchemist-hooks-compile-on-save t)
 ```
+
+* Start Alchemist minor mode automatically with elixir-mode when opening .ex or .exs files
+
+```el
+(add-hook 'elixir-mode-hook 'alchemist-mode)
+```
