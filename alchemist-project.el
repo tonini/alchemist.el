@@ -117,8 +117,8 @@ directory from there instead."
   "Return the file which are tested by FILE.
 DIRECTORY is the place where the file under test is located."
   (let* ((filename (file-relative-name file (alchemist-project-root)))
-         (filename (replace-regexp-in-string "^test" directory filename))
-         (filename (replace-regexp-in-string "_test\.exs$" "\.ex" filename)))
+         (filename (replace-regexp-in-string "_test\.exs$" "\.ex" filename))
+         (filename (replace-regexp-in-string "test" directory filename)))
     (concat (alchemist-project-root) filename)))
 
 (defun alchemist-project-open-file-for-current-tests (opener)
