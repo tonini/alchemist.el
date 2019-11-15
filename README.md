@@ -26,7 +26,7 @@ Alchemist comes with a bunch of **features**, which are:
 * Smart code completion
 * Elixir project management
 * Phoenix support
-* Integration with [company-mode](http://company-mode.github.io/)
+* Optional integration with [company-mode](http://company-mode.github.io/)
 
 ***
 

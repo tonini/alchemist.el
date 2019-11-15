@@ -29,7 +29,7 @@
 (require 'dash)
 (require 's)
 (require 'ansi-color)
-(require 'company-dabbrev-code)
+(require 'company-dabbrev-code nil t)
 (require 'alchemist-utils)
 
 (defgroup alchemist-complete nil
