@@ -26,7 +26,7 @@
 ;;; Code:
 
 (require 'comint)
-(require 'company)
+(require 'company nil t)
 (require 'alchemist-key)
 (require 'alchemist-scope)
 (require 'alchemist-project)
@@ -61,8 +61,9 @@ iex(1)>
 
 (defvar alchemist-iex-mode-map
   (let ((map (nconc (make-sparse-keymap) comint-mode-map)))
-    (define-key map "\t" 'company-complete)
-    (define-key map (kbd "TAB") 'company-complete)
+    (when (featurep 'company)
+      (define-key map "\t" 'company-complete)
+      (define-key map (kbd "TAB") 'company-complete))
     (define-key map (kbd (format "%s i r" alchemist-key-command-prefix)) 'alchemist-iex-open-input-ring)
     (define-key map (kbd (format "%s i c" alchemist-key-command-prefix)) 'alchemist-iex-clear-buffer)
     (define-key map (kbd (format "%s h e" alchemist-key-command-prefix)) 'alchemist-help-search-at-point)

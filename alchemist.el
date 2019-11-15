@@ -59,7 +59,6 @@
 (defvar alchemist-mode-keymap nil)
 
 (require 'easymenu)
-(require 'company)
 (require 'elixir-mode)
 (require 'alchemist-utils)
 (require 'alchemist-key)
@@ -75,9 +74,11 @@
 (require 'alchemist-compile)
 (require 'alchemist-refcard)
 (require 'alchemist-complete)
-(require 'alchemist-company)
 (require 'alchemist-macroexpand)
 (require 'alchemist-phoenix)
+
+(when (require 'company nil t)
+  (require 'alchemist-company))
 
 (defun alchemist-mode-hook ()
   "Hook which enables `alchemist-mode'"
