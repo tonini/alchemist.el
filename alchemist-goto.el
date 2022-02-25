@@ -137,7 +137,7 @@
 It will jump to the position of the symbol definition after selection."
   (interactive)
   (alchemist-goto--fetch-symbol-definitions)
-  (ring-insert find-tag-marker-ring (point-marker))
+  (xref-push-marker-stack)
   (let* ((selected-def (completing-read "Symbol definitions:" alchemist-goto--symbol-list))
          (position (cdr (assoc selected-def alchemist-goto--symbol-name-and-pos))))
     (goto-char (if (overlayp position) (overlay-start position) position))))
@@ -219,7 +219,7 @@ It will jump to the position of the symbol definition after selection."
          (function (alchemist-scope-extract-function expr))
          (modules (alchemist-utils-prepare-modules-for-elixir
                    (alchemist-scope-all-modules))))
-    (ring-insert find-tag-marker-ring (point-marker))
+    (xref-push-marker-stack)
     (cond
      ((and (null module)
            (alchemist-goto--symbol-definition-p function)
